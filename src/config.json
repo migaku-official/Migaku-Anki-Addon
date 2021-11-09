@@ -1,0 +1,72 @@
+{
+    "first_run": true,
+    "toggle_gui_simplification": true,
+    "warnNoteTypes": true,
+    "simplifications": {
+        "tools": {
+            "actionStudyDeck" : false,
+            "actionCreateFiltered": false
+        },
+        "deckOverview": {
+            "customStudy": false
+        },
+        "deckConf": {
+            "steps": false,
+            "graduatingInterval": false,
+            "easyInterval": false,
+            "startingEase": false,
+            "buryRelatedNew": false,
+            "lapsesTab": false,
+            "maxReviews": false,
+            "easyBonus": false,
+            "intervalModifier": false,
+            "maxInterval": false,
+            "buryRelatedReviews": false,
+            "deckConfMigakuHelpButton": true
+        },
+        "preferences": {
+            "showEstimates": false,
+            "showProgress": false,
+            "newSched": false,
+            "learnAheadLimit": false,
+            "renameNetwork": true
+        },
+        "addWindow": {
+            "addWindowMigakuHelpButton": true
+        },
+        "editor": {
+            "fieldsCardsButtons": false,
+            "rightTopBtns": {
+                "superscript": false,
+                "subscript": false,
+                "clozeDeletion": false,
+                "latexMenu": false
+            }
+        },
+        "browser": {
+            "menuActions": {
+                "notesMenu": {
+                    "actionAdd": false,
+                    "actionExport": false,
+                    "actionAdd_Tags": false,
+                    "actionRemove_Tags": false,
+                    "actionClear_Unused_Tags": false,
+                    "actionToggle_Mark": false,
+                    "actionFindDuplicates": false,
+                    "actionFindReplace": false,
+                    "actionManage_Note_Types": false
+                },
+                "cardsMenu": {
+                    "actionReposition": false,
+                    "menuFlag": false,
+                    "action_Info": false
+                }
+            },
+            "topMenu": {
+                "goMenu": false,
+                "migakuGuide": true
+            },
+            "toggleSidebar": false
+        }
+    }
+}

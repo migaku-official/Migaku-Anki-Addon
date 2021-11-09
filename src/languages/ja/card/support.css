@@ -1,0 +1,320 @@
+.word {
+    position: relative;
+}
+
+
+.popup {
+    display: none;
+    position: absolute;
+
+    z-index: 100;
+
+    padding: 7px;
+    border-radius: 5px;
+
+    text-align: left;
+
+    background-color: #ffffff;
+    box-shadow: rgba(0, 0, 0, .35) 0 5px 15px;
+}
+
+.nightMode .popup,
+.ankidroid_dark_mode .popup {
+    color: #ffffff;
+    background-color: #2f2f31
+}
+
+.popup-active .popup {
+    display: block;
+}
+
+.popup-direction-u .popup {
+    left: 0;
+    bottom: calc(100% + 14px);
+}
+
+.popup-direction-d .popup {
+    left: 0;
+    top: calc(100% + 14px);
+}
+
+.popup-direction-l .popup {
+    right: calc(100% + 14px);
+    top: 0;
+}
+
+.popup-direction-r .popup {
+    left: calc(100% + 14px);
+    top: 0;
+}
+
+.popup-direction-u .popup:after {
+    content: " ";
+    position: absolute;
+    left: 5px;
+    bottom: -10px;
+    border-top: 10px solid #ffffff;
+    border-right: 10px solid transparent;
+    border-left: 10px solid transparent;
+    border-bottom: none;
+}
+
+.nightMode .popup-direction-u .popup:after,
+.ankidroid_dark_mode .popup-direction-u .popup:after {
+    border-top: 10px solid #2f2f31;
+}
+
+.popup-direction-d .popup:after {
+    content: " ";
+    position: absolute;
+    left: 5px;
+    top: -10px;
+    border-top: none;
+    border-right: 10px solid transparent;
+    border-left: 10px solid transparent;
+    border-bottom: 10px solid #ffffff;
+}
+
+.nightMode .popup-direction-d .popup:after,
+.ankidroid_dark_mode .popup-direction-d .popup:after {
+    border-bottom: 10px solid #2f2f31;
+}
+
+.popup-direction-l .popup:after {
+    content: " ";
+    position: absolute;
+    right: -10px;
+    top: 5px;
+    border-top: 10px solid transparent;
+    border-right: none;
+    border-left: 10px solid #ffffff;
+    border-bottom: 10px solid transparent;
+}
+
+.nightMode .popup-direction-l .popup:after,
+.ankidroid_dark_mode .popup-direction-l .popup:after {
+    border-left: 10px solid #2f2f31;
+}
+
+.popup-direction-r .popup:after {
+    content: " ";
+    position: absolute;
+    left: -10px;
+    top: 5px;
+    border-top: 10px solid transparent;
+    border-right: 10px solid #ffffff;
+    border-left: none;
+    border-bottom: 10px solid transparent;
+}
+
+.nightMode .popup-direction-r .popup:after,
+.ankidroid_dark_mode .popup-direction-r .popup:after {
+    border-right: 10px solid #2f2f31;
+}
+
+
+.popup-hover-box {
+    display: none;
+}
+
+.popup-active .popup-hover-box {
+    display: block;
+    position: absolute;
+
+    z-index: 50;
+}
+
+.popup-direction-u .popup-hover-box {
+    left: 0;
+    bottom: 100%;
+    width: 100%;
+    height: calc(14px + 5px);
+}
+
+.popup-direction-d .popup-hover-box {
+    left: 0;
+    top: 100%;
+    width: 100%;
+    height: calc(14px + 5px);
+}
+
+.popup-direction-l .popup-hover-box {
+    top: 0;
+    right: 100%;
+    width: calc(14px + 5px);
+    height: 100%;
+}
+
+.popup-direction-r .popup-hover-box {
+    top: 0;
+    left: 100%;
+    width: calc(14px + 5px);
+    height: 100%;
+}
+
+
+.popup .pitch-graph {
+    white-space: nowrap;
+}
+
+
+.pitch-h,
+.word.active .pitch-hover-h {
+    color: #005CE6;
+}
+
+.pitch-a,
+.word.active .pitch-hover-a {
+    color: #E60000;
+}
+
+.pitch-n,
+.word.active .pitch-hover-n {
+    color: #E68A00;
+}
+
+.pitch-o,
+.word.active .pitch-hover-o {
+    color: #00802B;
+}
+
+.pitch-k,
+.word.active .pitch-hover-k {
+    color: #AC00E6;
+}
+
+.pitch-bg-h,
+.word.active .pitch-bg-hover-h {
+    background-color: #005CE6;
+}
+
+.pitch-bg-a,
+.word.active .pitch-bg-hover-a {
+    background-color: #E60000;
+}
+
+.pitch-bg-n,
+.word.active .pitch-bg-hover-n {
+    background-color: #E68A00;
+}
+
+.pitch-bg-o,
+.word.active .pitch-bg-hover-o {
+    background-color: #00802B;
+}
+
+.pitch-bg-k,
+.word.active .pitch-bg-hover-k {
+    background-color: #AC00E6;
+}
+
+.pitch-h.pitch-bg-h,
+.word.active .pitch-hover-h.pitch-bg-hover-h {
+    background-color: #002762;
+}
+
+.pitch-a.pitch-bg-a,
+.word.active .pitch-hover-a.pitch-bg-hover-a {
+    background-color: #6b0000;
+}
+
+.pitch-n.pitch-bg-n,
+.word.active .pitch-hover-n.pitch-bg-hover-n {
+    background-color: #6e4100;
+}
+
+.pitch-o.pitch-bg-o,
+.word.active .pitch-hover-o.pitch-bg-hover-o {
+    background-color: #003b14;
+}
+
+.pitch-k.pitch-bg-k,
+.word.active .pitch-hover-k.pitch-bg-hover-k {
+    background-color: #3e0053;
+}
+
+.pitch-graph {
+    display: inline-block;
+    position: relative;
+}
+
+.pitch-box {
+    display: inline-block;
+    position: relative;
+    margin-top: 0.2em;
+}
+
+.pitch-overbar {
+    display: inline-block;
+    position: absolute;
+    height: 0.15em;
+    width: 100%;
+    top: -0.075em;
+    left: 0;
+    background-color: currentColor;
+}
+
+.pitch-drop {
+    height: 0.4em;
+    width: 0.15em;
+    position: absolute;
+    top: -0.075em;
+    right: -0.075em;
+    background-color: currentColor;
+}
+
+.pitch-diamond {
+    display: inline-block;
+    width: 0.55em;
+    height: 0.55em;
+    transform: rotate(45deg) scale(0.71, 0.71);
+    margin-left: 0.05em;
+    margin-right: 0.05em;
+}
+
+.pitch-circle-left {
+    display: inline-block;
+    width: 0.25em;
+    height: 0.5em;
+    border-top-left-radius: 200% 100%;
+    border-bottom-left-radius: 200% 100%;
+    margin-left: 0.05em;
+}
+
+.pitch-circle-right {
+    display: inline-block;
+    width: 0.25em;
+    height: 0.5em;
+    border-top-right-radius: 200% 100%;
+    border-bottom-right-radius: 200% 100%;
+    margin-right: 0.05em;
+}
+
+.pitch-shape-hover .pitch-diamond,
+.pitch-shape-hover .pitch-circle-left,
+.pitch-shape-hover .pitch-circle-right {
+    visibility: hidden;
+}
+
+.pitch-shape-hover.active .pitch-diamond,
+.pitch-shape-hover.active .pitch-circle-left,
+.pitch-shape-hover.active .pitch-circle-right {
+    visibility: visible;
+}
+
+.furigana-invisible rt {
+    visibility: hidden;
+}
+
+.furigana-hover rt {
+    visibility: hidden;
+}
+
+.furigana-hover.active rt {
+    visibility: visible;
+}
+
+.popup-active.popup-direction-u rt {
+    /* dirty hack as visibility can change bound boxs in same cases */
+    color: transparent;
+}

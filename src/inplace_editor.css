@@ -1,0 +1,12 @@
+.editable-field.editable-field-active {
+    outline: 1px solid #0081f9 !important;
+}
+
+.nightMode .editable-field.editable-field-active {
+    outline: 1px solid #f98100 !important;
+}
+
+.show-empty-editable-field .editable-field.editable-field-empty:not(.editable-field-active):before {
+    color: #808080;
+    content: '(This field is empty)';
+}

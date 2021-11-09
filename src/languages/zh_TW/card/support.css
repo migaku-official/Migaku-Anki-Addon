@@ -1,0 +1,197 @@
+.word {
+    position: relative;
+}
+
+
+.popup {
+    display: none;
+    position: absolute;
+
+    z-index: 100;
+
+    padding: 7px;
+    border-radius: 5px;
+
+    text-align: left;
+
+    background-color: #ffffff;
+    box-shadow: rgba(0, 0, 0, .35) 0 5px 15px;
+}
+
+.nightMode .popup,
+.ankidroid_dark_mode .popup {
+    color: #ffffff;
+    background-color: #2f2f31
+}
+
+.popup-active .popup {
+    display: block;
+}
+
+.popup-direction-u .popup {
+    left: 0;
+    bottom: calc(100% + 14px);
+}
+
+.popup-direction-d .popup {
+    left: 0;
+    top: calc(100% + 14px);
+}
+
+.popup-direction-l .popup {
+    right: calc(100% + 14px);
+    top: 0;
+}
+
+.popup-direction-r .popup {
+    left: calc(100% + 14px);
+    top: 0;
+}
+
+.popup-direction-u .popup:after {
+    content: " ";
+    position: absolute;
+    left: 5px;
+    bottom: -10px;
+    border-top: 10px solid #ffffff;
+    border-right: 10px solid transparent;
+    border-left: 10px solid transparent;
+    border-bottom: none;
+}
+
+.nightMode .popup-direction-u .popup:after,
+.ankidroid_dark_mode .popup-direction-u .popup:after {
+    border-top: 10px solid #2f2f31;
+}
+
+.popup-direction-d .popup:after {
+    content: " ";
+    position: absolute;
+    left: 5px;
+    top: -10px;
+    border-top: none;
+    border-right: 10px solid transparent;
+    border-left: 10px solid transparent;
+    border-bottom: 10px solid #ffffff;
+}
+
+.nightMode .popup-direction-d .popup:after,
+.ankidroid_dark_mode .popup-direction-d .popup:after {
+    border-bottom: 10px solid #2f2f31;
+}
+
+.popup-direction-l .popup:after {
+    content: " ";
+    position: absolute;
+    right: -10px;
+    top: 5px;
+    border-top: 10px solid transparent;
+    border-right: none;
+    border-left: 10px solid #ffffff;
+    border-bottom: 10px solid transparent;
+}
+
+.nightMode .popup-direction-l .popup:after,
+.ankidroid_dark_mode .popup-direction-l .popup:after {
+    border-left: 10px solid #2f2f31;
+}
+
+.popup-direction-r .popup:after {
+    content: " ";
+    position: absolute;
+    left: -10px;
+    top: 5px;
+    border-top: 10px solid transparent;
+    border-right: 10px solid #ffffff;
+    border-left: none;
+    border-bottom: 10px solid transparent;
+}
+
+.nightMode .popup-direction-r .popup:after,
+.ankidroid_dark_mode .popup-direction-r .popup:after {
+    border-right: 10px solid #2f2f31;
+}
+
+
+.popup-hover-box {
+    display: none;
+}
+
+.popup-active .popup-hover-box {
+    display: block;
+    position: absolute;
+
+    z-index: 50;
+}
+
+.popup-direction-u .popup-hover-box {
+    left: 0;
+    bottom: 100%;
+    width: 100%;
+    height: calc(14px + 5px);
+}
+
+.popup-direction-d .popup-hover-box {
+    left: 0;
+    top: 100%;
+    width: 100%;
+    height: calc(14px + 5px);
+}
+
+.popup-direction-l .popup-hover-box {
+    top: 0;
+    right: 100%;
+    width: calc(14px + 5px);
+    height: 100%;
+}
+
+.popup-direction-r .popup-hover-box {
+    top: 0;
+    left: 100%;
+    width: calc(14px + 5px);
+    height: 100%;
+}
+
+
+.tone-1,
+.word.active .tone-hover-1 {
+    color: #E60000;
+}
+
+.tone-2,
+.word.active .tone-hover-2 {
+    color: #E68A00;
+}
+
+.tone-3,
+.word.active .tone-hover-3 {
+    color: #00802B;
+}
+
+.tone-4,
+.word.active .tone-hover-4 {
+    color: #005CE6;
+}
+
+/*.tone-5,
+.word.active .tone-hover-5 {
+    color: #AC00E6;
+}*/
+
+.tone-5,
+.word.active .tone-hover-5 {
+    color: #808080;
+}
+
+
+.reading-invisible rt {
+    visibility: hidden;
+}
+
+.reading-hover rt {
+    visibility: hidden;
+}
+
+.reading-hover.active rt {
+    visibility: visible;
+}
