@@ -134,7 +134,9 @@ class ManageNoteDialog(QDialog):
                 if self.hide_field(field_name):
                     list_widget.hideRow(i)
 
-                field_item = QTableWidgetItem(field_name)
+                field_name_clean = self.clean_field_name(field_name)
+
+                field_item = QTableWidgetItem(field_name_clean)
                 field_item.setFlags(field_item.flags() & ~(Qt.ItemIsEditable | Qt.ItemIsSelectable))
 
                 list_widget.setItem(i, 0, field_item)
@@ -184,6 +186,13 @@ class ManageNoteDialog(QDialog):
             note_type_mgr.nt_set_tmpl_lang(self.model, self.current_lang, tmpl_idx, fmt, fields_settings, commit=False)
 
         note_type_mgr.nt_set_css_lang(self.model, self.current_lang, commit=True)
+
+
+    def clean_field_name(self, field_name):
+        idx = field_name.rfind(':')
+        if idx > 0:
+            field_name = field_name[idx+1:]
+        return field_name
 
 
     def hide_field(self, field_name):
