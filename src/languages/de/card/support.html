@@ -58,9 +58,9 @@ function parseSyntax(text) {
             ret.push({
                 type: 'syntax',
                 text: match[2],
-                dict_form: args[0] || '',
-            		word_pos: args[1] || '',
-            		gender: args[2] || 'x'
+                dict_form: dict_form,
+                word_pos: word_pos,
+                gender: gender
             });
 
             last_idx = match.index + match[0].length;
