@@ -35,7 +35,7 @@ const word_pos_names = {
 function parseSyntax(text) {
     let ret = [];
 
-    const syntax_re = new RegExp(/(([a-zA-Z0-9äöüÄÖÜßaàâçéèêëîïôûùüÿñæœ]+?)\[(.*?)\])/gm);
+    const syntax_re = new RegExp(/(([a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F]+?)\[(.*?)\])/gm);
     let last_idx = 0;
     let match;
 
