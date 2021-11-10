@@ -1,13 +1,10 @@
 from enum import Enum
 
-import anki
 import aqt
 from aqt.utils import tr
 
+from . import config
 
-pass_fail = True
-button_coloring = False
-ease_factor_reset = True
 
 
 class Grading(Enum):
@@ -32,7 +29,7 @@ class Grading(Enum):
             self.Easy:  tr.studying_easy(),
         }[self]
 
-        if button_coloring:
+        if config.get('reviewer_button_coloring', True):
             return F'<span style="color: {self.button_color()};">{text}</span>'
         return text
 
@@ -40,6 +37,8 @@ class Grading(Enum):
 def init_reviewer_buttons(buttons_tuple, reviewer, card):
 
     button_count = reviewer.mw.col.sched.answerButtons(card)
+
+    pass_fail = config.get('pass_fail', True)
 
     if button_count == 2:
         buttons_tuple = (
@@ -81,6 +80,8 @@ aqt.gui_hooks.reviewer_will_init_answer_buttons.append(init_reviewer_buttons)
 def reviewer_mod_answer_ease(self, ease):
     button_count = self.mw.col.sched.answerButtons(self.card)
 
+    pass_fail = config.get('pass_fail', True)
+
     if pass_fail:
         if button_count == 3:
             if ease > 1:
@@ -97,7 +98,7 @@ aqt.reviewer.Reviewer._answerCard = reviewer_mod_answer_ease
 
 
 def card_reset_ease_factor(card):
-    if ease_factor_reset:
+    if config.get('maintain_ease', False):
         card.factor = 2500
 
 
