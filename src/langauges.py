@@ -254,6 +254,34 @@ class Languages(metaclass=LanguagesMeta):
         ],
     )
 
+    Portuguese = Language(
+        name_en='Portuguese',
+        name_native='Português',
+        code='pt',
+        fields=[
+            'Word',
+            'Sentence',
+            'Definitions',
+            'Translation',
+            'Word Audio',
+            'Sentence Audio',
+            'Image',
+            'Is Vocabulary Card',
+            'Is Audio Card',
+        ],
+        field_settings=[
+            FieldSetting('popup', 'Popup', [
+                FieldOption('no', 'Disabled'),
+                FieldOption('yes', 'Enabled'),
+            ]),
+            FieldSetting('gender-coloring', 'Gender Coloring', [
+                FieldOption('no', 'Disabled'),
+                FieldOption('yes', 'Enabled'),
+                FieldOption('hover', 'On Hover'),
+            ])
+        ],
+    )
+
     Spanish = Language(
         name_en='Spanish',
         name_native='Español',
