@@ -198,6 +198,34 @@ class Languages(metaclass=LanguagesMeta):
         ],
     )
 
+    French = Language(
+        name_en='French',
+        name_native='Français',
+        code='fr',
+        fields=[
+            'Word',
+            'Sentence',
+            'Definitions',
+            'Translation',
+            'Word Audio',
+            'Sentence Audio',
+            'Image',
+            'Is Vocabulary Card',
+            'Is Audio Card',
+        ],
+        field_settings=[
+            FieldSetting('popup', 'Popup', [
+                FieldOption('no', 'Disabled'),
+                FieldOption('yes', 'Enabled'),
+            ]),
+            FieldSetting('gender-coloring', 'Gender Coloring', [
+                FieldOption('no', 'Disabled'),
+                FieldOption('yes', 'Enabled'),
+                FieldOption('hover', 'On Hover'),
+            ])
+        ],
+    )
+
     German = Language(
         name_en='German',
         name_native='Deutsch',

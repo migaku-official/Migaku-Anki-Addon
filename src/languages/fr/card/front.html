@@ -1,0 +1,24 @@
+<div class="migaku-card migaku-card--front">
+    <div class="migaku-card-content">
+        {{^Is Audio Card}}
+            {{^Is Vocabulary Card}}
+                <span class="migaku-word-front">
+                    <div class="field" data-popup="yes">{{Sentence}}</div>
+                </span>
+            {{/Is Vocabulary Card}}
+            {{#Is Vocabulary Card}}
+                <span class="migaku-word-front">
+                    <div class="field" data-popup="yes">{{Word}}</div>
+                </span>
+            {{/Is Vocabulary Card}}
+        {{/Is Audio Card}}
+        {{#Is Audio Card}}
+            {{^Is Vocabulary Card}}
+                {{Sentence Audio}}
+            {{/Is Vocabulary Card}}
+            {{#Is Vocabulary Card}}
+                {{Word Audio}}
+            {{/Is Vocabulary Card}}
+        {{/Is Audio Card}}
+    </div>
+</div>
