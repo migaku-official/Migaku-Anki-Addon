@@ -21,6 +21,7 @@ from . import (
     reviewer,
     editor,
     inplace_editor,
+    browser,
     welcome_wizard,
     global_hotkeys,
     #simplify
