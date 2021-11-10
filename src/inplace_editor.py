@@ -22,6 +22,7 @@ from aqt.qt import *
 from aqt.utils import KeyboardModifiersPressed, tr, showWarning
 
 from .note_type_mgr import nt_get_lang
+from . import util
 from .util import addon_path, addon_web_uri
 from . import config
 
@@ -88,31 +89,45 @@ def handle_inplace_edit(reviewer: Reviewer, message: str):
     field_content = base64.b64decode(field_content_b64).decode('utf-8')
     should_reload = True
 
+    def set_content(new_field_content):
+        if field_name == 'Tags':
+            note.tags = new_field_content
+        else:
+            note[field_name] = new_field_content
+
+        note.flush()
+        reviewer.card.load()
+
+        if should_reload or config.get('inplace_editor_always_reload', False):
+            reviewer_reshow(reviewer, mute=True, reload_card=False)
+
     if command == 'inplace-edit-submit':
         should_reload = message_parts[3] == 'true'
+        set_content(field_content)
     elif command == 'inplace-edit-syntax-add':
         lang = nt_get_lang(card.note_type())
         if lang is None:
             return
-        field_content = lang.add_syntax(field_content)
+        if not aqt.mw.migaku_connection.is_connected():
+            util.show_critical('Anki is not connected to the Browser Extension.')
+            return
+        field_content = lang.remove_syntax(field_content)
+        aqt.mw.migaku_connection.request_syntax(
+            [{ field_name: field_content }],
+            lang.code,
+            on_done = lambda result: set_content(result[0][field_name]),
+            on_error = lambda msg: util.show_critical(msg),
+            callback_on_main_thread = True,
+            timeout=10,
+        )
     elif command == 'inplace-edit-syntax-remove':
         lang = nt_get_lang(card.note_type())
         if lang is None:
             return
         field_content = lang.remove_syntax(field_content)
+        set_content(field_content)
     else:
         raise ValueError('Invalid inplace edit')
-
-    if field_name == 'Tags':
-        note.tags = field_content
-    else:
-        note[field_name] = field_content
-
-    note.flush()
-    reviewer.card.load()
-
-    if should_reload or config.get('inplace_editor_always_reload', False):
-        reviewer_reshow(reviewer, mute=True, reload_card=False)
 
 
 def handle_js_message(handled: Tuple[bool, Any], message: str, ctx: Any) -> Tuple[bool, Any]:
