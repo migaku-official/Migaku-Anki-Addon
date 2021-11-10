@@ -5,8 +5,8 @@ import json
 import aqt
 from aqt.editor import Editor
 
-from .langauges import Languages, Language
 from . import note_type_mgr
+from . import util
 from .util import addon_path
 
 
@@ -29,6 +29,10 @@ def editor_generate_syntax(editor: Editor):
     if lang is None:
         return
 
+    if not aqt.mw.migaku_connection.is_connected():
+        util.show_critical('Anki is not connected to the Browser Extension.')
+        return
+
     note_id = editor.note.id
     note_id_key = str(note_id)
 
@@ -48,6 +52,9 @@ def editor_generate_syntax(editor: Editor):
             [{ note_id_key: text }],
             lang.code,
             on_done = handle_syntax,
+            on_error = lambda msg: util.show_critical(msg, parent=editor.parentWindow),
+            callback_on_main_thread = True,
+            timeout=10,
         )
     
     editor.web.evalWithCallback(editor_js + '\nfetch_text();', handle_text)
