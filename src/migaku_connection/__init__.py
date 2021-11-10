@@ -23,7 +23,7 @@ class MigakuServerThread(QThread):
     def run(self):
         self.loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self.loop)
-        
+
         self.server.listen(44432)
         tornado.ioloop.IOLoop.instance().start()
 
@@ -39,31 +39,78 @@ def with_connector_silent(func):
         return True
     return decorated
 
+
 def with_connector_msg_callback(func):
-    def null_func(*args, **kwargs):
-        pass
 
     def decorated(self, *args, **kwargs) :
         self.connector_lock.lock()
         
         msg_id = self._get_msg_id()
-        self.msg_handlers[msg_id] = (kwargs.get('on_done', null_func), kwargs.get('on_error', null_func))
 
-        if 'on_done' in kwargs:
-            del kwargs['on_done']
-        if 'on_error' in kwargs:
-            del kwargs['on_error']
+        msg_handler = self.MessageHandler(
+            on_done = kwargs.get('on_done'),
+            on_error = kwargs.get('on_error'),
+            on_timeout = kwargs.get('on_timeout'),
+            callback_on_main_thread = kwargs.get('callback_on_main_thread', False),
+        )
 
+        self.msg_handlers[msg_id] = msg_handler
+
+        timeout = kwargs.get('timeout', None)
+        if timeout is not None:
+            loop = self.thread.loop
+            loop.call_soon_threadsafe(
+                loop.call_later,
+                timeout,
+                self._msg_request_timed_out,
+                msg_id
+            )
+
+        for strip_arg in ['on_done', 'on_error', 'on_timeout', 'callback_on_main_thread', 'timeout']:
+            kwargs.pop(strip_arg, None)
+    
         kwargs['msg_id'] = msg_id
 
         if self.connector:
             func(self, *args, **kwargs)
+        else:
+            msg_handler.error('Browser Extension is not connected.')
+
         self.connector_lock.unlock()
-        return True
+
     return decorated
 
 
 class MigakuConnection(QObject):
+
+    class MessageHandler:
+        def __init__(self, on_done=None, on_error=None, on_timeout=None, callback_on_main_thread=False):
+            self.on_done = on_done
+            self.on_error = on_error
+            self.on_timeout = on_timeout
+            self.callback_on_main_thread = callback_on_main_thread
+
+        def _call(self, func, *args, **kwargs):
+            if func:
+                if self.callback_on_main_thread:
+                    aqt.mw.taskman.run_on_main(
+                        lambda: func(*args, **kwargs)
+                    )
+                else:
+                    func(*args, **kwargs)
+
+        def done(self, *args, **kwargs):
+            self._call(self.on_done, *args, **kwargs)
+
+        def error(self, *args, **kwargs):
+            self._call(self.on_error, *args, **kwargs)
+
+        def timeout(self, *args, **kwargs):
+            if self.on_timeout:
+                self._call(self.on_timeout, *args, **kwargs)
+            else:
+                self.error(*args, **kwargs)
+
 
     connected = pyqtSignal()
     disconnected = pyqtSignal()
@@ -85,7 +132,7 @@ class MigakuConnection(QObject):
 
         self.connector_lock = QMutex()
         self.connector = None
-        
+
         self.msg_id = 0
         self.msg_handlers = {}
 
@@ -107,8 +154,19 @@ class MigakuConnection(QObject):
         self.connector_lock.lock()
         if self.connector == connector:
             self.connector = None
+            for msg_handler in self.msg_handlers:
+                msg_handler.error('Browser Extension disconnected.')
             self.disconnected.emit()
         self.connector_lock.unlock()
+
+    def _msg_request_timed_out(self, msg_id):
+        self.connector_lock.lock()
+        if msg_id in self.msg_handlers:
+            msg_handler = self.msg_handlers[msg_id]
+            del self.msg_handlers[msg_id]
+            msg_handler.timeout('Request timed out.')
+        self.connector_lock.unlock()
+
 
     def _recv_data(self, data):
         if 'id' in data and 'msg' in data:
@@ -116,14 +174,12 @@ class MigakuConnection(QObject):
             msg = data['msg']
 
             if msg_id in self.msg_handlers:
-                on_done, on_error = self.msg_handlers[msg_id]
+                msg_handler = self.msg_handlers[msg_id]
                 del self.msg_handlers[msg_id]
 
                 if msg == 'Migaku-Deliver-Syntax':
                     card_data = data.get('data', {}).get('cardArray')
-                    aqt.mw.taskman.run_on_main(
-                        lambda: on_done(card_data)
-                    )
+                    msg_handler.done(card_data)
 
     def is_connected(self):
         self.connector_lock.lock()
@@ -139,7 +195,7 @@ class MigakuConnection(QObject):
     def search_dict(self, term):
         self.connector.send_data({
             'msg': 'Migaku-Search',
-            'data': { 'term': term } 
+            'data': { 'term': term }
         })
 
     @with_connector_silent
@@ -173,6 +229,7 @@ aqt.mw.migaku_connection = MigakuConnection(aqt.mw)
 
 
 class ConnectionStatusLabel(QLabel):
+
     def __init__(self, parent=None):
         super().__init__(parent)
         aqt.mw.migaku_connection.connected.connect(self.set_connected)
@@ -186,9 +243,9 @@ class ConnectionStatusLabel(QLabel):
             self.set_disconnected()
 
     def set_connected(self):
-        self.setText('● Connected')
+        self.setText('● Browser Extension Connected')
         self.setStyleSheet('color: green')
 
     def set_disconnected(self):
-        self.setText('● Not connected')
+        self.setText('● Browser Extension Not Connected')
         self.setStyleSheet('color: red')
