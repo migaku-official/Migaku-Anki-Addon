@@ -1,4 +1,5 @@
 import os
+from typing import Optional, List
 
 import aqt
 from aqt.qt import *
@@ -40,6 +41,45 @@ def make_icon(*path_parts):
 
 def default_icon():
     return make_icon('migaku_200.png')
+
+
+
+def show_into(text: str, title: str = 'Migaku', parent: Optional[QWidget] = None) -> int:
+    return show_msg_box(text, title, parent, QMessageBox.Information)
+
+
+def show_warning(text: str, title: str = 'Migaku', parent: Optional[QWidget] = None) -> int:
+    return show_msg_box(text, title, parent, QMessageBox.Warning)
+
+
+def show_critical(text: str, title: str = 'Migaku', parent: Optional[QWidget] = None) -> int:
+    return show_msg_box(text, title, parent, QMessageBox.Critical)
+
+
+def show_msg_box(text: str, title: str = 'Migaku', parent: Optional[QWidget] = None, icon: QMessageBox.Icon = QMessageBox.NoIcon, buttons: Optional[List[QMessageBox.StandardButton]] = None) -> int:
+
+    if parent is None:
+        parent = aqt.mw.app.activeWindow() or aqt.mw
+
+    mb = QMessageBox(parent)
+    mb.setText(text)
+    mb.setIcon(icon)
+    mb.setWindowTitle(title)
+    mb.setWindowIcon(default_icon())
+
+    if buttons:
+        default = None
+        for btn in buttons:
+            mb_btn = mb.addButton(btn)
+            if not default:
+                default = mb_btn
+        mb.setDefaultButton(default)
+    else:
+        mb_btn = mb.addButton(QMessageBox.Ok)
+        mb_btn.setDefault(True)
+
+    return mb.exec_()
+
 
 
 def open_browser(text: str):
