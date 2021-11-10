@@ -20,16 +20,29 @@ class FieldSetting:
         self.options = options
 
 
-class Language:
 
-    BRACKET_REMOVE_RE = re.compile(r'\[.*?\](?![^<]*>)')
+BRACKET_REMOVE_RE = re.compile(r'\[(?!sound:).*?\]')
 
-    def __init__(self, code: str, name_en: str, name_native: str, fields: List[str], field_settings: List[FieldSetting]):
+def remove_syntax_brackets(text):
+    return BRACKET_REMOVE_RE.sub('', text)
+
+SPACE_REMOVAL_RE = re.compile(r' (?![^{]*})')
+
+def remove_syntax_ja(text):
+    text = remove_syntax_brackets(text)
+    text = SPACE_REMOVAL_RE.sub('', text)
+    return text
+
+
+class Language:    
+
+    def __init__(self, code: str, name_en: str, name_native: str, fields: List[str], field_settings: List[FieldSetting], remove_syntax_func=remove_syntax_brackets):
         self.code = code
         self.name_en = name_en
         self.name_native = name_native
         self.fields = fields
         self.field_settings = field_settings
+        self.remove_syntax_func = remove_syntax_func
 
     def __repr__(self):
         return F'<Language {self.code}>'
@@ -44,7 +57,8 @@ class Language:
         raise NotImplementedError
 
     def remove_syntax(self, text):
-        return self.BRACKET_REMOVE_RE.sub('', text)
+        return self.remove_syntax_func(text)
+
 
 
 class LanguagesMeta(type):
@@ -107,6 +121,7 @@ class Languages(metaclass=LanguagesMeta):
                 FieldOption('hover', 'On Hover'),
             ]),
         ],
+        remove_syntax_func=remove_syntax_ja,
     )
 
     ChineseSimplified = Language(

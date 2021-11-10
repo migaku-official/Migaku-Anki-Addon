@@ -1,5 +1,6 @@
 import os
 from typing import List
+import json
 
 import aqt
 from aqt.editor import Editor
@@ -29,32 +30,25 @@ def editor_generate_syntax(editor: Editor):
         return
 
     note_id = editor.note.id
+    note_id_key = str(note_id)
 
     def handle_text(text):
         if text is None:
             return
 
-        
         def handle_syntax(syntax_data):
-            print(syntax_data)
-            return
+            if isinstance(syntax_data, list) and len(syntax_data) == 1:
+                new_text = syntax_data[0].get(note_id_key)
+                if new_text:
+                    editor.web.eval(editor_js + F'\nset_text({json.dumps(new_text)});')
 
-            text = lang.add_syntax(text, syntax)
-            editor.web.eval(editor_js + F'\nset_text("{text}");')
+        text = lang.remove_syntax(text)
 
-
-        print('requesting...')
         aqt.mw.migaku_connection.request_syntax(
-            [{ note_id: text }],
+            [{ note_id_key: text }],
             lang.code,
             on_done = handle_syntax,
         )
-
-        # print(F'STUB PARSE - lang: {lang.code}, text: {text}')
-        #text += '-PARSED-STUB'
-
-        #text = text.replace('"', '\\"')
-        # editor.web.eval(editor_js + F'\nset_text("{text}");')
     
     editor.web.evalWithCallback(editor_js + '\nfetch_text();', handle_text)
 
@@ -73,7 +67,7 @@ def editor_remove_syntax(editor: Editor):
             return
 
         text = lang.remove_syntax(text)
-        editor.web.eval(editor_js + F'\nset_text("{text}");')
+        editor.web.eval(editor_js + F'\nset_text({json.dumps(text)});')
 
     editor.web.evalWithCallback(editor_js + '\nfetch_text();', handle_text)
 
