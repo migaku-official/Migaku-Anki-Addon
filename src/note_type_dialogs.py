@@ -28,6 +28,7 @@ class ManageNoteDialog(QDialog):
         self.alist = QTableWidget()
 
         self.setWindowTitle('Migaku Options for ' + self.model['name'])
+        self.setWindowIcon(util.default_icon())
 
         lyt = QGridLayout()
         lyt.setColumnStretch(0, 0)
@@ -229,6 +230,7 @@ class AddNoteDialog(QDialog):
         super().__init__(parent)
 
         self.setWindowTitle('Add Migaku Note Type')
+        self.setWindowIcon(util.default_icon())
 
         lyt = QVBoxLayout()
         self.setLayout(lyt)

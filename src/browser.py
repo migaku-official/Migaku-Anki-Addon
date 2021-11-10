@@ -23,6 +23,7 @@ class AddSyntaxDialog(QDialog):
         self.current_batch_notes = []
 
         self.setWindowTitle(F'Add {lang.name_en} language syntax')
+        self.setWindowIcon(util.default_icon())
 
         lyt = QVBoxLayout()
         self.setLayout(lyt)
