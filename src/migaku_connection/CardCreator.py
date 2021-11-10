@@ -4,7 +4,6 @@ import time
 import subprocess
 from anki.notes import Note
 import json
-from .CommunicationKeys import ANKI_COMMUNICATION_KEYS
 
 
 import re
@@ -204,7 +203,7 @@ class CardCreator(MigakuHTTPHandler):
 
         note.flush()
         aqt.mw.col.save()
-        
+
         if 'editor' in current_note_info:
             current_note_info['editor'].loadNote()
         if 'reviewer' in current_note_info:

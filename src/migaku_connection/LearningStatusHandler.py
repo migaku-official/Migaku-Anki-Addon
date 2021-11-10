@@ -4,79 +4,85 @@ import json
 from anki.collection import Collection
 
 
-def getNextBatchOfCards(self, start, incrementor):
-    return self.db.all("SELECT c.ivl, n.flds, c.ord, n.mid FROM cards AS c INNER JOIN notes AS n ON c.nid = n.id WHERE c.type != 0 ORDER BY c.ivl LIMIT %s, %s;" % (start, incrementor))
+import aqt
 
 
-Collection.getNextBatchOfCards = getNextBatchOfCards
+def collection_get_next_card_batch(collection: Collection, start, incrementor):
+    return collection.db.all(F'''
+        SELECT c.ivl, n.flds, c.ord, n.mid
+        FROM cards AS c
+        INNER JOIN notes AS n ON c.nid = n.id
+        WHERE c.type != 0
+        ORDER BY c.ivl
+        LIMIT {start}, {incrementor};
+    ''')
 
 
 class LearningStatusHandler(MigakuHTTPHandler):
 
     def get(self):
-        self.finish("LearningStatusHandler")
+        self.finish('LearningStatusHandler')
 
     def post(self):
+        print('here we go')
+
         if self.checkVersion():
-            fetchModels = self.get_body_argument(
-                "fetchModelsAndTemplates", default=False)
-            if fetchModels is not False:
-                self.finish(self.fetchModelsAndTemplates())
+            fetch_models_templates = self.get_body_argument('fetchModelsAndTemplates', default=False)
+            if fetch_models_templates is not False:
+                self.finish(self.fetch_models_and_templates())
                 return
-            start = self.get_body_argument("start", default=False)
-            if start is not False:
-                incrementor = self.get_body_argument(
-                    "incrementor", default=False)
-                self.finish(self.getCards(start, incrementor))
+
+            start = self.get_body_argument('start', default=None)
+            if start is not None:
+                incrementor = self.get_body_argument('incrementor', default=False)
+                self.finish(self.get_cards(start, incrementor))
                 return
-        self.finish("Invalid Request")
 
-    def getFieldOrdinateDictionary(self, fieldEntries):
-        fieldOrdinates = {}
-        for field in fieldEntries:
-            fieldOrdinates[field["name"]] = field["ord"]
-        return fieldOrdinates
+        self.finish('Invalid Request')
 
-    def getFields(self, templateSide, fieldOrdinatesDict):
+    def get_field_ordinate_dictionary(self, field_entries):
+        return { field['name']: field['ord'] for field in field_entries}
+
+    def get_fields(self, templateSide, fieldOrdinatesDict):
         pattern = r"{{([^#^\/][^}]*?)}}"
         matches = re.findall(pattern, templateSide)
-        fields = self.getCleanedFieldArray(matches)
-        fieldsOrdinates = self.getFieldOrdinates(fields, fieldOrdinatesDict)
+        fields = self.get_cleaned_field_array(matches)
+        fieldsOrdinates = self.get_field_ordinates(fields, fieldOrdinatesDict)
         return fieldsOrdinates
 
-    def getFieldOrdinates(self, fields, fieldOrdinates):
+    def get_field_ordinates(self, fields, fieldOrdinates):
         ordinates = []
         for field in fields:
             if field in fieldOrdinates:
                 ordinates.append(fieldOrdinates[field])
         return ordinates
 
-    def getCleanedFieldArray(self, fields):
+    def get_cleaned_field_array(self, fields):
         noDupes = []
         for field in fields:
-            fieldName = self.getCleanedFieldName(field).strip()
+            fieldName = self.get_cleaned_field_name(field).strip()
             if not fieldName in noDupes and fieldName not in ["FrontSide", "Tags", "Subdeck", "Type", "Deck", "Card"]:
                 noDupes.append(fieldName)
         return noDupes
 
-    def getCleanedFieldName(self, field):
-        if ":" in field:
-            split = field.split(":")
-            return split[len(split) - 1]
-        return field
+    def get_cleaned_field_name(self, field_name):
+        idx = field_name.rfind(':')
+        if idx >= 0:
+            field_name = field_name[idx + 1:]
+        return field_name.strip()
 
-    def fetchModelsAndTemplates(self):
+    def fetch_models_and_templates(self):
         modelData = {}
-        models = self.mw.col.models.all()
+        models = aqt.mw.col.models.all()
         for idx, model in enumerate(models):
             mid = str(model["id"])
             templates = model["tmpls"]
             templateArray = []
-            fieldOrdinates = self.getFieldOrdinateDictionary(model["flds"])
+            fieldOrdinates = self.get_field_ordinate_dictionary(model["flds"])
             for template in templates:
-                frontFields = self.getFields(template["qfmt"], fieldOrdinates)
+                frontFields = self.get_fields(template["qfmt"], fieldOrdinates)
                 name = template["name"]
-                backFields = self.getFields(template["afmt"], fieldOrdinates)
+                backFields = self.get_fields(template["afmt"], fieldOrdinates)
 
                 templateArray.append({
                     "frontFields": frontFields,
@@ -91,9 +97,10 @@ class LearningStatusHandler(MigakuHTTPHandler):
                 }
         return json.dumps(modelData)
 
-    def getCards(self, start, incrementor):
-        cards = self.mw.col.getNextBatchOfCards(start, incrementor)
-        bracketPattern = "\[[^]\n]*?\]"
+    BRACKET_RE = re.compile('\\[[^]\n\u001F]*?\\]') # (U+001F): Unit Separator
+
+    def get_cards(self, start, incrementor):
+        cards = collection_get_next_card_batch(aqt.mw.col, start, incrementor)
         for card in cards:
-            card[1] = re.sub(bracketPattern, "", card[1])
+            card[1] = self.BRACKET_RE.sub('', card[1])
         return json.dumps(cards)
