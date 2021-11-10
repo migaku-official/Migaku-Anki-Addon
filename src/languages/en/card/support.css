@@ -189,6 +189,11 @@
     font-size: 25px;
 }
 
+.ipa {
+    margin-top: 5px;
+    font-size: 14px;
+}
+
 
 .gender-m, 
 .word.active .gender-hover-m {

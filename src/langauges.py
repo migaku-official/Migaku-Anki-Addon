@@ -198,6 +198,29 @@ class Languages(metaclass=LanguagesMeta):
         ],
     )
 
+    English = Language(
+        name_en='English',
+        name_native='English',
+        code='en',
+        fields=[
+            'Word',
+            'Sentence',
+            'Definitions',
+            'Translation',
+            'Word Audio',
+            'Sentence Audio',
+            'Image',
+            'Is Vocabulary Card',
+            'Is Audio Card',
+        ],
+        field_settings=[
+            FieldSetting('popup', 'Popup', [
+                FieldOption('no', 'Disabled'),
+                FieldOption('yes', 'Enabled'),
+            ])
+        ],
+    )
+
     French = Language(
         name_en='French',
         name_native='Français',
