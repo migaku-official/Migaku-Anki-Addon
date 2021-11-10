@@ -112,8 +112,7 @@ def handle_inplace_edit(reviewer: Reviewer, message: str):
     reviewer.card.load()
 
     if should_reload or config.get('inplace_editor_always_reload', False):
-        reviewer_reshow(reviewer, mute=True)
-        pass
+        reviewer_reshow(reviewer, mute=True, reload_card=False)
 
 
 def handle_js_message(handled: Tuple[bool, Any], message: str, ctx: Any) -> Tuple[bool, Any]:
@@ -137,11 +136,11 @@ def handle_js_message(handled: Tuple[bool, Any], message: str, ctx: Any) -> Tupl
 aqt.gui_hooks.webview_did_receive_js_message.append(handle_js_message)
 
 
-def reviewer_reshow(reviewer: Reviewer, mute=False) -> None:
+def reviewer_reshow(reviewer: Reviewer, mute=False, reload_card=True) -> None:
     if reviewer.mw.state != 'review':
         return
 
-    if reviewer.card:
+    if reviewer.card and reload_card:
         reviewer.card.load()
 
     elif reviewer.state == 'question':

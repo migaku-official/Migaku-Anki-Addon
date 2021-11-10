@@ -158,7 +158,6 @@ class MigakuConnection(QObject):
 
     @with_connector_msg_callback
     def request_syntax(self, data, lang_code, alternate_reading=False, msg_id=None):
-        print('requesting...')
         self.connector.send_data({
             'msg': 'Migaku-Syntax',
             'id': msg_id,
