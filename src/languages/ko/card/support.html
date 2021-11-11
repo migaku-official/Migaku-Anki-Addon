@@ -1,0 +1,306 @@
+<script>
+
+(function () {
+
+conjugation_pattern_names = {
+    0: 'base',
+    1: 'declarative present informal low',
+    2: 'declarative present informal high',
+    3: 'declarative present formal low',
+    4: 'declarative present formal high',
+    5: 'past base',
+    6: 'declarative past informal low',
+    7: 'declarative past informal high',
+    8: 'declarative past formal low',
+    9: 'declarative past formal high',
+    10: 'future base',
+    11: 'declarative future informal low',
+    12: 'declarative future informal high',
+    13: 'declarative future formal low',
+    14: 'declarative future formal high',
+    15: 'declarative future conditional informal low',
+    16: 'declarative future conditional informal high',
+    17: 'declarative future conditional formal low',
+    18: 'declarative future conditional formal high',
+    19: 'inquisitive present informal low',
+    20: 'inquisitive present informal high',
+    21: 'inquisitive present formal low',
+    22: 'inquisitive present formal high',
+    23: 'inquisitive past informal low',
+    24: 'inquisitive past informal high',
+    25: 'inquisitive past formal low',
+    26: 'inquisitive past formal high',
+    27: 'imperative present informal low',
+    28: 'imperative present informal high',
+    29: 'imperative present formal low',
+    30: 'imperative present formal high',
+    31: 'propositive present informal low',
+    32: 'propositive present informal high',
+    33: 'propositive present formal low',
+    34: 'propositive present formal high',
+    35: 'connective if',
+    36: 'connective and',
+    37: 'nominal ing'
+}
+
+const word_pos_names = {
+    a: '동사',
+    v: '형용사',
+    b: '동사/형용사',
+    np: '대명사',
+    add: '주소',
+    pl: '지명',
+    stl: '기차역(지하철역) 이름',
+    nnp: '고유 명사',
+    nng: '보통 명사',
+    nnb: '의존 명사',
+    nnbc: '분류사',
+    act: '배우 인명',
+    par: '인명',
+    maj: '부사',
+    mag: '접속 부사',
+    for: '외래어',
+    grp: '회사나 집단의 이름',
+    han: '한자어',
+    ic: '감탄사',
+    sla: '신조어, 준말, 비속어',
+    mm: '관형사',
+    nr: '수사',
+    act: '배우 인명',
+    pep: '인명',
+    plc: '지명'
+};
+
+
+function parseSyntax(text) {
+    let ret = [];
+
+    const syntax_re = new RegExp(/(([\uac00-\ud7af\u1100-\u11ff\u3130-\u318f\ua960-\ua97f\ud7b0-\ud7ff]+?)\[(.*?)\])/gm);
+    let last_idx = 0;
+    let match;
+
+    do {
+        match = syntax_re.exec(text);
+
+        if (match) {
+            if (match.index > last_idx) {
+                ret.push({
+                    type: 'plain',
+                    text: text.substring(last_idx, match.index)
+                });
+            }
+            
+            const args =  match[3].split(',');
+            const dict_form = args[0] || '';
+            const word_pos = args[1] || '';
+
+            ret.push({
+                type: 'syntax',
+                text: match[2],
+                dict_form: dict_form,
+                word_pos: word_pos,
+            });
+
+            last_idx = match.index + match[0].length;
+        }
+    } while (match);
+
+    if (last_idx < text.length) {
+        ret.push({
+            type: 'plain',
+            text: text.substr(last_idx)
+        });
+    }
+
+    return ret;
+}
+
+function syntaxElementToNode(syntax_element, field_settings) {
+    if (syntax_element.type !== 'syntax') {
+        return document.createTextNode(syntax_element.text);
+    }
+    else {
+        const word_container = document.createElement('span');
+        word_container.classList.add('word');
+
+        const text_elem = document.createElement('span');
+        text_elem.textContent = syntax_element.text;
+        text_elem.classList.add('word-text');
+
+        if (field_settings.gender_coloring !== 'no' && syntax_element.gender !== 'x') {
+            let gender_class = 'gender-';
+            if (field_settings.gender_coloring === 'hover') {
+                gender_class += 'hover-';
+            }
+            gender_class += syntax_element.gender;
+            text_elem.classList.add(gender_class);
+        }
+        word_container.appendChild(text_elem);
+
+        if (field_settings.popup === 'yes') {
+            const popup_hover_box = document.createElement('div');
+            popup_hover_box.classList.add('popup-hover-box');
+            word_container.appendChild(popup_hover_box);
+
+            const popup_container = document.createElement('div');
+            popup_container.classList.add('popup');
+            word_container.appendChild(popup_container);
+            
+            const pos_gender = document.createElement('div');
+            pos_gender.classList.add('word-pos-gender');
+            popup_container.appendChild(pos_gender);
+
+            const pos = document.createElement('div');
+            pos.classList.add('word-pos');
+            pos.textContent = word_pos_names[syntax_element.word_pos] || '';
+            pos_gender.appendChild(pos);
+
+            const gender_symbol = document.createElement('div');
+            gender_symbol.classList.add('word-gender-symbol-' + syntax_element.gender);;
+            pos_gender.appendChild(gender_symbol);
+            
+            const dict_form = document.createElement('div');
+            dict_form.classList.add('dict-form');
+            dict_form.textContent = syntax_element.dict_form;
+            popup_container.appendChild(dict_form);
+        }
+
+        return word_container;
+    }
+}
+
+function syntaxToNodes(syntax, field_settings) {
+    return syntax.map(function (syntax_element) {
+        return syntaxElementToNode(syntax_element, field_settings);
+    });
+}
+
+
+function handleFieldTextNodes(node, field_settings) {
+    if (node.nodeType == Node.TEXT_NODE) {
+        const text = node.textContent;
+        const syntax = parseSyntax(text);
+        const nodes = syntaxToNodes(syntax, field_settings);
+        for (const child of nodes) {
+            node.parentNode.insertBefore(child, node);
+        }
+        node.parentNode.removeChild(node);
+    }
+    else {
+        for (let i = node.childNodes.length - 1; i >= 0; i--) {
+            handleFieldTextNodes(node.childNodes[i], field_settings);
+        }
+    }
+}
+
+function handleField(field) {
+    const field_settings = {
+        popup: field.getAttribute('data-popup') || 'no',
+        gender_coloring: field.getAttribute('data-gender-coloring') || 'no'
+    };
+
+    handleFieldTextNodes(field, field_settings);
+}
+
+
+const fields = document.querySelectorAll('.field');
+
+for (field of fields) {
+    handleField(field);
+}
+
+
+function closeAllActive() {
+    const current_popups = document.querySelectorAll('.active');
+    for (const popup of current_popups) {
+        popup.classList.remove('active', 'popup-active');
+    }
+}
+
+function on_closeAllActiveBody(event) {
+    if (!event.target.closest('.word')) {
+        closeAllActive();
+    }
+}
+
+function activeEnablePopup(elem) {
+    const popup_elem = elem.querySelector('.popup');
+    if (!popup_elem) {
+        return
+    }
+
+    elem.classList.add('popup-active');
+
+    function isTooHigh() {
+        return popup_elem.getBoundingClientRect().top < 0
+    }
+    
+    function isTooLow() {
+        return popup_elem.getBoundingClientRect().bottom >= (window.innerHeight || document.documentElement.clientHeight)
+    }
+    
+    function isTooRight() {
+        return popup_elem.getBoundingClientRect().right >= (window.innerWidth || document.documentElement.clientWidth)
+    }
+    
+    function isTooLeft() {
+        return popup_elem.getBoundingClientRect().left < 0
+    }
+
+    elem.classList.remove('popup-direction-u', 'popup-direction-d', 'popup-direction-l', 'popup-direction-r');
+
+    elem.classList.add('popup-direction-u');
+    if (!isTooHigh()) {
+        return;
+    }
+    elem.classList.remove('popup-direction-u');
+
+    elem.classList.add('popup-direction-d');
+    if (!isTooLow()) {
+        return;
+    }
+    elem.classList.remove('popup-direction-d');
+
+    elem.classList.add('popup-direction-l');
+    if (!isTooLeft()) {
+        return;
+    }
+    elem.classList.remove('popup-direction-l');
+
+    elem.classList.add('popup-direction-r');
+    if (!isTooRight()) {
+        return;
+    }
+    elem.classList.remove('popup-direction-r');
+
+    elem.classList.add('popup-direction-u');
+}
+
+function on_activeEnter() {
+    closeAllActive();
+    this.classList.add('active');
+    activeEnablePopup(this);
+}
+
+function on_activeLeave() {
+    this.classList.remove('active', 'popup-active');
+}
+
+const word_elements = document.querySelectorAll('.word');
+const is_mobile = typeof(pycmd) === typeof(undefined);
+
+for (elem of word_elements) {
+    elem.addEventListener('mouseenter', on_activeEnter);
+    elem.addEventListener('ontouchend', on_activeEnter);
+    if (!is_mobile) {
+        elem.addEventListener('mouseleave', on_activeLeave);
+    }
+}
+
+if (is_mobile) {
+    document.body.addEventListener('click', on_closeAllActiveBody); 
+}
+
+}());
+
+</script>

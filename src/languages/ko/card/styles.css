@@ -1,0 +1,162 @@
+@font-face {
+    font-family: yumin;
+    src: url(_yumin.ttf);
+}
+
+.crad-wrapper {
+    position: relative;
+}
+
+.card-container {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    max-width: 1000px;
+    padding: 20px 20px;
+    text-align: center;
+    background-color: red;
+}
+
+.card, .card * {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font-family: yumin, sans-serif;
+}
+
+.card {
+    background: #e5f9ff;
+}
+
+.migaku-card {
+    position: relative;
+    background: white;
+    width: 90vw;
+    max-width: 600px;
+    margin: 20px auto 50px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.migaku-card-content {
+    padding: 20px;
+}
+
+.migaku-card--front {
+    text-align: center;
+}
+
+.migaku-card--back {
+    text-align: center;
+}
+
+.migaku-word-front {
+    font-size: 32px;
+}
+
+.migaku-word-back {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.migaku-card-image img {
+    height: 250px;
+    width: 90vw;
+    max-width: 600px;
+    object-fit: cover;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
+.migaku-sentence, .migaku-translation, .migaku-definition, .migaku-typeselect {
+    width: 100%;
+    text-align: left;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    line-height: 17px;
+}
+
+.migaku-sentence {
+    font-size: 25px;
+    line-height: 32px;
+}
+
+.migaku-translation {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.migaku-typeselect label {
+    white-space: nowrap;
+}
+
+.migaku-typeselect {
+    display: none;
+}
+
+.card-typeselect-available .migaku-typeselect {
+    display: block;
+}
+
+@media (min-width: 762px) {
+    .migaku-header {
+        justify-content: start;
+        padding-left: 50px;
+    }
+}
+
+@media (min-width: 500px) {
+    .migaku-card--back .migaku-card-content {
+        display: grid;
+        grid-gap: 20px;
+        grid-template-areas: "word-audio word word word word word word word" "sentence-audio sentence sentence sentence sentence sentence sentence sentence" "translation translation translation translation translation translation translation translation" "definition definition definition definition definition definition definition definition" "typeselect typeselect typeselect typeselect typeselect typeselect typeselect typeselect";
+    }
+    .migaku-card--back .migaku-word-audio {
+        grid-area: word-audio;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .migaku-card--back .migaku-word-back {
+        grid-area: word;
+        text-align: left;
+    }
+    .migaku-card--back .migaku-sentence-audio {
+        grid-area: sentence-audio;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .migaku-card--back .migaku-sentence {
+        grid-area: sentence;
+    }
+    .migaku-card--back .migaku-translation {
+        grid-area: translation;
+    }
+    .migaku-card--back .migaku-definition {
+        grid-area: definition;
+    }
+    .migaku-typeselect {
+        grid-area: typeselect;
+    }
+}
+
+.ankidroid_dark_mode.card, .nightMode.card {
+    background: #2b303b;
+}
+
+.ankidroid_dark_mode .migaku-header, .nightMode .migaku-header {
+    background: #f9a746;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.ankidroid_dark_mode .migaku-header h1, .ankidroid_dark_mode .migaku-header h1 {
+    color: white;
+}
+
+.ankidroid_dark_mode .migaku-card, .nightMode .migaku-card {
+    position: relative;
+    background: #363c4a;
+    box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.15);
+}

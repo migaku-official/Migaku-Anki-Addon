@@ -84,10 +84,10 @@ class LanguagesMeta(type):
 
 class Languages(metaclass=LanguagesMeta):
 
-    Japanese = Language(
-        name_en='Japanese',
-        name_native='日本語',
-        code='ja',
+    Cantonese = Language(
+        name_en='Cantonese',
+        name_native='粵語',
+        code='yue',
         fields=[
             'Word',
             'Sentence',
@@ -96,32 +96,23 @@ class Languages(metaclass=LanguagesMeta):
             'Word Audio',
             'Sentence Audio',
             'Image',
+            'Sentence Variant',
             'Is Vocabulary Card',
             'Is Audio Card',
         ],
         field_settings=[
-            FieldSetting('popup', 'Popup', [
-                FieldOption('no', 'Disabled'),
-                FieldOption('yes', 'Enabled'),
-            ]),
-            FieldSetting('furigana', 'Furigana', [
+            FieldSetting('reading', 'Reading', [
                 FieldOption('no', 'Disabled'),
                 FieldOption('yes', 'Enabled'),
                 FieldOption('hover', 'On Hover'),
                 FieldOption('hidden', 'Hidden'),
             ]),
-            FieldSetting('pitch-coloring', 'Pitch Coloring', [
-                FieldOption('no', 'Disabled'),
-                FieldOption('yes', 'Enabled'),
-                FieldOption('hover', 'On Hover'),
-            ]),
-            FieldSetting('pitch-shapes', 'Pitch Shapes', [
+            FieldSetting('tone-coloring', 'Tone Coloring', [
                 FieldOption('no', 'Disabled'),
                 FieldOption('yes', 'Enabled'),
                 FieldOption('hover', 'On Hover'),
             ]),
         ],
-        remove_syntax_func=remove_syntax_ja,
     )
 
     ChineseSimplified = Language(
@@ -273,6 +264,69 @@ class Languages(metaclass=LanguagesMeta):
                 FieldOption('no', 'Disabled'),
                 FieldOption('yes', 'Enabled'),
                 FieldOption('hover', 'On Hover'),
+            ])
+        ],
+    )
+
+    Japanese = Language(
+        name_en='Japanese',
+        name_native='日本語',
+        code='ja',
+        fields=[
+            'Word',
+            'Sentence',
+            'Definitions',
+            'Translation',
+            'Word Audio',
+            'Sentence Audio',
+            'Image',
+            'Is Vocabulary Card',
+            'Is Audio Card',
+        ],
+        field_settings=[
+            FieldSetting('popup', 'Popup', [
+                FieldOption('no', 'Disabled'),
+                FieldOption('yes', 'Enabled'),
+            ]),
+            FieldSetting('furigana', 'Furigana', [
+                FieldOption('no', 'Disabled'),
+                FieldOption('yes', 'Enabled'),
+                FieldOption('hover', 'On Hover'),
+                FieldOption('hidden', 'Hidden'),
+            ]),
+            FieldSetting('pitch-coloring', 'Pitch Coloring', [
+                FieldOption('no', 'Disabled'),
+                FieldOption('yes', 'Enabled'),
+                FieldOption('hover', 'On Hover'),
+            ]),
+            FieldSetting('pitch-shapes', 'Pitch Shapes', [
+                FieldOption('no', 'Disabled'),
+                FieldOption('yes', 'Enabled'),
+                FieldOption('hover', 'On Hover'),
+            ]),
+        ],
+        remove_syntax_func=remove_syntax_ja,
+    )
+
+    Korean = Language(
+        name_en='Korean',
+        name_native='코리안',
+        code='ko',
+        fields=[
+            'Word',
+            'Sentence',
+            'Definitions',
+            'Translation',
+            'Word Audio',
+            'Sentence Audio',
+            'Image',
+            'Is Vocabulary Card',
+            'Is Audio Card',
+        ],
+        field_settings=[
+            FieldSetting('popup', 'Popup', [
+                FieldOption('no', 'Disabled'),
+                FieldOption('yes', 'Enabled'),
             ])
         ],
     )

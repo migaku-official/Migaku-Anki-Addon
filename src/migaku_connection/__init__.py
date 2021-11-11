@@ -214,6 +214,11 @@ class MigakuConnection(QObject):
 
     @with_connector_msg_callback
     def request_syntax(self, data, lang_code, alternate_reading=False, msg_id=None):
+
+        idx = lang_code.find('_')
+        if idx >= 0:
+            lang_code = lang_code[:idx]
+
         self.connector.send_data({
             'msg': 'Migaku-Syntax',
             'id': msg_id,

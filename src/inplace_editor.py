@@ -118,7 +118,7 @@ def handle_inplace_edit(reviewer: Reviewer, message: str):
             on_done = lambda result: set_content(result[0][field_name]),
             on_error = lambda msg: util.show_critical(msg),
             callback_on_main_thread = True,
-            timeout=10,
+            timeout=20,
         )
     elif command == 'inplace-edit-syntax-remove':
         lang = nt_get_lang(card.note_type())

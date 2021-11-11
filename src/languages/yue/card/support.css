@@ -153,169 +153,45 @@
 }
 
 
-.popup .pitch-graph {
-    font-size: 30px;
-    white-space: nowrap;
-}
-
-
-.pitch-h,
-.word.active .pitch-hover-h {
-    color: #005CE6;
-}
-
-.pitch-a,
-.word.active .pitch-hover-a {
+.tone-1,
+.word.active .tone-hover-1 {
     color: #E60000;
 }
 
-.pitch-n,
-.word.active .pitch-hover-n {
+.tone-2,
+.word.active .tone-hover-2 {
     color: #E68A00;
 }
 
-.pitch-o,
-.word.active .pitch-hover-o {
+.tone-3,
+.word.active .tone-hover-3 {
     color: #00802B;
 }
 
-.pitch-k,
-.word.active .pitch-hover-k {
+.tone-4,
+.word.active .tone-hover-4 {
+    color: #005CE6;
+}
+
+.tone-5,
+.word.active .tone-hover-5 {
     color: #AC00E6;
 }
 
-.pitch-bg-h,
-.word.active .pitch-bg-hover-h {
-    background-color: #005CE6;
+.tone-6,
+.word.active .tone-hover-6 {
+    color: #808080;
 }
 
-.pitch-bg-a,
-.word.active .pitch-bg-hover-a {
-    background-color: #E60000;
-}
 
-.pitch-bg-n,
-.word.active .pitch-bg-hover-n {
-    background-color: #E68A00;
-}
-
-.pitch-bg-o,
-.word.active .pitch-bg-hover-o {
-    background-color: #00802B;
-}
-
-.pitch-bg-k,
-.word.active .pitch-bg-hover-k {
-    background-color: #AC00E6;
-}
-
-.pitch-h.pitch-bg-h,
-.word.active .pitch-hover-h.pitch-bg-hover-h {
-    background-color: #002762;
-}
-
-.pitch-a.pitch-bg-a,
-.word.active .pitch-hover-a.pitch-bg-hover-a {
-    background-color: #6b0000;
-}
-
-.pitch-n.pitch-bg-n,
-.word.active .pitch-hover-n.pitch-bg-hover-n {
-    background-color: #6e4100;
-}
-
-.pitch-o.pitch-bg-o,
-.word.active .pitch-hover-o.pitch-bg-hover-o {
-    background-color: #003b14;
-}
-
-.pitch-k.pitch-bg-k,
-.word.active .pitch-hover-k.pitch-bg-hover-k {
-    background-color: #3e0053;
-}
-
-.pitch-graph {
-    display: inline-block;
-    position: relative;
-}
-
-.pitch-box {
-    display: inline-block;
-    position: relative;
-    margin-top: 0.2em;
-}
-
-.pitch-overbar {
-    display: inline-block;
-    position: absolute;
-    height: 0.15em;
-    width: 100%;
-    top: -0.075em;
-    left: 0;
-    background-color: currentColor;
-}
-
-.pitch-drop {
-    height: 0.4em;
-    width: 0.15em;
-    position: absolute;
-    top: -0.075em;
-    right: -0.075em;
-    background-color: currentColor;
-}
-
-.pitch-diamond {
-    display: inline-block;
-    width: 0.55em;
-    height: 0.55em;
-    transform: rotate(45deg) scale(0.71, 0.71);
-    margin-left: 0.05em;
-    margin-right: 0.05em;
-}
-
-.pitch-circle-left {
-    display: inline-block;
-    width: 0.25em;
-    height: 0.5em;
-    border-top-left-radius: 200% 100%;
-    border-bottom-left-radius: 200% 100%;
-    margin-left: 0.05em;
-}
-
-.pitch-circle-right {
-    display: inline-block;
-    width: 0.25em;
-    height: 0.5em;
-    border-top-right-radius: 200% 100%;
-    border-bottom-right-radius: 200% 100%;
-    margin-right: 0.05em;
-}
-
-.pitch-shape-hover .pitch-diamond,
-.pitch-shape-hover .pitch-circle-left,
-.pitch-shape-hover .pitch-circle-right {
+.reading-invisible rt {
     visibility: hidden;
 }
 
-.pitch-shape-hover.active .pitch-diamond,
-.pitch-shape-hover.active .pitch-circle-left,
-.pitch-shape-hover.active .pitch-circle-right {
+.reading-hover rt {
+    visibility: hidden;
+}
+
+.reading-hover.active rt {
     visibility: visible;
-}
-
-.furigana-invisible rt {
-    visibility: hidden;
-}
-
-.furigana-hover rt {
-    visibility: hidden;
-}
-
-.furigana-hover.active rt {
-    visibility: visible;
-}
-
-.popup-active.popup-direction-u rt {
-    /* dirty hack as visibility can change bound boxs in same cases */
-    color: transparent;
 }

@@ -1,14 +1,29 @@
 import sys
 import os
 import aqt
+import anki
 
-# Add lib folder to import path
-sys.path.append(
-    os.path.join(
-        os.path.dirname(os.path.abspath(__file__)),
-        'lib'
+
+# insert librairies into sys.path
+
+def add_sys_path(*path_parts):
+    sys.path.insert(
+        0,
+        os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            'lib',
+            *path_parts
+        )
     )
-)
+
+if anki.utils.isLin:
+    add_sys_path('linux')
+elif anki.utils.isMac:
+    add_sys_path('macos')
+elif anki.utils.isWin:
+    add_sys_path('windows')
+add_sys_path('shared')
+
 
 # Allow webviews to access necessary resources
 aqt.mw.addonManager.setWebExports(__name__, r'(languages/.*?\.svg|inplace_editor.css)')
