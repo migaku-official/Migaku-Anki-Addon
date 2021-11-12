@@ -16,13 +16,13 @@ def add_sys_path(*path_parts):
         )
     )
 
+add_sys_path('shared')
 if anki.utils.isLin:
     add_sys_path('linux')
 elif anki.utils.isMac:
     add_sys_path('macos')
 elif anki.utils.isWin:
     add_sys_path('windows')
-add_sys_path('shared')
 
 
 # Allow webviews to access necessary resources

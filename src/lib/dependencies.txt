@@ -1,3 +1,7 @@
-pynput
-    Xlib (python-xlib)
-tornado
+tornado                                     shared/tornado
+pynput                                      shared/pynput
+    python-xlib                             linux/Xlib
+    pyobjc-core                             macos/obj
+    pyobjc-framework-Quartz                 macos/Quartz
+    pyobjc-framework-Cocoa                  macos/AppKit macos/Cocoa macos/CoreFoundation macos/Foundation
+    pyobjc-framework-ApplicationServices    macos/HIServices
