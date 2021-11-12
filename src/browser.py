@@ -92,7 +92,7 @@ class AddRemoveSyntaxDialog(QDialog):
             field_name = itm.data(Qt.DisplayRole)
             field_checked = itm.checkState() == Qt.Checked
             checked_fields_states[field_name] = field_checked
-        
+
         last_checked = config.get('syntax_fields_last_checked', {})
         last_checked.update(checked_fields_states)
         config.set('syntax_fields_last_checked', last_checked, do_write=True)
@@ -113,7 +113,7 @@ class AddRemoveSyntaxDialog(QDialog):
             label= self.progress_string,
             parent=self
         )
-        
+
         if self.is_remove:
             self.remove_thread = self.RemoveThread(self.lang, self.note_ids, self.checked_fields)
             self.remove_thread.finished.connect(self.on_finished)
