@@ -4,6 +4,7 @@ from typing import Optional
 import pynput.keyboard
 from pynput.keyboard import Key
 
+import anki
 import aqt
 from aqt.qt import *
 from aqt.utils import isMac, isWin
@@ -138,7 +139,7 @@ class KeyboardHandler(QObject):
 
 
 
-class HotkeyHandler(QObject):
+class HotkeyHandlerBase(QObject):
 
     hotkeys = [
         ('open_dict',       KeySequence('f', KeySequence.Ctrl | KeySequence.Alt), 'Open dictionary'),
@@ -169,10 +170,23 @@ class HotkeyHandler(QObject):
     def on_action_fired(self, action):
         if action == 'open_dict':
             aqt.mw.migaku_connection.open_dict()
+            self.focus_dictionary()
         if action in ['search_dict', 'set_sentence', 'add_definition']:
             self.request_seltected_text(action)
 
     def request_seltected_text(self, action):
+
+        modifier_keys = [
+            Key.alt_gr,
+            Key.alt, Key.alt_l, Key.alt_r,
+            Key.cmd, Key.cmd_l, Key.cmd_r,
+            Key.ctrl, Key.ctrl_l, Key.ctrl_r,
+            Key.shift, Key.shift_l, Key.shift_r
+        ]
+
+        for key in modifier_keys:
+            self.keyboard_controller.release(key)
+
         with self.keyboard_controller.pressed(Key.cmd if isMac else Key.ctrl):
             self.keyboard_controller.press('c')
             self.keyboard_controller.release('c')
@@ -188,10 +202,53 @@ class HotkeyHandler(QObject):
 
         if action == 'search_dict':
             aqt.mw.migaku_connection.search_dict(text)
+            self.focus_dictionary()
         elif action == 'set_sentence':
             aqt.mw.migaku_connection.set_sentence(text)
+            self.focus_dictionary()
         elif action == 'add_definition':
             aqt.mw.migaku_connection.add_definition(text)
+            self.focus_dictionary()
+
+    def focus_dictionary(self):
+        # Implemented in derived classes if required
+        pass
+
+
+if isWin:
+
+    import ctypes
+
+    class HotkeyHandlerWindows(HotkeyHandlerBase):
+
+        def focus_dictionary(self, retry_count=5):
+            enum_windows_proc = ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.c_int, ctypes.POINTER(ctypes.c_int))
+
+            did_focus = False
+
+            def foreach_window(hWnd, lParam):
+                nonlocal did_focus
+                title_length = ctypes.windll.user32.GetWindowTextLengthW(hWnd)
+                title_buff = ctypes.create_unicode_buffer(title_length + 1)
+                ctypes.windll.user32.GetWindowTextW(hWnd, title_buff, title_length + 1)
+                title = title_buff.value
+                if title == 'Migaku Dictionary':
+                    ctypes.windll.user32.SetForegroundWindow(hWnd)
+                    did_focus = True
+                return True
+
+            ctypes.windll.user32.EnumWindows(enum_windows_proc(foreach_window), 0)
+
+            if retry_count > 0 and not did_focus:
+                QTimer.singleShot(100, lambda: self.focus_dictionary(retry_count - 1))
+
+            return did_focus
+
+    HotkeyHandler = HotkeyHandlerWindows
+
+else:
+    # Dictionary focus not required
+    HotkeyHandler = HotkeyHandlerBase
 
 
 
