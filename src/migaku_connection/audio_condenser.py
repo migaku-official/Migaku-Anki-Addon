@@ -1,7 +1,7 @@
 from os.path import join, exists
 import os
 import subprocess
-from .MigakuHTTPHandler import MigakuHTTPHandler
+from .migaku_http_handler import MigakuHTTPHandler
 
 
 class AudioCondenser(MigakuHTTPHandler):

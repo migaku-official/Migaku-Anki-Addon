@@ -1,6 +1,6 @@
 import json
 import aqt
-from .MigakuHTTPHandler import MigakuHTTPHandler
+from .migaku_http_handler import MigakuHTTPHandler
 
 
 

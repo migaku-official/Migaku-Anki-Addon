@@ -1,4 +1,4 @@
-from .MigakuHTTPHandler import MigakuHTTPHandler
+from .migaku_http_handler import MigakuHTTPHandler
 import re
 import json
 from anki.collection import Collection
@@ -44,7 +44,7 @@ class LearningStatusHandler(MigakuHTTPHandler):
         return { field['name']: field['ord'] for field in field_entries}
 
     def get_fields(self, templateSide, fieldOrdinatesDict):
-        pattern = r"{{([^#^\/][^}]*?)}}"
+        pattern = r'{{([^#^\/][^}]*?)}}'
         matches = re.findall(pattern, templateSide)
         fields = self.get_cleaned_field_array(matches)
         fieldsOrdinates = self.get_field_ordinates(fields, fieldOrdinatesDict)
@@ -58,12 +58,12 @@ class LearningStatusHandler(MigakuHTTPHandler):
         return ordinates
 
     def get_cleaned_field_array(self, fields):
-        noDupes = []
+        no_dupes = []
         for field in fields:
-            fieldName = self.get_cleaned_field_name(field).strip()
-            if not fieldName in noDupes and fieldName not in ["FrontSide", "Tags", "Subdeck", "Type", "Deck", "Card"]:
-                noDupes.append(fieldName)
-        return noDupes
+            field_name = self.get_cleaned_field_name(field).strip()
+            if not field_name in no_dupes and field_name not in ['FrontSide', 'Tags', 'Subdeck', 'Type', 'Deck', 'Card']:
+                no_dupes.append(field_name)
+        return no_dupes
 
     def get_cleaned_field_name(self, field_name):
         idx = field_name.rfind(':')
@@ -72,30 +72,30 @@ class LearningStatusHandler(MigakuHTTPHandler):
         return field_name.strip()
 
     def fetch_models_and_templates(self):
-        modelData = {}
+        model_data = {}
         models = aqt.mw.col.models.all()
-        for idx, model in enumerate(models):
-            mid = str(model["id"])
-            templates = model["tmpls"]
-            templateArray = []
-            fieldOrdinates = self.get_field_ordinate_dictionary(model["flds"])
+        for model in models:
+            mid = str(model['id'])
+            templates = model['tmpls']
+            template_array = []
+            field_ordinates = self.get_field_ordinate_dictionary(model['flds'])
             for template in templates:
-                frontFields = self.get_fields(template["qfmt"], fieldOrdinates)
-                name = template["name"]
-                backFields = self.get_fields(template["afmt"], fieldOrdinates)
+                front_fields = self.get_fields(template['qfmt'], field_ordinates)
+                name = template['name']
+                back_fields = self.get_fields(template['afmt'], field_ordinates)
 
-                templateArray.append({
-                    "frontFields": frontFields,
-                    "backFields": backFields,
-                    "name": name,
+                template_array.append({
+                    'frontFields': front_fields,
+                    'backFields': back_fields,
+                    'name': name,
                 })
-            if mid not in modelData:
-                modelData[mid] = {
-                    "templates": templateArray,
-                    "fields": fieldOrdinates,
-                    "name": model["name"],
+            if mid not in model_data:
+                model_data[mid] = {
+                    'templates': template_array,
+                    'fields': field_ordinates,
+                    'name': model['name'],
                 }
-        return json.dumps(modelData)
+        return json.dumps(model_data)
 
     BRACKET_RE = re.compile('\\[[^]\n\u001F]*?\\]') # (U+001F): Unit Separator
 

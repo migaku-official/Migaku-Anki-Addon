@@ -6,9 +6,9 @@ from aqt.qt import *
 
 from .migaku_connector import MigakuConnector
 
-from .CardCreator import CardCreator
-from .AudioCondenser import AudioCondenser
-from .LearningStatusHandler import LearningStatusHandler
+from .card_creator import CardCreator
+from .audio_condenser import AudioCondenser
+from .learning_status_handler import LearningStatusHandler
 from .profile_data_provider import ProfileDataProvider
 
 

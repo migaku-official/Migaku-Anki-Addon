@@ -1,4 +1,4 @@
-from .MigakuHTTPHandler import MigakuHTTPHandler
+from .migaku_http_handler import MigakuHTTPHandler
 from os.path import join, exists
 import time
 import subprocess
