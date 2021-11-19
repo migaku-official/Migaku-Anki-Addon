@@ -4,7 +4,7 @@ from typing import List, Dict, Optional
 import aqt
 from anki.models import NotetypeDict
 
-from .langauges import Languages, Language
+from .languages import Languages, Language
 
 
 NOTE_TYPE_PREFIX = 'Migaku '

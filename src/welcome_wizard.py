@@ -3,7 +3,7 @@ from aqt.qt import *
 
 from . import util
 from . import config
-from .langauges import Languages
+from .languages import Languages
 from . import note_type_mgr
 from .migaku_connection import ConnectionStatusLabel
 from .global_hotkeys import HotkeyConfigWidget, hotkey_handeler

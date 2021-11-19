@@ -1,12 +1,13 @@
 from collections import OrderedDict
 from typing import List
 import re
+import importlib
 
-from . util import addon_path, addon_web_uri
+from .. util import addon_path, addon_web_uri
 
 
 class FieldOption:
-    
+
     def __init__(self, value: str, label: str):
         self.value = value
         self.label = label
@@ -21,28 +22,27 @@ class FieldSetting:
 
 
 
-BRACKET_REMOVE_RE = re.compile(r'\[(?!sound:).*?\]')
+class Language:
 
-def remove_syntax_brackets(text):
-    return BRACKET_REMOVE_RE.sub('', text)
+    BRACKET_REMOVE_RE = re.compile(r'\[(?!sound:).*?\]')
 
-SPACE_REMOVAL_RE = re.compile(r' (?![^{]*})')
-
-def remove_syntax_ja(text):
-    text = remove_syntax_brackets(text)
-    text = SPACE_REMOVAL_RE.sub('', text)
-    return text
-
-
-class Language:    
-
-    def __init__(self, code: str, name_en: str, name_native: str, fields: List[str], field_settings: List[FieldSetting], remove_syntax_func=remove_syntax_brackets):
+    def __init__(self, code: str, name_en: str, name_native: str, fields: List[str], field_settings: List[FieldSetting]):
         self.code = code
         self.name_en = name_en
         self.name_native = name_native
         self.fields = fields
         self.field_settings = field_settings
-        self.remove_syntax_func = remove_syntax_func
+
+        try:
+            self.util = importlib.import_module(F'.{self.code}', __name__)
+        except ImportError:
+            self.util = None
+
+        if hasattr(self.util, 'remove_syntax'):
+            self.remove_syntax_func = self.util.remove_syntax
+        else:
+            self.remove_syntax_func = self._remove_syntax_brackets
+
 
     def __repr__(self):
         return F'<Language {self.code}>'
@@ -58,6 +58,10 @@ class Language:
 
     def remove_syntax(self, text):
         return self.remove_syntax_func(text)
+
+    @classmethod
+    def _remove_syntax_brackets(cls, text):
+        return cls.BRACKET_REMOVE_RE.sub('', text)
 
 
 
@@ -305,7 +309,6 @@ class Languages(metaclass=LanguagesMeta):
                 FieldOption('hover', 'On Hover'),
             ]),
         ],
-        remove_syntax_func=remove_syntax_ja,
     )
 
     Korean = Language(

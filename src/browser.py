@@ -2,7 +2,7 @@ import aqt
 from aqt.qt import *
 from aqt.browser import Browser
 
-from .langauges import Language
+from .languages import Language
 from . import config
 from . import note_type_mgr
 from . import util

@@ -6,7 +6,7 @@ import aqt
 from aqt.qt import *
 
 from . import util
-from .langauges import Languages
+from .languages import Languages
 from . import note_type_mgr
 
 
