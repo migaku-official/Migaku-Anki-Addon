@@ -12,7 +12,7 @@ class ProfileDataProvider(MigakuHTTPHandler):
 
 
     def post(self):
-        if self.checkVersion():
+        if self.check_version():
             fetch_data = self.get_body_argument('fetchProfileData', default=False)
             if fetch_data:
                 profile_data = self.compose_profile_data()

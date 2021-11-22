@@ -26,7 +26,7 @@ class LearningStatusHandler(MigakuHTTPHandler):
     def post(self):
         print('here we go')
 
-        if self.checkVersion():
+        if self.check_version():
             fetch_models_templates = self.get_body_argument('fetchModelsAndTemplates', default=False)
             if fetch_models_templates is not False:
                 self.finish(self.fetch_models_and_templates())

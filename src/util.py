@@ -1,4 +1,5 @@
 import os
+import shutil
 from typing import Optional, List
 
 import aqt
@@ -16,6 +17,9 @@ def addon_path(*path_parts):
 def user_path(*path_parts):
     return os.path.join(user_files_dir, *path_parts)
 
+# assure that user_files exists
+os.makedirs(user_path(), exist_ok=True)
+
 
 def col_media_path(*path_parts):
     return os.path.join(aqt.mw.col.media.dir(), *path_parts)
@@ -23,6 +27,10 @@ def col_media_path(*path_parts):
 
 def tmp_path(*path_parts):
     return addon_path('tmp', *path_parts)
+
+# assure that tmp folder exists and is empty
+shutil.rmtree(tmp_path(), ignore_errors=True)
+os.makedirs(tmp_path(), exist_ok=True)
 
 
 def addon_web_uri(*path_parts):

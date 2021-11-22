@@ -56,7 +56,7 @@ class AudioCondenser(MigakuHTTPHandler):
         return re.sub(r"[\n:'\":/\|?*><!]", "", filename).strip()
 
     def post(self):
-        if self.checkVersion():
+        if self.check_version():
             config = self.getConfig()
             timestamp = self.get_body_argument("timestamp", default=0)
             finished = self.get_body_argument("finished", default=False)

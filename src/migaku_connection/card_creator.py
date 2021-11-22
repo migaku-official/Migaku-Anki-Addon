@@ -23,7 +23,7 @@ class CardCreator(MigakuHTTPHandler):
 
 
     def post(self):
-        if not self.checkVersion():
+        if not self.check_version():
             self.finish('Card could not be created: Version mismatch')
             return
 
@@ -147,7 +147,7 @@ class CardCreator(MigakuHTTPHandler):
 
     def moveExtensionMp3ToMediaFolder(self, source, filename):
         path = join(aqt.mw.col.media.dir(), filename)
-        subprocess.call([self.ffmpeg, '-i', source, path])
+        self.connection.ffmpeg.call('-i', source, path)
 
 
     def handle_data_from_card_creator(self, jsonData):

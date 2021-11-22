@@ -10,6 +10,7 @@ from .card_creator import CardCreator
 from .audio_condenser import AudioCondenser
 from .learning_status_handler import LearningStatusHandler
 from .profile_data_provider import ProfileDataProvider
+from .ffmpeg_manager import FFmpegManager
 
 
 class MigakuServerThread(QThread):
@@ -84,7 +85,13 @@ def with_connector_msg_callback(func):
 class MigakuConnection(QObject):
 
     class MessageHandler:
-        def __init__(self, on_done=None, on_error=None, on_timeout=None, callback_on_main_thread=False):
+        def __init__(
+            self,
+            on_done=None,
+            on_error=None,
+            on_timeout=None,
+            callback_on_main_thread=False
+        ):
             self.on_done = on_done
             self.on_error = on_error
             self.on_timeout = on_timeout
@@ -130,13 +137,15 @@ class MigakuConnection(QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
 
+        self.ffmpeg = FFmpegManager(self)
+
         self.connector_lock = QMutex()
         self.connector = None
 
         self.msg_id = 0
         self.msg_handlers = {}
 
-        self.server = tornado.web.Application(self.handlers, connection=self, PROTOCOL_VERSION=self.PROTOCOL_VERSION)
+        self.server = tornado.web.Application(self.handlers, connection=self)
         self.thread = MigakuServerThread(self.server)
         self.thread.start()
 
@@ -181,32 +190,32 @@ class MigakuConnection(QObject):
                     card_data = data.get('data', {}).get('cardArray')
                     msg_handler.done(card_data)
 
-    def is_connected(self):
+    def is_connected(self) -> bool:
         self.connector_lock.lock()
         r = self.connector is not None
         self.connector_lock.unlock()
         return r
 
     @with_connector_silent
-    def open_dict(self):
+    def open_dict(self) -> None:
         self.connector.send_data({ 'msg': 'Migaku-Open' })
 
     @with_connector_silent
-    def search_dict(self, term):
+    def search_dict(self, term: str) -> None:
         self.connector.send_data({
             'msg': 'Migaku-Search',
             'data': { 'term': term }
         })
 
     @with_connector_silent
-    def set_sentence(self, sentence):
+    def set_sentence(self, sentence: str) -> None:
         self.connector.send_data({
             'msg': 'Migaku-Sentence',
             'data': { 'sentence': sentence }
         })
 
     @with_connector_silent
-    def add_definition(self, definition):
+    def add_definition(self, definition: str) -> None:
         self.connector.send_data({
             'msg': 'Migaku-Definition',
             'data': { 'definition': definition }
