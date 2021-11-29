@@ -1,5 +1,6 @@
 import tornado.web
 
+
 class MigakuHTTPHandler(tornado.web.RequestHandler):
 
     def set_default_headers(self):
@@ -8,7 +9,7 @@ class MigakuHTTPHandler(tornado.web.RequestHandler):
         self.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
 
     def initialize(self):
-        self.connection: MigakuConnection = self.application.settings['connection']
+        self.connection = self.application.settings['connection']
 
     def check_version(self):
         version = int(self.get_body_argument('version', default=False))

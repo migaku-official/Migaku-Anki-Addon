@@ -27,9 +27,13 @@ class FFmpegManager(aqt.qt.QObject):
 
         self.make_avaialble()
 
+
+    def is_available(self):
+        return not self.ffmpeg_path is None
+
     
     def call(self, *args, **kwargs):
-        assert self.ffmpeg_path
+        assert self.is_available()
         return subprocess.call([self.ffmpeg_path, *args], kwargs)
 
 

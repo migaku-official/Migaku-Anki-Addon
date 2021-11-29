@@ -1,104 +1,118 @@
-from os.path import join, exists
 import os
-import subprocess
+import shutil
+import re
+
+import aqt
+
 from .migaku_http_handler import MigakuHTTPHandler
+
+from .. import config
+from .. import util
+
 
 
 class AudioCondenser(MigakuHTTPHandler):
 
     def get(self):
-        self.finish("ImportHandler")
+        self.finish('ImportHandler')
 
-    def ffmpegExists(self):
-        if exists(self.ffmpeg):
-            return True
-        return False
 
-    def removeTempFiles(self):
-        tmpdir = self.tempDirectory
-        filelist = [f for f in os.listdir(tmpdir)]
-        for f in filelist:
-            path = os.path.join(tmpdir, f)
-            try:
-                os.remove(path)
-            except:
-                innerDirFiles = [df for df in os.listdir(path)]
-                for df in innerDirFiles:
-                    innerPath = os.path.join(path, df)
-                    os.remove(innerPath)
-                os.rmdir(path)
+    def can_condense(self):
+        return self.connection.ffmpeg.is_available()
 
-    def condenseAudioUsingFFMPEG(self, filename, timestamp, config):
-        print("FFMPEG REACHED")
-        wavDir = join(self.tempDirectory, timestamp)
-        if exists(wavDir):
-            config = self.getConfig()
-            mp3dir = config.get('condensed-audio-dir', False)
-            wavs = [f for f in os.listdir(wavDir)]
-            wavs.sort()
-            wavListFilePath = join(wavDir, "list.txt")
-            wavListFile = open(wavListFilePath, "w+")
-            print(filename)
-            filename = self.cleanFilename(filename + "\n") + "-condensed.mp3"
-            mp3path = join(mp3dir, filename)
-            print(wavs)
-            for wav in wavs:
-                wavListFile.write("file '{}'\n".format(join(wavDir, wav)))
-            wavListFile.close()
-            subprocess.call([self.ffmpeg, '-y', '-f', 'concat', '-safe',
-                            '0', '-i', wavListFilePath, '-write_xing', '0', mp3path])
-            self.removeTempFiles()
+
+    def condense_audio(self, filename, timestamp):
+        segments_dir = util.tmp_path(timestamp)
+        if os.path.exists(segments_dir):
+            condensed_dir = config.get('condensed-audio-dir')
+            
+            segment_names = [f for f in os.listdir(segments_dir)]
+            segment_names.sort()
+
+            segment_list_path = os.path.join(segments_dir, 'list.txt')
+            with open(segment_list_path, 'w+') as f:
+                for s in segment_names:
+                    f.write('file \'{}\'\n'.format(os.path.join(segments_dir, s)))
+
+            out_filename = self.clean_filename(filename + '\n') + '-condensed.mp3'
+            out_path = os.path.join(condensed_dir, out_filename)
+
+            self.connection.ffmpeg.call(
+                '-y', '-f', 'concat', '-safe', '0', '-i', segment_list_path, '-write_xing', '0', out_path
+            )
+
+            shutil.rmtree(segments_dir, ignore_errors=True)
+
             if not config.get('disable-condensed-audio-messages', False):
-                self.alert("A Condensed Audio File has been generated.\n\n The file: " +
-                           filename + "\nhas been created in dir: " + mp3dir)
+                alert('A Condensed Audio File has been generated.\n\n The file: ' + out_filename + '\nhas been created in dir: ' + condensed_dir)
 
-    def cleanFilename(self, filename):
-        return re.sub(r"[\n:'\":/\|?*><!]", "", filename).strip()
+
+    def clean_filename(self, filename):
+        return re.sub(r'[\n:\'\":/\|?*><!]', '', filename).strip()
+
 
     def post(self):
         if self.check_version():
-            config = self.getConfig()
-            timestamp = self.get_body_argument("timestamp", default=0)
-            finished = self.get_body_argument("finished", default=False)
+            timestamp = str(self.get_body_argument('timestamp', default=0))
+            finished = self.get_body_argument('finished', default=False)
+
             if finished:
-                filename = self.get_body_argument("filename", default=False)
+                filename = self.get_body_argument('filename', default=None)
                 if not filename:
-                    filename = str(timestamp)
-                self.condenseAudioUsingFFMPEG(filename, timestamp, config)
-                self.removeCondensedAudioInProgressMessage()
+                    filename = timestamp
+                self.condense_audio(filename, timestamp)
+                removeCondensedAudioInProgressMessage()
+                self.finish('Condensing finished.')
                 return
+
             else:
-                mp3dir = config.get('condensed-audio-dir', False)
-                if not mp3dir:
-                    self.alert("You must specify a Condensed Audio Save Location.\n\nYou can do this by:\n1. Navigating to Migaku->Dictionary Settings in Anki's menu bar.\n2. Clicking \"Choose Directory\" for the \"Condensed Audio Save Location\"  in the bottom right of the settings window.")
-                    self.removeCondensedAudioInProgressMessage()
-                    self.finish("Save location not set.")
-                elif self.ffmpegExists():
-                    self.handleAudioFileInRequestAndReturnFilename(
-                        self.copyFileToCondensedAudioDir, timestamp)
-                    print("File saved in temp dir")
-                    self.addCondensedAudioInProgressMessage()
-                    self.finish("Exporting Condensed Audio")
+                condensed_dir = config.get('condensed-audio-dir')
+                if not condensed_dir:
+                    alert('You must specify a Condensed Audio Save Location.\n\nYou can do this by:\n1. Navigating to Migaku->Dictionary Settings in Anki\'s menu bar.\n2. Clicking \'Choose Directory\' for the \'Condensed Audio Save Location\'  in the bottom right of the settings window.')
+                    removeCondensedAudioInProgressMessage()
+                    self.finish('Save location not set.')
+                elif self.can_condense():
+                    self.handle_request_audio_file(self.copy_file_to_condensed_audio_dir, timestamp)
+                    add_condensed_audio_progress_msg()
+                    self.finish('Exporting Condensed Audio')
                 else:
-                    self.alert("The FFMPEG media encoder must be installed in order to export condensedAudio.\n\nIn order to install FFMPEG please enable MP3 Conversion in the Dictionary Settings window and click \"Apply\".\nFFMPEG will then be downloaded and installed automatically.")
-                    self.removeCondensedAudioInProgressMessage()
-                    self.finish("FFMPEG not installed.")
+                    alert('The FFMPEG media encoder must be installed in order to export condensedAudio.\n\nIn order to install FFMPEG please enable MP3 Conversion in the Dictionary Settings window and click \'Apply\'.\nFFMPEG will then be downloaded and installed automatically.')
+                    removeCondensedAudioInProgressMessage()
+                    self.finish('FFMPEG not installed.')
                 return
-        self.finish("Invalid Request")
 
-    def handleAudioFileInRequestAndReturnFilename(self, copyFileFunction, timestamp):
-        if "audio" in self.request.files:
-            audioFile = self.request.files['audio'][0]
-            audioFileName = audioFile["filename"]
-            copyFileFunction(audioFile, audioFileName, timestamp)
-            return audioFileName
-        else:
-            return False
+        self.finish('Invalid Request')
 
-    def copyFileToCondensedAudioDir(self, file, filename, timestamp):
-        directoryPath = join(self.tempDirectory, timestamp)
-        if not exists(directoryPath):
-            os.mkdir(directoryPath)
-        filePath = join(directoryPath, filename)
-        fh = open(filePath, 'wb')
-        fh.write(file['body'])
+
+    def handle_request_audio_file(self, copy_file_func, timestamp):
+        if 'audio' in self.request.files:
+            audio_file = self.request.files['audio'][0]
+            audio_file_name = audio_file['filename']
+            copy_file_func(audio_file, audio_file_name, timestamp)
+
+
+    def copy_file_to_condensed_audio_dir(self, file, filename, timestamp):
+        directory_path = util.tmp_path(timestamp)
+        os.makedirs(directory_path, exist_ok=True)
+        file_path = os.path.join(directory_path, filename)
+        with open(file_path, 'wb') as f:
+            f.write(file['body'])
+
+
+def alert(msg: str):
+    aqt.mw.taskman.run_on_main(
+        util.show_into(msg, 'Condensed Audio Export')
+    )
+
+
+def add_condensed_audio_progress_msg():
+    aqt.mw.taskman.run_on_main(
+        lambda: aqt.mw.progress.start(
+            label='Exporting Condensed Audio',
+        )
+    )
+
+def removeCondensedAudioInProgressMessage():
+    aqt.mw.taskman.run_on_main(
+        lambda: aqt.mw.progress.finish()
+    )
