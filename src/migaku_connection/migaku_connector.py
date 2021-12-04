@@ -6,6 +6,8 @@ import aqt
 
 class MigakuConnector(tornado.websocket.WebSocketHandler):
 
+    DEBUG = True
+
     def open(self):
         self.connection = self.application.settings['connection']
         self.connection._set_connector(self)
@@ -18,9 +20,11 @@ class MigakuConnector(tornado.websocket.WebSocketHandler):
 
     def on_message(self, message):
         data = json.loads(message)
-        print('<<<', data)
+        if self.DEBUG:
+            print('<<<', data)
         self.connection._recv_data(data)
 
     def send_data(self, data):
-        print('>>>', data)
+        if self.DEBUG:
+            print('>>>', data)
         self.write_message(json.dumps(data, ensure_ascii=False))

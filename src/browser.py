@@ -4,7 +4,7 @@ from aqt.browser import Browser
 
 from .add_remove_syntax_dialog import AddRemoveSyntaxDialog
 from .card_type_change_dialog import CardTypeChangeDialog
-
+from .definition_add_dialog import DefinitionAddDialog
 
 def setup_browser_menu(browser: Browser):
     browser.form.menuEdit.addSeparator()
@@ -26,6 +26,13 @@ def setup_browser_menu(browser: Browser):
         lambda: CardTypeChangeDialog.show_modal(browser.selectedNotes(), browser)
     )
     browser.form.menuEdit.addAction(card_type_action)
+
+    definitions_action = QAction('Generate Definitions', browser)
+    definitions_action.triggered.connect(
+        lambda: DefinitionAddDialog.show_modal(browser.selectedNotes(), browser)
+    )
+    browser.form.menuEdit.addAction(definitions_action)
+
 
 
 aqt.gui_hooks.browser_menus_did_init.append(setup_browser_menu)

@@ -23,9 +23,17 @@ class CardCreator(MigakuHTTPHandler):
 
 
     def post(self):
+
         if not self.check_version():
             self.finish('Card could not be created: Version mismatch')
             return
+
+        msg_id = self.get_body_argument('id', default=None)
+        if not msg_id is None:
+            try:
+                msg_id = int(msg_id)
+            except ValueError:
+                msg_id = None
 
         received_audio = self.get_body_argument('Migaku-Deliver-Audio', default=None)
         if received_audio:
@@ -37,7 +45,7 @@ class CardCreator(MigakuHTTPHandler):
             self.handle_no_audio_results()
             return
 
-        received_data = self.get_body_argument('Migaku-Accept-Data', default=False)
+        received_data = self.get_body_argument('Migaku-Accept-Data', default=None)
         if received_data:
             self.handle_data_from_card_creator(received_data)
             return
@@ -47,9 +55,14 @@ class CardCreator(MigakuHTTPHandler):
             self.search_note_id(note_id)
             return
 
-        card = self.get_body_argument('card', default=False)
+        card = self.get_body_argument('card', default=None)
         if card:
             self.create_card(card)
+            return
+
+        definitions = self.get_body_argument('Migaku-Deliver-Definitions', default=None)
+        if definitions and not msg_id is None:
+            self.handle_definitions(msg_id, definitions)
             return
 
         self.finish('Invalid request.')
@@ -88,6 +101,18 @@ class CardCreator(MigakuHTTPHandler):
         self.handle_files(self.request.files, convert_to_mp3)
 
         self.finish(json.dumps({'id': note.id}))
+
+
+    def handle_definitions(self, msg_id, definition_data):
+        definitions = json.loads(definition_data)
+        convert_to_mp3 = config.get('convert-to-mp3', False)
+        self.handle_files(self.request.files, convert_to_mp3)
+        self.connection._recv_data({
+            'id': msg_id,
+            'msg': 'Migaku-Deliver-Definitions',
+            'data': definitions
+        })
+        self.finish('Received defintions from card creator.')
 
 
     def move_file_to_media_dir(self, file_body, filename):

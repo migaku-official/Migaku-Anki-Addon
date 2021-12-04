@@ -502,19 +502,41 @@ function syntaxToNodes(syntax, field_settings) {
     });
 }
 
-function handleFieldTextNodes(node, field_settings) {
+function handleFieldTextNodes(node, field_settings, in_curly={ value: false }) {
     if (node.nodeType == Node.TEXT_NODE) {
-        const text = node.textContent;
+        let text = node.textContent;
+
+        // Handle curly braces spanning across tags (ugly, ugly, ugly)
+        if (in_curly.value) {
+            text = '{' + text;
+        }
+        for (let i = text.length-1; i >= 0; i--) {
+            if (text[i] == '}') {
+                in_curly.value = false;
+                break
+            }
+            else if (text[i] == '{') {
+                in_curly.value = true;
+                break
+            }
+        }
+        if (in_curly.value) {
+            text = text + '}';
+        }
+
         const syntax = parseSyntax(text);
         const nodes = syntaxToNodes(syntax, field_settings);
+        
+        const replacement_node = document.createElement('span');
+        node.parentNode.insertBefore(replacement_node, node);
         for (const child of nodes) {
-            node.parentNode.insertBefore(child, node);
+            replacement_node.appendChild(child);
         }
         node.parentNode.removeChild(node);
     }
     else {
-        for (let i = node.childNodes.length - 1; i >= 0; i--) {
-            handleFieldTextNodes(node.childNodes[i], field_settings);
+        for (let i =  0; i < node.childNodes.length; i++) {
+            handleFieldTextNodes(node.childNodes[i], field_settings, in_curly);
         }
     }
 }

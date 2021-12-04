@@ -163,7 +163,7 @@ class MigakuConnection(QObject):
         self.connector_lock.lock()
         if self.connector == connector:
             self.connector = None
-            for msg_handler in self.msg_handlers:
+            for msg_handler in self.msg_handlers.values():
                 msg_handler.error('Browser Extension disconnected.')
             self.disconnected.emit()
         self.connector_lock.unlock()
@@ -188,6 +188,10 @@ class MigakuConnection(QObject):
 
                 if msg == 'Migaku-Deliver-Syntax':
                     card_data = data.get('data', {}).get('cardArray')
+                    msg_handler.done(card_data)
+
+                elif msg == 'Migaku-Deliver-Definitions':
+                    card_data = data.get('data', {})
                     msg_handler.done(card_data)
 
     def is_connected(self) -> bool:
@@ -236,6 +240,24 @@ class MigakuConnection(QObject):
                 'readingType': alternate_reading,
                 'cardArray': data
             }
+        })
+
+    @with_connector_msg_callback
+    def request_definitions(self, cards, lang_code, alternate_reading=False, msg_id=None):
+
+        idx = lang_code.find('_')
+        if idx >= 0:
+            lang_code = lang_code[:idx]
+
+        self.connector.send_data({
+            'msg': 'Migaku-Request-Definitions',
+            'data': {
+                'languageCode': lang_code,
+                'readingType': alternate_reading,
+                'cardIdWords': cards,
+                'syntax': True
+            },
+            'id': msg_id
         })
 
 
