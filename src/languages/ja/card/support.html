@@ -206,6 +206,7 @@ function parseSyntax(text) {
     let ret = [];
 
     const syntax_re = new RegExp(/{([^]*?)}|((\S*)\[(.*?)\](\S*))|([^ {]+)/gm);
+    const punctuation_re = new RegExp(/[\u3000-\u3003\u3005-\u303F（）［］｛｝｟｠｡｢｣､･]/m);
     
     var match;
     do {
@@ -230,9 +231,28 @@ function parseSyntax(text) {
                     const dict_form = first_parts[1] || '';
                     const pitch_accents = braket_parts[1].split(',');
 
+                    const pre_text_match = match[3];
+
+                    let i = pre_text_match.length;
+                    while (i > 0) {
+                        if (punctuation_re.test(pre_text_match[i-1])) {
+                            break;
+                        }
+                        i--;
+                    }
+
+                    if (i > 0) {
+                        ret.push({
+                            type: 'plain',
+                            text: pre_text_match.substring(0, i)
+                        });
+                    }
+
+                    const pre_text = pre_text_match.substring(i);
+
                     ret.push({
                         type: 'syntax',
-                        word_pre: match[3],
+                        word_pre: pre_text,
                         word_post: match[5],
                         reading: reading,
                         dict_form: dict_form,
