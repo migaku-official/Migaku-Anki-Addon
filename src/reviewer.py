@@ -38,7 +38,7 @@ def init_reviewer_buttons(buttons_tuple, reviewer, card):
 
     button_count = reviewer.mw.col.sched.answerButtons(card)
 
-    pass_fail = config.get('pass_fail', True)
+    pass_fail = config.get('reviewer_pass_fail', True)
 
     if button_count == 2:
         buttons_tuple = (
@@ -80,7 +80,7 @@ aqt.gui_hooks.reviewer_will_init_answer_buttons.append(init_reviewer_buttons)
 def reviewer_mod_answer_ease(self, ease):
     button_count = self.mw.col.sched.answerButtons(self.card)
 
-    pass_fail = config.get('pass_fail', True)
+    pass_fail = config.get('reviewer_pass_fail', True)
 
     if pass_fail:
         if button_count == 3:
