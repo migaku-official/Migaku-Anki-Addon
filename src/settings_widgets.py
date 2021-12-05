@@ -47,16 +47,28 @@ class SettingsWidget(QWidget):
         if self.BOTTOM_STRETCH:
             self.lyt.addStretch()
 
-    def init_ui(self):
+    def init_ui(self) -> None:
         pass
 
-    def save(self):
+    def save(self) -> None:
         pass
     
     @classmethod
-    def wizard_page(cls, parent=None, is_tutorial=True):
+    def wizard_page(cls, parent=None, is_tutorial=True) -> WizardPage:
         return cls.WizardPage(cls, parent, is_tutorial)
 
+    @classmethod
+    def make_label(cls, text: str) -> QLabel:
+        lbl = QLabel(text)
+        lbl.setWordWrap(True)
+        lbl.setTextInteractionFlags(Qt.TextBrowserInteraction)
+        lbl.linkActivated.connect(aqt.utils.openLink)
+        return lbl
+
+    def add_label(self, text: str) -> QLabel:
+        lbl = self.make_label(text)
+        self.lyt.addWidget(lbl)
+        return lbl
 
 
 class AboutWidget(SettingsWidget):
@@ -64,6 +76,7 @@ class AboutWidget(SettingsWidget):
     TITLE = 'About'
 
     def init_ui(self):
+
         lbl = QLabel(
             F'<h2>Migaku Anki - {VERSION_STRING}</h2>'
 
@@ -90,7 +103,8 @@ class WelcomeWidget(SettingsWidget):
     def init_ui(self):
         welcome_lbl = QLabel('Migaku Anki provieds all features you need to optimally learn languages with Anki and Migaku.<br><br>'
                              'This setup will give you a quick overview over the featureset and explain how to use it.<br><br>'
-                             'Let\'s go!<br>')
+                             'Let\'s go!<br><br>'
+                             'You can always later see this guide and the settings by clicking <i>Migaku > Settings/Help</i>.')
         welcome_lbl.setWordWrap(True)
         self.lyt.addWidget(welcome_lbl)
 
@@ -119,12 +133,15 @@ class LanguageWidget(SettingsWidget):
         self.lang_list.clear()
 
         for lang in Languages:
+            is_installed = note_type_mgr.is_installed(lang)
             text = lang.name_en
             if lang.name_native and lang.name_native != lang.name_en:
                 text += F' ({lang.name_native})'
             item = QListWidgetItem(text)
             item.setData(Qt.UserRole, lang.code)
-            item.setCheckState(Qt.Checked if note_type_mgr.is_installed(lang) else Qt.Unchecked)
+            item.setCheckState(Qt.Checked if is_installed else Qt.Unchecked)
+            if is_installed:
+                item.setFlags(item.flags() & ~(Qt.ItemIsEnabled | Qt.ItemIsSelectable))
             self.lang_list.addItem(item)
 
     def save(self):
@@ -134,6 +151,7 @@ class LanguageWidget(SettingsWidget):
             if item.checkState() == Qt.Checked:
                 lang = Languages[lang_code]
                 note_type_mgr.install(lang)
+        self.setup_langs()
 
 
 class ExtensionWidget(SettingsWidget):
@@ -239,9 +257,6 @@ class InplaceEditorWidget(SettingsWidget):
 
     def init_ui(self):  
 
-        lyt = QVBoxLayout()
-        self.setLayout(lyt)
-
         lbl1 = QLabel('With Migaku Anki you can edit your flash cards during your reviews.<br><br>'
                       'To do so simply double click any field on your card. A cursor will appear and you can freely edit the field and even paste images and audio files. '
                       'Simply click out of the field to finish editing.<br><br>'
@@ -259,19 +274,32 @@ class ReviewWidget(SettingsWidget):
 
     TITLE = 'Review Settings'
 
-    def init_ui(self):  
+    def init_ui(self):
 
-        lyt = QVBoxLayout()
-        self.setLayout(lyt)
+        self.add_label(
+            'By default Anki allows grading cards as Again, Hard, Good and Easy.<br>'
+            'The hard and easy buttons can lead unnecessarily long grading descision times as well to permanently seeing cards too often/little.<br>'
+            'Enabling Pass/Fail will remove those buttons.'
+        )
 
-        lbl1 = QLabel('TODO')
-        lbl1.setWordWrap(True)
-        self.lyt.addWidget(lbl1)
-
-        pass_fail = QCheckBox('Pass/Fail')
-        pass_fail.setChecked(config.get('review_pass_fail', True))
-        pass_fail.stateChanged.connect(lambda state: config.set('review_pass_fail', state == Qt.Checked))
+        pass_fail = QCheckBox('Enable Pass/Fail (Recommended)')
+        pass_fail.setChecked(config.get('reviewer_pass_fail', True))
+        pass_fail.stateChanged.connect(lambda state: config.set('reviewer_pass_fail', state == Qt.Checked))
         self.lyt.addWidget(pass_fail)
+
+        self.add_label('<hr>')
+
+        self.add_label(
+            'The negative effects of the ease factor can be prevented by fixing the ease factor (how difficult a card is considered) in place.<br>'
+            'This option will prevent those effects if you want to use the Easy/Hard buttons and fixes negative effects caused in the past.'
+        )
+
+        pass_fail = QCheckBox('Maintain Ease Factor (Recommended)')
+        pass_fail.setChecked(config.get('maintain_ease', True))
+        pass_fail.stateChanged.connect(lambda state: config.set('maintain_ease', state == Qt.Checked))
+        self.lyt.addWidget(pass_fail)
+
+        self.add_label('<hr>')
 
         colored_buttons = QCheckBox('Colored Grading Buttons')
         colored_buttons.setChecked(config.get('reviewer_button_coloring', True))
@@ -301,4 +329,5 @@ TUTORIAL_WIDGETS = [
     SyntaxWidget,
     SyntaxAddRemoveWidget,
     InplaceEditorWidget,
+    ReviewWidget,
 ]
