@@ -1,9 +1,9 @@
 from .migaku_http_handler import MigakuHTTPHandler
-from os.path import join, exists
 import time
 import subprocess
 from anki.notes import Note
 import json
+import os
 
 
 import re
@@ -77,16 +77,13 @@ class CardCreator(MigakuHTTPHandler):
 
         note = Note(aqt.mw.col, note_type)
 
-        convert_to_mp3 = config.get('convert-to-mp3', False)
+        convert_to_mp3 = config.get('convert_audio_mp3', False)
 
         for field in card_data['fields']:
             if 'content' in field and field['content']:
                 content = field['content']
                 field_name = field['name']
-
-                if convert_to_mp3:
-                    content = self.convert_to_mp3(content)
-
+                content = self.post_process_text(content)
                 note[field_name] = content
 
         tags = card_data.get('tags')
@@ -98,15 +95,14 @@ class CardCreator(MigakuHTTPHandler):
         aqt.mw.col.save()
         aqt.mw.taskman.run_on_main(aqt.mw.reset)
 
-        self.handle_files(self.request.files, convert_to_mp3)
+        self.handle_files(self.request.files)
 
         self.finish(json.dumps({'id': note.id}))
 
 
     def handle_definitions(self, msg_id, definition_data):
         definitions = json.loads(definition_data)
-        convert_to_mp3 = config.get('convert-to-mp3', False)
-        self.handle_files(self.request.files, convert_to_mp3)
+        self.handle_files(self.request.files)
         self.connection._recv_data({
             'id': msg_id,
             'msg': 'Migaku-Deliver-Definitions',
@@ -127,7 +123,7 @@ class CardCreator(MigakuHTTPHandler):
             file_handle.write(file_body)
 
 
-    def handle_files(self, file_dict, convert_to_mp3):
+    def handle_files(self, file_dict):
 
         if file_dict:
 
@@ -142,19 +138,19 @@ class CardCreator(MigakuHTTPHandler):
                     self.move_file_to_media_dir(file_body, file_name)
 
                 elif suffix in self.audio_formats:
-                    self.handleAudioFile(file_body, file_name, suffix, convert_to_mp3)
+                    self.handleAudioFile(file_body, file_name, suffix)
 
 
-    def handleAudioFile(self, file, filename, suffix, convert_to_mp3):
-        if convert_to_mp3 and suffix != 'mp3':
+    def handleAudioFile(self, file, filename, suffix):
+        if config.get('convert_audio_mp3', True) and suffix != 'mp3':
             print("converting to mp3")
             self.move_file_to_tmp_dir(file, filename)
-            audioTempPath = join(self.tempDirectory, filename)
-            if not self.checkFileExists(audioTempPath):
-                self.alert(filename + " could not be converted to an mp3.")
+            audio_temp_path = util.tmp_path(filename)
+            if not self.checkFileExists(audio_temp_path):
+                alert(filename + " could not be converted to an mp3.")
                 return
             filename = filename[0:-3] + "mp3"
-            self.moveExtensionMp3ToMediaFolder(audioTempPath, filename)
+            self.moveExtensionMp3ToMediaFolder(audio_temp_path, filename)
 
         else:
             print("moving audio file")
@@ -164,14 +160,14 @@ class CardCreator(MigakuHTTPHandler):
     def checkFileExists(self, source):
         now = time.time()
         while True:
-            if exists(source):
+            if os.path.exists(source):
                 return True
             if time.time() - now > 15:
                 return False
 
 
     def moveExtensionMp3ToMediaFolder(self, source, filename):
-        path = join(aqt.mw.col.media.dir(), filename)
+        path = util.col_media_path(filename)
         self.connection.ffmpeg.call('-i', source, path)
 
 
@@ -190,7 +186,7 @@ class CardCreator(MigakuHTTPHandler):
         text = data['text']
         templates = data['templates']
 
-        convert_to_mp3 = config.get('convert-to-mp3', False)
+        convert_to_mp3 = config.get('convert_audio_mp3', False)
         if convert_to_mp3:
             text = self.text_sound_to_mp3(text)
 
@@ -217,7 +213,7 @@ class CardCreator(MigakuHTTPHandler):
         if not field_name:
             return 'No field for data_type found for current note'
 
-        self.handle_files(self.request.files, convert_to_mp3)
+        self.handle_files(self.request.files)
 
         field_contents = note[field_name].rstrip()
         if field_contents:
@@ -238,8 +234,7 @@ class CardCreator(MigakuHTTPHandler):
 
 
     def handle_audio_delivery(self, text):
-        convert_to_mp3 = config.get('convert-to-mp3', False)
-        self.handle_files(self.request.files, convert_to_mp3)
+        self.handle_files(self.request.files)
         print('Audio was received by anki.')
         print(text)
         self.finish('Audio was received by anki.')
@@ -256,11 +251,20 @@ class CardCreator(MigakuHTTPHandler):
             lambda: util.open_browser(search_str)
         )
 
-    def text_sound_to_mp3(self, text):
-        def conv(match):
+    def post_process_text(self, text):
+        def conv_mp3(match):
             return '[sound:' + match.group(1) + '.mp3]'
 
-        return self.TO_MP3_RE.sub(conv, text)
+        if config.get('convert_audio_mp3', True):
+            text =  self.TO_MP3_RE.sub(conv_mp3, text)
+
+        return text
+
+
+def alert(msg: str):
+    aqt.mw.taskman.run_on_main(
+        util.show_into(msg, 'Condensed Audio Export')
+    )
 
 
 

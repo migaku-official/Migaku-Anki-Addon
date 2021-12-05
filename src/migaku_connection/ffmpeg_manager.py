@@ -34,7 +34,7 @@ class FFmpegManager(aqt.qt.QObject):
     
     def call(self, *args, **kwargs):
         assert self.is_available()
-        return subprocess.call([self.ffmpeg_path, *args], kwargs)
+        return subprocess.call([self.ffmpeg_path, *args], **kwargs)
 
 
     def make_avaialble(self):

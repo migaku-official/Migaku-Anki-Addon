@@ -278,7 +278,7 @@ class ReviewWidget(SettingsWidget):
 
         self.add_label(
             'By default Anki allows grading cards as Again, Hard, Good and Easy.<br>'
-            'The hard and easy buttons can lead unnecessarily long grading descision times as well to permanently seeing cards too often/little.<br>'
+            'The hard and easy buttons can lead to unnecessarily long grading descision times as well to permanently seeing cards too often/little.<br>'
             'Enabling Pass/Fail will remove those buttons.'
         )
 
@@ -310,6 +310,22 @@ class ReviewWidget(SettingsWidget):
         config.write()
 
 
+class MediaFileWidget(SettingsWidget):
+
+    TITLE = 'Media Files'
+
+    def init_ui(self):
+        self.add_label(
+            'Audio files imported via the Browser Extension can be in many formats, some of which cannot be played by some versions of Anki or have a very large file size.<br>'
+            'The option below will convert all media files exported from the Browser Extension to the MP3 format.'
+        )
+
+        convert_audio_mp3 = QCheckBox('Convert audio files to MP3 (Recommended)')
+        convert_audio_mp3.setChecked(config.get('convert_audio_mp3', True))
+        convert_audio_mp3.stateChanged.connect(lambda state: config.set('convert_audio_mp3', state == Qt.Checked))
+        self.lyt.addWidget(convert_audio_mp3)
+
+
 SETTINGS_WIDGETS = [
     AboutWidget,
     LanguageWidget,
@@ -319,6 +335,7 @@ SETTINGS_WIDGETS = [
     SyntaxAddRemoveWidget,
     InplaceEditorWidget,
     ReviewWidget,
+    MediaFileWidget,
 ]
 
 TUTORIAL_WIDGETS = [
