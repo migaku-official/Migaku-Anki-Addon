@@ -1,6 +1,7 @@
 import sys
 import os
 import aqt
+from aqt.qt import *
 import anki
 
 
@@ -39,8 +40,16 @@ from . import (
     browser,
     welcome_wizard,
     global_hotkeys,
-    #simplify
+    settings_window
 )
 
 
 from . import migaku_connection
+
+
+def setup_menu():
+    menu = QMenu('Migaku', aqt.mw)
+    menu.addAction(settings_window.action)
+    aqt.mw.form.menubar.insertMenu(aqt.mw.form.menuHelp.menuAction(), menu)  
+
+setup_menu()
