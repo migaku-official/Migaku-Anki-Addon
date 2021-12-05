@@ -10,6 +10,7 @@ from aqt.qt import *
 from aqt.utils import isMac, isWin
 
 from . import config
+from . import util
 
 
 class KeySequence:
@@ -142,10 +143,11 @@ class KeyboardHandler(QObject):
 class HotkeyHandlerBase(QObject):
 
     hotkeys = [
-        ('open_dict',       KeySequence('f', KeySequence.Ctrl | KeySequence.Alt), 'Open dictionary'),
-        ('search_dict',     KeySequence('d', KeySequence.Ctrl | KeySequence.Alt), 'Search selected text in dictionary'),
-        ('set_sentence',    KeySequence('s', KeySequence.Ctrl | KeySequence.Alt), 'Send sentence to card exporter'),
-        ('add_definition',  KeySequence('g', KeySequence.Ctrl | KeySequence.Alt), 'Send definition to card exporter'),
+        ('open_dict',         KeySequence('f', KeySequence.Ctrl | KeySequence.Alt), 'Open dictionary'),
+        ('search_dict',       KeySequence('d', KeySequence.Ctrl | KeySequence.Alt), 'Search selected text in dictionary'),
+        ('set_sentence',      KeySequence('s', KeySequence.Ctrl | KeySequence.Alt), 'Send sentence to card exporter'),
+        ('add_definition',    KeySequence('g', KeySequence.Ctrl | KeySequence.Alt), 'Send definition to card exporter'),
+        ('search_collection', KeySequence('b', KeySequence.Ctrl | KeySequence.Alt), 'Search selected text in card collection'),
     ]
 
     def __init__(self, parent=None):
@@ -171,7 +173,7 @@ class HotkeyHandlerBase(QObject):
         if action == 'open_dict':
             aqt.mw.migaku_connection.open_dict()
             self.focus_dictionary()
-        if action in ['search_dict', 'set_sentence', 'add_definition']:
+        if action in ['search_dict', 'set_sentence', 'add_definition', 'search_collection']:
             self.request_seltected_text(action)
 
     def request_seltected_text(self, action):
@@ -209,6 +211,8 @@ class HotkeyHandlerBase(QObject):
         elif action == 'add_definition':
             aqt.mw.migaku_connection.add_definition(text)
             self.focus_dictionary()
+        elif action == 'search_collection':
+            util.open_browser(text)
 
     def focus_dictionary(self):
         # Implemented in derived classes if required
