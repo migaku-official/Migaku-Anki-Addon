@@ -48,7 +48,7 @@ function editable_field_deactivated() {
     const should_reload =
         (this.parentElement &&                                   // Field with syntax
          this.parentElement.classList.contains('field') &&
-         new_content.includes('[')) ||
+         (new_content.includes('[') || new_content.includes('{'))) ||
         new_content.includes('[sound:') ||                       // Sound
         new_content.match(/\{\{c\d+::.*?\}\}/g);                 // Cloze
 

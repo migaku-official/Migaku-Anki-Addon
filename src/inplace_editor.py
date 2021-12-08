@@ -96,10 +96,12 @@ def handle_inplace_edit(reviewer: Reviewer, message: str):
             note[field_name] = new_field_content
 
         note.flush()
-        reviewer.card.load()
 
-        if should_reload or config.get('inplace_editor_always_reload', False):
-            reviewer_reshow(reviewer, mute=True, reload_card=False)
+        if reviewer.mw.state == 'review' and reviewer.card:
+            reviewer.card.load()
+
+            if should_reload or config.get('inplace_editor_always_reload', False):
+                reviewer_reshow(reviewer, mute=True, reload_card=False)
 
     if command == 'inplace-edit-submit':
         should_reload = message_parts[3] == 'true'
