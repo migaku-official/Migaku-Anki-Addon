@@ -45,9 +45,9 @@ anki.hooks.field_filter.append(apply_edit_filter)
 # Inject JS into reviewer and init editable fields when card side is shown
 
 def show_empty_fields_js():
-    show_empty_fields = config.get('inplace_editor_show_empty_fields', True)
+    show_empty_fields = config.get('inplace_editor_show_empty_fields', False)
     value = 'true' if show_empty_fields else 'false'
-    return F'document.querySelector("#qa").classList.toggle("show-empty-editable-field", {value});'
+    return F'try {{ document.querySelector("#qa").classList.toggle("show-empty-editable-field", {value}); }} catch (e) {{ }}'
 
 def update_show_empty_fields():
     aqt.mw.reviewer.web.eval(show_empty_fields_js())

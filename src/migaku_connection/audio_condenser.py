@@ -24,7 +24,7 @@ class AudioCondenser(MigakuHTTPHandler):
     def condense_audio(self, filename, timestamp):
         segments_dir = util.tmp_path(timestamp)
         if os.path.exists(segments_dir):
-            condensed_dir = config.get('condensed-audio-dir')
+            condensed_dir = config.get('condensed_audio_dir')
             
             segment_names = [f for f in os.listdir(segments_dir)]
             segment_names.sort()
@@ -61,15 +61,15 @@ class AudioCondenser(MigakuHTTPHandler):
                 if not filename:
                     filename = timestamp
                 self.condense_audio(filename, timestamp)
-                removeCondensedAudioInProgressMessage()
+                remove_condensed_audio_pogress_message()
                 self.finish('Condensing finished.')
                 return
 
             else:
-                condensed_dir = config.get('condensed-audio-dir')
+                condensed_dir = config.get('condensed_audio_dir')
                 if not condensed_dir:
                     alert('You must specify a Condensed Audio Save Location.\n\nYou can do this by:\n1. Navigating to Migaku->Dictionary Settings in Anki\'s menu bar.\n2. Clicking \'Choose Directory\' for the \'Condensed Audio Save Location\'  in the bottom right of the settings window.')
-                    removeCondensedAudioInProgressMessage()
+                    remove_condensed_audio_pogress_message()
                     self.finish('Save location not set.')
                 elif self.can_condense():
                     self.handle_request_audio_file(self.copy_file_to_condensed_audio_dir, timestamp)
@@ -77,7 +77,7 @@ class AudioCondenser(MigakuHTTPHandler):
                     self.finish('Exporting Condensed Audio')
                 else:
                     alert('The FFMPEG media encoder must be installed in order to export condensedAudio.\n\nIn order to install FFMPEG please enable MP3 Conversion in the Dictionary Settings window and click \'Apply\'.\nFFMPEG will then be downloaded and installed automatically.')
-                    removeCondensedAudioInProgressMessage()
+                    remove_condensed_audio_pogress_message()
                     self.finish('FFMPEG not installed.')
                 return
 
@@ -112,7 +112,7 @@ def add_condensed_audio_progress_msg():
         )
     )
 
-def removeCondensedAudioInProgressMessage():
+def remove_condensed_audio_pogress_message():
     aqt.mw.taskman.run_on_main(
         lambda: aqt.mw.progress.finish()
     )

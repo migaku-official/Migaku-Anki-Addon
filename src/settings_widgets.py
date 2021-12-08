@@ -255,19 +255,32 @@ class InplaceEditorWidget(SettingsWidget):
 
     TITLE = 'Inplace Editor'
 
-    def init_ui(self):  
+    def init_ui(self):
 
-        lbl1 = QLabel('With Migaku Anki you can edit your flash cards during your reviews.<br><br>'
-                      'To do so simply double click any field on your card. A cursor will appear and you can freely edit the field and even paste images and audio files. '
-                      'Simply click out of the field to finish editing.<br><br>'
-                      'If you want to add editing support to your own note types add the "editable" filter before the field names:')
-        lbl1.setWordWrap(True)
-        self.lyt.addWidget(lbl1)
+        self.add_label(
+            'With Migaku Anki you can edit your flash cards during your reviews.<br><br>'
+            'To do so simply double click any field on your card. A cursor will appear and you can freely edit the field and even paste images and audio files. '
+            'Simply click out of the field to finish editing.<br><br>'
+            'If you want to add editing support to your own note types add the "editable" filter before the field names:'
+        )
 
-        lbl2 = QLabel('{{ExampleField}} -> {{editable:ExampleField}}')
-        lbl2.setStyleSheet('background-color:#202020; color:#F8F8F8;')
-        lbl2.setWordWrap(True)
-        self.lyt.addWidget(lbl2)
+        lbl = QLabel('{{ExampleField}} -> {{editable:ExampleField}}')
+        lbl.setStyleSheet('background-color:#202020; color:#F8F8F8;')
+        lbl.setWordWrap(True)
+        self.lyt.addWidget(lbl)
+
+        self.add_label('')
+
+        self.add_label('By enabling the following option you can also edit empty fields on your cards:')
+
+        show_empty_fields = QCheckBox('Show empty fields')
+        show_empty_fields.setChecked(config.get('inplace_editor_show_empty_fields', False))
+        show_empty_fields.stateChanged.connect(lambda state: config.set('inplace_editor_show_empty_fields', state == Qt.Checked))
+        self.lyt.addWidget(show_empty_fields)
+
+    def save(self):
+        from .inplace_editor import update_show_empty_fields
+        update_show_empty_fields()
 
 
 class ReviewWidget(SettingsWidget):
@@ -326,6 +339,29 @@ class MediaFileWidget(SettingsWidget):
         self.lyt.addWidget(convert_audio_mp3)
 
 
+class CondensedAudioWidget(SettingsWidget):
+
+    TITLE = 'Condensed Audio'
+
+    def init_ui(self):
+        self.add_label(
+            'Condensed audio exported from the Browser Extension will be exported to the following folder:'
+        )
+
+        self.dir_label = QLabel(config.get('condensed_audio_dir', 'None'))
+        self.lyt.addWidget(self.dir_label)
+
+        btn = QPushButton('Change')
+        btn.clicked.connect(self.change_dir)
+        self.lyt.addWidget(btn)
+
+    def change_dir(self):
+        new_dir = QFileDialog.getExistingDirectory(self, 'Choose Directory')
+        if dir:
+            config.set('condensed_audio_dir', new_dir)
+            self.dir_label.setText(new_dir)
+
+
 SETTINGS_WIDGETS = [
     AboutWidget,
     LanguageWidget,
@@ -336,6 +372,7 @@ SETTINGS_WIDGETS = [
     InplaceEditorWidget,
     ReviewWidget,
     MediaFileWidget,
+    CondensedAudioWidget,
 ]
 
 TUTORIAL_WIDGETS = [
