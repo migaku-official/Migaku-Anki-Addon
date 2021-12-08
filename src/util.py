@@ -52,7 +52,7 @@ def default_icon():
 
 
 
-def show_into(text: str, title: str = 'Migaku', parent: Optional[QWidget] = None) -> int:
+def show_info(text: str, title: str = 'Migaku', parent: Optional[QWidget] = None) -> int:
     return show_msg_box(text, title, parent, QMessageBox.Information)
 
 
@@ -62,6 +62,10 @@ def show_warning(text: str, title: str = 'Migaku', parent: Optional[QWidget] = N
 
 def show_critical(text: str, title: str = 'Migaku', parent: Optional[QWidget] = None) -> int:
     return show_msg_box(text, title, parent, QMessageBox.Critical)
+
+
+def show_question(text: str, title: str = 'Migaku', parent: Optional[QWidget] = None) -> int:
+    return show_msg_box(text, title, parent, QMessageBox.Question, QMessageBox.Yes | QMessageBox.No)
 
 
 def show_msg_box(text: str, title: str = 'Migaku', parent: Optional[QWidget] = None, icon: QMessageBox.Icon = QMessageBox.NoIcon, buttons: Optional[List[QMessageBox.StandardButton]] = None) -> int:

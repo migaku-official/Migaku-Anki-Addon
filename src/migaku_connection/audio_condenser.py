@@ -101,7 +101,7 @@ class AudioCondenser(MigakuHTTPHandler):
 
 def alert(msg: str):
     aqt.mw.taskman.run_on_main(
-        util.show_into(msg, 'Condensed Audio Export')
+        util.show_info(msg, 'Condensed Audio Export')
     )
 
 
