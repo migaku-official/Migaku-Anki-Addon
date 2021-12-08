@@ -245,7 +245,7 @@ class SyntaxAddRemoveWidget(SettingsWidget):
         lbl2.setPixmap(util.make_pixmap('syntax_buttons_example.png'))
         self.lyt.addWidget(lbl2)
 
-        lbl3 = QLabel('<br>Make sure the browser extension is connected when using this features.<br><br>'
+        lbl3 = QLabel('<br>Make sure the browser extension is connected when using these features.<br><br>'
                       'To remove syntax either press F4 or press the right button.')
         lbl3.setWordWrap(True)
         self.lyt.addWidget(lbl3)
