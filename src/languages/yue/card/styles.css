@@ -3,6 +3,11 @@
     src: url("_NotoSerifTC-Regular.otf");
 }
 
+@font-face {
+    font-family: cardFontAlt;
+    src: url("_NotoSerifSC-Regular.otf");
+}
+
 body {
     margin: 0px;
     padding: 0px;
