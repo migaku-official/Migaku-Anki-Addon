@@ -206,7 +206,7 @@ function parseSyntax(text) {
     let ret = [];
 
     const syntax_re = new RegExp(/{([^]*?)}|((\S*)\[(.*?)\](\S*))|([^ {]+)/gm);
-    const punctuation_re = new RegExp(/[\u3000-\u3003\u3005-\u303F（）［］｛｝｟｠｡｢｣､･]/m);
+    const ja_text_re = new RegExp(/[\u3041-\u3096\u30A0-\u30FF\u3400-\u4DB5\u4E00-\u9FCB\uF900-\uFA6A\u2E80-\u2FD5\uFF65-\uFF9F\々]/m);
     
     var match;
     do {
@@ -235,7 +235,7 @@ function parseSyntax(text) {
 
                     let i = pre_text_match.length;
                     while (i > 0) {
-                        if (punctuation_re.test(pre_text_match[i-1])) {
+                        if (!ja_text_re.test(pre_text_match[i-1])) {
                             break;
                         }
                         i--;
