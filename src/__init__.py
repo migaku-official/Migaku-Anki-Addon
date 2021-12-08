@@ -39,6 +39,7 @@ from . import (
     inplace_editor,
     click_play_audio,
     browser,
+    card_layout,
     welcome_wizard,
     global_hotkeys,
     settings_window
