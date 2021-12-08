@@ -1,162 +1,234 @@
 @font-face {
-    font-family: yumin;
-    src: url(_yumin.ttf);
+    font-family: cardFont;
+    src: url("_NotoSerif-Regular.otf");
 }
 
-.crad-wrapper {
-    position: relative;
+body {
+    margin: 0px;
+    padding: 0px;
 }
 
-.card-container {
-    display: flex;
-    flex-direction: column;
-    margin: 0 auto;
-    max-width: 1000px;
-    padding: 20px 20px;
-    text-align: center;
-    background-color: red;
+main.container {
+    margin: 0px;
+    padding: 0px;
+    width: 100vw;
 }
 
-.card, .card * {
+main.container #qa {
+    margin-top: 0px;
+}
+
+
+main.container .card {
+    min-height: calc(100vh - 240px);
+}
+
+
+main.container .card audio {
+    width: 150px;
+}
+
+#content {
+    margin: 0px;
+}
+
+.card,
+.card * {
     box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-    font-family: yumin, sans-serif;
+    padding: 0px;
+    margin: 0px;
+    font-family: cardFont, sans-serif;
+
 }
 
 .card {
     background: #e5f9ff;
+    font-size: 18px;
+    font-smooth: always;
+    color: rgb(40, 40, 50);
+    height: 100vh;
+    width: 100vw;
+}
+
+.migaku-header {
+    background: #2880ff;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.migaku-header h1 {
+    color: white;
+}
+
+.migaku-logo {
+    height: 35px;
+    margin: 5px;
 }
 
 .migaku-card {
     position: relative;
     background: white;
     width: 90vw;
-    max-width: 600px;
+    max-width: 650px;
     margin: 20px auto 50px;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
-}
-
-.migaku-card-content {
-    padding: 20px;
-}
-
-.migaku-card--front {
-    text-align: center;
-}
-
-.migaku-card--back {
-    text-align: center;
-}
-
-.migaku-word-front {
-    font-size: 32px;
-}
-
-.migaku-word-back {
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-.migaku-card-image img {
-    height: 250px;
-    width: 90vw;
-    max-width: 600px;
-    object-fit: cover;
-    border-top-right-radius: 10px;
-    border-top-left-radius: 10px;
-}
-
-.migaku-sentence, .migaku-translation, .migaku-definition, .migaku-typeselect {
-    width: 100%;
     text-align: left;
-    margin-top: 20px;
-    margin-bottom: 10px;
-    font-size: 16px;
-    line-height: 17px;
 }
 
-.migaku-sentence {
-    font-size: 25px;
-    line-height: 32px;
+.migaku-card-front .migaku-card-content {
+    padding: 20px;
+    text-align: center;
+    font-size: 22px;
 }
 
-.migaku-translation {
+.migaku-card-back .migaku-card-content {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    position: relative;
+}
+
+.migaku-indented {
+    margin-left: 5%;
+}
+
+.sentence-separator {
+    width: 100%;
+    margin: 15px 0px;
+    border-color: rgb(220, 220, 220);
+}
+
+.migaku-card-sentence {
+    font-size: 24px;
+    text-align: center;
+    width: 100%;
     margin-top: 10px;
-    margin-bottom: 10px;
 }
 
-.migaku-typeselect label {
-    white-space: nowrap;
+.migaku-card-unknown {
+    margin-top: 10px;
+    font-size: 24px;
 }
 
-.migaku-typeselect {
+.migaku-card-translation,
+.migaku-card-examples {
+    color: rgba(30, 30, 55, .7);
+}
+
+.migaku-card-translation, .migaku-card-sentence-audio {
+    text-align: center;
+    width: 100%;
+}
+
+.migaku-card-sentence-audio, .migaku-card-unknown-audio {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.migaku-card-sentence-audio {
+    justify-content: center;
+}
+
+.migaku-card-screenshot, .migaku-card-images {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    align-items: end;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    overflow: hidden;
+    justify-items: center;
+}
+
+.migaku-card-screenshot br, .migaku-card-images br {
     display: none;
 }
 
-.card-typeselect-available .migaku-typeselect {
-    display: block;
+.migaku-card-images {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    grid-gap: 5px;
+    grid-template-columns: auto auto auto auto;
+}
+
+.migaku-card-screenshot img {
+    max-width: 100%;
+    max-height: 365px;
+}
+
+.migaku-card-images img {
+    max-width: 100%;
+    max-height: 125px;
+
+}
+
+.migaku-card-examples {
+    margin-bottom: 15px;
+}
+
+
+.ankidroid_dark_mode .migaku-header,
+.nightMode .migaku-header {
+    background: #f9a746;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.ankidroid_dark_mode.card,
+.nightMode.card {
+    color: rgb(245, 245, 255);
+    background: #2b303b;
+}
+
+.ankidroid_dark_mode .migaku-card-translation,
+.nightMode.card .migaku-card-translation,
+.ankidroid_dark_mode .migaku-card-examples,
+.nightMode.card .migaku-card-examples {
+    color: rgba(230, 230, 255, .65);
+}
+
+
+
+.ankidroid_dark_mode .migaku-card,
+.nightMode .migaku-card {
+    background: #363c4a;
+    box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.15);
+}
+
+.ankidroid_dark_mode .sentence-separator,
+.nightMode .sentence-separator {
+    border-color: rgb(175, 175, 175);
+}
+
+.replay-button {
+    height: 25px;
+}
+
+.playImage {
+    height: 30px !important;
+    width: 30px !important;
+    margin-right: 4px;
 }
 
 @media (min-width: 762px) {
     .migaku-header {
         justify-content: start;
-        padding-left: 50px;
+        padding-left: 20px;
     }
 }
 
-@media (min-width: 500px) {
-    .migaku-card--back .migaku-card-content {
-        display: grid;
-        grid-gap: 20px;
-        grid-template-areas: "word-audio word word word word word word word" "sentence-audio sentence sentence sentence sentence sentence sentence sentence" "translation translation translation translation translation translation translation translation" "definition definition definition definition definition definition definition definition" "typeselect typeselect typeselect typeselect typeselect typeselect typeselect typeselect";
-    }
-    .migaku-card--back .migaku-word-audio {
-        grid-area: word-audio;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .migaku-card--back .migaku-word-back {
-        grid-area: word;
-        text-align: left;
-    }
-    .migaku-card--back .migaku-sentence-audio {
-        grid-area: sentence-audio;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .migaku-card--back .migaku-sentence {
-        grid-area: sentence;
-    }
-    .migaku-card--back .migaku-translation {
-        grid-area: translation;
-    }
-    .migaku-card--back .migaku-definition {
-        grid-area: definition;
-    }
-    .migaku-typeselect {
-        grid-area: typeselect;
-    }
-}
+@media only screen and (max-width: 768px) {
 
-.ankidroid_dark_mode.card, .nightMode.card {
-    background: #2b303b;
-}
-
-.ankidroid_dark_mode .migaku-header, .nightMode .migaku-header {
-    background: #f9a746;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.ankidroid_dark_mode .migaku-header h1, .ankidroid_dark_mode .migaku-header h1 {
-    color: white;
-}
-
-.ankidroid_dark_mode .migaku-card, .nightMode .migaku-card {
-    position: relative;
-    background: #363c4a;
-    box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.15);
+    /* For mobile phones: */
+    .migaku-card {
+        width: 96vw;
+    }
 }
