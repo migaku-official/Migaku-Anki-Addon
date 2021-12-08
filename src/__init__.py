@@ -37,6 +37,7 @@ from . import (
     reviewer,
     editor,
     inplace_editor,
+    click_play_audio,
     browser,
     welcome_wizard,
     global_hotkeys,

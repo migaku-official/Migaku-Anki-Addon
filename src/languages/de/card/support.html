@@ -85,6 +85,11 @@ function syntaxElementToNode(syntax_element, field_settings) {
         const word_container = document.createElement('span');
         word_container.classList.add('word');
 
+        const audio_play_word = syntax_element.text;
+        word_container.addEventListener('click', function() {
+            pycmd('play_audio-' + audio_play_word);
+        });
+
         const text_elem = document.createElement('span');
         text_elem.textContent = syntax_element.text;
         text_elem.classList.add('word-text');

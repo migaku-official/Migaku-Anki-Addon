@@ -155,6 +155,7 @@
 
 .popup .pitch-graph {
     font-size: 30px;
+    line-height: 30px;
     white-space: nowrap;
 }
 
@@ -248,18 +249,18 @@
 .pitch-overbar {
     display: inline-block;
     position: absolute;
-    height: 0.15em;
+    height: 0.1em;
     width: 100%;
-    top: -0.075em;
+    top: -0.275em;
     left: 0;
     background-color: currentColor;
 }
 
 .pitch-drop {
     height: 0.4em;
-    width: 0.15em;
+    width: 0.1em;
     position: absolute;
-    top: -0.075em;
+    top: -0.275em;
     right: -0.075em;
     background-color: currentColor;
 }

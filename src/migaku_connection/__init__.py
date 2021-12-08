@@ -225,6 +225,22 @@ class MigakuConnection(QObject):
             'data': { 'definition': definition }
         })
 
+    @with_connector_silent
+    def play_audio(self, lang_code: str, word: str) -> None:
+        
+        idx = lang_code.find('_')
+        if idx >= 0:
+            lang_code = lang_code[:idx]
+
+        self.connector.send_data({
+            'msg': 'Migaku-Play-Audio',
+            'data': {
+                'languageCode': lang_code,
+                'text': word,
+            },
+            'id': -1
+        })
+
     @with_connector_msg_callback
     def request_syntax(self, data, lang_code, alternate_reading=False, msg_id=None):
 

@@ -362,12 +362,17 @@ function pitchClasses(pitch_text, hover) {
 
 
 function syntaxElementToNode(syntax_element, field_settings) {
-    if (syntax_element.text) {
+    if (syntax_element.type !== 'syntax') {
         return document.createTextNode(syntax_element.text);
     }
     else {
         const node = document.createElement('span');
         node.classList.add('word');
+
+        const audio_play_word = syntax_element.word_pre + syntax_element.word_post;
+        node.addEventListener('click', function() {
+            pycmd('play_audio-' + audio_play_word);
+        });
 
         if (field_settings.furigana === 'hidden') {
             node.classList.add('furigana-invisible');

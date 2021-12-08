@@ -149,6 +149,10 @@ function syntaxElementToNode(syntax_element, field_settings) {
         const word_container = document.createElement('span');
         word_container.classList.add('word');
 
+        const audio_play_word = syntax_element.text;
+        word_container.addEventListener('click', function() {
+            pycmd('play_audio-' + audio_play_word);
+        });
 
         let main_text_html;
         if (field_settings.tone_coloring !== 'no') {
