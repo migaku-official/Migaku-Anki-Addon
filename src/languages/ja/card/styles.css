@@ -1,6 +1,6 @@
 @font-face {
     font-family: cardFont;
-    src: url(fontForLanguage.ttf);
+    src: url("_NotoSerifJP-Regular.otf");
 }
 
 body {

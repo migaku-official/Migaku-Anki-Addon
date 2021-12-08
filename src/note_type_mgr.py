@@ -1,9 +1,12 @@
 import re
+import os
+import shutil
 from typing import List, Dict, Optional
 
 import aqt
 from anki.models import NotetypeDict
 
+from . import util
 from .languages import Languages, Language
 
 
@@ -104,6 +107,12 @@ def nt_update(nt: NotetypeDict, lang: Language, commit=True) -> None:
 
     # Set template css
     nt_set_css_lang(nt, lang, commit=False)
+
+    # Copy media files
+    media_dir = lang.file_path('card', 'media')
+    if os.path.exists(media_dir):
+        for fname in os.listdir(media_dir):
+            shutil.copy(os.path.join(media_dir, fname), util.col_media_path(fname))
 
     if commit:
         nt_mgr.update_dict(nt)
