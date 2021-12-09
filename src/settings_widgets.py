@@ -355,9 +355,21 @@ class CondensedAudioWidget(SettingsWidget):
         btn.clicked.connect(self.change_dir)
         self.lyt.addWidget(btn)
 
+        self.add_label('<hr>')
+
+        self.add_label(
+            'By enabling the following option you can keep using Anki while condensed audio is being exported. '
+            'Keep in mind that the condensing process will be cancelled when closing Anki.'
+        )
+
+        condensed_audio_messages_disabled = QCheckBox('Disable progress and completion messages.')
+        condensed_audio_messages_disabled.setChecked(config.get('condensed_audio_messages_disabled', False))
+        condensed_audio_messages_disabled.stateChanged.connect(lambda state: config.set('condensed_audio_messages_disabled', state == Qt.Checked))
+        self.lyt.addWidget(condensed_audio_messages_disabled)
+
     def change_dir(self):
         new_dir = QFileDialog.getExistingDirectory(self, 'Choose Directory')
-        if dir:
+        if new_dir:
             config.set('condensed_audio_dir', new_dir)
             self.dir_label.setText(new_dir)
 

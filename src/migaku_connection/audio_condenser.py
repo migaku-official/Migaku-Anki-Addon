@@ -42,9 +42,10 @@ class AudioCondenser(MigakuHTTPHandler):
             )
 
             shutil.rmtree(segments_dir, ignore_errors=True)
-
-            if not config.get('disable-condensed-audio-messages', False):
-                alert('A Condensed Audio File has been generated.\n\nThe file: ' + out_filename + '\nhas been created in: ' + condensed_dir)
+            
+            remove_condensed_audio_pogress_message(timestamp)
+            if not config.get('condensed_audio_messages_disabled', False):
+                alert(F'A condensed audio file has been generated.\n\nThe file "{out_filename}" has been created in "{condensed_dir}".')
 
 
     def clean_filename(self, filename):
@@ -61,7 +62,6 @@ class AudioCondenser(MigakuHTTPHandler):
                 if not filename:
                     filename = timestamp
                 self.condense_audio(filename, timestamp)
-                remove_condensed_audio_pogress_message(timestamp)
                 self.finish('Condensing finished.')
                 return
 
@@ -109,6 +109,9 @@ is_added_for_timestamp = {}
 
 def add_condensed_audio_progress_msg(timestamp):
 
+    if config.get('condensed_audio_messages_disabled', False):
+        return
+
     if timestamp in is_added_for_timestamp:
         return
     
@@ -116,12 +119,15 @@ def add_condensed_audio_progress_msg(timestamp):
 
     aqt.mw.taskman.run_on_main(
         lambda: aqt.mw.progress.start(
-            label='Exporting Condensed Audio',
+            label='Generating Condensed Audio...',
         )
     )
 
 def remove_condensed_audio_pogress_message(timestamp):
     
+    if config.get('condensed_audio_messages_disabled', False):
+        return
+
     if not timestamp in is_added_for_timestamp:
         return
     
