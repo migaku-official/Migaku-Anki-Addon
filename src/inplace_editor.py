@@ -101,6 +101,7 @@ def handle_inplace_edit(reviewer: Reviewer, message: str):
     def set_content(new_field_content, checkpoint_name=None):
         if field_name == 'Tags':
             note.tags = new_field_content
+            note.tags = aqt.mw.col.tags.split(new_field_content)
         else:
             if note[field_name] == new_field_content:
                 maybe_reshow_card()
