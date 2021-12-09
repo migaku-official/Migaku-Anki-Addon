@@ -44,7 +44,7 @@ class AudioCondenser(MigakuHTTPHandler):
             shutil.rmtree(segments_dir, ignore_errors=True)
 
             if not config.get('disable-condensed-audio-messages', False):
-                alert('A Condensed Audio File has been generated.\n\n The file: ' + out_filename + '\nhas been created in dir: ' + condensed_dir)
+                alert('A Condensed Audio File has been generated.\n\nThe file: ' + out_filename + '\nhas been created in: ' + condensed_dir)
 
 
     def clean_filename(self, filename):
@@ -61,23 +61,23 @@ class AudioCondenser(MigakuHTTPHandler):
                 if not filename:
                     filename = timestamp
                 self.condense_audio(filename, timestamp)
-                remove_condensed_audio_pogress_message()
+                remove_condensed_audio_pogress_message(timestamp)
                 self.finish('Condensing finished.')
                 return
 
             else:
                 condensed_dir = config.get('condensed_audio_dir')
                 if not condensed_dir:
-                    alert('You must specify a Condensed Audio Save Location.\n\nYou can do this by:\n1. Navigating to Migaku->Dictionary Settings in Anki\'s menu bar.\n2. Clicking \'Choose Directory\' for the \'Condensed Audio Save Location\'  in the bottom right of the settings window.')
-                    remove_condensed_audio_pogress_message()
+                    alert('You must specify a Condensed Audio Save Location.<br><br>Navigate to <i>Migaku &gt; Settings/Help &gt; Condensed Audio</i> and press the <i>Change</i> button')
+                    remove_condensed_audio_pogress_message(timestamp)
                     self.finish('Save location not set.')
                 elif self.can_condense():
                     self.handle_request_audio_file(self.copy_file_to_condensed_audio_dir, timestamp)
-                    add_condensed_audio_progress_msg()
+                    add_condensed_audio_progress_msg(timestamp)
                     self.finish('Exporting Condensed Audio')
                 else:
-                    alert('The FFMPEG media encoder must be installed in order to export condensedAudio.\n\nIn order to install FFMPEG please enable MP3 Conversion in the Dictionary Settings window and click \'Apply\'.\nFFMPEG will then be downloaded and installed automatically.')
-                    remove_condensed_audio_pogress_message()
+                    alert('ffmpeg is not available.')
+                    remove_condensed_audio_pogress_message(timestamp)
                     self.finish('FFMPEG not installed.')
                 return
 
@@ -101,18 +101,32 @@ class AudioCondenser(MigakuHTTPHandler):
 
 def alert(msg: str):
     aqt.mw.taskman.run_on_main(
-        util.show_info(msg, 'Condensed Audio Export')
+        lambda: util.show_info(msg, 'Condensed Audio Export')
     )
 
 
-def add_condensed_audio_progress_msg():
+is_added_for_timestamp = {}
+
+def add_condensed_audio_progress_msg(timestamp):
+
+    if timestamp in is_added_for_timestamp:
+        return
+    
+    is_added_for_timestamp[timestamp] = True
+
     aqt.mw.taskman.run_on_main(
         lambda: aqt.mw.progress.start(
             label='Exporting Condensed Audio',
         )
     )
 
-def remove_condensed_audio_pogress_message():
+def remove_condensed_audio_pogress_message(timestamp):
+    
+    if not timestamp in is_added_for_timestamp:
+        return
+    
+    del is_added_for_timestamp[timestamp]
+
     aqt.mw.taskman.run_on_main(
-        lambda: aqt.mw.progress.finish()
+        aqt.mw.progress.finish
     )
