@@ -65,7 +65,7 @@ class DefinitionAddDialog(QDialog):
         top_lyt.addWidget(QLabel('Searched Field:'), i, 0)
         self.search_field_box = QComboBox()
         self.search_field_box.addItems(note_type_fields)
-        field = self.config.get('search_field', '')
+        field = self.config.get('search_field', 'Target Word')
         if field in note_type_fields:
             self.search_field_box.setCurrentText(field)
         top_lyt.addWidget(self.search_field_box, i, 1)
