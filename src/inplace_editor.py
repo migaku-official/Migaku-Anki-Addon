@@ -26,6 +26,8 @@ from . import util
 from .util import addon_path, addon_web_uri
 from . import config
 
+from aqt.operations.note import update_note
+
 
 # Apply div around editable fields
 
@@ -89,31 +91,46 @@ def handle_inplace_edit(reviewer: Reviewer, message: str):
     field_content = base64.b64decode(field_content_b64).decode('utf-8')
     should_reload = True
 
-    def set_content(new_field_content):
-        if field_name == 'Tags':
-            note.tags = new_field_content
-        else:
-            note[field_name] = new_field_content
-
-        note.flush()
-
+    def maybe_reshow_card():
         if reviewer.mw.state == 'review' and reviewer.card:
             reviewer.card.load()
 
             if should_reload or config.get('inplace_editor_always_reload', False):
                 reviewer_reshow(reviewer, mute=True, reload_card=False)
 
+    def set_content(new_field_content, checkpoint_name=None):
+        if field_name == 'Tags':
+            note.tags = new_field_content
+        else:
+            if note[field_name] == new_field_content:
+                maybe_reshow_card()
+                return
+            note[field_name] = new_field_content
+
+        if checkpoint_name:
+            checkpoint_id = aqt.mw.col.add_custom_undo_entry(checkpoint_name)
+        else:
+            checkpoint_id = None
+
+        def on_note_flushed(_ret):
+            if not checkpoint_id is None:
+                aqt.mw.col.merge_undo_entries(checkpoint_id)
+            maybe_reshow_card()
+
+        update_note(parent=aqt.mw, note=note).success(on_note_flushed).run_in_background()
+
     def on_syntax_delivery(result):
-        set_content(result[0][field_name])
+        set_content(result[0][field_name], F'Add {lang.name_en} Syntax')
         aqt.mw.progress.finish()
 
     def on_syntax_error(msg):
         aqt.mw.progress.finish()
         util.show_critical(msg)
+        maybe_reshow_card()
 
     if command == 'inplace-edit-submit':
         should_reload = message_parts[3] == 'true'
-        set_content(field_content)
+        set_content(field_content, 'Edit Field')
     elif command == 'inplace-edit-syntax-add':
         lang = nt_get_lang(card.note_type())
         if lang is None:
@@ -136,7 +153,7 @@ def handle_inplace_edit(reviewer: Reviewer, message: str):
         if lang is None:
             return
         field_content = lang.remove_syntax(field_content)
-        set_content(field_content)
+        set_content(field_content, F'Remove {lang.name_en} Syntax')
     else:
         raise ValueError('Invalid inplace edit')
 
