@@ -103,6 +103,14 @@ def handle_inplace_edit(reviewer: Reviewer, message: str):
             if should_reload or config.get('inplace_editor_always_reload', False):
                 reviewer_reshow(reviewer, mute=True, reload_card=False)
 
+    def on_syntax_delivery(result):
+        set_content(result[0][field_name])
+        aqt.mw.progress.finish()
+
+    def on_syntax_error(msg):
+        aqt.mw.progress.finish()
+        util.show_critical(msg)
+
     if command == 'inplace-edit-submit':
         should_reload = message_parts[3] == 'true'
         set_content(field_content)
@@ -113,12 +121,13 @@ def handle_inplace_edit(reviewer: Reviewer, message: str):
         if not aqt.mw.migaku_connection.is_connected():
             util.show_critical('Anki is not connected to the Browser Extension.')
             return
+        aqt.mw.progress.start(label=F'Adding {lang.name_en} syntax to field...')
         field_content = lang.remove_syntax(field_content)
         aqt.mw.migaku_connection.request_syntax(
             [{ field_name: field_content }],
             lang.code,
-            on_done = lambda result: set_content(result[0][field_name]),
-            on_error = lambda msg: util.show_critical(msg),
+            on_done = on_syntax_delivery,
+            on_error = on_syntax_error,
             callback_on_main_thread = True,
             timeout=20,
         )
