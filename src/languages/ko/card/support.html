@@ -2,7 +2,7 @@
 
 (function () {
 
-conjugation_pattern_names = {
+const conjugation_pattern_names = {
     0: 'base',
     1: 'declarative present informal low',
     2: 'declarative present informal high',
@@ -90,16 +90,19 @@ function parseSyntax(text) {
                 });
             }
             
-            const args =  match[3].split(',');
-            const dict_form = args[0] || '';
-            const word_pos = args[1] || '';
+            // stub
+            ret.push({
+                type: 'syntax',
+                text: match[2]
+            });
 
+            /*
             ret.push({
                 type: 'syntax',
                 text: match[2],
-                dict_form: dict_form,
-                word_pos: word_pos,
+                // ...
             });
+            */
 
             last_idx = match.index + match[0].length;
         }
@@ -132,17 +135,17 @@ function syntaxElementToNode(syntax_element, field_settings) {
         text_elem.textContent = syntax_element.text;
         text_elem.classList.add('word-text');
 
-        if (field_settings.gender_coloring !== 'no' && syntax_element.gender !== 'x') {
+        /*if (field_settings.gender_coloring !== 'no' && syntax_element.gender !== 'x') {
             let gender_class = 'gender-';
             if (field_settings.gender_coloring === 'hover') {
                 gender_class += 'hover-';
             }
             gender_class += syntax_element.gender;
             text_elem.classList.add(gender_class);
-        }
+        }*/
         word_container.appendChild(text_elem);
 
-        if (field_settings.popup === 'yes') {
+        /*if (field_settings.popup === 'yes') {
             const popup_hover_box = document.createElement('div');
             popup_hover_box.classList.add('popup-hover-box');
             word_container.appendChild(popup_hover_box);
@@ -168,7 +171,7 @@ function syntaxElementToNode(syntax_element, field_settings) {
             dict_form.classList.add('dict-form');
             dict_form.textContent = syntax_element.dict_form;
             popup_container.appendChild(dict_form);
-        }
+        }*/
 
         return word_container;
     }
@@ -200,8 +203,7 @@ function handleFieldTextNodes(node, field_settings) {
 
 function handleField(field) {
     const field_settings = {
-        popup: field.getAttribute('data-popup') || 'no',
-        gender_coloring: field.getAttribute('data-gender-coloring') || 'no'
+        popup: field.getAttribute('data-popup') || 'no'
     };
 
     handleFieldTextNodes(field, field_settings);
