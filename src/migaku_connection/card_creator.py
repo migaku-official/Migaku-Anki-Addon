@@ -143,7 +143,6 @@ class CardCreator(MigakuHTTPHandler):
 
     def handleAudioFile(self, file, filename, suffix):
         if config.get('convert_audio_mp3', True) and suffix != 'mp3':
-            print("converting to mp3")
             self.move_file_to_tmp_dir(file, filename)
             audio_temp_path = util.tmp_path(filename)
             if not self.checkFileExists(audio_temp_path):
@@ -186,9 +185,7 @@ class CardCreator(MigakuHTTPHandler):
         text = data['text']
         templates = data['templates']
 
-        convert_to_mp3 = config.get('convert_audio_mp3', False)
-        if convert_to_mp3:
-            text = self.text_sound_to_mp3(text)
+        text = self.post_process_text(text)
 
         current_note_info = get_current_note_info()
 
@@ -241,8 +238,8 @@ class CardCreator(MigakuHTTPHandler):
 
 
     def handle_no_audio_results(self):
-        print("No audio was delivered to anki.")
-        self.finish("No audio was delivered to anki.")
+        print('No audio was delivered to anki.')
+        self.finish('No audio was delivered to anki.')
 
 
     def search_note_id(self, note_id):

@@ -90,7 +90,7 @@ class DefinitionAddDialog(QDialog):
         mapping_lyt.addWidget(QLabel('Text Definitions:'), i, 0)
         self.out_box_text = QComboBox()
         self.out_box_text.addItems(note_type_fields)
-        field = self.config['mapping'].get('text', '')
+        field = self.config['mapping'].get('text', 'Definitions')
         if field in note_type_fields:
             self.out_box_text.setCurrentText(field)
         mapping_lyt.addWidget(self.out_box_text, i, 1)
@@ -99,7 +99,7 @@ class DefinitionAddDialog(QDialog):
         mapping_lyt.addWidget(QLabel('Example Sentences:'), i, 0)
         self.out_box_example_sentences = QComboBox()
         self.out_box_example_sentences.addItems(note_type_fields)
-        field = self.config['mapping'].get('example_sentences', '')
+        field = self.config['mapping'].get('example_sentences', 'Example Sentences')
         if field in note_type_fields:
             self.out_box_example_sentences.setCurrentText(field)
         mapping_lyt.addWidget(self.out_box_example_sentences, i, 1)
@@ -108,7 +108,7 @@ class DefinitionAddDialog(QDialog):
         mapping_lyt.addWidget(QLabel('Word Audio:'), i, 0)
         self.out_box_word_audio = QComboBox()
         self.out_box_word_audio.addItems(note_type_fields)
-        field = self.config['mapping'].get('word_audio', '')
+        field = self.config['mapping'].get('word_audio', 'Word Audio')
         if field in note_type_fields:
             self.out_box_word_audio.setCurrentText(field)
         mapping_lyt.addWidget(self.out_box_word_audio, i, 1)
@@ -117,7 +117,7 @@ class DefinitionAddDialog(QDialog):
         mapping_lyt.addWidget(QLabel('Images:'), i, 0)
         self.out_box_images = QComboBox()
         self.out_box_images.addItems(note_type_fields)
-        field = self.config['mapping'].get('images', '')
+        field = self.config['mapping'].get('images', 'Images')
         if field in note_type_fields:
             self.out_box_images.setCurrentText(field)
         mapping_lyt.addWidget(self.out_box_images, i, 1)
