@@ -12,12 +12,11 @@ from .languages import Languages, Language
 
 NOTE_TYPE_PREFIX = 'Migaku '
 NOTE_TYPE_MARK_CSS = '/* Managed Migaku Note Type */'
-NOTE_TYPE_MARK_CSS_COMMENT = '/* Remove the line above to disable automatic note type updating */'
 
 FIELD_RE = re.compile(r'<div class=\"field\" (.*?)>{{(?!#|/|\^|FrontSide|Tags)(.*?)}}</div>|{{(?!#|/|\^|FrontSide|Tags)(.*?)}}')
 SETTINGS_RE = re.compile(r'data-(.*?)=\"(.*?)\"')
-FORMAT_RE = re.compile(r'<!--###MIGAKU (.*?) SUPPORT JS START###.*?SUPPORT JS END###-->', re.DOTALL)
-STYLE_RE = re.compile(r'/\*###MIGAKU (.*?) SUPPORT CSS START###.*?SUPPORT CSS END###\*/', re.DOTALL)
+FORMAT_RE = re.compile(r'<!--###MIGAKU (.*?) SUPPORT JS STARTS###.*?SUPPORT JS ENDS###-->', re.DOTALL)
+STYLE_RE = re.compile(r'/\*###MIGAKU (.*?) SUPPORT CSS STARTS###.*?SUPPORT CSS ENDS###\*/', re.DOTALL)
 
 
 def is_installed(lang: Language) -> bool:
@@ -79,7 +78,7 @@ def nt_update(nt: NotetypeDict, lang: Language, commit=True) -> None:
     css_data = open(css_path, 'r', encoding='utf-8').read()
 
     # Set CSS
-    nt['css'] = NOTE_TYPE_MARK_CSS + '\n' + NOTE_TYPE_MARK_CSS_COMMENT + '\n\n' + css_data
+    nt['css'] = NOTE_TYPE_MARK_CSS + '\n\n' + css_data
 
     # Get or create template
     template_name = 'Standard'
@@ -136,9 +135,9 @@ def nt_set_css_lang(nt: NotetypeDict, lang: Optional[Language], commit=True) -> 
         card_css_path = lang.file_path('card', 'support.css')
         card_css = open(card_css_path, 'r', encoding='utf-8').read()
 
-        css_data += F'\n\n/*###MIGAKU {lang.name_en.upper()} SUPPORT CSS START###*/'
+        css_data += F'\n\n/*###MIGAKU {lang.name_en.upper()} SUPPORT CSS STARTS###*/'
         css_data += card_css
-        css_data += F'/*###MIGAKU {lang.name_en.upper()} SUPPORT CSS END###*/'
+        css_data += F'/*###MIGAKU {lang.name_en.upper()} SUPPORT CSS ENDS###*/'
 
     nt['css'] = css_data
 
@@ -203,9 +202,9 @@ def nt_set_tmpl_lang(nt: NotetypeDict, lang: Optional[Language], tmpl_idx: int, 
         card_js_path = lang.file_path('card', 'support.html')
         card_js = open(card_js_path, 'r', encoding='utf-8').read()
 
-        fmt_data += F'\n\n<!--###MIGAKU {lang.name_en.upper()} SUPPORT JS START###-->'
+        fmt_data += F'\n\n<!--###MIGAKU {lang.name_en.upper()} SUPPORT JS STARTS###-->'
         fmt_data += card_js
-        fmt_data += F'<!--###MIGAKU {lang.name_en.upper()} SUPPORT JS END###-->'
+        fmt_data += F'<!--###MIGAKU {lang.name_en.upper()} SUPPORT JS ENDS###-->'
 
     nt['tmpls'][tmpl_idx][fmt] = fmt_data
 
