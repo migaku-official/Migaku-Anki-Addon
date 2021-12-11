@@ -248,14 +248,15 @@ class AddNoteDialog(QDialog):
                 item.setFlags(item.flags() & ~(Qt.ItemIsSelectable | Qt.ItemIsEnabled))
             item.setData(Qt.UserRole, lang.code)
             self.list.addItem(item)
-
+        
         button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
         lyt.addWidget(button_box)
 
     def accept(self):
-        selected_item = self.list.currentItem()
+        selected_items = self.list.selectedItems()
+        selected_item = selected_items[0] if len(selected_items) == 1 else None
         if not selected_item:
             QMessageBox.information(self, 'Error', 'Please select a language for which you want to add the Migaku card type.')
             return
