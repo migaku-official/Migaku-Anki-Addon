@@ -41,48 +41,50 @@
         <div class="migaku-card-images">
             {{editable:Images}}
         </div>
-
-        <div class="migaku-typeselect">
-            <form>
-                <label>
-                    <input type="radio" id="type-s" name="type" value="s">
-                    Sentence
-                </label>
-
-                <label>
-                    <input type="radio" id="type-v" name="type" value="v">
-                    Vocabulary
-                </label>
-
-                <label>
-                    <input type="radio" id="type-as" name="type" value="as">
-                    Audio Sentence
-                </label>
-
-                <label>
-                    <input type="radio" id="type-av" name="type" value="av">
-                    Audio Vocabulary
-                </label>
-            </form>
-        </div>
-        <script>
-            if (typeof (pycmd) !== "undefined") {
-                const form = document.querySelector('.migaku-typeselect form');
-
-                let card_type = `{{Is Vocabulary Card}}`.replace(/(<([^>]+)>)/ig, '').length ? 'v' : 's';
-                if (`{{Is Audio Card}}`.replace(/(<([^>]+)>)/ig, '').length) {
-                    card_type = 'a' + card_type;
-                }
-                form.elements["type"].value = card_type;
-
-                form.onchange = function () {
-                    const card_type = form.elements['type'].value;
-                    pycmd('update_card_type|' + card_type);
-                }
-            }
-            else {
-                document.querySelector('.migaku-typeselect').style.display = 'none';
-            }
-        </script>
     </div>
 </div>
+
+
+<div class="migaku-typeselect">
+    <form>
+        <label>
+            <input type="radio" id="type-s" name="type" value="s">
+            Sentence
+        </label>
+
+        <label>
+            <input type="radio" id="type-v" name="type" value="v">
+            Vocabulary
+        </label>
+
+        <label>
+            <input type="radio" id="type-as" name="type" value="as">
+            Audio Sentence
+        </label>
+
+        <label>
+            <input type="radio" id="type-av" name="type" value="av">
+            Audio Vocabulary
+        </label>
+    </form>
+</div>
+
+<script>
+    if (typeof (pycmd) !== "undefined") {
+        const form = document.querySelector('.migaku-typeselect form');
+
+        let card_type = `{{Is Vocabulary Card}}`.replace(/(<([^>]+)>)/ig, '').length ? 'v' : 's';
+        if (`{{Is Audio Card}}`.replace(/(<([^>]+)>)/ig, '').length) {
+            card_type = 'a' + card_type;
+        }
+        form.elements["type"].value = card_type;
+
+        form.onchange = function () {
+            const card_type = form.elements['type'].value;
+            pycmd('update_card_type|' + card_type);
+        }
+    }
+    else {
+        document.querySelector('.migaku-typeselect').style.display = 'none';
+    }
+</script>
