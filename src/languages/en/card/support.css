@@ -14,14 +14,14 @@
 
     text-align: left;
 
-    background-color: #ffffff;
+    background-color: #e5f9ff;
     box-shadow: rgba(0, 0, 0, .35) 0 5px 15px;
 }
 
 .nightMode .popup,
 .ankidroid_dark_mode .popup {
     color: #ffffff;
-    background-color: #2f2f31
+    background-color: #2b303b;
 }
 
 .popup-active .popup {
@@ -53,7 +53,7 @@
     position: absolute;
     left: 5px;
     bottom: -10px;
-    border-top: 10px solid #ffffff;
+    border-top: 10px solid #e5f9ff;
     border-right: 10px solid transparent;
     border-left: 10px solid transparent;
     border-bottom: none;
@@ -61,7 +61,7 @@
 
 .nightMode .popup-direction-u .popup:after,
 .ankidroid_dark_mode .popup-direction-u .popup:after {
-    border-top: 10px solid #2f2f31;
+    border-top: 10px solid #2b303b;
 }
 
 .popup-direction-d .popup:after {
@@ -72,12 +72,12 @@
     border-top: none;
     border-right: 10px solid transparent;
     border-left: 10px solid transparent;
-    border-bottom: 10px solid #ffffff;
+    border-bottom: 10px solid #e5f9ff;
 }
 
 .nightMode .popup-direction-d .popup:after,
 .ankidroid_dark_mode .popup-direction-d .popup:after {
-    border-bottom: 10px solid #2f2f31;
+    border-bottom: 10px solid #2b303b;
 }
 
 .popup-direction-l .popup:after {
@@ -87,13 +87,13 @@
     top: 5px;
     border-top: 10px solid transparent;
     border-right: none;
-    border-left: 10px solid #ffffff;
+    border-left: 10px solid #e5f9ff;
     border-bottom: 10px solid transparent;
 }
 
 .nightMode .popup-direction-l .popup:after,
 .ankidroid_dark_mode .popup-direction-l .popup:after {
-    border-left: 10px solid #2f2f31;
+    border-left: 10px solid #2b303b;
 }
 
 .popup-direction-r .popup:after {
@@ -102,14 +102,14 @@
     left: -10px;
     top: 5px;
     border-top: 10px solid transparent;
-    border-right: 10px solid #ffffff;
+    border-right: 10px solid #e5f9ff;
     border-left: none;
     border-bottom: 10px solid transparent;
 }
 
 .nightMode .popup-direction-r .popup:after,
 .ankidroid_dark_mode .popup-direction-r .popup:after {
-    border-right: 10px solid #2f2f31;
+    border-right: 10px solid #2b303b;
 }
 
 
