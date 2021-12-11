@@ -46,8 +46,8 @@ main.container .card audio {
     font-size: 18px;
     font-smooth: always;
     color: rgb(40, 40, 50);
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
 }
 
 .migaku-header {
@@ -71,7 +71,7 @@ main.container .card audio {
 .migaku-card {
     position: relative;
     background: white;
-    width: 90vw;
+    width: 90%;
     max-width: 650px;
     margin: 20px auto 50px;
     border-radius: 10px;
@@ -175,6 +175,14 @@ main.container .card audio {
     margin-bottom: 15px;
 }
 
+.migaku-card-sentence,
+.migaku-card-unknown,
+.migaku-card-translation,
+.migaku-card-examples,
+.migaku-card-definitions {
+    word-break: break-word;
+}
+
 
 .ankidroid_dark_mode .migaku-header,
 .nightMode .migaku-header {
@@ -228,7 +236,13 @@ main.container .card audio {
 @media only screen and (max-width: 768px) {
 
     /* For mobile phones: */
+    .migaku-card-front .migaku-card-content {
+        width: calc(100% - 40px);
+    }
+    .migaku-card-back .migaku-card-content {
+        width: calc(100% - 30px);
+    }
     .migaku-card {
-        width: 96vw;
+        width: 96%;
     }
 }
