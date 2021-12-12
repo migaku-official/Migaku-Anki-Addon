@@ -205,7 +205,9 @@ function distributeFurigana(term, reading) {
 function parseSyntax(text) {
     let ret = [];
 
-    const syntax_re = new RegExp(/{([^]*?)}|((\S*)\[(.*?)\](\S*))|([^ {]+)/gm);
+    // without workarounds for missing spaces: /{([^]*?)}|((\S*)\[(.*?)\](\S*))|([^ {]+)/gm
+    const syntax_re = new RegExp(/{([^]*?)}|(([\S　]*)\[(.*?)\](\S*))|([^ {]+)/gm);
+
     const ja_text_re = new RegExp(/[\u3041-\u3096\u30A0-\u30FF\u3400-\u4DB5\u4E00-\u9FCB\uF900-\uFA6A\u2E80-\u2FD5\uFF65-\uFF9F\々]/m);
     
     var match;
