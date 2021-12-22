@@ -11,6 +11,7 @@ from .audio_condenser import AudioCondenser
 from .learning_status_handler import LearningStatusHandler
 from .profile_data_provider import ProfileDataProvider
 from .ffmpeg_manager import FFmpegManager
+from .info_provider import InfoProvider
 
 
 class MigakuServerThread(QThread):
@@ -130,6 +131,7 @@ class MigakuConnection(QObject):
         ('/create', CardCreator),
         ('/profile-data', ProfileDataProvider),
         ('/create', CardCreator),
+        ('/info', InfoProvider),
     ]
 
     PROTOCOL_VERSION = 2
