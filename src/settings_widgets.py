@@ -339,7 +339,7 @@ class MediaFileWidget(SettingsWidget):
         self.lyt.addWidget(convert_audio_mp3)
 
         self.add_label(
-            'Audio files imported via the Browser Extension may vary in volume which can be distracting during reviews. '
+            'Audio files imported via the Browser Extension may vary in volume which can be distracting during reviews.<br>'
             'The option below will normalize the volume of all imported audio files to approximately the same level.'
         )
 
