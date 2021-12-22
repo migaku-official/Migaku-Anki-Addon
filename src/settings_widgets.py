@@ -336,10 +336,16 @@ class MediaFileWidget(SettingsWidget):
         convert_audio_mp3 = QCheckBox('Convert audio files to MP3 (Recommended)')
         convert_audio_mp3.setChecked(config.get('convert_audio_mp3', True))
         convert_audio_mp3.stateChanged.connect(lambda state: config.set('convert_audio_mp3', state == Qt.Checked))
-        normalize_audio = QCheckBox('Normalizes audio levels (sets volume of all audio files to approximately the same level)')
+        self.lyt.addWidget(convert_audio_mp3)
+
+        self.add_label(
+            'Audio files imported via the Browser Extension may vary in volume which can be distracting during reviews. '
+            'The option below will normalize the volume of all imported audio files to approximately the same level.'
+        )
+
+        normalize_audio = QCheckBox('Normalize audio volume (Recommended)')
         normalize_audio.setChecked(config.get('normalize_audio', True))
         normalize_audio.stateChanged.connect(lambda state: config.set('normalize_audio', state == Qt.Checked))
-        self.lyt.addWidget(convert_audio_mp3)
         self.lyt.addWidget(normalize_audio)
 
 
