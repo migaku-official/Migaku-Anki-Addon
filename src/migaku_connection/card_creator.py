@@ -1,4 +1,6 @@
 from .migaku_http_handler import MigakuHTTPHandler
+from pydub import AudioSegment
+from pydub import effects
 import time
 import subprocess
 from anki.notes import Note
@@ -142,15 +144,17 @@ class CardCreator(MigakuHTTPHandler):
 
 
     def handleAudioFile(self, file, filename, suffix):
-        if config.get('convert_audio_mp3', True) and suffix != 'mp3':
+        if config.get('normalize_audio', True) or (config.get('convert_audio_mp3', True) and suffix != 'mp3'):
             self.move_file_to_tmp_dir(file, filename)
             audio_temp_path = util.tmp_path(filename)
             if not self.checkFileExists(audio_temp_path):
                 alert(filename + " could not be converted to an mp3.")
                 return
             filename = filename[0:-3] + "mp3"
-            self.moveExtensionMp3ToMediaFolder(audio_temp_path, filename)
-
+            if config.get('normalize_audio', True):
+                self.moveExtensionMp3NormalizeToMediaFolder(audio_temp_path, filename)
+            else:
+                self.moveExtensionMp3ToMediaFolder(audio_temp_path, filename)
         else:
             print("moving audio file")
             self.move_file_to_media_dir(file, filename)
@@ -164,6 +168,17 @@ class CardCreator(MigakuHTTPHandler):
             if time.time() - now > 15:
                 return False
 
+
+    def moveExtensionMp3NormalizeToMediaFolder(self, source, filename):
+        path = util.col_media_path(filename)
+
+        def match_target_amplitude(sound, target_dBFS):
+            change_in_dBFS = target_dBFS - sound.dBFS
+            return sound.apply_gain(change_in_dBFS)
+
+        sound = AudioSegment.from_file(source)
+        normalized_sound = match_target_amplitude(sound, -26.0)
+        normalized_sound.export(path, format="mp3")
 
     def moveExtensionMp3ToMediaFolder(self, source, filename):
         path = util.col_media_path(filename)
