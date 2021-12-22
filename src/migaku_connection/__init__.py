@@ -12,6 +12,7 @@ from .learning_status_handler import LearningStatusHandler
 from .profile_data_provider import ProfileDataProvider
 from .ffmpeg_manager import FFmpegManager
 from .info_provider import InfoProvider
+from .card_send import CardSender
 
 
 class MigakuServerThread(QThread):
@@ -132,6 +133,7 @@ class MigakuConnection(QObject):
         ('/profile-data', ProfileDataProvider),
         ('/create', CardCreator),
         ('/info', InfoProvider),
+        ('/sendcard', CardSender),
     ]
 
     PROTOCOL_VERSION = 2
@@ -229,7 +231,7 @@ class MigakuConnection(QObject):
 
     @with_connector_silent
     def play_audio(self, lang_code: str, word: str) -> None:
-        
+
         idx = lang_code.find('_')
         if idx >= 0:
             lang_code = lang_code[:idx]
@@ -241,6 +243,13 @@ class MigakuConnection(QObject):
                 'text': word,
             },
             'id': -1
+        })
+
+    @with_connector_silent
+    def send_cards(self, cards_data) -> None:
+        self.connector.send_data({
+            'msg': 'Migaku-Send-Cards',
+            'data': cards_data
         })
 
     @with_connector_msg_callback
