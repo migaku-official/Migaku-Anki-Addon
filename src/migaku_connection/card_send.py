@@ -24,6 +24,7 @@ class CardSender(MigakuHTTPHandler):
             'sentence_audio_url':   make_url(data.get('audio')),
             'is_media_local':       True,   # Extension won't send back files
             'batch_count':          data.get('batch_count', 1),
+            'batch_id':             data.get('batch_id', 0),
         }
 
         self.connection.send_cards(
