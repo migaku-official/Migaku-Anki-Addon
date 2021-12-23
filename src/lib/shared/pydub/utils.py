@@ -7,7 +7,10 @@ import sys
 from subprocess import Popen, PIPE
 from math import log, ceil
 from tempfile import TemporaryFile
-from warnings import warn
+# TEMPORARY FIX TO PREVENT ERROR POPUPS
+#from warnings import warn
+def warn(msg, *args, **kwargs):
+    print('[WARNING]', msg)
 from functools import wraps
 
 try:
@@ -431,4 +434,3 @@ def ms_to_stereo(audio_segment):
 	channel = audio_segment.split_to_mono()
 	channel = [channel[0].overlay(channel[1]) - 3, channel[0].overlay(channel[1].invert_phase()) - 3]
 	return AudioSegment.from_mono_audiosegments(channel[0], channel[1])
-
