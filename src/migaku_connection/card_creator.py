@@ -152,7 +152,8 @@ class CardCreator(MigakuHTTPHandler):
                 return
             filename = filename[0:-3] + "mp3"
             if config.get('normalize_audio', True):
-                self.moveExtensionMp3NormalizeToMediaFolder(audio_temp_path, filename)
+                # TODO: self.moveExtensionMp3NormalizeToMediaFolder(audio_temp_path, filename)
+                self.moveExtensionMp3ToMediaFolder(audio_temp_path, filename)
             else:
                 self.moveExtensionMp3ToMediaFolder(audio_temp_path, filename)
         else:
