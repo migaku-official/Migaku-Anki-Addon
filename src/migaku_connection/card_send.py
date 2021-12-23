@@ -21,8 +21,7 @@ class CardSender(MigakuHTTPHandler):
             'sentence_translation': data.get('sentence_translation'),
             'unknown_words':        data.get('unknown_words'),
             'image_url':            make_url(data.get('image')),
-            'sentence_audio_url':   make_url(data.get('audio')),
-            'is_media_local':       True,   # Extension won't send back files
+            'sentence_audio_url':   make_url(data.get('sentence_audio')),
             'batch_count':          data.get('batch_count', 1),
             'batch_id':             data.get('batch_id', 0),
         }
