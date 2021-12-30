@@ -13,7 +13,7 @@ from .global_hotkeys import HotkeyConfigWidget, hotkey_handeler
 class SettingsWidget(QWidget):
 
     class WizardPage(QWizardPage):
-        
+
         def __init__(self, widget_cls, parent=None, is_tutorial=True):
             super().__init__(parent)
             self.widget = widget_cls(is_tutorial=is_tutorial)
@@ -22,7 +22,8 @@ class SettingsWidget(QWidget):
             if self.widget.SUBTITLE:
                 self.setSubTitle(self.widget.SUBTITLE)
             if self.widget.PIXMAP:
-                self.setPixmap(QWizard.WatermarkPixmap, util.make_pixmap(self.widget.PIXMAP))
+                self.setPixmap(QWizard.WatermarkPixmap,
+                               util.make_pixmap(self.widget.PIXMAP))
             self.lyt = QVBoxLayout()
             self.lyt.setContentsMargins(0, 0, 0, 0)
             self.lyt.addWidget(self.widget)
@@ -40,7 +41,7 @@ class SettingsWidget(QWidget):
         super().__init__(parent)
 
         self.is_tutorial = is_tutorial
-    
+
         self.lyt = QVBoxLayout()
         self.setLayout(self.lyt)
         self.init_ui()
@@ -52,7 +53,7 @@ class SettingsWidget(QWidget):
 
     def save(self) -> None:
         pass
-    
+
     @classmethod
     def wizard_page(cls, parent=None, is_tutorial=True) -> WizardPage:
         return cls.WizardPage(cls, parent, is_tutorial)
@@ -78,7 +79,7 @@ class AboutWidget(SettingsWidget):
     def init_ui(self):
 
         lbl = QLabel(
-           F'<h2>Migaku Anki - {VERSION_STRING}</h2>'
+            F'<h2>Migaku Anki - {VERSION_STRING}</h2>'
 
             '<h3>License</h3>'
             '<p><a href="https://github.com/migaku-official/Migaku-Anki">Migaku Anki</a> is copyright © 2021 Migaku Ltd. and released under the <a href="https://github.com/migaku-official/Migaku-Anki/blob/main/COPYING">GNU General Public License</a>.</p>'
@@ -114,7 +115,8 @@ class LanguageWidget(SettingsWidget):
     TITLE = 'Language Selection'
 
     def init_ui(self):
-        lbl1 = QLabel('Migaku allows you to learn all of the following languages. Please select all the ones you want to learn:')
+        lbl1 = QLabel(
+            'Migaku allows you to learn all of the following languages. Please select all the ones you want to learn:')
         lbl1.setWordWrap(True)
         self.lyt.addWidget(lbl1)
 
@@ -141,7 +143,8 @@ class LanguageWidget(SettingsWidget):
             item.setData(Qt.UserRole, lang.code)
             item.setCheckState(Qt.Checked if is_installed else Qt.Unchecked)
             if is_installed:
-                item.setFlags(item.flags() & ~(Qt.ItemIsEnabled | Qt.ItemIsSelectable))
+                item.setFlags(item.flags() & ~(
+                    Qt.ItemIsEnabled | Qt.ItemIsSelectable))
             self.lang_list.addItem(item)
 
     def save(self):
@@ -165,15 +168,15 @@ class ExtensionWidget(SettingsWidget):
     def init_ui(self, parent=None):
 
         lbl1 = QLabel('Migaku Anki uses the Migaku Browser Extension as a dictionary, to add syntax to your cards and several other features.<br><br>'
-                     F'Make sure to install the extension for your browser to use this functionality. See <a href="{self.EXTENSION_URL}">here</a> for instructinos.<br><br>'
+                      F'Make sure to install the extension for your browser to use this functionality. See <a href="{self.EXTENSION_URL}">here</a> for instructinos.<br><br>'
                       'If the browser extension is installed and running, the status below will reflect so.')
         lbl1.setWordWrap(True)
         lbl1.setTextInteractionFlags(Qt.TextBrowserInteraction)
         lbl1.linkActivated.connect(aqt.utils.openLink)
         self.lyt.addWidget(lbl1)
-        
+
         self.lyt.addStretch()
-        
+
         self.lyt.addWidget(ConnectionStatusLabel())
 
 
@@ -185,14 +188,16 @@ class GlobalHotkeysWidget(SettingsWidget):
 
     def init_ui(self, parent=None):
 
-        lbl1 = QLabel('You can use the following hotkeys to interact with the browser extension while it is connected:')
+        lbl1 = QLabel(
+            'You can use the following hotkeys to interact with the browser extension while it is connected:')
         lbl1.setWordWrap(True)
         self.lyt.addWidget(lbl1)
 
         self.hotkey_config = HotkeyConfigWidget(hotkey_handeler)
         self.lyt.addWidget(self.hotkey_config)
 
-        lbl2 = QLabel('You can press the buttons on the right and press a new key combination if you want to change it.')
+        lbl2 = QLabel(
+            'You can press the buttons on the right and press a new key combination if you want to change it.')
         lbl2.setWordWrap(True)
         self.lyt.addWidget(lbl2)
 
@@ -217,12 +222,13 @@ class SyntaxWidget(SettingsWidget):
         lbl1.setWordWrap(True)
         self.lyt.addWidget(lbl1)
 
-        lbl2 = QLabel('This[this,pron,ðɪs;ðɪs] is[be,aux,ɪz;ɪz] a[a,x,ʌ;eɪ] test[test,noun,test].')
+        lbl2 = QLabel(
+            'This[this,pron,ðɪs;ðɪs] is[be,aux,ɪz;ɪz] a[a,x,ʌ;eɪ] test[test,noun,test].')
         lbl2.setStyleSheet('background-color:#202020; color:#F8F8F8;')
         lbl2.setWordWrap(True)
         self.lyt.addWidget(lbl2)
 
-        lbl3 = QLabel('<br>On your cards the information in the brackets is displayed in a popup over the word, as ruby text or changes the color of the word, depdning on the language:')
+        lbl3 = QLabel('<br>On your cards the information in the brackets is displayed in a popup over the word, as ruby text or changes the color of the word, depending on the language:')
         lbl3.setWordWrap(True)
         self.lyt.addWidget(lbl3)
 
@@ -235,9 +241,10 @@ class SyntaxAddRemoveWidget(SettingsWidget):
 
     TITLE = 'Add/Remove Language Syntax'
 
-    def init_ui(self):        
+    def init_ui(self):
 
-        lbl1 = QLabel('To add or update syntax of your cards go to any editor window in Anki, select a field and press F2 or press this button (icons vary depending on language:')
+        lbl1 = QLabel(
+            'To add or update syntax of your cards go to any editor window in Anki, select a field and press F2 or press this button (icons vary depending on language:')
         lbl1.setWordWrap(True)
         self.lyt.addWidget(lbl1)
 
@@ -271,11 +278,14 @@ class InplaceEditorWidget(SettingsWidget):
 
         self.add_label('')
 
-        self.add_label('By enabling the following option you can also edit empty fields on your cards:')
+        self.add_label(
+            'By enabling the following option you can also edit empty fields on your cards:')
 
         show_empty_fields = QCheckBox('Show empty fields')
-        show_empty_fields.setChecked(config.get('inplace_editor_show_empty_fields', False))
-        show_empty_fields.stateChanged.connect(lambda state: config.set('inplace_editor_show_empty_fields', state == Qt.Checked))
+        show_empty_fields.setChecked(config.get(
+            'inplace_editor_show_empty_fields', False))
+        show_empty_fields.stateChanged.connect(lambda state: config.set(
+            'inplace_editor_show_empty_fields', state == Qt.Checked))
         self.lyt.addWidget(show_empty_fields)
 
     def save(self):
@@ -297,7 +307,8 @@ class ReviewWidget(SettingsWidget):
 
         pass_fail = QCheckBox('Enable Pass/Fail (Recommended)')
         pass_fail.setChecked(config.get('reviewer_pass_fail', True))
-        pass_fail.stateChanged.connect(lambda state: config.set('reviewer_pass_fail', state == Qt.Checked))
+        pass_fail.stateChanged.connect(lambda state: config.set(
+            'reviewer_pass_fail', state == Qt.Checked))
         self.lyt.addWidget(pass_fail)
 
         self.add_label('<hr>')
@@ -309,14 +320,17 @@ class ReviewWidget(SettingsWidget):
 
         pass_fail = QCheckBox('Maintain Ease Factor (Recommended)')
         pass_fail.setChecked(config.get('maintain_ease', True))
-        pass_fail.stateChanged.connect(lambda state: config.set('maintain_ease', state == Qt.Checked))
+        pass_fail.stateChanged.connect(lambda state: config.set(
+            'maintain_ease', state == Qt.Checked))
         self.lyt.addWidget(pass_fail)
 
         self.add_label('<hr>')
 
         colored_buttons = QCheckBox('Colored Grading Buttons')
-        colored_buttons.setChecked(config.get('reviewer_button_coloring', True))
-        colored_buttons.stateChanged.connect(lambda state: config.set('reviewer_button_coloring', state == Qt.Checked))
+        colored_buttons.setChecked(config.get(
+            'reviewer_button_coloring', True))
+        colored_buttons.stateChanged.connect(lambda state: config.set(
+            'reviewer_button_coloring', state == Qt.Checked))
         self.lyt.addWidget(colored_buttons)
 
     def save(self):
@@ -333,12 +347,14 @@ class MediaFileWidget(SettingsWidget):
             'The option below will convert all media files exported from the Browser Extension to the MP3 format.'
         )
 
-        convert_audio_mp3 = QCheckBox('Convert audio files to MP3 (Recommended)')
+        convert_audio_mp3 = QCheckBox(
+            'Convert audio files to MP3 (Recommended)')
         convert_audio_mp3.setChecked(config.get('convert_audio_mp3', True))
-        convert_audio_mp3.stateChanged.connect(lambda state: config.set('convert_audio_mp3', state == Qt.Checked))
+        convert_audio_mp3.stateChanged.connect(
+            lambda state: config.set('convert_audio_mp3', state == Qt.Checked))
         self.lyt.addWidget(convert_audio_mp3)
 
-        return # TODO
+        return  # TODO
 
         self.add_label(
             'Audio files imported via the Browser Extension may vary in volume which can be distracting during reviews.<br>'
@@ -347,7 +363,8 @@ class MediaFileWidget(SettingsWidget):
 
         normalize_audio = QCheckBox('Normalize audio volume (Recommended)')
         normalize_audio.setChecked(config.get('normalize_audio', True))
-        normalize_audio.stateChanged.connect(lambda state: config.set('normalize_audio', state == Qt.Checked))
+        normalize_audio.stateChanged.connect(
+            lambda state: config.set('normalize_audio', state == Qt.Checked))
         self.lyt.addWidget(normalize_audio)
 
 
@@ -374,9 +391,12 @@ class CondensedAudioWidget(SettingsWidget):
             'Keep in mind that the condensing process will be cancelled when closing Anki.'
         )
 
-        condensed_audio_messages_disabled = QCheckBox('Disable progress and completion messages.')
-        condensed_audio_messages_disabled.setChecked(config.get('condensed_audio_messages_disabled', False))
-        condensed_audio_messages_disabled.stateChanged.connect(lambda state: config.set('condensed_audio_messages_disabled', state == Qt.Checked))
+        condensed_audio_messages_disabled = QCheckBox(
+            'Disable progress and completion messages.')
+        condensed_audio_messages_disabled.setChecked(
+            config.get('condensed_audio_messages_disabled', False))
+        condensed_audio_messages_disabled.stateChanged.connect(lambda state: config.set(
+            'condensed_audio_messages_disabled', state == Qt.Checked))
         self.lyt.addWidget(condensed_audio_messages_disabled)
 
     def change_dir(self):
