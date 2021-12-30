@@ -21,7 +21,6 @@ class FieldSetting:
         self.options = options
 
 
-
 class Language:
 
     BRACKET_REMOVE_RE = re.compile(r'\[(?!sound:).*?\]')
@@ -43,7 +42,6 @@ class Language:
         else:
             self.remove_syntax_func = self._remove_syntax_brackets
 
-
     def __repr__(self):
         return F'<Language {self.code}>'
 
@@ -62,7 +60,6 @@ class Language:
     @classmethod
     def _remove_syntax_brackets(cls, text):
         return cls.BRACKET_REMOVE_RE.sub('', text)
-
 
 
 class LanguagesMeta(type):
@@ -327,7 +324,7 @@ class Languages(metaclass=LanguagesMeta):
 
     Korean = Language(
         name_en='Korean',
-        name_native='코리안',
+        name_native='한국어',
         code='ko',
         fields=[
             'Sentence',
