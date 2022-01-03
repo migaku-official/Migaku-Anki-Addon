@@ -37,7 +37,7 @@ class WelcomeWizard(QWizard):
     def save(self):
         for p in self.pages:
             p.save()
-        config.set('first_run', False)
+        config.set('first_run', False, do_write=True)
 
     @classmethod
     def check_show_modal(cls):
