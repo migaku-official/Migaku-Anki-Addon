@@ -42,6 +42,7 @@ from . import (
     card_layout,
     welcome_wizard,
     global_hotkeys,
+    webview_contextmenu,
     settings_window
 )
 
