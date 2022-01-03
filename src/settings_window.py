@@ -48,3 +48,5 @@ class SettingsWindow(QDialog):
 
 action = QAction('Settings/Help', aqt.mw)
 action.triggered.connect(SettingsWindow.show_modal)
+
+aqt.mw.addonManager.setConfigAction(__name__, SettingsWindow.show_modal)
