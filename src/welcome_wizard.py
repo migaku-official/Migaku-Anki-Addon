@@ -18,6 +18,8 @@ class WelcomeWizard(QWizard):
     def __init__(self, parent=None):
         super().__init__(parent)
 
+        self.setWizardStyle(QWizard.ModernStyle)
+
         self.setWindowTitle('Welcome! - Migaku Anki')
         self.setWindowIcon(util.default_icon())
 
