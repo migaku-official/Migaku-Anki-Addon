@@ -165,7 +165,7 @@ class ExtensionWidget(SettingsWidget):
     def init_ui(self, parent=None):
 
         lbl1 = QLabel('Migaku Anki uses the Migaku Browser Extension as a dictionary, to add syntax to your cards and several other features.<br><br>'
-                     F'Make sure to install the extension for your browser to use this functionality. See <a href="{self.EXTENSION_URL}">here</a> for instructinos.<br><br>'
+                     F'Make sure to install the extension for your browser to use this functionality. See <a href="{self.EXTENSION_URL}">here</a> for instructions.<br><br>'
                       'If the browser extension is installed and running, the status below will reflect so.')
         lbl1.setWordWrap(True)
         lbl1.setTextInteractionFlags(Qt.TextBrowserInteraction)
