@@ -200,6 +200,7 @@ class CardCreator(MigakuHTTPHandler):
 
         text = data['text']
         templates = data['templates']
+        default_templates = data['defaultTemplates']
 
         text = self.post_process_text(text)
 
@@ -215,8 +216,11 @@ class CardCreator(MigakuHTTPHandler):
         if not note_type:
             return 'Current note has no valid note_type.'
 
-        note_ident = str(note_type.get('id', '')) + str(note_type.get('name', ''))
+        note_name = str(note_type.get('name', ''))
+        note_ident = str(note_type.get('id', '')) + note_name
         note_template = templates.get(note_ident)
+        if not note_template:
+            note_template = default_templates.get(note_name)
 
         if not note_template:
             return 'No template for current note.'
