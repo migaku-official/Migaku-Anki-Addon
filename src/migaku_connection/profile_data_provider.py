@@ -13,6 +13,13 @@ class ProfileDataProvider(MigakuHTTPHandler):
 
     def post(self):
         if self.check_version():
+
+            if not self.is_ready():
+                self.set_status(409)
+                self.finish('Invalid Request')
+                return
+
+
             fetch_data = self.get_body_argument('fetchProfileData', default=False)
             if fetch_data:
                 profile_data = self.compose_profile_data()
@@ -70,3 +77,7 @@ class ProfileDataProvider(MigakuHTTPHandler):
                 })
 
         return note_type_data
+
+
+    def is_ready(self):
+        return not aqt.mw.col is None
