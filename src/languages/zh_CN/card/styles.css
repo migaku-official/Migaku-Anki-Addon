@@ -1,11 +1,11 @@
 @font-face {
     font-family: cardFont;
-    src: url("_NotoSerifSC-Regular.otf");
+    src: url("/_NotoSerifSC-Regular.otf");
 }
 
 @font-face {
     font-family: cardFontAlt;
-    src: url("_NotoSerifTC-Regular.otf");
+    src: url("/_NotoSerifTC-Regular.otf");
 }
 
 body {

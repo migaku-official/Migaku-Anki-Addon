@@ -136,7 +136,8 @@ def bind_sockets(
                 if errno_from_exception(e) != errno.ENOPROTOOPT:
                     # Hurd doesn't support SO_REUSEADDR.
                     raise
-        if reuse_port:
+        if reuse_port or True:
+            print('REUSE!')
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
         if af == socket.AF_INET6:
             # On linux, ipv6 sockets accept ipv4 too by default,
