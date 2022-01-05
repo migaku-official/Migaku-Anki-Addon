@@ -569,6 +569,12 @@ function handleFieldTextNodes(node, field_settings, in_curly={ value: false }) {
 }
 
 function handleField(field) {
+    // Ignore field if it doesn't contain syntax
+    const syntax_test_re = /[\{\}\[\]]/;
+    if (!syntax_test_re.test(field.textContent)) {
+        return;
+    }
+
     const field_settings = {
         popup: field.getAttribute('data-popup') || 'no',
         pitch_coloring: field.getAttribute('data-pitch-coloring') || 'no',
