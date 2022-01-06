@@ -298,13 +298,13 @@
 .pitch-shape-hover .pitch-diamond,
 .pitch-shape-hover .pitch-circle-left,
 .pitch-shape-hover .pitch-circle-right {
-    visibility: hidden;
+    display: none;
 }
 
 .pitch-shape-hover.active .pitch-diamond,
 .pitch-shape-hover.active .pitch-circle-left,
 .pitch-shape-hover.active .pitch-circle-right {
-    visibility: visible;
+    display: inline-block;
 }
 
 .furigana-invisible rt {
