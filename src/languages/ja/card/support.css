@@ -243,7 +243,10 @@
 .pitch-box {
     display: inline-block;
     position: relative;
-    margin-top: 0.2em;
+    margin-top: 0.6em;
+    margin-bottom: 0.1em;
+    margin-left: 0.2em;
+    margin-right: 0.2em;
 }
 
 .pitch-overbar {
