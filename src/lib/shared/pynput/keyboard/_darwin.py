@@ -277,6 +277,13 @@ class Listener(ListenerMixin, _base.Listener):
     def _handle(self, _proxy, event_type, event, _refcon):
         # Convert the event to a KeyCode; this may fail, and in that case we
         # pass None
+
+        # CUSTOM: Workaround for caps lock crash
+        vk = CGEventGetIntegerValueField(
+            event, kCGKeyboardEventKeycode)
+        if vk == 0 or vk == 255:
+            return
+
         try:
             key = self._event_to_key(event)
         except IndexError:
