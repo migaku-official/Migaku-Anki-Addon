@@ -15,8 +15,7 @@ class ProfileDataProvider(MigakuHTTPHandler):
         if self.check_version():
 
             if not self.is_ready():
-                self.set_status(409)
-                self.finish('Invalid Request')
+                self.finish('{"data": false}')
                 return
 
 
