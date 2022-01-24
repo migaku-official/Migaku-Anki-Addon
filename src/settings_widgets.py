@@ -312,6 +312,9 @@ class ReviewWidget(SettingsWidget):
         pass_fail.stateChanged.connect(lambda state: config.set('maintain_ease', state == Qt.Checked))
         self.lyt.addWidget(pass_fail)
 
+        self.add_label('If you review cards on mobile devices your ease factor will not be maintained. '
+                       'To reset it press "Reset Ease Factor" from the Migaku menu. Note that this action will force a full sync.')
+
         self.add_label('<hr>')
 
         colored_buttons = QCheckBox('Colored Grading Buttons')

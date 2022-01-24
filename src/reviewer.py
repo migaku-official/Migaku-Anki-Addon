@@ -98,9 +98,8 @@ aqt.reviewer.Reviewer._answerCard = reviewer_mod_answer_ease
 
 
 def card_reset_ease_factor(card):
-    if config.get('maintain_ease', False):
-        card.factor = 2500
-
+    if config.get('maintain_ease', True):
+        card.factor = int(config.get('maintain_ease_factor', 2.5) * 1000)
 
 aqt.gui_hooks.reviewer_did_show_question.append(card_reset_ease_factor)
 aqt.gui_hooks.reviewer_did_show_answer.append(card_reset_ease_factor)

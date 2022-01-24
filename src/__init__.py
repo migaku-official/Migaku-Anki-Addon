@@ -43,7 +43,8 @@ from . import (
     welcome_wizard,
     global_hotkeys,
     webview_contextmenu,
-    settings_window
+    settings_window,
+    ease_reset,
 )
 
 
@@ -53,6 +54,7 @@ from . import migaku_connection
 def setup_menu():
     menu = QMenu('Migaku', aqt.mw)
     menu.addAction(settings_window.action)
+    menu.addAction(ease_reset.action)
     aqt.mw.form.menubar.insertMenu(aqt.mw.form.menuHelp.menuAction(), menu)  
 
 setup_menu()
