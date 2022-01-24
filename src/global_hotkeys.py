@@ -96,6 +96,15 @@ class KeyboardHandler(QObject):
         )
         self.listener.start()
 
+        if isMac:
+            import HIServices
+            if not HIServices.AXIsProcessTrusted():
+                util.show_info(
+                    'For Migaku global hotkeys to work, you must allow Anki to control keyboard inputs.\n\n'
+                    'To do this, go to System Preferences > Security & Privacy > Privacy > Accessibility and check the box for "Anki".\n\n'
+                    'Then restart Anki.'
+                )
+
     def on_press(self, raw_key):
         raw_key = self.listener.canonical(raw_key)
         if raw_key in self.modifier_map:
