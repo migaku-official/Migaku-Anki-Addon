@@ -6,7 +6,7 @@ from . import config
 from .languages import Languages
 from . import note_type_mgr
 from .migaku_connection import ConnectionStatusLabel
-from .global_hotkeys import HotkeyConfigWidget, hotkey_handeler
+from .global_hotkeys import HotkeyConfigWidget, hotkey_handler
 from . import config
 from .settings_widgets import TUTORIAL_WIDGETS
 

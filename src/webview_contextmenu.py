@@ -5,7 +5,7 @@ from . import global_hotkeys
 def webview_search_dict(web_view):
     text = web_view.selectedText()
     aqt.mw.migaku_connection.search_dict(text)
-    global_hotkeys.hotkey_handeler.focus_dictionary()
+    global_hotkeys.hotkey_handler.focus_dictionary()
 
 def webview_search_collection(web_view):
     text = web_view.selectedText()

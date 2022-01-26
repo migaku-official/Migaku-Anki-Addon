@@ -20,17 +20,23 @@ class KeySequence:
     Ctrl  = 1 << 2
     Meta  = 1 << 3
 
-    def __init__(self, key: str, modifiers: int = 0):
+    def __init__(self, key: Optional[str], modifiers: int = 0):
         self.key = key
         self.modifiers = modifiers
-    
+
     def __hash__(self):
         return hash((self.key, self.modifiers))
 
     def __eq__(self, other):
         return self.key == other.key and self.modifiers == other.modifiers
 
+    def is_disabled(self):
+        return self.key is None
+
     def to_user_string(self):
+        if self.is_disabled():
+            return 'Disabled'
+
         key_strings = []
         if isMac:
             if self.modifiers & self.Meta:
@@ -173,10 +179,10 @@ class HotkeyHandlerBase(QObject):
             sequence_tuple = config.get('hotkey_' + action)
             if sequence_tuple:
                 sequence = KeySequence(*sequence_tuple)
+                self.keyboard_handler.add_action(action, sequence)
             else:
                 sequence = default_sequence
-
-            self.keyboard_handler.add_action(action, sequence)
+                self.keyboard_handler.add_action(action, sequence)
 
     def on_action_fired(self, action):
         if action == 'open_dict':
@@ -267,12 +273,12 @@ else:
 
 class HotkeyConfigWidget(QWidget):
 
-    def __init__(self, hotkey_handeler, parent=None):
+    def __init__(self, hotkey_handler, parent=None):
         super().__init__(parent)
 
         self.setAttribute(Qt.WA_DeleteOnClose)
 
-        self.hotkey_handeler = hotkey_handeler
+        self.hotkey_handler = hotkey_handler
 
         lyt = QGridLayout()
         self.setLayout(lyt)
@@ -282,7 +288,7 @@ class HotkeyConfigWidget(QWidget):
         self.idx_for_button = {}
 
         i = 0
-        for j, (_, _, text) in enumerate(self.hotkey_handeler.hotkeys):
+        for j, (_, _, text) in enumerate(self.hotkey_handler.hotkeys):
             lyt.addWidget(QLabel(text + ':'), i, 0)
             sequence = self.sequence_for_idx(j)
             btn = QPushButton(sequence.to_user_string())
@@ -294,14 +300,14 @@ class HotkeyConfigWidget(QWidget):
 
             i += 1
 
-        self.hotkey_handeler.keyboard_handler.key_pressed.connect(self.on_key_pressed)
+        self.hotkey_handler.keyboard_handler.key_pressed.connect(self.on_key_pressed)
 
     def __del__(self):
-        self.hotkey_handeler.keyboard_handler.block_actions = False
+        self.hotkey_handler.keyboard_handler.block_actions = False
 
 
     def sequence_for_idx(self, idx):
-        hotkey = self.hotkey_handeler.hotkeys[idx]
+        hotkey = self.hotkey_handler.hotkeys[idx]
 
         sequence_tuple = config.get('hotkey_' + hotkey[0])
         if sequence_tuple:
@@ -310,7 +316,7 @@ class HotkeyConfigWidget(QWidget):
 
 
     def on_button_pressed(self):
-        self.hotkey_handeler.keyboard_handler.block_actions = False
+        self.hotkey_handler.keyboard_handler.block_actions = False
         btn = self.sender()
         new_idx = self.idx_for_button[btn]
 
@@ -321,27 +327,27 @@ class HotkeyConfigWidget(QWidget):
         if new_idx != self.current_idx:
             btn = self.sender()
             btn.setText('[...]')
-            self.hotkey_handeler.keyboard_handler.block_actions = True
+            self.hotkey_handler.keyboard_handler.block_actions = True
             self.current_idx = new_idx
         else:
-            self.current_idx = None
+            self.on_key_pressed(KeySequence(None))
 
 
     def on_key_pressed(self, sequence):
         if self.current_idx is None:
             return
 
-        self.hotkey_handeler.keyboard_handler.block_actions = False
+        self.hotkey_handler.keyboard_handler.block_actions = False
 
         btn = self.buttons[self.current_idx]
         btn.setText(sequence.to_user_string())
 
-        hotkey = self.hotkey_handeler.hotkeys[self.current_idx]
+        hotkey = self.hotkey_handler.hotkeys[self.current_idx]
         config.set('hotkey_' + hotkey[0], [sequence.key, sequence.modifiers])
-        self.hotkey_handeler.keyboard_handler.add_action(hotkey[0], sequence, remove_existing=True)
+        self.hotkey_handler.keyboard_handler.add_action(hotkey[0], sequence, remove_existing=True)
 
         self.current_idx = None
 
 
 
-hotkey_handeler = HotkeyHandler(aqt.mw)
+hotkey_handler = HotkeyHandler(aqt.mw)

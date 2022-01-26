@@ -7,7 +7,7 @@ from . import util
 from .languages import Languages
 from . import note_type_mgr
 from .migaku_connection import ConnectionStatusLabel
-from .global_hotkeys import HotkeyConfigWidget, hotkey_handeler
+from .global_hotkeys import HotkeyConfigWidget, hotkey_handler
 
 
 class SettingsWidget(QWidget):
@@ -185,19 +185,19 @@ class GlobalHotkeysWidget(SettingsWidget):
 
     def init_ui(self, parent=None):
 
-        lbl1 = QLabel('You can use the following hotkeys to interact with the browser extension while it is connected:')
-        lbl1.setWordWrap(True)
-        self.lyt.addWidget(lbl1)
+        self.add_label(
+            'You can use the following hotkeys to interact with the browser extension while it is connected:'
+        )
 
-        self.hotkey_config = HotkeyConfigWidget(hotkey_handeler)
+        self.hotkey_config = HotkeyConfigWidget(hotkey_handler)
         self.lyt.addWidget(self.hotkey_config)
 
-        lbl2 = QLabel('You can press the buttons on the right and press a new key combination if you want to change it.')
-        lbl2.setWordWrap(True)
-        self.lyt.addWidget(lbl2)
+        self.add_label(
+            'To set new key combinations click the buttons on the right and press a new key combination. '
+            'To disable a hotkey click the button again without pressing a new key combination.'
+        )
 
         self.lyt.addStretch()
-
         self.lyt.addWidget(ConnectionStatusLabel())
 
     def save(self):
