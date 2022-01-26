@@ -79,20 +79,12 @@ class KeyboardHandler(QObject):
         self.block_actions = False
         self.actions = { False: {}, True: {} }
 
-        if isMac:
-            self.modifier_map = {
-                Key.shift: 1 << 0,
-                Key.alt:   1 << 1,
-                Key.cmd:   1 << 2,
-                Key.ctrl:  1 << 3,
-            }
-        else:
-            self.modifier_map = {
-                Key.shift: 1 << 0,
-                Key.alt:   1 << 1,
-                Key.ctrl:  1 << 2,
-                Key.cmd:   1 << 3,
-            }
+        self.modifier_map = {
+            Key.shift: 1 << 0,
+            Key.alt:   1 << 1,
+            Key.ctrl:  1 << 2,
+            Key.cmd:   1 << 3,
+        }
 
         self.modifiers = 0
 
