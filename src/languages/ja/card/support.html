@@ -224,49 +224,42 @@ function parseSyntax(text) {
             // syntax segment
             if (match[2]) {
                 const braket_parts = match[4].split(';');
-                
-                if (braket_parts.length >= 2)
-                {
-                    const first_parts = braket_parts[0].split(',');
 
-                    const reading = first_parts[0] || '';
-                    const dict_form = first_parts[1] || '';
-                    const pitch_accents = braket_parts[1].split(',');
+                const first_parts = braket_parts[0].split(',');
 
-                    const pre_text_match = match[3];
+                const reading = first_parts[0] || '';
+                const dict_form = first_parts[1] || '';
 
-                    let i = pre_text_match.length;
-                    while (i > 0) {
-                        if (!ja_text_re.test(pre_text_match[i-1])) {
-                            break;
-                        }
-                        i--;
+                const pitch_accent_parts = braket_parts[1] || '';
+                const pitch_accents = pitch_accent_parts.split(',');
+
+                const pre_text_match = match[3];
+
+                let i = pre_text_match.length;
+                while (i > 0) {
+                    if (!ja_text_re.test(pre_text_match[i-1])) {
+                        break;
                     }
+                    i--;
+                }
 
-                    if (i > 0) {
-                        ret.push({
-                            type: 'plain',
-                            text: pre_text_match.substring(0, i)
-                        });
-                    }
-
-                    const pre_text = pre_text_match.substring(i);
-
+                if (i > 0) {
                     ret.push({
-                        type: 'syntax',
-                        word_pre: pre_text,
-                        word_post: match[5],
-                        reading: reading,
-                        dict_form: dict_form,
-                        pitch_accents: pitch_accents
+                        type: 'plain',
+                        text: pre_text_match.substring(0, i)
                     });
                 }
-                else {
-                    ret.push({
-                        type: 'syntax_error',
-                        text: match[3] + match[5]
-                    });
-                }
+
+                const pre_text = pre_text_match.substring(i);
+
+                ret.push({
+                    type: 'syntax',
+                    word_pre: pre_text,
+                    word_post: match[5],
+                    reading: reading,
+                    dict_form: dict_form,
+                    pitch_accents: pitch_accents
+                });
             }
             // plain segment
             else if (match[6]) {
