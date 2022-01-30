@@ -33,8 +33,6 @@ class RetirementHandler:
         d_conf = self.col.decks.config_dict_for_deck_id(card.did)
         r_int = d_conf.get('retirement_interval')
 
-        print(r_int)
-
         if not r_int:
             return
 

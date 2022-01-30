@@ -6,7 +6,6 @@ from . import config
 
 def reset_ease(sync=True, force_sync=True):
     factor = int(config.get('maintain_ease_factor', 2.5) * 1000)
-    print(factor)
     aqt.mw.col.db.execute('update cards set factor = ?', factor)
 
     if sync or force_sync:
