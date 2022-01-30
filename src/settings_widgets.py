@@ -326,6 +326,117 @@ class ReviewWidget(SettingsWidget):
         config.write()
 
 
+class RetirementWidget(SettingsWidget):
+
+    TITLE = 'Retirement'
+
+    def init_ui(self):
+        self.is_loading = False
+
+        configs = aqt.mw.col.decks.all_config()
+        congig_names = [c['name'] for c in configs]
+
+        top_lyt = QHBoxLayout()
+        self.lyt.addLayout(top_lyt)
+
+        top_lyt.addWidget(QLabel('Options Group:'))
+
+        self.selector = QComboBox()
+        self.selector.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.selector.addItems(congig_names)
+        top_lyt.addWidget(self.selector)
+
+        self.add_label('<hr>')
+
+        sub_lyt = QGridLayout()
+        self.lyt.addLayout(sub_lyt)
+
+        sub_lyt.addWidget(QLabel('Retirement Interval:'), 0, 0)
+
+        interval_lyt = QHBoxLayout()
+        sub_lyt.addLayout(interval_lyt, 0, 1)
+        self.interval = QSpinBox()
+        self.interval.setFixedWidth(75)
+        self.interval.setMinimum(0)
+        self.interval.setMaximum(99999)
+        interval_lyt.addWidget(self.interval)
+        interval_lyt.addWidget(QLabel('days (0 = disabled)'))
+        interval_lyt.addStretch()
+
+        actions_box = QGroupBox('Actions')
+        sub_lyt.addWidget(actions_box, 1, 0, 1, 2)
+        actions_lyt = QGridLayout()
+        actions_box.setLayout(actions_lyt)
+
+        self.delete = QCheckBox('Delete')
+        actions_lyt.addWidget(self.delete, 0, 0, 1, 2)
+
+        self.suspend = QCheckBox('Suspend')
+        actions_lyt.addWidget(self.suspend, 1, 0, 1, 2)
+
+        actions_lyt.addWidget(QLabel('Tag'), 2, 0)
+        self.tag = QLineEdit()
+        actions_lyt.addWidget(self.tag, 2, 1)
+
+        actions_lyt.addWidget(QLabel('Move'), 3, 0)
+        self.deck = QComboBox()
+        self.deck.addItem('<Do not move>')
+        for deck in aqt.mw.col.decks.all_names_and_ids():
+            self.deck.addItem(deck.name)
+        actions_lyt.addWidget(self.deck, 3, 1)
+
+        self.add_label('After a card reaches the retirement interval the selected actions will be performed.')
+
+        self.add_label('<hr>')
+
+        notify = QCheckBox('Show notifications when cards are retired')
+        notify.setChecked(config.get('retirement_notify', True))
+        notify.stateChanged.connect(lambda state: config.set('retirement_notify', state == Qt.Checked))
+        self.lyt.addWidget(notify)
+
+        self.interval.valueChanged.connect(self.save)
+        self.tag.textChanged.connect(self.save)
+        self.deck.currentIndexChanged.connect(self.save)
+        self.delete.stateChanged.connect(self.save)
+        self.suspend.stateChanged.connect(self.save)
+
+        self.selector.currentIndexChanged.connect(self.load)
+        self.load(self.selector.currentIndex())
+
+    def load(self, idx):
+        if idx < 0:
+            return
+
+        self.is_loading = True
+
+        c = aqt.mw.col.decks.all_config()[idx]
+        self.interval.setValue(c.get('retirement_interval', 0))
+        self.tag.setText(c.get('retirement_tag', ''))
+        deck_index = 0
+        r_deck = c.get('retirement_deck')
+        if r_deck:
+            deck_index = max(self.deck.findText(r_deck), 0)
+        self.deck.setCurrentIndex(deck_index)
+        self.delete.setChecked(c.get('retirement_delete', False))
+        self.suspend.setChecked(c.get('retirement_suspend', False))
+        self.is_loading = False
+
+    def save(self):
+        if self.is_loading:
+            return
+
+        idx = self.selector.currentIndex()
+        c = aqt.mw.col.decks.all_config()[idx]
+
+        c['retirement_interval'] = self.interval.value()
+        c['retirement_tag'] = self.tag.text().strip()
+        c['retirement_deck'] = self.deck.currentText() if self.deck.currentIndex() > 0 else None
+        c['retirement_delete'] = self.delete.isChecked()
+        c['retirement_suspend'] = self.suspend.isChecked()
+
+        aqt.mw.col.decks.update_config(c)
+
+
 class MediaFileWidget(SettingsWidget):
 
     TITLE = 'Media Files'
@@ -398,6 +509,7 @@ SETTINGS_WIDGETS = [
     SyntaxAddRemoveWidget,
     InplaceEditorWidget,
     ReviewWidget,
+    RetirementWidget,
     MediaFileWidget,
     CondensedAudioWidget,
 ]
