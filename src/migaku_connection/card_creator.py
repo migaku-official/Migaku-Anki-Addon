@@ -1,16 +1,15 @@
-from .migaku_http_handler import MigakuHTTPHandler
 from pydub import AudioSegment
 from pydub import effects
 import time
 import subprocess
-from anki.notes import Note
 import json
 import os
-
-
 import re
-import aqt
 
+import aqt
+from anki.notes import Note
+
+from .migaku_http_handler import MigakuHTTPHandler
 from .. import config
 from .. import util
 from ..inplace_editor import reviewer_reshow
@@ -239,12 +238,16 @@ class CardCreator(MigakuHTTPHandler):
             field_contents = text
         note[field_name] = field_contents
 
-        note.flush()
-        aqt.mw.col.save()
-
+        # TODO: Refactor
         if 'editor' in current_note_info:
-            current_note_info['editor'].loadNote()
+            editor = current_note_info['editor']
+            editor.loadNote()
+            if not editor.addMode:
+                editor._save_current_note()
         if 'reviewer' in current_note_info:
+            # NOTE: cannot use aqt.operations.update_note as it invalidates mw
+            note.flush()
+            aqt.mw.col.save()
             reviewer_reshow(current_note_info['reviewer'], mute=True)
 
         return 'Added data to note.'
