@@ -222,7 +222,7 @@ class SyntaxWidget(SettingsWidget):
         lbl2.setWordWrap(True)
         self.lyt.addWidget(lbl2)
 
-        lbl3 = QLabel('<br>On your cards the information in the brackets is displayed in a popup over the word, as ruby text or changes the color of the word, depdning on the language:')
+        lbl3 = QLabel('<br>On your cards the information in the brackets is displayed in a popup over the word, as ruby text or changes the color of the word, depending on the language:')
         lbl3.setWordWrap(True)
         self.lyt.addWidget(lbl3)
 
