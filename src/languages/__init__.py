@@ -327,7 +327,7 @@ class Languages(metaclass=LanguagesMeta):
 
     Korean = Language(
         name_en='Korean',
-        name_native='코리안',
+        name_native='한국어',
         code='ko',
         fields=[
             'Sentence',
