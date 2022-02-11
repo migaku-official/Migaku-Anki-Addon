@@ -595,11 +595,14 @@ function closeAllActive() {
     for (const popup of current_popups) {
         popup.classList.remove('active', 'popup-active');
     }
+    return current_popups.length > 0;
 }
 
 function on_closeAllActiveBody(event) {
     if (!event.target.closest('.word')) {
-        closeAllActive();
+        if (closeAllActive()) {
+            event.preventDefault();
+        }
     }
 }
 
@@ -656,7 +659,11 @@ function activeEnablePopup(elem) {
     elem.classList.add('popup-direction-u');
 }
 
-function on_activeEnter() {
+function on_activeEnter(event) {
+    if (event) {
+        event.preventDefault();
+    }
+
     closeAllActive();
     this.classList.add('active');
     activeEnablePopup(this);

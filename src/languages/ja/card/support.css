@@ -307,19 +307,11 @@
     display: inline-block;
 }
 
+
 .furigana-invisible rt {
-    visibility: hidden;
+    display: none;
 }
 
-.furigana-hover rt {
-    visibility: hidden;
-}
-
-.furigana-hover.active rt {
-    visibility: visible;
-}
-
-.popup-active.popup-direction-u rt {
-    /* dirty hack as visibility can change bound boxs in same cases */
-    color: transparent;
+.furigana-hover:not(.active) rt {
+    display: none;
 }

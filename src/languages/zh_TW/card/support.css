@@ -185,13 +185,9 @@
 
 
 .reading-invisible rt {
-    visibility: hidden;
+    display: none;
 }
 
-.reading-hover rt {
-    visibility: hidden;
-}
-
-.reading-hover.active rt {
-    visibility: visible;
+.reading-hover:not(.active) rt {
+    display: none;
 }
