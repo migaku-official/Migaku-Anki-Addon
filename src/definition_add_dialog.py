@@ -268,7 +268,7 @@ class DefinitionAddDialog(QDialog):
         if not lang:
             note_type_name = note_type['name']
             util.show_warning('Please select notes that have an associated language.<br><br>'
-                             F'If you want to set the language for to the "{note_type_name}" note type go to Tools > Manage Note Types > Migaku Options.')
+                             F'If you want to set the language for the "{note_type_name}" note type go to Tools > Manage Note Types > Migaku Options.')
             return
 
         dlg = cls(lang, note_type, note_ids, parent)
