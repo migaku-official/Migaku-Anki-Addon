@@ -197,11 +197,8 @@ class CardCreator(MigakuHTTPHandler):
         if not data_type:
             return 'No data_type'
 
-        text = data['text']
         templates = data['templates']
         default_templates = data['defaultTemplates']
-
-        text = self.post_process_text(text)
 
         current_note_info = get_current_note_info()
 
@@ -224,7 +221,13 @@ class CardCreator(MigakuHTTPHandler):
         if not note_template:
             return 'No template for current note.'
 
-        field_name = template_find_field_name_for_data_type(note_template, data_type)
+        field_name, syntax = template_find_field_name_and_syntax_for_data_type(note_template, data_type)
+
+        if syntax:
+            text = data['parsed']
+        else:
+            text = data['text']
+        text = self.post_process_text(text)
 
         if not field_name:
             return 'No field for data_type found for current note'
@@ -288,12 +291,13 @@ def alert(msg: str):
 
 
 
-def template_find_field_name_for_data_type(template, data_type):
+def template_find_field_name_and_syntax_for_data_type(template, data_type):
     for field_name, field_data in template.items():
         if isinstance(field_data, dict):
             field_data_type = field_data.get('dataType', {}).get('key')
             if field_data_type and field_data_type == data_type:
-                return field_name
+                syntax = field_data.get('syntax', False)
+                return field_name, syntax
     return None
 
 
