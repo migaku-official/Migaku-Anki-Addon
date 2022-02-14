@@ -191,3 +191,9 @@
 .reading-hover:not(.active) rt {
     display: none;
 }
+
+
+ruby > rt {
+    user-select: none;
+}
+  
