@@ -27,7 +27,7 @@ jobs:
         shell: bash
         run: |
           cd src
-          zip -r ../dist/MigakuAnki_${{ env.RELEASE_VERSION }}.ankiaddon . -x user_files/\* meta.json
+          zip -r ../dist/Migaku.ankiaddon . -x user_files/\* meta.json
           cd ..
       - name: Upload artifacts
         uses: ncipollo/release-action@v1
