@@ -152,8 +152,8 @@ class HotkeyHandlerBase(QObject):
     hotkeys = [
         ('open_dict',         KeySequence('f', KeySequence.Ctrl | KeySequence.Alt), 'Open dictionary'),
         ('search_dict',       KeySequence('d', KeySequence.Ctrl | KeySequence.Alt), 'Search selected text in dictionary'),
-        ('set_sentence',      KeySequence('s', KeySequence.Ctrl | KeySequence.Alt), 'Send sentence to card exporter'),
-        ('add_definition',    KeySequence('g', KeySequence.Ctrl | KeySequence.Alt), 'Send definition to card exporter'),
+        ('set_sentence',      KeySequence('s', KeySequence.Ctrl | KeySequence.Alt), 'Send sentence to card creator'),
+        ('add_definition',    KeySequence('g', KeySequence.Ctrl | KeySequence.Alt), 'Send definition to card creator'),
         ('search_collection', KeySequence('b', KeySequence.Ctrl | KeySequence.Alt), 'Search selected text in card collection'),
     ]
 
