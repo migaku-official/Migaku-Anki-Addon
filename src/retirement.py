@@ -16,11 +16,17 @@ class RetirementHandler:
     def __init__(self, col: Collection=None):
         self.col = aqt.mw.col
 
-        self.total = 0
-        self.removed = 0
-        self.suspended = 0
-        self.tagged = 0
-        self.moved = 0
+        self.r_total = 0
+        self.r_removed = 0
+        self.r_suspended = 0
+        self.r_tagged = 0
+        self.r_moved = 0
+
+        self.p_total = 0
+        self.p_type_changed = 0
+        self.p_tagged = 0
+        self.p_moved = 0
+
         self.noteids_removed = set()
         self.notes_modified = []
         self.cards_modified = []
@@ -32,35 +38,34 @@ class RetirementHandler:
 
         d_conf = self.col.decks.config_dict_for_deck_id(card.did)
         r_int = d_conf.get('retirement_interval')
+        p_int = d_conf.get('promotion_interval')
 
-        if not r_int:
-            return
+        if r_int and card.ivl > r_int:
 
-        r_delete = d_conf.get('retirement_delete', False)
-        r_suspend = d_conf.get('retirement_suspend', False)
-        r_tag = d_conf.get('retirement_tag')
-        r_deck = d_conf.get('retirement_deck')
+            r_delete = d_conf.get('retirement_delete', False)
+            r_suspend = d_conf.get('retirement_suspend', False)
+            r_tag = d_conf.get('retirement_tag')
+            r_deck = d_conf.get('retirement_deck')
 
-        if card.ivl > r_int:
             handled = False
 
             if r_delete:
                 self.noteids_removed.add(note.id)
-                self.removed += 1
+                self.r_removed += 1
                 handled = True
             else:
                 if r_suspend:
                     if card.queue != -1:
                         card.queue = -1
                         self.cards_modified.append(card)
-                        self.suspended += 1
+                        self.r_suspended += 1
                         handled = True
 
                 if r_tag:
                     if not note.has_tag(r_tag):
                         note.add_tag(r_tag)
                         self.notes_modified.append(note)
-                        self.tagged += 1
+                        self.r_tagged += 1
                         handled = True
 
                 if r_deck:
@@ -69,11 +74,62 @@ class RetirementHandler:
                         if card.did != new_did:
                             card.did = new_did
                             self.cards_modified.append(card)
-                            self.moved += 1
+                            self.r_moved += 1
                             handled = True
 
             if handled:
-                self.total += 1
+                self.r_total += 1
+
+
+        elif p_int and card.ivl > p_int:
+
+            p_tag_required = d_conf.get('promotion_required_tag')
+
+            if not p_tag_required or note.has_tag(p_tag_required):
+                p_type = d_conf.get('promotion_type')
+                p_tag = d_conf.get('promotion_tag')
+                p_deck = d_conf.get('promotion_deck')
+
+                handled = False
+                type_changed = False
+
+                if p_type:
+                    if 'Is Vocabulary Card' in note:
+                        val = note['Is Vocabulary Card']
+                        new_val = 'x' if ('v' in p_type) else ''
+                        if val != new_val:
+                            note['Is Vocabulary Card'] = new_val
+                            type_changed = True
+                    if 'Is Audio Card' in note:
+                        val = note['Is Audio Card']
+                        new_val = 'x' if ('a' in p_type) else ''
+                        if val != new_val:
+                            note['Is Audio Card'] = new_val
+                            type_changed = True
+                    if type_changed:
+                        self.notes_modified.append(note)
+                        self.p_type_changed += 1
+                        handled = True
+
+                if p_tag:
+                    if not note.has_tag(p_tag):
+                        note.add_tag(p_tag)
+                        if not type_changed:
+                            self.notes_modified.append(note)
+                        self.p_tagged += 1
+                        handled = True
+
+                if p_deck:
+                    new_did = self.col.decks.id(p_deck)
+                    if new_did is not None:
+                        if card.did != new_did:
+                            card.did = new_did
+                            self.cards_modified.append(card)
+                            self.p_moved += 1
+                            handled = True
+
+                if handled:
+                    self.p_total += 1
 
     
     def execute(self, parent: QWidget, on_done=None, on_failure=None) -> None:
@@ -109,13 +165,21 @@ class RetirementHandler:
 
         self.checkpoint_id = None
 
-        if self.total < 1:
+        if self.r_total < 1 and self.p_total < 1:
             _on_done()
         else:
-            if self.total == 1:
-                msg = 'Retire Card'
+            if self.r_total and self.p_total:
+                msg = F'Retire/Promote {self.r_total} Cards'
+            elif self.r_total:
+                if self.r_total == 1:
+                    msg = 'Retire Card'
+                else:
+                    msg = F'Retire {self.r_total} Cards'
             else:
-                msg = F'Retire {self.total} Cards'
+                if self.p_total == 1:
+                    msg = 'Promote Card'
+                else:
+                    msg = F'Promote {self.p_total} Cards'
 
             self.checkpoint_id = self.col.add_custom_undo_entry(msg)
             update_notes()
@@ -123,7 +187,7 @@ class RetirementHandler:
 
 def check_all():
 
-    aqt.mw.progress.start(immediate=True, label='Checking card retirement...')
+    aqt.mw.progress.start(immediate=True, label='Checking card retirement/promotion...')
 
     handler = RetirementHandler()
     cardids = aqt.mw.col.find_cards('')
@@ -138,18 +202,38 @@ def check_all():
         def finalize():
             aqt.mw.progress.finish()
 
+            msg_parts = []
+
             if config.get('retirement_notify', True):
-                msg_parts = []
-                if handler.suspended > 0:
-                    msg_parts.append(F'{handler.suspended} card(s) suspended')
-                if handler.tagged > 0:
-                    msg_parts.append(F'{handler.tagged} notes(s) tagged')
-                if handler.moved > 0:
-                    msg_parts.append(F'{handler.moved} card(s) moved')
-                if handler.removed > 0:
-                    msg_parts.append(F'{handler.removed} card(s) removed')
-                if msg_parts:
-                    util.show_info(F'{handler.total} card(s) have been retired:<br><br>- ' + '<br>- '.join(msg_parts))
+                r_msg_parts = []
+                if handler.r_suspended > 0:
+                    r_msg_parts.append(F'{handler.r_suspended} card(s) suspended')
+                if handler.r_tagged > 0:
+                    r_msg_parts.append(F'{handler.r_tagged} notes(s) tagged')
+                if handler.r_moved > 0:
+                    r_msg_parts.append(F'{handler.r_moved} card(s) moved')
+                if handler.r_removed > 0:
+                    r_msg_parts.append(F'{handler.r_removed} card(s) removed')
+                if r_msg_parts:
+                    msg_parts.append(
+                        F'{handler.r_total} card(s) have been retired:<br><br>- ' + '<br>- '.join(r_msg_parts)
+                    )
+
+            if config.get('promotion_notify', True):
+                p_msg_parts = []
+                if handler.p_type_changed > 0:
+                    p_msg_parts.append(F'{handler.p_type_changed} note(s) type changed')
+                if handler.p_tagged > 0:
+                    p_msg_parts.append(F'{handler.p_tagged} note(s) tagged')
+                if handler.p_moved > 0:
+                    p_msg_parts.append(F'{handler.p_moved} card(s) moved')
+                if p_msg_parts:
+                    msg_parts.append(
+                        F'{handler.p_total} card(s) have been promoted:<br><br>- ' + '<br>- '.join(p_msg_parts)
+                    )
+
+            if msg_parts:
+                aqt.utils.showInfo('<br><br>'.join(msg_parts))
 
         handler.execute(aqt.mw, on_done=finalize, on_failure=finalize)
 
@@ -160,8 +244,10 @@ def answer_hook(rev: Reviewer, card: Card, ease: Literal[1, 2, 3, 4]) -> None:
     handler = RetirementHandler()
     handler.check(card)
     handler.execute(rev.mw)
-    if handler.total > 0 and config.get('retirement_notify', True):
+    if handler.r_total > 0 and config.get('retirement_notify', True):
         aqt.utils.tooltip('Card retired.')
+    elif handler.p_total > 0 and config.get('promotion_notify', True):
+        aqt.utils.tooltip('Card promoted.')
 
 aqt.gui_hooks.reviewer_did_answer_card.append(answer_hook)
 
@@ -186,5 +272,5 @@ def on_deck_options_did_load(dialog):
 aqt.gui_hooks.deck_options_did_load.append(on_deck_options_did_load)
 
 
-action = QAction('Check card retirement', aqt.mw)
+action = QAction('Check card retirement/promotion', aqt.mw)
 action.triggered.connect(lambda: check_all())

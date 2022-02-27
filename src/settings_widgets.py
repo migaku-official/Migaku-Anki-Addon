@@ -340,13 +340,13 @@ class ReviewWidget(SettingsWidget):
 
 class RetirementWidget(SettingsWidget):
 
-    TITLE = 'Retirement'
+    TITLE = 'Card Retirement'
 
     def init_ui(self):
         self.is_loading = False
 
         configs = aqt.mw.col.decks.all_config()
-        congig_names = [c['name'] for c in configs]
+        config_names = [c['name'] for c in configs]
 
         top_lyt = QHBoxLayout()
         self.lyt.addLayout(top_lyt)
@@ -355,7 +355,7 @@ class RetirementWidget(SettingsWidget):
 
         self.selector = QComboBox()
         self.selector.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
-        self.selector.addItems(congig_names)
+        self.selector.addItems(config_names)
         top_lyt.addWidget(self.selector)
 
         self.add_label('<hr>')
@@ -388,6 +388,7 @@ class RetirementWidget(SettingsWidget):
 
         actions_lyt.addWidget(QLabel('Tag'), 2, 0)
         self.tag = QLineEdit()
+        self.tag.setPlaceholderText('None')
         actions_lyt.addWidget(self.tag, 2, 1)
 
         actions_lyt.addWidget(QLabel('Move'), 3, 0)
@@ -448,6 +449,133 @@ class RetirementWidget(SettingsWidget):
         ) if self.deck.currentIndex() > 0 else None
         c['retirement_delete'] = self.delete.isChecked()
         c['retirement_suspend'] = self.suspend.isChecked()
+
+        aqt.mw.col.decks.update_config(c)
+
+
+class PromotionWidget(SettingsWidget):
+
+    TITLE = 'Card Promotion'
+
+    def init_ui(self):
+        self.is_loading = False
+
+        configs = aqt.mw.col.decks.all_config()
+        config_names = [c['name'] for c in configs]
+
+        top_lyt = QHBoxLayout()
+        self.lyt.addLayout(top_lyt)
+
+        top_lyt.addWidget(QLabel('Options Group:'))
+
+        self.selector = QComboBox()
+        self.selector.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.selector.addItems(config_names)
+        top_lyt.addWidget(self.selector)
+
+        self.add_label('<hr>')
+
+        sub_lyt = QGridLayout()
+        self.lyt.addLayout(sub_lyt)
+
+        sub_lyt.addWidget(QLabel('Promotion Interval:'), 0, 0)
+
+        interval_lyt = QHBoxLayout()
+        sub_lyt.addLayout(interval_lyt, 0, 1)
+        self.interval = QSpinBox()
+        self.interval.setFixedWidth(75)
+        self.interval.setMinimum(0)
+        self.interval.setMaximum(99999)
+        interval_lyt.addWidget(self.interval)
+        interval_lyt.addWidget(QLabel('days (0 = disabled)'))
+        interval_lyt.addStretch()
+
+        actions_box = QGroupBox('Actions')
+        sub_lyt.addWidget(actions_box, 1, 0, 1, 2)
+        actions_lyt = QGridLayout()
+        actions_box.setLayout(actions_lyt)
+
+        actions_lyt.addWidget(QLabel('Set Type'), 2, 0)
+        self.type = QComboBox()
+        self.type.addItem('<Don\'t change>', '')
+        self.type.addItem('Sentence', 's')
+        self.type.addItem('Vocabulary', 'v')
+        self.type.addItem('Audio Sentence', 'as')
+        self.type.addItem('Audio Vocabulary', 'av')
+        actions_lyt.addWidget(self.type, 2, 1)
+
+        actions_lyt.addWidget(QLabel('Tag'), 3, 0)
+        self.tag = QLineEdit()
+        self.tag.setPlaceholderText('None')
+        actions_lyt.addWidget(self.tag, 3, 1)
+
+        actions_lyt.addWidget(QLabel('Move'), 4, 0)
+        self.deck = QComboBox()
+        self.deck.addItem('<Do not move>')
+        for deck in aqt.mw.col.decks.all_names_and_ids():
+            self.deck.addItem(deck.name)
+        actions_lyt.addWidget(self.deck, 4, 1)
+
+        required_lyt = QHBoxLayout()
+        required_lyt.addWidget(QLabel('Required Tag'))
+        self.required_tag = QLineEdit()
+        self.required_tag.setPlaceholderText('None')
+        required_lyt.addWidget(self.required_tag)
+        self.lyt.addLayout(required_lyt)
+
+        self.add_label(
+            'After a card reaches the promotion interval the selected actions will be performed if the required tag is present or empty.')
+
+        self.add_label('<hr>')
+
+        notify = QCheckBox('Show notifications when cards are promoted')
+        notify.setChecked(config.get('promotion_notify', True))
+        notify.stateChanged.connect(lambda state: config.set(
+            'promotion_notify', state == Qt.Checked))
+        self.lyt.addWidget(notify)
+
+        self.interval.valueChanged.connect(self.save)
+        self.type.currentIndexChanged.connect(self.save)
+        self.tag.textChanged.connect(self.save)
+        self.deck.currentIndexChanged.connect(self.save)
+        self.required_tag.textChanged.connect(self.save)
+
+        self.selector.currentIndexChanged.connect(self.load)
+        self.load(self.selector.currentIndex())
+
+    def load(self, idx):
+        if idx < 0:
+            return
+
+        self.is_loading = True
+
+        c = aqt.mw.col.decks.all_config()[idx]
+        self.interval.setValue(c.get('promotion_interval', 0))
+        self.type.setCurrentIndex(
+            max(self.type.findData(c.get('promotion_type', '')), 0)
+        )
+        self.tag.setText(c.get('promotion_tag', ''))
+        self.required_tag.setText(c.get('promotion_required_tag', ''))
+        deck_index = 0
+        p_deck = c.get('promotion_deck')
+        if p_deck:
+            deck_index = max(self.deck.findText(p_deck), 0)
+        self.deck.setCurrentIndex(deck_index)
+        self.is_loading = False
+
+    def save(self):
+        if self.is_loading:
+            return
+
+        idx = self.selector.currentIndex()
+        c = aqt.mw.col.decks.all_config()[idx]
+
+        c['promotion_interval'] = self.interval.value()
+        c['promotion_type'] = self.type.currentData()
+        c['promotion_tag'] = self.tag.text().strip()
+        c['promotion_required_tag'] = self.required_tag.text().strip()
+        c['promotion_deck'] = self.deck.currentText(
+        ) if self.deck.currentIndex() > 0 else None
 
         aqt.mw.col.decks.update_config(c)
 
@@ -531,6 +659,7 @@ SETTINGS_WIDGETS = [
     InplaceEditorWidget,
     ReviewWidget,
     RetirementWidget,
+    PromotionWidget,
     MediaFileWidget,
     CondensedAudioWidget,
 ]
