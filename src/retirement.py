@@ -81,7 +81,7 @@ class RetirementHandler:
                 self.r_total += 1
 
 
-        elif p_int and card.ivl > p_int:
+        elif p_int and card.ivl > p_int and note['Target Word'] != '':
 
             p_tag_required = d_conf.get('promotion_required_tag')
 
