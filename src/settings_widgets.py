@@ -547,15 +547,23 @@ class PromotionWidget(SettingsWidget):
             self.deck.addItem(deck.name)
         actions_lyt.addWidget(self.deck, 4, 1)
 
-        required_lyt = QHBoxLayout()
-        required_lyt.addWidget(QLabel('Required Tag'))
+        tag_lyt = QGridLayout()
+        self.lyt.addLayout(tag_lyt)
+
+        tag_lyt.addWidget(QLabel('Required Tag'), 0, 0)
         self.required_tag = QLineEdit()
         self.required_tag.setPlaceholderText('None')
-        required_lyt.addWidget(self.required_tag)
-        self.lyt.addLayout(required_lyt)
+        tag_lyt.addWidget(self.required_tag, 0, 1)
+
+        tag_lyt.addWidget(QLabel('Forbidden Tag'), 1, 0)
+        self.forbidden_tag = QLineEdit()
+        self.forbidden_tag.setPlaceholderText('None')
+        tag_lyt.addWidget(self.forbidden_tag, 1, 1)
 
         self.add_label(
-            'After a card reaches the promotion interval the selected actions will be performed if the required tag is present or empty.')
+            'After a card reaches the promotion interval the selected actions will be performed ' \
+            'if the required tag is present or empty and the forbidden tag is not present or empty.'
+        )
 
         self.add_label('<hr>')
 
@@ -570,6 +578,7 @@ class PromotionWidget(SettingsWidget):
         self.tag.textChanged.connect(self.save)
         self.deck.currentIndexChanged.connect(self.save)
         self.required_tag.textChanged.connect(self.save)
+        self.forbidden_tag.textChanged.connect(self.save)
 
         self.selector.currentIndexChanged.connect(self.load)
         self.load(self.selector.currentIndex())
@@ -587,6 +596,7 @@ class PromotionWidget(SettingsWidget):
         )
         self.tag.setText(c.get('promotion_tag', ''))
         self.required_tag.setText(c.get('promotion_required_tag', ''))
+        self.forbidden_tag.setText(c.get('promotion_forbidden_tag', ''))
         deck_index = 0
         p_deck = c.get('promotion_deck')
         if p_deck:
@@ -605,6 +615,7 @@ class PromotionWidget(SettingsWidget):
         c['promotion_type'] = self.type.currentData()
         c['promotion_tag'] = self.tag.text().strip()
         c['promotion_required_tag'] = self.required_tag.text().strip()
+        c['promotion_forbidden_tag'] = self.forbidden_tag.text().strip()
         c['promotion_deck'] = self.deck.currentText(
         ) if self.deck.currentIndex() > 0 else None
 

@@ -84,8 +84,11 @@ class RetirementHandler:
         elif p_int and card.ivl > p_int:
 
             p_tag_required = d_conf.get('promotion_required_tag')
+            p_tag_forbidden = d_conf.get('promotion_forbidden_tag')
 
-            if not p_tag_required or note.has_tag(p_tag_required):
+            if (not p_tag_required or note.has_tag(p_tag_required)) and \
+               (not p_tag_forbidden or not note.has_tag(p_tag_forbidden)):
+
                 p_type = d_conf.get('promotion_type')
                 p_tag = d_conf.get('promotion_tag')
                 p_deck = d_conf.get('promotion_deck')
