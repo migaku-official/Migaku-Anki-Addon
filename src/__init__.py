@@ -46,7 +46,7 @@ from . import (
     settings_window,
     ease_reset,
     retirement,
-    video_driver_fix,
+    #video_driver_fix,
 )
 
 
