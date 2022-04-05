@@ -94,18 +94,38 @@ class RetirementHandler:
                 type_changed = False
 
                 if p_type:
-                    if 'Is Vocabulary Card' in note:
-                        val = 'x' if note['Is Vocabulary Card'] else ''
-                        new_val = 'x' if ('v' in p_type) else ''
-                        if val != new_val:
-                            note['Is Vocabulary Card'] = new_val
-                            type_changed = True
-                    if 'Is Audio Card' in note:
-                        val = 'x' if note['Is Audio Card'] else ''
-                        new_val = 'x' if ('a' in p_type) else ''
-                        if val != new_val:
-                            note['Is Audio Card'] = new_val
-                            type_changed = True
+                    # Check if type is possible for card (prevent blank front)
+                    # Pass for non note types with non standard field names
+                    type_change_ok = True
+
+                    if p_type == 's':
+                        if 'Sentence' in note and not note['Sentence']:
+                            type_change_ok = False
+                    elif p_type == 'v':
+                        if 'Target Word' in note and not note['Target Word']:
+                            type_change_ok = False
+                    elif p_type == 'as':
+                        if 'Sentence Audio' in note and not note['Sentence Audio']:
+                            type_change_ok = False
+                    elif p_type == 'av':
+                        if 'Word Audio' in note and not note['Word Audio']:
+                            type_change_ok = False
+
+                    # Change field values accordingly and update note
+                    if type_change_ok:
+                        if 'Is Vocabulary Card' in note:
+                            old_val = 'x' if note['Is Vocabulary Card'] else ''
+                            new_val = 'x' if 'v' in p_type else ''
+                            if old_val != new_val:
+                                note['Is Vocabulary Card'] = new_val
+                                type_changed = True
+                        if 'Is Audio Card' in note:
+                            old_val = 'x' if note['Is Audio Card'] else ''
+                            new_val = 'x' if 'a' in p_type else ''
+                            if old_val != new_val:
+                                note['Is Audio Card'] = new_val
+                                type_changed = True
+
                     if type_changed:
                         self.notes_modified.append(note)
                         self.p_type_changed += 1
