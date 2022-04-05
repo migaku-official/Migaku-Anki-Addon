@@ -95,13 +95,13 @@ class RetirementHandler:
 
                 if p_type:
                     if 'Is Vocabulary Card' in note:
-                        val = note['Is Vocabulary Card']
+                        val = 'x' if note['Is Vocabulary Card'] else ''
                         new_val = 'x' if ('v' in p_type) else ''
                         if val != new_val:
                             note['Is Vocabulary Card'] = new_val
                             type_changed = True
                     if 'Is Audio Card' in note:
-                        val = note['Is Audio Card']
+                        val = 'x' if note['Is Audio Card'] else ''
                         new_val = 'x' if ('a' in p_type) else ''
                         if val != new_val:
                             note['Is Audio Card'] = new_val
