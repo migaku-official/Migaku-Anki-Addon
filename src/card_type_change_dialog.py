@@ -1,9 +1,10 @@
 import aqt
 from aqt.qt import *
 
-from . import util
-
 from aqt.operations import CollectionOp
+
+from . import util
+from . import config
 
 
 class CardTypeChangeDialog(QDialog):
@@ -57,6 +58,7 @@ class CardTypeChangeDialog(QDialog):
 
     def run(self, col):
         update_notes = []
+        tag = config.get('card_type_tag', '')
         for note_id in self.note_ids:
             note = col.get_note(note_id)
             if note:
@@ -64,6 +66,8 @@ class CardTypeChangeDialog(QDialog):
                     note['Is Vocabulary Card'] = self.is_vocabulary_card_val
                 if 'Is Audio Card' in note:
                     note['Is Audio Card'] = self.is_audio_card_val
+                if tag:
+                    note.add_tag(tag)
                 update_notes.append(note)
         return col.update_notes(update_notes)
 

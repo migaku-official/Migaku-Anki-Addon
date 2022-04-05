@@ -291,6 +291,37 @@ class InplaceEditorWidget(SettingsWidget):
         update_show_empty_fields()
 
 
+class CardTypeWidget(SettingsWidget):
+
+    TITLE = 'Card Type Changing'
+
+    def init_ui(self):
+
+        self.add_label(
+            'While reviewing a Migaku card you can change it\'s type by using these multiple choice buttons at the bottom of it\'s back side.'
+        )
+
+        img_lbl = QLabel()
+        img_lbl.setPixmap(util.make_pixmap('card_types_example.png'))
+        self.lyt.addWidget(img_lbl)
+
+        self.add_label(
+            '"Card Type" refers to what content you are questioned about on the front of your card.'
+        )
+
+        self.add_label('<br>')
+
+        self.add_label(
+            'If you wish to add a specific tag when changing the card type, you can enter it in the following field. This can be useful in combination with the "Card Promotion" feature.'
+        )
+
+        tag = QLineEdit()
+        tag.setPlaceholderText('Tag to add when changing card type')
+        tag.setText(config.get('card_type_tag', ''))
+        tag.textChanged.connect(lambda text: config.set('card_type_tag', text))
+        self.lyt.addWidget(tag)
+
+
 class ReviewWidget(SettingsWidget):
 
     TITLE = 'Review Settings'
@@ -658,6 +689,7 @@ SETTINGS_WIDGETS = [
     SyntaxAddRemoveWidget,
     InplaceEditorWidget,
     ReviewWidget,
+    CardTypeWidget,
     RetirementWidget,
     PromotionWidget,
     MediaFileWidget,

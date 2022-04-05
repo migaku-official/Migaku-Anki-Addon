@@ -14,6 +14,8 @@ from aqt.reviewer import Reviewer
 from aqt.browser.previewer import Previewer
 from aqt.operations.note import update_note
 
+from . import config
+
 
 def handle_cmd(cmd, note: anki.collection.Note, no_refresh: bool = False):
     card_type = cmd.split('|')[1]
@@ -25,6 +27,10 @@ def handle_cmd(cmd, note: anki.collection.Note, no_refresh: bool = False):
         note['Is Vocabulary Card'] = 'x' if is_vocabulary_card else ''
     if 'Is Audio Card' in note:
         note['Is Audio Card'] = 'x' if is_audio_card else ''
+
+    tag = config.get('card_type_tag', '')
+    if tag:
+        note.add_tag(tag)
 
     if no_refresh:
         note.flush()
