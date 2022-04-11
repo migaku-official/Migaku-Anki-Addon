@@ -8,6 +8,7 @@ from .languages import Languages
 from . import note_type_mgr
 from .migaku_connection import ConnectionStatusLabel
 from .global_hotkeys import HotkeyConfigWidget, hotkey_handler
+from .balance_scheduler_vacaton_window import BalanceSchedulerVacationWindow
 
 
 class SettingsWidget(QWidget):
@@ -369,6 +370,103 @@ class ReviewWidget(SettingsWidget):
         config.write()
 
 
+class SchedulingWidget(SettingsWidget):
+
+    TITLE = 'Review Scheduling'
+
+    def init_ui(self):
+        self.is_loading = False
+
+        configs = aqt.mw.col.decks.all_config()
+        config_names = [c['name'] for c in configs]
+
+        top_lyt = QHBoxLayout()
+        self.lyt.addLayout(top_lyt)
+
+        top_lyt.addWidget(QLabel('Options Group:'))
+
+        self.selector = QComboBox()
+        self.selector.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.selector.addItems(config_names)
+        top_lyt.addWidget(self.selector)
+
+        self.add_label('<hr>')
+
+        self.weekday_sliders = []
+
+        self.enabled = QCheckBox('Enable Migaku Scheduling')
+        self.enabled.stateChanged.connect(self.save)
+        self.lyt.addWidget(self.enabled)
+
+        balance_factor_lyt = QHBoxLayout()
+        self.lyt.addLayout(balance_factor_lyt)
+
+        balance_factor_lyt.addWidget(QLabel('Balance Strength'))
+        self.move_factor = QSlider(Qt.Horizontal)
+        self.move_factor.setMinimum(0)
+        self.move_factor.setMaximum(1000)
+        self.move_factor.valueChanged.connect(self.save)
+        balance_factor_lyt.addWidget(self.move_factor)
+
+        self.week_box = QGroupBox('Weekly Schedule')
+        self.lyt.addWidget(self.week_box)
+
+        week_box_lyt = QGridLayout()
+        self.week_box.setLayout(week_box_lyt)
+
+        for i, weekday in enumerate(('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')):
+            lbl = QLabel(weekday)
+            week_box_lyt.addWidget(lbl, i, 0)
+            slider = QSlider(Qt.Horizontal)
+            slider.setMinimum(0)
+            slider.setMaximum(1000)
+            slider.valueChanged.connect(self.save)
+            week_box_lyt.addWidget(slider, i, 1)
+            self.weekday_sliders.append(slider)
+
+        self.add_label('<hr>')
+        
+        manage_vacations = QPushButton('Manage Vacations')
+        manage_vacations.clicked.connect(self.manage_vacations)
+        self.lyt.addWidget(manage_vacations)
+
+        self.selector.currentIndexChanged.connect(self.load)
+        self.load(self.selector.currentIndex())
+
+    def load(self, idx):
+        if idx < 0:
+            return
+
+        self.is_loading = True
+
+        c = aqt.mw.col.decks.all_config()[idx]
+
+        self.enabled.setChecked(c.get('scheduling_enabled', False))
+        self.move_factor.setValue(round(c.get('scheduling_move_factor', 0.1) * 5000))
+
+        week_schedule = c.get('scheduling_week', [1.0] * 7)
+        for slider, value in zip(self.weekday_sliders, week_schedule):
+            slider.setValue(int(value * 1000))
+
+        self.is_loading = False
+
+    def save(self):
+        if self.is_loading:
+            return
+
+        idx = self.selector.currentIndex()
+        c = aqt.mw.col.decks.all_config()[idx]
+
+        c['scheduling_enabled'] = self.enabled.isChecked()
+        c['scheduling_move_factor'] = self.move_factor.value() / 5000
+        c['scheduling_week'] = [slider.value() / 1000 for slider in self.weekday_sliders]
+
+        aqt.mw.col.decks.update_config(c)
+
+    def manage_vacations(self):
+        BalanceSchedulerVacationWindow(self).exec_()
+
+
 class RetirementWidget(SettingsWidget):
 
     TITLE = 'Card Retirement'
@@ -700,6 +798,7 @@ SETTINGS_WIDGETS = [
     SyntaxAddRemoveWidget,
     InplaceEditorWidget,
     ReviewWidget,
+    SchedulingWidget,
     CardTypeWidget,
     RetirementWidget,
     PromotionWidget,

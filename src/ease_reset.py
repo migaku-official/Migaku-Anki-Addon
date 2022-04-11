@@ -15,5 +15,5 @@ def reset_ease(sync=True, force_sync=True):
             aqt.mw.on_sync_button_clicked()
 
 
-action = QAction('Reset card ease', aqt.mw)
+action = QAction('Reset Card Ease', aqt.mw)
 action.triggered.connect(lambda: reset_ease())
