@@ -223,6 +223,9 @@ class CardCreator(MigakuHTTPHandler):
 
         field_name, syntax = template_find_field_name_and_syntax_for_data_type(note_template, data_type)
 
+        if field_name is None or syntax is None:
+            return 'No field name or syntax for data type.'
+
         if syntax:
             text = data['parsed']
         else:
@@ -298,7 +301,7 @@ def template_find_field_name_and_syntax_for_data_type(template, data_type):
             if field_data_type and field_data_type == data_type:
                 syntax = field_data.get('syntax', False)
                 return field_name, syntax
-    return None
+    return None, None
 
 
 
