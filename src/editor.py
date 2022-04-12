@@ -118,8 +118,8 @@ def editor_note_changed(editor: Editor):
     lang = editor_get_lang(editor)
     if lang is None:
         js = '''
-            $('#migaku_btn_syntax_generate').hide();
-            $('#migaku_btn_syntax_remove').hide();
+            document.getElementById('migaku_btn_syntax_generate').style.display = 'none';
+            document.getElementById('migaku_btn_syntax_remove').style.display = 'none';
         '''
     else:
         add_icon_path = lang.web_uri('icons', 'generate.svg')
@@ -128,12 +128,12 @@ def editor_note_changed(editor: Editor):
         img_filter = 'invert(0)' if no_icon_invert else ''
 
         js = F'''
-            $('#migaku_btn_syntax_generate img').attr('src', '{add_icon_path}');
-            $('#migaku_btn_syntax_generate img').css('filter', '{img_filter}');
-            $('#migaku_btn_syntax_remove img').attr('src', '{remove_icon_path}');
-            $('#migaku_btn_syntax_remove img').css('filter', '{img_filter}');
-            $('#migaku_btn_syntax_generate').show();
-            $('#migaku_btn_syntax_remove').show();
+            document.querySelector('#migaku_btn_syntax_generate img').src = '{add_icon_path}';
+            document.querySelector('#migaku_btn_syntax_generate img').style.filter = '{img_filter}';
+            document.querySelector('#migaku_btn_syntax_remove img').src = '{remove_icon_path}';
+            document.querySelector('#migaku_btn_syntax_remove img').style.filter = '{img_filter}';
+            document.getElementById('migaku_btn_syntax_generate').style.display = '';
+            document.getElementById('migaku_btn_syntax_remove').style.display = '';
         '''
     editor.web.eval(js)
 
