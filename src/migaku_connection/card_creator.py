@@ -151,8 +151,8 @@ class CardCreator(MigakuHTTPHandler):
                 return
             filename = filename[0:-3] + "mp3"
             if config.get('normalize_audio', True):
-                # TODO: self.moveExtensionMp3NormalizeToMediaFolder(audio_temp_path, filename)
-                self.moveExtensionMp3ToMediaFolder(audio_temp_path, filename)
+                self.moveExtensionMp3NormalizeToMediaFolder(audio_temp_path, filename)
+                # self.moveExtensionMp3ToMediaFolder(audio_temp_path, filename)
             else:
                 self.moveExtensionMp3ToMediaFolder(audio_temp_path, filename)
         else:
@@ -177,7 +177,7 @@ class CardCreator(MigakuHTTPHandler):
             return sound.apply_gain(change_in_dBFS)
 
         sound = AudioSegment.from_file(source)
-        normalized_sound = match_target_amplitude(sound, -26.0)
+        normalized_sound = match_target_amplitude(sound, -25.0)
         normalized_sound.export(path, format="mp3")
 
     def moveExtensionMp3ToMediaFolder(self, source, filename):
