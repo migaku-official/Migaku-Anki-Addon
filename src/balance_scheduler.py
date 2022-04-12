@@ -80,6 +80,19 @@ class BalanceScheduler:
         return self.ms_to_col_day(last_rev[0]) + card.ivl
 
 
+    def revs_done_today_for_deck(self, deckid):
+        return self.col.db.scalar(
+            'SELECT count() FROM revlog JOIN cards ON revlog.cid = cards.id '
+            'WHERE revlog.id >= ? AND cards.ivl >= 1 AND cards.did = ?',
+            self.today_start_ms(),
+            deckid
+        )
+
+
+    def revs_done_today_for_decks(self, deckids):
+        return sum(self.revs_done_today_for_deck(did) for did in deckids)
+
+
     def find_balance_candidates_for_deck(self, deck_id):
         today = self.col.sched.today
 
@@ -119,7 +132,7 @@ class BalanceScheduler:
         return candidates
 
 
-    def balance_candiates(self, candidates, move_factor, schedule_factors, vacations):
+    def balance_candiates(self, candidates, move_factor, schedule_factors, vacations, revs_done_today):
 
         r_schedule_factors = self.rotate_schedule(schedule_factors)
 
@@ -130,6 +143,7 @@ class BalanceScheduler:
             move_factor=move_factor,
             schedule_factors=r_schedule_factors,
             vacations=vacations,
+            revs_done_today=revs_done_today,
         )
 
         self.col.db.executemany(
@@ -167,7 +181,8 @@ class BalanceScheduler:
                 vacations.append(vacation)
 
             candidates = self.find_balance_candidates_for_decks(deck_ids)
-            self.balance_candiates(candidates, move_factor, schedule_factors, vacations)
+            revs_done_today = self.revs_done_today_for_decks(deck_ids)
+            self.balance_candiates(candidates, move_factor, schedule_factors, vacations, revs_done_today)
 
 
 def balance_all():
