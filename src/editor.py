@@ -18,9 +18,6 @@ def editor_get_lang(editor: Editor):
     return None
 
 
-editor_js = open(addon_path('editor.js'), 'r', encoding='utf-8').read()
-
-
 def editor_generate_syntax(editor: Editor):
     if editor.currentField is None or editor.note is None:
         return
@@ -36,17 +33,23 @@ def editor_generate_syntax(editor: Editor):
     note_id = editor.note.id
     note_id_key = str(note_id)
 
-    def handle_text(text):
-        if text is None:
+    def do_edit():
+        note = editor.note
+        field_idx = editor.currentField
+
+        if not note or field_idx is None:
             return
+
+        text = note.fields[field_idx]
+        text = lang.remove_syntax(text)
 
         def handle_syntax(syntax_data):
             if isinstance(syntax_data, list) and len(syntax_data) == 1:
                 new_text = syntax_data[0].get(note_id_key)
                 if new_text:
-                    editor.web.eval(editor_js + F'\nset_text({json.dumps(new_text)});')
-
-        text = lang.remove_syntax(text)
+                    note.fields[field_idx] = new_text
+                    aqt.mw.col.update_note(note)
+                    editor.loadNoteKeepingFocus()
 
         aqt.mw.migaku_connection.request_syntax(
             [{ note_id_key: text }],
@@ -56,9 +59,8 @@ def editor_generate_syntax(editor: Editor):
             callback_on_main_thread = True,
             timeout=10,
         )
-    
-    editor.web.evalWithCallback(editor_js + '\nfetch_text();', handle_text)
 
+    editor.call_after_note_saved(callback=do_edit, keepFocus=True)
 
 
 def editor_remove_syntax(editor: Editor):
@@ -69,14 +71,21 @@ def editor_remove_syntax(editor: Editor):
     if lang is None:
         return
 
-    def handle_text(text):
-        if text is None:
+    def do_edit():
+        note = editor.note
+        field_idx = editor.currentField
+
+        if not note or field_idx is None:
             return
 
+        text = note.fields[field_idx]
         text = lang.remove_syntax(text)
-        editor.web.eval(editor_js + F'\nset_text({json.dumps(text)});')
 
-    editor.web.evalWithCallback(editor_js + '\nfetch_text();', handle_text)
+        note.fields[field_idx] = text
+        aqt.mw.col.update_note(note)
+        editor.loadNoteKeepingFocus()
+
+    editor.call_after_note_saved(callback=do_edit, keepFocus=True)
 
 
 def setup_editor_buttons(buttons: List[str], editor: Editor):
@@ -109,8 +118,8 @@ def editor_note_changed(editor: Editor):
     lang = editor_get_lang(editor)
     if lang is None:
         js = '''
-            $('#migaku_btn_syntax_generate').hide();
-            $('#migaku_btn_syntax_remove').hide();
+            document.getElementById('migaku_btn_syntax_generate').style.display = 'none';
+            document.getElementById('migaku_btn_syntax_remove').style.display = 'none';
         '''
     else:
         add_icon_path = lang.web_uri('icons', 'generate.svg')
@@ -119,12 +128,12 @@ def editor_note_changed(editor: Editor):
         img_filter = 'invert(0)' if no_icon_invert else ''
 
         js = F'''
-            $('#migaku_btn_syntax_generate img').attr('src', '{add_icon_path}');
-            $('#migaku_btn_syntax_generate img').css('filter', '{img_filter}');
-            $('#migaku_btn_syntax_remove img').attr('src', '{remove_icon_path}');
-            $('#migaku_btn_syntax_remove img').css('filter', '{img_filter}');
-            $('#migaku_btn_syntax_generate').show();
-            $('#migaku_btn_syntax_remove').show();
+            document.querySelector('#migaku_btn_syntax_generate img').src = '{add_icon_path}';
+            document.querySelector('#migaku_btn_syntax_generate img').style.filter = '{img_filter}';
+            document.querySelector('#migaku_btn_syntax_remove img').src = '{remove_icon_path}';
+            document.querySelector('#migaku_btn_syntax_remove img').style.filter = '{img_filter}';
+            document.getElementById('migaku_btn_syntax_generate').style.display = '';
+            document.getElementById('migaku_btn_syntax_remove').style.display = '';
         '''
     editor.web.eval(js)
 
