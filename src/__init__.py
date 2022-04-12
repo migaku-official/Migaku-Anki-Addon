@@ -47,6 +47,7 @@ from . import (
     ease_reset,
     retirement,
     balance_scheduler,
+    balance_scheduler_dayoff_window,
     #video_driver_fix,
 )
 
@@ -61,6 +62,7 @@ def setup_menu():
     menu.addAction(ease_reset.action)
     menu.addAction(retirement.action)
     menu.addAction(balance_scheduler.action),
+    menu.addAction(balance_scheduler_dayoff_window.action),
     aqt.mw.form.menubar.insertMenu(aqt.mw.form.menuHelp.menuAction(), menu)  
 
 setup_menu()
