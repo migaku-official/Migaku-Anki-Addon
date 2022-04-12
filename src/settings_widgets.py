@@ -372,7 +372,7 @@ class ReviewWidget(SettingsWidget):
 
 class SchedulingWidget(SettingsWidget):
 
-    TITLE = 'Review Scheduling'
+    TITLE = 'Review Scheduling (Beta)'
 
     def init_ui(self):
         self.is_loading = False
