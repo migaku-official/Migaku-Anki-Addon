@@ -3,6 +3,7 @@ import subprocess
 import requests
 import zipfile
 import appdirs
+from threading import Lock
 
 import aqt
 from anki.utils import isLin, isMac, isWin
@@ -14,6 +15,9 @@ from .. import config
 class ProgramManager(aqt.qt.QObject):
 
     BASE_DOWNLOAD_URI = "https://migaku-public-data.s3.filebase.com/"
+    lock = Lock()
+    total_progress_dict = {}
+    progress_dict = {}
 
     def __init__(self, program_name: str, parent=None):
         super().__init__(parent)
@@ -64,7 +68,7 @@ class ProgramManager(aqt.qt.QObject):
             def run(self):
                 self.target()
 
-        aqt.mw.progress.start(label=f"Downloading {self.program_name}", max=100)
+        aqt.mw.progress.start(label=f"Downloading ffmpeg and ffprobe", max=100)
 
         self.program_path = self.migaku_shared_path + "/" + self.program_executable_name
         print(self.program_path)
@@ -85,26 +89,36 @@ class ProgramManager(aqt.qt.QObject):
 
     def _download(self):
         # download ffmpeg zip
-        def fmt_kb(n):
-            return f"{n//1000}kB"
+        def fmt_mb(n):
+            return f"{n//1000000}MB"
 
         download_path = util.tmp_path(f"{self.program_name}-download")
         try:
             with open(download_path, "wb") as f:
                 with requests.get(self.os_download_uri(), stream=True) as r:
                     total = int(r.headers["Content-Length"])
+                    overall_total = 0
+                    print(f"Downloading {fmt_mb(total)} for {self.program_name}")
+                    with self.lock:
+                        self.total_progress_dict[self.program_name] = total
                     for chunk in r.iter_content(chunk_size=8192):
                         if chunk:
                             f.write(chunk)
                             pos = f.tell()
+                            with self.lock:
+                                for program_name in self.total_progress_dict:
+                                    if program_name != self.program_name:
+                                        overall_total = total + self.total_progress_dict[program_name]
+                                self.progress_dict[self.program_name] = pos
+                                for key in self.progress_dict:
+                                    if key != self.program_name:
+                                        pos += self.progress_dict[key]
 
-                            label = (
-                                f"Downloading {self.program_name}\n({fmt_kb(pos)}/{fmt_kb(total)})"
-                            )
+                            label = f"Downloading ffmpeg and ffprobe\n({fmt_mb(pos)}/{fmt_mb(overall_total)})"
 
                             aqt.mw.taskman.run_on_main(
                                 lambda: aqt.mw.progress.update(
-                                    value=pos, max=total, label=label
+                                    value=pos, max=overall_total, label=label
                                 )
                             )
         except requests.HTTPError:
@@ -112,7 +126,9 @@ class ProgramManager(aqt.qt.QObject):
 
         # extract ffmpeg executable from downloaded zip into user_data
         aqt.mw.taskman.run_on_main(
-            lambda: aqt.mw.progress.update(value=0, max=0, label=f"Extracting {self.program_name}")
+            lambda: aqt.mw.progress.update(
+                value=0, max=0, label=f"Extracting {self.program_name}"
+            )
         )
 
         with zipfile.ZipFile(download_path) as zf:
