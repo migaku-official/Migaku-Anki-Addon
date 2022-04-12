@@ -8,7 +8,7 @@ from .languages import Languages
 from . import note_type_mgr
 from .migaku_connection import ConnectionStatusLabel
 from .global_hotkeys import HotkeyConfigWidget, hotkey_handler
-from .balance_scheduler_vacaton_window import BalanceSchedulerVacationWindow
+from .balance_scheduler_vacation_window import BalanceSchedulerVacationWindow
 
 
 class SettingsWidget(QWidget):
