@@ -3,7 +3,7 @@ from collections import defaultdict
 import aqt
 from aqt.qt import *
 
-from .balance_scheduler import BalanceScheduler
+from .balance_scheduler import BalanceScheduler, balance_all
 
 
 class BalanceSchedulerVacationWindow(QDialog):
@@ -57,14 +57,12 @@ class BalanceSchedulerVacationWindow(QDialog):
 
     def add(self, start=None, end=None, groups_enabled=None, factor=None):
         if start is None:
-            start = QDate.currentDate()
-        else:
-            start = self.col_day_to_date(start)
+            start = aqt.mw.col.sched.today
+        start = self.col_day_to_date(start)
 
         if end is None:
-            end = QDate.currentDate()
-        else:
-            end = self.col_day_to_date(end)
+            end = aqt.mw.col.sched.today
+        end = self.col_day_to_date(end)
 
         if groups_enabled is None:
             groups_enabled = [True] * len(self.group_names)
@@ -134,9 +132,18 @@ class BalanceSchedulerVacationWindow(QDialog):
             for i in vacations_groups[id_]:
                 groups_enabled[i] = True
 
+            start = vacations_start[id_]
+            end = vacations_end[id_]
+
+            if end < start:
+                continue
+
+            if end < aqt.mw.col.sched.today:
+                continue
+
             self.add(
-                vacations_start[id_],
-                vacations_end[id_],
+                start,
+                end,
                 groups_enabled,
                 vacations_factor[id_],
             )
@@ -180,8 +187,14 @@ class BalanceSchedulerVacationWindow(QDialog):
         for g in groups:
             aqt.mw.col.decks.update_config(g)
 
+        balance_all()
+
     def col_day_to_date(self, day):
         return self.col_date.addDays(max(0, day))
 
     def date_to_col_day(self, date):
         return max(0, date.toJulianDay() - self.col_date.toJulianDay())
+
+
+action = QAction('Manage Vacations', aqt.mw)
+action.triggered.connect(lambda: BalanceSchedulerVacationWindow().exec_())

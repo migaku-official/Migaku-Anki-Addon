@@ -184,6 +184,8 @@ class BalanceScheduler:
             revs_done_today = self.revs_done_today_for_decks(deck_ids)
             self.balance_candiates(candidates, move_factor, schedule_factors, vacations, revs_done_today)
 
+        aqt.mw.reset()
+
 
 def balance_all():
     bsched = BalanceScheduler(aqt.mw.col)
