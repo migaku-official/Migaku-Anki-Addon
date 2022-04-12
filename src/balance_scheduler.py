@@ -75,8 +75,6 @@ class BalanceScheduler:
         if last_rev is None:
             return None
 
-        assert card.ivl == last_rev[1]
-
         return self.ms_to_col_day(last_rev[0]) + card.ivl
 
 
