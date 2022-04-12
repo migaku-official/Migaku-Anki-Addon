@@ -129,6 +129,7 @@ class BalanceScheduler:
             num_days=self.SCHEDULE_DAYS,
             move_factor=move_factor,
             schedule_factors=r_schedule_factors,
+            vacations=vacations,
         )
 
         self.col.db.executemany(
