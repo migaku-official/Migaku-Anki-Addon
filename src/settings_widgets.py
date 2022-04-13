@@ -46,10 +46,14 @@ class SettingsWidget(QWidget):
         self.lyt = QVBoxLayout()
         self.setLayout(self.lyt)
         self.init_ui()
+        self.toggle_advanced(False)
         if self.BOTTOM_STRETCH:
             self.lyt.addStretch()
 
     def init_ui(self) -> None:
+        pass
+
+    def toggle_advanced(self, state: bool) -> None:
         pass
 
     def save(self) -> None:
@@ -79,7 +83,7 @@ class AboutWidget(SettingsWidget):
 
     def init_ui(self):
 
-        lbl = QLabel(
+        self.add_label(
             F'<h2>Migaku Anki - {VERSION_STRING}</h2>'
 
             '<h3>License</h3>'
@@ -89,11 +93,21 @@ class AboutWidget(SettingsWidget):
             '<p>Migaku Anki uses several third-party libraries to function. Below are links to homepages and licenses of these:</p>'
             '<p><a href="https://foosoft.net/projects/yomichan/">Yomichan</a> is used for distributing furigana, and is copyright © 2016-2022 Yomichan Authors and released under the <a href="https://github.com/FooSoft/yomichan/blob/master/LICENSE">GNU General Public License</a>.</p>'
         )
-        lbl.setWordWrap(True)
-        lbl.setTextInteractionFlags(Qt.TextBrowserInteraction)
-        lbl.linkActivated.connect(aqt.utils.openLink)
 
-        self.lyt.addWidget(lbl)
+        self.add_label('<hr>')
+
+        advanced_toggle = QCheckBox('Show advanced settings')
+        advanced_toggle.setCheckState(Qt.Checked if config.get('show_advanced') else Qt.Unchecked)
+        advanced_toggle.stateChanged.connect(self.on_toggle_advanced)
+
+        self.lyt.addWidget(advanced_toggle)
+
+    def on_toggle_advanced(self, check_state) -> None:
+        state = check_state == Qt.Checked
+        config.set('show_advanced', state)
+
+        if hasattr(self, 'settings_window'):
+            self.settings_window.toggle_advanced(state)
 
 
 class WelcomeWidget(SettingsWidget):
@@ -377,6 +391,9 @@ class SchedulingWidget(SettingsWidget):
     def init_ui(self):
         self.is_loading = False
 
+        self.info_lbl = self.add_label('')
+        self.add_label('<hr>')
+
         configs = aqt.mw.col.decks.all_config()
         config_names = [c['name'] for c in configs]
 
@@ -401,7 +418,8 @@ class SchedulingWidget(SettingsWidget):
         balance_factor_lyt = QHBoxLayout()
         self.lyt.addLayout(balance_factor_lyt)
 
-        balance_factor_lyt.addWidget(QLabel('Balance Strength'))
+        self.move_factor_lbl = QLabel('Balance Strength')
+        balance_factor_lyt.addWidget(self.move_factor_lbl)
         self.move_factor = QSlider(Qt.Horizontal)
         self.move_factor.setMinimum(0)
         self.move_factor.setMaximum(1000)
@@ -432,6 +450,22 @@ class SchedulingWidget(SettingsWidget):
 
         self.selector.currentIndexChanged.connect(self.load)
         self.load(self.selector.currentIndex())
+
+    def toggle_advanced(self, state):
+        if not state:
+            self.info_lbl.setText(
+                'Once you enable Migaku Scheduling, all cards within the selected options group will be balanced '
+                'so that you roughly have the same amout of reviews each day.<br>'
+                'The weekday sliders can be used to control the amount of cards you want to see in relation on a specific day (left: 0%, right: 100%).'
+            )
+        else:
+            self.info_lbl.setText(
+                'Once you enable Migaku Scheduling, all cards within the selected options group will be balanced '
+                'with the selected balance strength (left: 0%, right: 20% derivation from optimal interval).<br>'
+                'The weekday sliders can be used to control the amount of cards you want to see in relation on a specific day (left: 0%, right: 100%).'
+            )
+        self.move_factor_lbl.setVisible(state)
+        self.move_factor.setVisible(state)
 
     def load(self, idx):
         if idx < 0:

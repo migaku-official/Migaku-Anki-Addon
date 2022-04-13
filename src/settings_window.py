@@ -28,11 +28,15 @@ class SettingsWindow(QDialog):
         lyt.addWidget(self.stack)
 
         self.widgets = []
+
         for wcls in SETTINGS_WIDGETS:
             w = wcls()
+            w.settings_window = self
             self.widgets.append(w)
             self.stack_selector.addItem(w.TITLE)
             self.stack.addWidget(w)
+
+        self.toggle_advanced(config.get('show_advanced', False))
 
     def closeEvent(self, _evt):
         self.accept()
@@ -41,6 +45,10 @@ class SettingsWindow(QDialog):
         for w in self.widgets:
             w.save()
         super().accept()
+
+    def toggle_advanced(self, toggle: bool):
+        for w in self.widgets:
+            w.toggle_advanced(toggle)
 
     @classmethod
     def show_modal(cls):
