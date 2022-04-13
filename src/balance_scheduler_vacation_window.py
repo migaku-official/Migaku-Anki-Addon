@@ -29,7 +29,10 @@ class BalanceSchedulerVacationWindow(QDialog):
             'After that select the start and end date of your vacation. The dates are inclusive.<br>'
             'In the groups dropdown you can select to which option groups the vacation should be applied.<br>'
             'The slider at the right allows you to adjust the amount of reviews you want to do during the vacation '
-            'ranging from 0% (left) to 100% (right) the amount you would have usually.'
+            'ranging from 0% (left) to 100% (right) the amount you would have usually.<br>'
+            '<br>'
+            'Note that only option groups for which Migaku Scheduling is enabled are affected by vacations.<br>'
+            'To enable Migaku Scheduling for a group, go to <i>Migaku &gt; Settings &gt; Review Scheduling</i>'
         )
         lbl.setWordWrap(True)
         lyt.addWidget(lbl)
@@ -58,7 +61,7 @@ class BalanceSchedulerVacationWindow(QDialog):
 
         self.del_buttons = []
 
-        self.resize(700, 350)
+        self.resize(700, 475)
         self.reload()
 
     def accept(self):
