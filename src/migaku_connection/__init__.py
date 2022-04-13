@@ -1,5 +1,6 @@
 import asyncio
 import tornado
+from pathlib import Path
 
 import aqt
 from aqt.qt import *
@@ -10,7 +11,7 @@ from .card_creator import CardCreator
 from .audio_condenser import AudioCondenser
 from .learning_status_handler import LearningStatusHandler
 from .profile_data_provider import ProfileDataProvider
-from .ffmpeg_manager import FFmpegManager
+from .ffmpeg_manager import ProgramManager
 from .info_provider import InfoProvider
 from .card_send import CardSender
 
@@ -141,7 +142,11 @@ class MigakuConnection(QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.ffmpeg = FFmpegManager(self)
+        self.ffmpeg = ProgramManager("ffmpeg", self)
+        self.ffprobe = ProgramManager("ffprobe", self)
+        os.environ["PATH"] += os.pathsep + str(Path(self.ffmpeg.program_path).parent)
+        os.environ["PATH"] += os.pathsep + str(Path(self.ffprobe.program_path).parent)
+
 
         self.connector_lock = QMutex()
         self.connector = None

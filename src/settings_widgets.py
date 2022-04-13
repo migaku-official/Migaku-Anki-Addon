@@ -771,8 +771,6 @@ class MediaFileWidget(SettingsWidget):
             lambda state: config.set('convert_audio_mp3', state == Qt.Checked))
         self.lyt.addWidget(convert_audio_mp3)
 
-        return  # TODO
-
         self.add_label(
             'Audio files imported via the Browser Extension may vary in volume which can be distracting during reviews.<br>'
             'The option below will normalize the volume of all imported audio files to approximately the same level.'

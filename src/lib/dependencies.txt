@@ -1,4 +1,6 @@
 tornado                                     shared/tornado
+pydub                                       shared/pydub
+appdirs                                     shared/appdirs.py
 pynput                                      shared/pynput
     python-xlib                             linux/Xlib
     pyobjc-core                             macos/obj
