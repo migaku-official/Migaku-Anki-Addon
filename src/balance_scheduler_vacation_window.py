@@ -24,6 +24,16 @@ class BalanceSchedulerVacationWindow(QDialog):
         lyt = QVBoxLayout()
         self.setLayout(lyt)
 
+        lbl = QLabel(
+            'To add a vacation, click the "Add" button at the bottom.<br>'
+            'After that select the start and end date of your vacation. The dates are inclusive.<br>'
+            'In the groups dropdown you can select to which option groups the vacation should be applied.<br>'
+            'The slider at the right allows you to adjust the amount of reviews you want to do during the vacation '
+            'ranging from 0% (left) to 100% (right) the amount you would have usually.'
+        )
+        lbl.setWordWrap(True)
+        lyt.addWidget(lbl)
+
         self.list = QTableWidget()
         self.list.setColumnCount(5)
         self.list.setHorizontalHeaderLabels(['Start', 'End', 'Groups', 'Review Amount', ''])
