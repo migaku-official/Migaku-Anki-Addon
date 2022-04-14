@@ -455,7 +455,7 @@ class SchedulingWidget(SettingsWidget):
         if not state:
             self.info_lbl.setText(
                 'Once you enable Migaku Scheduling, all cards within the selected options group will be balanced '
-                'so that you roughly have the same amout of reviews each day.<br>'
+                'so that you roughly have the same amount of reviews each day.<br>'
                 'The weekday sliders can be used to control the amount of cards you want to see in relation on a specific day (left: 0%, right: 100%).'
             )
         else:
