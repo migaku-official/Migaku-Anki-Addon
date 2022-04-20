@@ -144,10 +144,15 @@ class BalanceScheduler:
             revs_done_today=revs_done_today,
         )
 
-        self.col.db.executemany(
-            'UPDATE cards SET due = ? WHERE id = ?',
-            [(new_day, card.id) for card, new_day in to_balance]
-        )
+        for card, new_day in to_balance:
+            card = self.col.get_card(card.id)
+            card.due = new_day
+            self.col.update_card(card)
+
+        # self.col.db.executemany(
+        #    'UPDATE cards SET due = ? WHERE id = ?',
+        #    [(new_day, card.id) for card, new_day in to_balance]
+        #)
 
     def balance_all(self):
         group_decks = defaultdict(list)
