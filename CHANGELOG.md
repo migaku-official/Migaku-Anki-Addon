@@ -1,3 +1,8 @@
+## 0.2.1
+
+- [FIX] Allow incremental sync for balance scheduler card modifications
+- [FIX] Syntax tools in card adding dialog
+
 ## 0.2.0
 
 - [FEATURE] Support for Anki 2.1.50
