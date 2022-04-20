@@ -48,7 +48,6 @@ def editor_generate_syntax(editor: Editor):
                 new_text = syntax_data[0].get(note_id_key)
                 if new_text:
                     note.fields[field_idx] = new_text
-                    aqt.mw.col.update_note(note)
                     editor.loadNoteKeepingFocus()
 
         aqt.mw.migaku_connection.request_syntax(
@@ -66,7 +65,7 @@ def editor_generate_syntax(editor: Editor):
 def editor_remove_syntax(editor: Editor):
     if editor.currentField is None or editor.note is None:
         return
-    
+
     lang = editor_get_lang(editor)
     if lang is None:
         return
@@ -82,7 +81,6 @@ def editor_remove_syntax(editor: Editor):
         text = lang.remove_syntax(text)
 
         note.fields[field_idx] = text
-        aqt.mw.col.update_note(note)
         editor.loadNoteKeepingFocus()
 
     editor.call_after_note_saved(callback=do_edit, keepFocus=True)
