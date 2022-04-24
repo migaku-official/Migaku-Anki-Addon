@@ -12,6 +12,9 @@ from aqt.utils import isMac, isWin
 from . import config
 from . import util
 
+if isMac:
+    import HIServices
+
 
 class KeySequence:
 
@@ -95,7 +98,6 @@ class KeyboardHandler(QObject):
         self.listener.start()
 
         if isMac:
-            import HIServices
             if not HIServices.AXIsProcessTrusted():
                 util.show_info(
                     'For Migaku global hotkeys to work, you must allow Anki to control keyboard inputs.\n\n'
