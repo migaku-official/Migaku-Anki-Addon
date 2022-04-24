@@ -1,6 +1,6 @@
 # coding=utf-8
 # pynput
-# Copyright (C) 2015-2021 Moses Palmér
+# Copyright (C) 2015-2022 Moses Palmér
 #
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU Lesser General Public License as published by the Free
@@ -40,6 +40,7 @@ from pynput._util.win32 import (
     KEYBDINPUT,
     KeyTranslator,
     ListenerMixin,
+    MapVirtualKey,
     SendInput,
     SystemHook,
     VkKeyScan)
@@ -70,13 +71,15 @@ class KeyCode(_base.KeyCode):
         """
         if self.vk:
             vk = self.vk
-            scan = self._scan or 0
+            scan = self._scan \
+                or MapVirtualKey(vk, MapVirtualKey.MAPVK_VK_TO_VSC)
             flags = 0
         else:
             res = VkKeyScan(self.char)
             if (res >> 8) & 0xFF == 0:
                 vk = res & 0xFF
-                scan = self._scan or 0
+                scan = self._scan \
+                    or MapVirtualKey(vk, MapVirtualKey.MAPVK_VK_TO_VSC)
                 flags = 0
             else:
                 vk = 0

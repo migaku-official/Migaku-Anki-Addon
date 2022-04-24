@@ -1,6 +1,6 @@
 # coding=utf-8
 # pynput
-# Copyright (C) 2015-2021 Moses Palmér
+# Copyright (C) 2015-2022 Moses Palmér
 #
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU Lesser General Public License as published by the Free
@@ -122,6 +122,12 @@ LPINPUT = ctypes.POINTER(INPUT)
 VkKeyScan = windll.user32.VkKeyScanW
 VkKeyScan.argtypes = (
     wintypes.WCHAR,)
+
+MapVirtualKey = windll.user32.MapVirtualKeyW
+MapVirtualKey.argtypes = (
+    wintypes.UINT,
+    wintypes.UINT)
+MapVirtualKey.MAPVK_VK_TO_VSC = 0
 
 SendInput = windll.user32.SendInput
 SendInput.argtypes = (

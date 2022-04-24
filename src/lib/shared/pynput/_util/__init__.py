@@ -1,6 +1,6 @@
 # coding=utf-8
 # pynput
-# Copyright (C) 2015-2021 Moses Palmér
+# Copyright (C) 2015-2022 Moses Palmér
 #
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU Lesser General Public License as published by the Free
@@ -65,6 +65,7 @@ def backend(package):
 
     errors = []
     resolutions = []
+    print('MODULES', modules)
     for module in modules:
         try:
             return importlib.import_module('._' + module, package)
@@ -81,6 +82,23 @@ def backend(package):
                 for s in resolutions))
             if resolutions else '')
 
+
+def prefix(base, cls):
+    """Calculates the prefix to use for platform specific options for a
+    specific class.
+
+    The prefix if the name of the module containing the class that is an
+    immediate subclass of ``base`` among the super classes of ``cls``.
+    """
+    for super_cls in filter(
+            lambda cls: issubclass(cls, base),
+            cls.__mro__[1:]):
+        if super_cls is base:
+            return cls.__module__.rsplit('.', 1)[-1][1:] + '_'
+        else:
+            result = prefix(base, super_cls)
+            if result is not None:
+                return result
 
 
 class AbstractListener(threading.Thread):

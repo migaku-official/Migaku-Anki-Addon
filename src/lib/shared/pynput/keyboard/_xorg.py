@@ -1,6 +1,6 @@
 # coding=utf-8
 # pynput
-# Copyright (C) 2015-2021 Moses Palmér
+# Copyright (C) 2015-2022 Moses Palmér
 #
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU Lesser General Public License as published by the Free
@@ -236,8 +236,8 @@ class Controller(NotifierMixin, _base.Controller):
             raise self.InvalidKeyException(key)
 
         # If the key has a virtual key code, use that immediately with
-        # fake_input; fake input,being an X server extension, has access to more
-        # internal state that we
+        # fake_input; fake input,being an X server extension, has access to
+        # more internal state that we do
         if key.vk is not None:
             with display_manager(self._display) as dm:
                 Xlib.ext.xtest.fake_input(

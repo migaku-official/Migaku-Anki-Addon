@@ -1,6 +1,6 @@
 # coding=utf-8
 # pynput
-# Copyright (C) 2015-2021 Moses Palmér
+# Copyright (C) 2015-2022 Moses Palmér
 #
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU Lesser General Public License as published by the Free
@@ -381,7 +381,8 @@ class ListenerMixin(object):
     def _run(self):
         self._display_stop = Xlib.display.Display()
         self._display_record = Xlib.display.Display()
-        with display_manager(self._display_stop) as dm:
+        self._stopped = False
+        with display_manager(self._display_record) as dm:
             self._context = dm.record_create_context(
                 0,
                 [Xlib.ext.record.AllClients],
@@ -401,7 +402,7 @@ class ListenerMixin(object):
             self._initialize(self._display_stop)
             self._mark_ready()
             if self.suppress:
-                with display_manager(self._display_record) as dm:
+                with display_manager(self._display_stop) as dm:
                     self._suppress_start(dm)
             self._display_record.record_enable_context(
                 self._context, self._handler)
@@ -412,6 +413,8 @@ class ListenerMixin(object):
             if self.suppress:
                 with display_manager(self._display_stop) as dm:
                     self._suppress_stop(dm)
+            self._display_stop.record_disable_context(self._context)
+            self._display_stop.flush()
             self._display_record.record_free_context(self._context)
             self._display_stop.close()
             self._display_record.close()
@@ -420,13 +423,9 @@ class ListenerMixin(object):
     def _stop_platform(self):
         if not hasattr(self, '_context'):
             self.wait()
-        # pylint: disable=W0702; we must ignore errors
-        try:
-            with display_manager(self._display_stop) as dm:
-                dm.record_disable_context(self._context)
-        except:
-            pass
-        # pylint: enable=W0702
+
+        # Do this asynchronously to avoid deadlocks
+        self._display_record.record_disable_context(self._context)
 
     def _suppress_start(self, display):
         """Starts suppressing events.
