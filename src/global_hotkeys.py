@@ -101,7 +101,7 @@ class KeyboardHandler(QObject):
             if not HIServices.AXIsProcessTrusted():
                 util.show_info(
                     'For Migaku global hotkeys to work, you must allow Anki to control keyboard inputs.\n\n'
-                    'To do this, go to System Preferences > Security & Privacy > Privacy > Accessibility and check the box for "Anki".\n\n'
+                    'To do this, go to System Preferences > Security & Privacy > Privacy > Input Monitoring and check the box for "Anki".\n\n'
                     'Then restart Anki.'
                 )
 
