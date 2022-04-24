@@ -23,7 +23,11 @@ class SettingsWidget(QWidget):
             if self.widget.SUBTITLE:
                 self.setSubTitle(self.widget.SUBTITLE)
             if self.widget.PIXMAP:
-                self.setPixmap(QWizard.WatermarkPixmap,
+                if hasattr(QWizard, 'WizardPixmap'):
+                    QWizard_WatermarkPixmap = QWizard.WizardPixmap.WatermarkPixmap
+                else:
+                    QWizard_WatermarkPixmap = QWizard.WatermarkPixmap
+                self.setPixmap(QWizard_WatermarkPixmap,
                                util.make_pixmap(self.widget.PIXMAP))
             self.lyt = QVBoxLayout()
             self.lyt.setContentsMargins(0, 0, 0, 0)
