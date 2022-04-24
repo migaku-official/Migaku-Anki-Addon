@@ -12,4 +12,7 @@ __pycache__/
 # vscode
 .vscode/
 
+# macOS
+.DS_Store
+
 tmp/
