@@ -244,7 +244,6 @@ function parseSyntax(text) {
                 }
 
                 if (i > 0) {
-                    console.log('PLN', pre_text_match.substring(0, i));
                     ret.push({
                         type: 'plain',
                         text: pre_text_match.substring(0, i)
@@ -252,8 +251,6 @@ function parseSyntax(text) {
                 }
 
                 const pre_text = pre_text_match.substring(i);
-
-                console.log('SYN', pre_text, match[5]);
 
                 ret.push({
                     type: 'syntax',
@@ -266,7 +263,6 @@ function parseSyntax(text) {
             }
             // plain segment
             else if (match[6]) {
-                console.log('PLN', match[6]);
                 ret.push({
                     type: 'plain',
                     text: match[6]
