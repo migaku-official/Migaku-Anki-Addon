@@ -12,9 +12,6 @@ from aqt.utils import isMac, isWin
 from . import config
 from . import util
 
-if isMac:
-    import HIServices
-
 
 class KeySequence:
 
@@ -97,13 +94,10 @@ class KeyboardHandler(QObject):
         )
         self.listener.start()
 
-        if isMac:
-            if not HIServices.AXIsProcessTrusted():
-                util.show_info(
-                    'For Migaku global hotkeys to work, you must allow Anki to control keyboard inputs.\n\n'
-                    'To do this, go to System Preferences > Security & Privacy > Privacy > Input Monitoring and check the box for "Anki".\n\n'
-                    'Then restart Anki.'
-                )
+    def is_available(self):
+        if hasattr(self.listener, 'IS_TRUSTED') and not self.listener.IS_TRUSTED:
+            return False
+        return True
 
     def on_press(self, raw_key):
         raw_key = self.listener.canonical(raw_key)
@@ -177,6 +171,9 @@ class HotkeyHandlerBase(QObject):
             else:
                 sequence = default_sequence
                 self.keyboard_handler.add_action(action, sequence)
+
+    def is_available(self):
+        return self.keyboard_handler.is_available()
 
     def on_action_fired(self, action):
         if action == 'open_dict':
