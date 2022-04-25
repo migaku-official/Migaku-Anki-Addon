@@ -40,13 +40,13 @@ class KeySequence:
         key_strings = []
         if isMac:
             if self.modifiers & self.Meta:
-                key_strings.append('Command')
+                key_strings.append('⌘')
             if self.modifiers & self.Ctrl:
-                key_strings.append('Control')
+                key_strings.append('⌃')
             if self.modifiers & self.Alt:
-                key_strings.append('Option')
+                key_strings.append('⌥')
             if self.modifiers & self.Shift:
-                key_strings.append('Shift')
+                key_strings.append('⇧')
         else:
             if self.modifiers & self.Ctrl:
                 key_strings.append('Ctrl')
