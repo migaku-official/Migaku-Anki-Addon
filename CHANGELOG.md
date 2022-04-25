@@ -1,3 +1,7 @@
+## 0.2.2
+
+- [FEATURE] Support for native Apple silicon (M1) Anki versions
+
 ## 0.2.1
 
 - [FIX] Allow incremental sync for balance scheduler card modifications
