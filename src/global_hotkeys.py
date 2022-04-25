@@ -39,15 +39,17 @@ class KeySequence:
 
         key_strings = []
         if isMac:
-            if self.modifiers & self.Meta:
-                key_strings.append('⌘')
+            join_char = ''
             if self.modifiers & self.Ctrl:
                 key_strings.append('⌃')
             if self.modifiers & self.Alt:
                 key_strings.append('⌥')
             if self.modifiers & self.Shift:
                 key_strings.append('⇧')
+            if self.modifiers & self.Meta:
+                key_strings.append('⌘')
         else:
+            join_char = '+'
             if self.modifiers & self.Ctrl:
                 key_strings.append('Ctrl')
             if self.modifiers & self.Alt:
@@ -60,7 +62,7 @@ class KeySequence:
         key_segs = [seg.capitalize() for seg in self.key.split('_')]
         key_strings.append(' '.join(key_segs))
 
-        return '+'.join(key_strings)
+        return join_char.join(key_strings)
 
     def __repr__(self):
         return F'<{type(self).__name__} {self.to_user_string()}>'
