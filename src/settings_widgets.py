@@ -23,7 +23,11 @@ class SettingsWidget(QWidget):
             if self.widget.SUBTITLE:
                 self.setSubTitle(self.widget.SUBTITLE)
             if self.widget.PIXMAP:
-                self.setPixmap(QWizard.WatermarkPixmap,
+                if hasattr(QWizard, 'WizardPixmap'):
+                    QWizard_WatermarkPixmap = QWizard.WizardPixmap.WatermarkPixmap
+                else:
+                    QWizard_WatermarkPixmap = QWizard.WatermarkPixmap
+                self.setPixmap(QWizard_WatermarkPixmap,
                                util.make_pixmap(self.widget.PIXMAP))
             self.lyt = QVBoxLayout()
             self.lyt.setContentsMargins(0, 0, 0, 0)
@@ -202,6 +206,15 @@ class GlobalHotkeysWidget(SettingsWidget):
     BOTTOM_STRETCH = False
 
     def init_ui(self, parent=None):
+
+        if not hotkey_handler.is_available():
+            self.add_label(
+                'For Migaku global hotkeys to work, you must allow Anki to monitor keyboard inputs.\n\n'
+                'To do this, go to System Preferences > Security & Privacy > Privacy. Then for both "Accessibility" and "Input Monitoring" check the box for "Anki".\n\n'
+                'These permissions are required to detect when the specified shortcuts are pressend and are required to copy the selected text'
+                'Finally restart Anki.'
+            )
+            return
 
         self.add_label(
             'You can use the following hotkeys to interact with the browser extension while it is connected:'

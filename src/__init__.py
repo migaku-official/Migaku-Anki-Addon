@@ -1,5 +1,8 @@
+from platform import platform
 import sys
 import os
+import platform
+
 import aqt
 from aqt.qt import *
 import anki
@@ -20,6 +23,8 @@ def add_sys_path(*path_parts):
 add_sys_path('shared')
 if anki.utils.isLin:
     add_sys_path('linux')
+elif anki.utils.isMac and platform.processor() == 'arm':
+    add_sys_path('macos_arm')
 elif anki.utils.isMac:
     add_sys_path('macos')
 elif anki.utils.isWin:

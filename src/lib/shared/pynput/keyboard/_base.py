@@ -1,6 +1,6 @@
 # coding=utf-8
 # pynput
-# Copyright (C) 2015-2021 Moses Palmér
+# Copyright (C) 2015-2022 Moses Palmér
 #
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU Lesser General Public License as published by the Free
@@ -31,7 +31,7 @@ import unicodedata
 
 import six
 
-from pynput._util import AbstractListener
+from pynput._util import AbstractListener, prefix
 from pynput import _logger
 
 
@@ -667,8 +667,8 @@ class Listener(AbstractListener):
         system.
 
     :param kwargs: Any non-standard platform dependent options. These should be
-        prefixed with the platform name thus: ``darwin_``, ``xorg_`` or
-        ``win32_``.
+        prefixed with the platform name thus: ``darwin_``, ``uinput_``,
+        ``xorg_`` or ``win32_``.
 
         Supported values are:
 
@@ -680,6 +680,14 @@ class Listener(AbstractListener):
             This callable can freely modify the event using functions like
             ``Quartz.CGEventSetIntegerValueField``. If this callable does not
             return the event, the event is suppressed system wide.
+
+        ``uinput_device_paths``
+            A list of device paths.
+
+            If this is specified, *pynput* will limit the number of devices
+            checked for the capabilities needed to those passed, otherwise all
+            system devices will be used. Passing this might be required if an
+            incorrect device is chosen.
 
         ``win32_event_filter``
             A callable taking the arguments ``(msg, data)``, where ``msg`` is
@@ -695,11 +703,11 @@ class Listener(AbstractListener):
     def __init__(self, on_press=None, on_release=None, suppress=False,
                  **kwargs):
         self._log = _logger(self.__class__)
-        prefix = self.__class__.__module__.rsplit('.', 1)[-1][1:] + '_'
+        option_prefix = prefix(Listener, self.__class__)
         self._options = {
-            key[len(prefix):]: value
+            key[len(option_prefix):]: value
             for key, value in kwargs.items()
-            if key.startswith(prefix)}
+            if key.startswith(option_prefix)}
         super(Listener, self).__init__(
             on_press=on_press, on_release=on_release, suppress=suppress)
 # pylint: enable=W0223
@@ -725,5 +733,7 @@ class Listener(AbstractListener):
             return KeyCode.from_char(key.char.lower())
         elif isinstance(key, Key) and key.value in _NORMAL_MODIFIERS:
             return _NORMAL_MODIFIERS[key.value]
+        elif isinstance(key, Key) and key.value.vk is not None:
+            return KeyCode.from_vk(key.value.vk)
         else:
             return key
