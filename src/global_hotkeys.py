@@ -20,7 +20,7 @@ class KeySequence:
     Ctrl  = 1 << 2
     Meta  = 1 << 3
 
-    def __init__(self, key: Optional[str], modifiers: int = 0):
+    def __init__(self, key: Optional[str] = None, modifiers: int = 0):
         self.key = key
         self.modifiers = modifiers
 
@@ -227,7 +227,22 @@ class HotkeyHandlerBase(QObject):
         pass
 
 
-if isWin:
+if isMac:
+
+    class HotkeyHandlerMac(HotkeyHandlerBase):
+
+        hotkeys = [
+            ('open_dict',         KeySequence(), 'Open dictionary'),
+            ('search_dict',       KeySequence(), 'Search selected text in dictionary'),
+            ('set_sentence',      KeySequence(), 'Send sentence to card creator'),
+            ('add_definition',    KeySequence(), 'Send definition to card creator'),
+            ('search_collection', KeySequence(), 'Search selected text in card collection'),
+        ]
+
+    HotkeyHandler = HotkeyHandlerMac
+
+
+elif isWin:
 
     import ctypes
 
