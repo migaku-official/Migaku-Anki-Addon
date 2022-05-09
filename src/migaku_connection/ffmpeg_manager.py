@@ -38,7 +38,7 @@ class ProgramManager(aqt.qt.QObject):
         self.make_available()
 
     def is_available(self):
-        return self.program_path is not None and self.ffprobe_path is not None
+        return self.program_path is not None
 
     def call(self, *args, **kwargs):
         assert self.is_available()

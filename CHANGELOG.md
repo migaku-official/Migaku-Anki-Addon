@@ -1,3 +1,7 @@
+## Unreleased
+
+- [FIX] Condensed audio error
+
 ## 0.2.2
 
 - [FEATURE] Support for native Apple silicon (M1) Anki versions
