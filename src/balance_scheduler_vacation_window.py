@@ -96,13 +96,21 @@ class BalanceSchedulerVacationWindow(QDialog):
         end_widget.setDate(end)
         self.list.setCellWidget(row, 1, end_widget)
 
-        group_box = QComboBox()
-        group_box.addItems(self.group_names)
-        for i, enabled in zip(range(group_box.count()), groups_enabled):
-            item = group_box.model().item(i)
-            item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
-            item.setCheckState(Qt.Checked if enabled else Qt.Unchecked)
-        self.list.setCellWidget(row, 2, group_box)
+        group_tool_btn = QToolButton()
+        group_tool_btn.setText('Change')
+        group_tool_btn.setPopupMode(QToolButton.InstantPopup)
+
+        group_menu = QMenu()
+        group_tool_btn.setMenu(group_menu)
+
+        for name, enabled in zip(self.group_names, groups_enabled):
+            action = QWidgetAction(group_menu)
+            box = QCheckBox(name, group_menu)
+            box.setChecked(enabled)
+            action.setDefaultWidget(box)
+            group_menu.addAction(action)
+
+        self.list.setCellWidget(row, 2, group_tool_btn)
 
         slider = QSlider(Qt.Horizontal)
         slider.setRange(0, 1000)
@@ -181,9 +189,11 @@ class BalanceSchedulerVacationWindow(QDialog):
             id_ = QDateTime.currentMSecsSinceEpoch() + row
 
             groups_enabled = []
-            for i in range(len(self.group_names)):
-                item = self.list.cellWidget(row, 2).model().item(i)
-                groups_enabled.append(item.checkState() == Qt.Checked)
+            menu = self.list.cellWidget(row, 2).menu()
+            for i, action in enumerate(menu.actions()):
+                box = action.defaultWidget()
+                groups_enabled.append(box.isChecked())
+
             factor = self.list.cellWidget(row, 3).value() / 1000.0
 
             for i in range(len(groups)):
