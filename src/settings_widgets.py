@@ -100,14 +100,14 @@ class AboutWidget(SettingsWidget):
 
         self.add_label('<hr>')
 
-        advanced_toggle = QCheckBox('Show advanced settings')
-        advanced_toggle.setCheckState(Qt.Checked if config.get('show_advanced') else Qt.Unchecked)
-        advanced_toggle.stateChanged.connect(self.on_toggle_advanced)
+        self.advanced_toggle = QCheckBox('Show advanced settings')
+        self.advanced_toggle.setChecked(config.get('show_advanced', False))
+        self.advanced_toggle.stateChanged.connect(self.on_toggle_advanced)
 
-        self.lyt.addWidget(advanced_toggle)
+        self.lyt.addWidget(self.advanced_toggle)
 
-    def on_toggle_advanced(self, check_state) -> None:
-        state = check_state == Qt.Checked
+    def on_toggle_advanced(self) -> None:
+        state = self.advanced_toggle.isChecked()
         config.set('show_advanced', state)
 
         if hasattr(self, 'settings_window'):
@@ -310,8 +310,9 @@ class InplaceEditorWidget(SettingsWidget):
         show_empty_fields = QCheckBox('Show empty fields')
         show_empty_fields.setChecked(config.get(
             'inplace_editor_show_empty_fields', False))
-        show_empty_fields.stateChanged.connect(lambda state: config.set(
-            'inplace_editor_show_empty_fields', state == Qt.Checked))
+        show_empty_fields.toggled.connect(lambda checked: config.set(
+            'inplace_editor_show_empty_fields', checked)
+        )
         self.lyt.addWidget(show_empty_fields)
 
     def save(self):
@@ -364,8 +365,7 @@ class ReviewWidget(SettingsWidget):
 
         pass_fail = QCheckBox('Enable Pass/Fail (Recommended)')
         pass_fail.setChecked(config.get('reviewer_pass_fail', True))
-        pass_fail.stateChanged.connect(lambda state: config.set(
-            'reviewer_pass_fail', state == Qt.Checked))
+        pass_fail.toggled.connect(lambda checked: config.set('reviewer_pass_fail', checked))
         self.lyt.addWidget(pass_fail)
 
         self.add_label('<hr>')
@@ -377,8 +377,7 @@ class ReviewWidget(SettingsWidget):
 
         pass_fail = QCheckBox('Maintain Ease Factor (Recommended)')
         pass_fail.setChecked(config.get('maintain_ease', True))
-        pass_fail.stateChanged.connect(lambda state: config.set(
-            'maintain_ease', state == Qt.Checked))
+        pass_fail.toggled.connect(lambda checked: config.set('maintain_ease', checked))
         self.lyt.addWidget(pass_fail)
 
         self.add_label('If you review cards on mobile devices your ease factor will not be maintained. '
@@ -387,10 +386,8 @@ class ReviewWidget(SettingsWidget):
         self.add_label('<hr>')
 
         colored_buttons = QCheckBox('Colored Grading Buttons')
-        colored_buttons.setChecked(config.get(
-            'reviewer_button_coloring', True))
-        colored_buttons.stateChanged.connect(lambda state: config.set(
-            'reviewer_button_coloring', state == Qt.Checked))
+        colored_buttons.setChecked(config.get('reviewer_button_coloring', True))
+        colored_buttons.toggled.connect(lambda checked: config.set('reviewer_button_coloring', checked))
         self.lyt.addWidget(colored_buttons)
 
     def save(self):
@@ -581,8 +578,7 @@ class RetirementWidget(SettingsWidget):
 
         notify = QCheckBox('Show notifications when cards are retired')
         notify.setChecked(config.get('retirement_notify', True))
-        notify.stateChanged.connect(lambda state: config.set(
-            'retirement_notify', state == Qt.Checked))
+        notify.toggled.connect(lambda checked: config.set('retirement_notify', checked))
         self.lyt.addWidget(notify)
 
         self.interval.valueChanged.connect(self.save)
@@ -714,8 +710,7 @@ class PromotionWidget(SettingsWidget):
 
         notify = QCheckBox('Show notifications when cards are promoted')
         notify.setChecked(config.get('promotion_notify', True))
-        notify.stateChanged.connect(lambda state: config.set(
-            'promotion_notify', state == Qt.Checked))
+        notify.toggled.connect(lambda checked: config.set('promotion_notify', checked))
         self.lyt.addWidget(notify)
 
         self.interval.valueChanged.connect(self.save)
@@ -780,8 +775,7 @@ class MediaFileWidget(SettingsWidget):
         convert_audio_mp3 = QCheckBox(
             'Convert audio files to MP3 (Recommended)')
         convert_audio_mp3.setChecked(config.get('convert_audio_mp3', True))
-        convert_audio_mp3.stateChanged.connect(
-            lambda state: config.set('convert_audio_mp3', state == Qt.Checked))
+        convert_audio_mp3.toggled.connect(lambda checked: config.set('convert_audio_mp3', checked))
         self.lyt.addWidget(convert_audio_mp3)
 
         self.add_label(
@@ -791,9 +785,127 @@ class MediaFileWidget(SettingsWidget):
 
         normalize_audio = QCheckBox('Normalize audio volume (Recommended)')
         normalize_audio.setChecked(config.get('normalize_audio', True))
-        normalize_audio.stateChanged.connect(
-            lambda state: config.set('normalize_audio', state == Qt.Checked))
+        normalize_audio.toggled.connect(lambda checked: config.set('normalize_audio', checked))
         self.lyt.addWidget(normalize_audio)
+
+
+class FieldSettingsWidget(SettingsWidget):
+
+    TITLE = 'Field Settings'
+
+    def init_ui(self):
+
+        self.regex_del_buttons = []
+
+        br_lyt = QHBoxLayout()
+        self.lyt.addLayout(br_lyt)
+
+        br_box = QCheckBox('Remove line breaks from sentences')
+        br_box.setChecked(config.get('remove_sentence_linebreaks', False))
+        br_box.toggled.connect(
+            lambda checked: config.set('remove_sentence_linebreaks', checked)
+        )
+        br_lyt.addWidget(br_box)
+
+        br_lyt.addStretch()
+
+        br_lyt.addWidget(QLabel('(Replace with:'))
+
+        br_txt = QLineEdit()
+        br_txt.setText(config.get('sentence_linebreak_replacement', ''))
+        br_txt.textChanged.connect(
+            lambda text: config.set('sentence_linebreak_replacement', text)
+        )
+        br_txt.setMaximumWidth(50)
+        br_lyt.addWidget(br_txt)
+
+        br_lyt.addWidget(QLabel(')'))
+
+
+        self.regex_widget = QWidget()
+        self.lyt.addWidget(self.regex_widget)
+
+        regex_lyt = QVBoxLayout()
+        regex_lyt.setContentsMargins(0, 0, 0, 0)
+        self.regex_widget.setLayout(regex_lyt)
+
+        regex_lyt.addWidget(QLabel('<hr>'))
+
+        regex_lyt.addWidget(self.make_label(
+            'This option will substitute the field contents of the selected fields (comma separated) '
+            'when creating cards using the specified regular expression and replacement string. '
+            'Refer to <a href="https://docs.python.org/3/library/re.html#regular-expression-syntax">this</a> '
+            'for the regular expression syntax.'
+        ))
+
+        self.regex_table = QTableWidget()
+        regex_lyt.addWidget(self.regex_table)
+        self.regex_table.setRowCount(0)
+        self.regex_table.setColumnCount(4)
+        self.regex_table.setHorizontalHeaderLabels(['Field Names', 'Regex', 'Replacement', ''])
+        self.regex_table.horizontalHeader().setSectionResizeMode(3, QHeaderView.Fixed)
+        self.regex_table.horizontalHeader().resizeSection(3, 25)
+        self.regex_table.verticalHeader().setVisible(False)
+
+        regex_btn_lyt = QHBoxLayout()
+        regex_add = QPushButton('Add')
+        regex_add.clicked.connect(lambda: self.add_regex())
+        regex_btn_lyt.addWidget(regex_add)
+        regex_btn_lyt.addStretch()
+        regex_lyt.addLayout(regex_btn_lyt)
+
+        self.add_label('<hr>')
+        self.add_label('Note that these settings only apply to cards created from the browser extension.')
+
+        for data in config.get('field_regex', []):
+            self.add_regex(data)
+
+    def toggle_advanced(self, state):
+        self.regex_widget.setVisible(state)
+
+    def save(self):
+        datas = []
+        for row in range(self.regex_table.rowCount()):
+            data = {}
+            field_names_raw = self.regex_table.cellWidget(row, 0).text()
+            field_names = [x.strip() for x in field_names_raw.split(',')]
+            data['field_names'] = field_names
+            data['regex'] = self.regex_table.cellWidget(row, 1).text()
+            data['replacement'] = self.regex_table.cellWidget(row, 2).text()
+            datas.append(data)
+        config.set('field_regex', datas)
+
+    def add_regex(self, data=None):
+        if data is None:
+            data = {}
+
+        row = self.regex_table.rowCount()
+        self.regex_table.setRowCount(row + 1)
+
+        fields_edit = QLineEdit()
+        fields_edit.setText(', '.join(data.get('field_names', [])))
+        self.regex_table.setCellWidget(row, 0, fields_edit)
+
+        regex_edit = QLineEdit()
+        regex_edit.setText(data.get('regex', ''))
+        self.regex_table.setCellWidget(row, 1, regex_edit)
+
+        replacement_edit = QLineEdit()
+        replacement_edit.setText(data.get('replacement', ''))
+        self.regex_table.setCellWidget(row, 2, replacement_edit)
+
+        btn_del = QPushButton('✖')
+        btn_del.clicked.connect(self.remove_regex)
+        self.regex_del_buttons.append(btn_del)
+        self.regex_table.setCellWidget(row, 3, btn_del)
+
+    def remove_regex(self):
+        del_btn = self.sender()
+        row = self.regex_del_buttons.index(del_btn)
+        if row < 0:
+            return
+        self.regex_table.removeRow(row)
+        del self.regex_del_buttons[row]
 
 
 class CondensedAudioWidget(SettingsWidget):
@@ -820,11 +932,14 @@ class CondensedAudioWidget(SettingsWidget):
         )
 
         condensed_audio_messages_disabled = QCheckBox(
-            'Disable progress and completion messages.')
+            'Disable progress and completion messages.'
+        )
         condensed_audio_messages_disabled.setChecked(
-            config.get('condensed_audio_messages_disabled', False))
-        condensed_audio_messages_disabled.stateChanged.connect(lambda state: config.set(
-            'condensed_audio_messages_disabled', state == Qt.Checked))
+            config.get('condensed_audio_messages_disabled', False)
+        )
+        condensed_audio_messages_disabled.toggled.connect(
+            lambda checked: config.set('condensed_audio_messages_disabled', checked)
+        )
         self.lyt.addWidget(condensed_audio_messages_disabled)
 
     def change_dir(self):
@@ -848,6 +963,7 @@ SETTINGS_WIDGETS = [
     RetirementWidget,
     PromotionWidget,
     MediaFileWidget,
+    FieldSettingsWidget,
     CondensedAudioWidget,
 ]
 

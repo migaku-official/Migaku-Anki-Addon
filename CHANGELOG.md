@@ -2,6 +2,9 @@
 
 - [FIX] Condensed audio error
 - [FIX] Improved vacation group selector
+- [FIX] Checkbox toggles on certain Qt versions
+- [FEATURE] Option to remove/replace line breaks from sentences of new cards
+- [FEATURE] Option to apply regex replacement for new cards
 
 ## 0.2.2
 

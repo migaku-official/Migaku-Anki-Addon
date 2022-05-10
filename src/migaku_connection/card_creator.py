@@ -21,6 +21,7 @@ class CardCreator(MigakuHTTPHandler):
     audio_formats = ['mp3', 'ogg', 'wav']
 
     TO_MP3_RE = re.compile(r'\[sound:(.*?)\.(wav|ogg)\]')
+    BR_RE = re.compile(r'<br\s*/?>')
 
 
     def post(self):
@@ -78,13 +79,11 @@ class CardCreator(MigakuHTTPHandler):
 
         note = Note(aqt.mw.col, note_type)
 
-        convert_to_mp3 = config.get('convert_audio_mp3', False)
-
         for field in card_data['fields']:
             if 'content' in field and field['content']:
                 content = field['content']
                 field_name = field['name']
-                content = self.post_process_text(content)
+                content = self.post_process_text(content, field_name)
                 note[field_name] = content
 
         tags = card_data.get('tags')
@@ -230,7 +229,7 @@ class CardCreator(MigakuHTTPHandler):
             text = data['parsed']
         else:
             text = data['text']
-        text = self.post_process_text(text)
+        text = self.post_process_text(text, field_name)
 
         if not field_name:
             return 'No field for data_type found for current note'
@@ -277,12 +276,22 @@ class CardCreator(MigakuHTTPHandler):
             lambda: util.open_browser(search_str)
         )
 
-    def post_process_text(self, text):
+    def post_process_text(self, text, field_name):
         def conv_mp3(match):
             return '[sound:' + match.group(1) + '.mp3]'
 
         if config.get('convert_audio_mp3', True):
             text =  self.TO_MP3_RE.sub(conv_mp3, text)
+
+        if config.get('remove_sentence_linebreaks', False) and 'sentence' in field_name.lower():
+            repl = config.get('sentence_linebreak_replacement', '')
+            text = self.BR_RE.sub(repl, text)
+
+        for data in config.get('field_regex', []):
+            if field_name in data['field_names']:
+                regex = data['regex']
+                repl = data['replacement']
+                text = re.sub(regex, repl, text)
 
         return text
 
