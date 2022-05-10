@@ -1,3 +1,4 @@
+import math
 import json
 from typing import Literal
 
@@ -92,9 +93,11 @@ class RetirementHandler:
                 p_type = d_conf.get('promotion_type')
                 p_tag = d_conf.get('promotion_tag')
                 p_deck = d_conf.get('promotion_deck')
+                p_ivl_factor = d_conf.get('promotion_ivl_factor', 1.0)
 
                 handled = False
                 type_changed = False
+                card_modified = False
 
                 if p_type:
                     # Check if type is possible for card (prevent blank front)
@@ -147,9 +150,21 @@ class RetirementHandler:
                     if new_did is not None:
                         if card.did != new_did:
                             card.did = new_did
-                            self.cards_modified.append(card)
+                            card_modified = True
                             self.p_moved += 1
                             handled = True
+
+                # Only change the factor if anything else happened
+                if handled and p_ivl_factor != 1.0 and card.ivl > 1 and card.queue == 2:
+                    card.ivl = math.ceil(card.ivl * p_ivl_factor)
+                    until_rev = card.due - self.col.sched.today
+                    if until_rev > 0:
+                        new_until_rev = math.ceil(until_rev * p_ivl_factor)
+                        card.due = max(self.col.sched.today + new_until_rev, self.col.sched.today + 1)
+                    card_modified = True
+
+                if card_modified:
+                    self.cards_modified.append(card)
 
                 if handled:
                     self.p_total += 1

@@ -688,6 +688,14 @@ class PromotionWidget(SettingsWidget):
             self.deck.addItem(deck.name)
         actions_lyt.addWidget(self.deck, 4, 1)
 
+        actions_lyt.addWidget(QLabel('Interval Factor'), 5, 0)
+        self.factor = QDoubleSpinBox()
+        self.factor.setMinimum(0.0)
+        self.factor.setMaximum(10.0)
+        self.factor.setSingleStep(0.1)
+        self.factor.setDecimals(1)
+        actions_lyt.addWidget(self.factor, 5, 1)
+
         tag_lyt = QGridLayout()
         self.lyt.addLayout(tag_lyt)
 
@@ -742,6 +750,7 @@ class PromotionWidget(SettingsWidget):
         if p_deck:
             deck_index = max(self.deck.findText(p_deck), 0)
         self.deck.setCurrentIndex(deck_index)
+        self.factor.setValue(c.get('promotion_ivl_factor', 1.0))
         self.is_loading = False
 
     def save(self):
@@ -756,8 +765,8 @@ class PromotionWidget(SettingsWidget):
         c['promotion_tag'] = self.tag.text().strip()
         c['promotion_required_tag'] = self.required_tag.text().strip()
         c['promotion_forbidden_tag'] = self.forbidden_tag.text().strip()
-        c['promotion_deck'] = self.deck.currentText(
-        ) if self.deck.currentIndex() > 0 else None
+        c['promotion_deck'] = self.deck.currentText() if self.deck.currentIndex() > 0 else None
+        c['promotion_ivl_factor'] = self.factor.value()
 
         aqt.mw.col.decks.update_config(c)
 
