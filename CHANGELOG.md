@@ -5,6 +5,7 @@
 - [FIX] Checkbox toggles on certain Qt versions
 - [FEATURE] Option to remove/replace line breaks from sentences of new cards
 - [FEATURE] Option to apply regex replacement for new cards
+- [FEATURE] Card promotion interval factor
 
 ## 0.2.2
 
