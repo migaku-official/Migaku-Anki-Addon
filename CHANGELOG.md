@@ -1,4 +1,4 @@
-## Unreleased
+## 0.2.3
 
 - [FIX] Condensed audio error
 - [FIX] Improved vacation group selector
