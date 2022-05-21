@@ -1,3 +1,7 @@
+## 0.2.4
+
+- [FEATURE] Endpoint for searching
+
 ## 0.2.3
 
 - [FIX] Condensed audio error

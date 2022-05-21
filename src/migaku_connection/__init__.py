@@ -14,6 +14,7 @@ from .profile_data_provider import ProfileDataProvider
 from .ffmpeg_manager import ProgramManager
 from .info_provider import InfoProvider
 from .card_send import CardSender
+from .search_handler import SearchHandler
 
 
 class MigakuServerThread(QThread):
@@ -135,6 +136,7 @@ class MigakuConnection(QObject):
         ('/create', CardCreator),
         ('/info', InfoProvider),
         ('/sendcard', CardSender),
+        ('/search', SearchHandler),
     ]
 
     PROTOCOL_VERSION = 2
