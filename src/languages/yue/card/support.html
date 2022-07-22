@@ -327,10 +327,15 @@ for (elem of word_elements) {
     if (!is_mobile) {
         elem.addEventListener('mouseleave', on_activeLeave);
     }
+    if (is_mobile) {
+        elem.addEventListener('click', on_activeEnter);
+        elem.classList.add('tappable');
+    }
 }
 
 if (is_mobile) {
-    document.body.addEventListener('click', on_closeAllActiveBody); 
+    document.body.addEventListener('click', on_closeAllActiveBody);       
+    document.body.classList.add('tappable'); 
 }
 
 }());
