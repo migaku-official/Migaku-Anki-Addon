@@ -84,6 +84,10 @@ function editable_field_on_keydown(e) {
 
 function init_editable_fields() {
     $('.editable-field').each(function() {
+        const field_name = this.getAttribute('data-field-name');
+        const field_name_css_string_safe = field_name.replace(/"/g, '\\"');
+        this.style.setProperty('--field-name', `"${field_name_css_string_safe}"`);
+
         const is_empty = this.innerHTML.trim() === '';
         this.classList.toggle('editable-field-empty', is_empty);
 

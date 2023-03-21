@@ -8,5 +8,5 @@
 
 .show-empty-editable-field .editable-field.editable-field-empty:not(.editable-field-active):before {
     color: #808080;
-    content: '(This field is empty)';
+    content: '(' var(--field-name) ')';
 }
