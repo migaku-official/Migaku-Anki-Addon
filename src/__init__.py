@@ -67,9 +67,9 @@ def setup_menu():
     menu.addSeparator()
     menu.addAction(ease_reset.action)
     menu.addAction(retirement.action)
-    menu.addAction(balance_scheduler.action),
+    menu.addAction(balance_scheduler.action)
     menu.addAction(balance_scheduler_vacation_window.action)
-    menu.addAction(balance_scheduler_dayoff_window.action),
-    aqt.mw.form.menubar.insertMenu(aqt.mw.form.menuHelp.menuAction(), menu)  
+    menu.addAction(balance_scheduler_dayoff_window.action)
+    aqt.mw.form.menubar.insertMenu(aqt.mw.form.menuHelp.menuAction(), menu)
 
 setup_menu()
