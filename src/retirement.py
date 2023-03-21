@@ -307,7 +307,7 @@ def on_deck_options_did_load(dialog):
         )
     )
 
-aqt.gui_hooks.deck_options_did_load.append(on_deck_options_did_load)
+# aqt.gui_hooks.deck_options_did_load.append(on_deck_options_did_load)
 
 
 action = QAction('Check Card Retirement/Promotion', aqt.mw)
