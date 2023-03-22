@@ -205,6 +205,7 @@ main.container .card audio {
 .migaku-typeselect label {
   padding: 0 7px;
   white-space: nowrap;
+  font-family: sans-serif;
 }
 
 .ankidroid_dark_mode .migaku-header,
