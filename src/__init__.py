@@ -54,7 +54,7 @@ from . import (
     balance_scheduler,
     balance_scheduler_vacation_window,
     balance_scheduler_dayoff_window,
-    #video_driver_fix,
+    anki_version,
 )
 
 
@@ -73,3 +73,4 @@ def setup_menu():
     aqt.mw.form.menubar.insertMenu(aqt.mw.form.menuHelp.menuAction(), menu)
 
 setup_menu()
+anki_version.check_anki_version_dialog()
