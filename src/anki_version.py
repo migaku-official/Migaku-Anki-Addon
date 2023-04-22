@@ -9,7 +9,7 @@ from enum import Enum
 recommended_version_tuple = (2, 1, 61)
 
 # This can be used when older versions continue to be supported
-recommended_version_lower_tuple = recommended_version_tuple
+recommended_version_lower_tuple = (2, 1, 45)
 
 recommended_version = '.'.join(str(x) for x in recommended_version_tuple)
 recommended_version_lower = '.'.join(str(x) for x in recommended_version_lower_tuple)
