@@ -7,7 +7,7 @@ from pynput.keyboard import Key
 import anki
 import aqt
 from aqt.qt import *
-from aqt.utils import isMac, isWin
+from aqt.utils import isMac, isWin, isLin
 
 from . import config
 from . import util
@@ -194,8 +194,9 @@ class HotkeyHandlerBase(QObject):
             Key.shift, Key.shift_l, Key.shift_r
         ]
 
-        for key in modifier_keys:
-            self.keyboard_controller.release(key)
+        if not isLin:
+            for key in modifier_keys:
+                self.keyboard_controller.release(key)
 
         with self.keyboard_controller.pressed(Key.cmd if isMac else Key.ctrl):
             self.keyboard_controller.press('c')
