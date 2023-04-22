@@ -22,7 +22,6 @@
 
 from Xlib import X
 from Xlib.protocol import rq, structs
-from Xlib.xobject import resource
 from Xlib.error import XError
 
 extname = 'DAMAGE'
@@ -179,4 +178,4 @@ def init(disp, info):
 
     disp.extension_add_event(info.first_event + DamageNotifyCode, DamageNotify)
 
-    disp.add_extension_error(code=BadDamageCode, err=BadDamageError)
+    disp.extension_add_error(code=BadDamageCode, err=BadDamageError)

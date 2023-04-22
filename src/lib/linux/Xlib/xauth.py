@@ -27,6 +27,8 @@ from Xlib import X, error
 FamilyInternet = X.FamilyInternet
 FamilyDECnet = X.FamilyDECnet
 FamilyChaos = X.FamilyChaos
+FamilyServerInterpreted = X.FamilyServerInterpreted
+FamilyInternetV6 = X.FamilyInternetV6
 FamilyLocal = 256
 
 class Xauthority(object):
@@ -118,6 +120,8 @@ class Xauthority(object):
         matches = {}
 
         for efam, eaddr, enum, ename, edata in self.entries:
+            if enum == b'' and ename not in matches:
+                enum = num
             if efam == family and eaddr == address and num == enum:
                 matches[ename] = edata
 

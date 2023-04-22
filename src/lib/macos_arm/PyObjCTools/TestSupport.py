@@ -79,7 +79,6 @@ def sdkForPython(_cache=[]):  # noqa: B006, M511
     or None if no framework was used
     """
     if not _cache:
-
         cflags = _get_config_var("CFLAGS")
         m = _re.search(r"-isysroot\s+([^ ]*)(\s|$)", cflags)
         if m is None:
@@ -325,6 +324,8 @@ _typealias = {}
 _typealias[objc._C_LNG_LNG] = objc._C_LNG
 _typealias[objc._C_ULNG_LNG] = objc._C_ULNG
 
+_idlike_cache = set()
+
 
 class TestCase(_unittest.TestCase):
     """
@@ -405,6 +406,88 @@ class TestCase(_unittest.TestCase):
                 or "%s is not a variadic function with a "
                 "null-terminated list of arguments" % (method,)
             )
+
+    def assertArgIsIDLike(self, method, argno, message=None):
+        global _idlike_cache
+
+        if isinstance(method, objc.selector):
+            offset = 2
+        else:
+            offset = 0
+        info = method.__metadata__()
+        tp = info["arguments"][argno + offset].get("type")
+
+        if tp in {b"@", b"^@", b"n^@", b"N^@", b"o^@"}:
+            return
+
+        if tp in _idlike_cache:
+            return
+        elif tp.startswith(b"^") and tp[1:] in _idlike_cache:
+            return
+        elif tp.startswith(b"o^") and tp[2:] in _idlike_cache:
+            return
+        elif tp.startswith(b"n^") and tp[2:] in _idlike_cache:
+            return
+        elif tp.startswith(b"N^") and tp[2:] in _idlike_cache:
+            return
+
+        # Assume that tests are supposed to pass,
+        # our cache may be out of date
+        tmp = set(objc._idSignatures())
+        _idlike_cache = set(tmp)
+
+        if tp in _idlike_cache:
+            return
+        elif tp.startswith(b"^") and tp[1:] in _idlike_cache:
+            return
+        elif tp.startswith(b"o^") and tp[2:] in _idlike_cache:
+            return
+        elif tp.startswith(b"n^") and tp[2:] in _idlike_cache:
+            return
+        elif tp.startswith(b"N^") and tp[2:] in _idlike_cache:
+            return
+
+        self.fail(
+            message or "argument %d of %r is not IDLike (%r)" % (argno, method, tp)
+        )
+
+    def assertResultIsIDLike(self, method, message=None):
+        global _idlike_cache
+
+        info = method.__metadata__()
+        tp = info["retval"].get("type")
+
+        if tp in {b"@", b"^@", b"n^@", b"N^@", b"o^@"}:
+            return
+
+        if tp in _idlike_cache:
+            return
+        elif tp.startswith(b"^") and tp[1:] in _idlike_cache:
+            return
+        elif tp.startswith(b"o^") and tp[2:] in _idlike_cache:
+            return
+        elif tp.startswith(b"n^") and tp[2:] in _idlike_cache:
+            return
+        elif tp.startswith(b"N^") and tp[2:] in _idlike_cache:
+            return
+
+        # Assume that tests are supposed to pass,
+        # our cache may be out of date
+        tmp = set(objc._idSignatures())
+        _idlike_cache = set(tmp)
+
+        if tp in _idlike_cache:
+            return
+        elif tp.startswith(b"^") and tp[1:] in _idlike_cache:
+            return
+        elif tp.startswith(b"o^") and tp[2:] in _idlike_cache:
+            return
+        elif tp.startswith(b"n^") and tp[2:] in _idlike_cache:
+            return
+        elif tp.startswith(b"N^") and tp[2:] in _idlike_cache:
+            return
+
+        self.fail(message or f"result of {method!r} is not IDLike ({tp!r})")
 
     def assertArgIsNullTerminated(self, method, argno, message=None):
         if isinstance(method, objc.selector):
@@ -842,7 +925,7 @@ class TestCase(_unittest.TestCase):
     def assertResultIsBOOL(self, method, message=None):
         info = method.__metadata__()
         typestr = info["retval"]["type"]
-        if typestr != objc._C_NSBOOL:
+        if typestr not in (objc._C_NSBOOL, objc._C_BOOL):
             self.fail(
                 message or f"result of {method} is not of type BOOL, but {typestr!r}"
             )
@@ -854,7 +937,7 @@ class TestCase(_unittest.TestCase):
             offset = 0
         info = method.__metadata__()
         typestr = info["arguments"][argno + offset]["type"]
-        if typestr != objc._C_NSBOOL:
+        if typestr not in (objc._C_NSBOOL, objc._C_BOOL):
             self.fail(
                 message
                 or "arg %d of %s is not of type BOOL, but %r" % (argno, method, typestr)
@@ -1025,59 +1108,75 @@ class TestCase(_unittest.TestCase):
     def _validateCallableMetadata(
         self, value, class_name=None, skip_simple_charptr_check=False
     ):
-        with self.subTest(repr(value)):
-            callable_meta = value.__metadata__()
-            argcount = len(callable_meta["arguments"])
+        if False and isinstance(value, objc.selector):
+            # Check if the signature might contain types that are interesting
+            # for this method. This avoids creating a metadata dict for 'simple'
+            # methods.
+            # XXX: Disabled this shortcut due to adding already_retained tests
+            signature = value.signature
+            if objc._C_PTR not in signature and objc._C_CHARPTR not in signature:
+                return
 
-            for idx, meta in [("retval", callable_meta["retval"])] + list(
-                enumerate(callable_meta["arguments"])
+        callable_meta = value.__metadata__()
+        argcount = len(callable_meta["arguments"])
+
+        for idx, meta in [("retval", callable_meta["retval"])] + list(
+            enumerate(callable_meta["arguments"])
+        ):
+            if meta.get("already_retained", False) and meta.get(
+                "already_cfretained", False
             ):
-                if meta["type"].endswith(objc._C_PTR + objc._C_CHR):
-                    if meta.get("c_array_delimited_by_null", False):
-                        self.fail(
-                            f"{value}: {idx}: null-delimited 'char*', use _C_CHAR_AS_TEXT instead {class_name or ''}"
-                        )
-                    if not skip_simple_charptr_check:
-                        self.fail(f"{value}: {idx}: 'char*' {class_name or ''}")
+                self.fail(
+                    f"{value}: {idx}: both already_retained and already_cfretained"
+                )
 
-                v = meta.get("c_array_size_in_arg", None)
-                if isinstance(v, int):
-                    if not (0 <= v < argcount):
-                        self.fail(
-                            f"{value}: {idx}: c_array_size_in_arg out of range {v} {class_name or ''}"
-                        )
-                elif isinstance(v, tuple):
-                    b, e = v
-                    if not (0 <= b < argcount):
-                        self.fail(
-                            f"{value}: {idx}: c_array_size_in_arg out of range {b} {class_name or ''}"
-                        )
-                    if not (0 <= e < argcount):
-                        self.fail(
-                            f"{value}: {idx}: c_array_size_in_arg out of range {e} {class_name or ''}"
-                        )
+            if meta["type"].endswith(objc._C_PTR + objc._C_CHR) or meta[
+                "type"
+            ].endswith(objc._C_CHARPTR):
+                if meta.get("c_array_delimited_by_null", False):
+                    self.fail(
+                        f"{value}: {idx}: null-delimited 'char*', use _C_CHAR_AS_TEXT instead {class_name or ''}"
+                    )
+                if not skip_simple_charptr_check:
+                    self.fail(f"{value}: {idx}: 'char*' {class_name or ''}")
 
-                tp = meta["type"]
-                if any(
-                    tp.startswith(pfx)
-                    for pfx in (objc._C_IN, objc._C_OUT, objc._C_INOUT)
+            v = meta.get("c_array_size_in_arg", None)
+            if isinstance(v, int):
+                if not (0 <= v < argcount):
+                    self.fail(
+                        f"{value}: {idx}: c_array_size_in_arg out of range {v} {class_name or ''}"
+                    )
+            elif isinstance(v, tuple):
+                b, e = v
+                if not (0 <= b < argcount):
+                    self.fail(
+                        f"{value}: {idx}: c_array_size_in_arg out of range {b} {class_name or ''}"
+                    )
+                if not (0 <= e < argcount):
+                    self.fail(
+                        f"{value}: {idx}: c_array_size_in_arg out of range {e} {class_name or ''}"
+                    )
+
+            tp = meta["type"]
+            if any(
+                tp.startswith(pfx) for pfx in (objc._C_IN, objc._C_OUT, objc._C_INOUT)
+            ):
+                rest = tp[1:]
+                if not rest.startswith(objc._C_PTR) and not rest.startswith(
+                    objc._C_CHARPTR
                 ):
-                    rest = tp[1:]
-                    if not rest.startswith(objc._C_PTR) and not rest.startswith(
-                        objc._C_CHARPTR
-                    ):
+                    self.fail(
+                        f"{value}: {idx}: byref specifier on non-pointer: {tp} {class_name or ''}"
+                    )
+
+                rest = rest[1:]
+
+                if rest.startswith(objc._C_STRUCT_B):
+                    name, fields = objc.splitStructSignature(rest)
+                    if not fields:
                         self.fail(
-                            f"{value}: {idx}: byref specifier on non-pointer: {tp} {class_name or ''}"
+                            f"{value}: {idx}: byref to empty struct (handle/CFType?): {tp} {class_name or ''}"
                         )
-
-                    rest = rest[1:]
-
-                    if rest.startswith(objc._C_STRUCT_B):
-                        name, fields = objc.splitStructSignature(rest)
-                        if not fields:
-                            self.fail(
-                                f"{value}: {idx}: byref to empty struct (handle/CFType?): {tp} {class_name or ''}"
-                            )
 
     def assertCallableMetadataIsSane(
         self, module, *, exclude_cocoa=True, exclude_attrs=()
@@ -1097,11 +1196,19 @@ class TestCase(_unittest.TestCase):
 
             exclude_names = set(dir(Cocoa))
 
-            # Don't exclude 'NSObject' because a number
+            # Don't exclude NSObject' because a number
             # of frameworks define categories on this class.
             exclude_names -= {"NSObject"}
         else:
             exclude_names = set()
+
+        exclude_method_names = {
+            "copyRenderedTextureForCGLContext_pixelFormat_bounds_isFlipped_",
+            "newTaggedNSStringWithASCIIBytes__length__",
+            "utf8ValueSafe",
+            "utf8ValueSafe_",
+            "isKeyExcludedFromWebScript_",
+        }
 
         exclude_attrs = set(exclude_attrs)
         exclude_attrs.add(("NSColor", "scn_C3DColorIgnoringColorSpace_success_"))
@@ -1110,45 +1217,112 @@ class TestCase(_unittest.TestCase):
         )
         exclude_attrs.add(("SCNColor", "scn_C3DColorIgnoringColorSpace_success_"))
         exclude_attrs.add(("SKColor", "scn_C3DColorIgnoringColorSpace_success_"))
+        exclude_attrs.add(
+            (
+                "NSObject",
+                "copyRenderedTextureForCGLContext_pixelFormat_bounds_isFlipped_",
+            )
+        )
+        exclude_attrs.add(
+            (
+                "NSObject",
+                "newTaggedNSStringWithASCIIBytes__length__",
+            )
+        )
+        exclude_attrs.add(
+            (
+                "NSObject",
+                "utf8ValueSafe",
+            )
+        )
+        exclude_attrs.add(
+            (
+                "NSObject",
+                "utf8ValueSafe_",
+            )
+        )
+        exclude_attrs.add(
+            (
+                "NSObject",
+                "isKeyExcludedFromWebScript_",
+            )
+        )
 
-        for nm in dir(module):
+        # Calculate all (interesting) names in the module. This pokes into
+        # the implementation details of objc.ObjCLazyModule to avoid loading
+        # all attributes (which is expensive for larger bindings).
+        if isinstance(module, objc.ObjCLazyModule):
+            module_names = []
+            module_names.extend(
+                cls.__name__
+                for cls in objc.getClassList()
+                if (not cls.__name__.startswith("_")) and ("." not in cls.__name__)
+            )
+            module_names.extend(module._ObjCLazyModule__funcmap or [])
+            module_names.extend(module.__dict__.keys())
+            todo = list(module._ObjCLazyModule__parents or [])
+            while todo:
+                parent = todo.pop()
+                if isinstance(parent, objc.ObjCLazyModule):
+                    module_names.extend(parent._ObjCLazyModule__funcmap or ())
+                    todo.extend(parent._ObjCLazyModule__parents or ())
+                    module_names.extend(parent.__dict__.keys())
+                else:
+                    module_names.extend(dir(module))
+            module_names.sort()
+        else:
+            module_names = sorted(dir(module))
+
+        for _idx, nm in enumerate(module_names):
+            # print(f"{_idx}/{len(module_names)} {nm}")
             if nm in exclude_names:
                 continue
             if nm in exclude_attrs:
                 continue
 
-            value = getattr(module, nm)
+            try:
+                value = getattr(module, nm)
+            except AttributeError:
+                continue
             if isinstance(value, objc.objc_class):
                 if value.__name__ == "Object":
                     # Root class, does not conform to the NSObject
                     # protocol and useless to test.
                     continue
-                for attr_name in dir(value.pyobjc_instanceMethods):
+                for attr_name, attr in value.pyobjc_instanceMethods.__dict__.items():
+                    if attr_name in exclude_method_names:
+                        continue
                     if (nm, attr_name) in exclude_attrs:
                         continue
                     if attr_name.startswith("_"):
                         # Skip private names
                         continue
-                    attr = getattr(value.pyobjc_instanceMethods, attr_name, None)
-                    if isinstance(attr, objc.selector):
-                        self._validateCallableMetadata(
-                            attr, nm, skip_simple_charptr_check=not exclude_cocoa
-                        )
 
-                for attr_name in dir(value.pyobjc_classMethods):
+                    with self.subTest(classname=nm, instance_method=attr_name):
+                        if isinstance(attr, objc.selector):  # pragma: no branch
+                            self._validateCallableMetadata(
+                                attr, nm, skip_simple_charptr_check=not exclude_cocoa
+                            )
+
+                for attr_name, attr in value.pyobjc_classMethods.__dict__.items():
+                    if attr_name in exclude_method_names:
+                        continue
                     if (nm, attr_name) in exclude_attrs:
                         continue
                     if attr_name.startswith("_"):
                         # Skip private names
                         continue
-                    attr = getattr(value.pyobjc_classMethods, attr_name, None)
-                    if isinstance(attr, objc.selector):
-                        self._validateCallableMetadata(
-                            attr, nm, skip_simple_charptr_check=not exclude_cocoa
-                        )
+
+                    with self.subTest(classname=nm, instance_method=attr_name):
+                        attr = getattr(value.pyobjc_classMethods, attr_name, None)
+                        if isinstance(attr, objc.selector):  # pragma: no branch
+                            self._validateCallableMetadata(
+                                attr, nm, skip_simple_charptr_check=not exclude_cocoa
+                            )
 
             elif isinstance(value, objc.function):
-                self._validateCallableMetadata(value)
+                with self.subTest(function=nm):
+                    self._validateCallableMetadata(value)
 
             else:
                 continue
@@ -1184,6 +1358,7 @@ class TestCase(_unittest.TestCase):
 main = _unittest.main
 expectedFailure = _unittest.expectedFailure
 skipUnless = _unittest.skipUnless
+SkipTest = _unittest.SkipTest
 
 
 def expectedFailureIf(condition):

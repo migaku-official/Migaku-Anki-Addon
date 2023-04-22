@@ -39,7 +39,6 @@ prefixes = {
 
 
 def describe_type(typestr):
-
     nm = basic_types.get(typestr)
     if nm is not None:
         return nm
@@ -71,8 +70,19 @@ def describe_type(typestr):
         else:
             nm = typestr[:idx]
             if not nm:
-                nm = b"<?>"
-            return "struct {}".format(nm.decode("utf-8"))
+                return "struct <?>"
+            nm = nm.decode("utf-8").lstrip("_")
+            if "." in nm:
+                return nm.rsplit(".", 1)[-1]
+            return nm
+
+    if typestr.startswith(objc._C_VECTOR_B):
+        base_type = basic_types[typestr[-2:-1]]
+        if base_type.startswith("unsigned "):
+            base_type = "u" + base_type.split()[-1]
+
+        count = typestr[1:-2]
+        return f"simd_{base_type}{count.decode()}"
 
     if typestr.startswith(objc._C_ARY_B):
         typestr = typestr[1:]

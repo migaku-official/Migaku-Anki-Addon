@@ -71,7 +71,7 @@ class _BaseDisplay(protocol_display.Display):
         protocol_display.Display.__init__(self, *args, **keys)
         self._atom_cache = {}
 
-    def get_atom(self, atomname, only_if_exists=0):
+    def get_atom(self, atomname, only_if_exists=False):
         if atomname in self._atom_cache:
             return self._atom_cache[atomname]
 
@@ -340,8 +340,8 @@ class Display(object):
         # extension dict maintained in the display object
         setattr(self.extension_event, name, (code,subcode))
 
-    def add_extension_error(self, code, err):
-        """add_extension_error(code, err)
+    def extension_add_error(self, code, err):
+        """extension_add_error(code, err)
 
         Add an extension error.  CODE is the numeric code, and ERR is
         the error class.
@@ -473,7 +473,7 @@ class Display(object):
     ### X requests
     ###
 
-    def intern_atom(self, name, only_if_exists = 0):
+    def intern_atom(self, name, only_if_exists = False):
         """Intern the string name, returning its atom number. If
         only_if_exists is true and the atom does not already exist, it
         will not be created and X.NONE is returned."""
@@ -482,7 +482,7 @@ class Display(object):
                                only_if_exists = only_if_exists)
         return r.atom
 
-    def get_atom(self, atom, only_if_exists = 0):
+    def get_atom(self, atom, only_if_exists = False):
         """Alias for intern_atom, using internal cache"""
         return self.display.get_atom(atom, only_if_exists)
 
@@ -501,7 +501,7 @@ class Display(object):
                                       selection = selection)
         return r.owner
 
-    def send_event(self, destination, event, event_mask = 0, propagate = 0,
+    def send_event(self, destination, event, event_mask = 0, propagate = False,
                    onerror = None):
         """Send a synthetic event to the window destination which can be
         a window object, or X.PointerWindow or X.InputFocus. event is the
@@ -849,7 +849,8 @@ class Display(object):
 
     def change_hosts(self, mode, host_family, host, onerror = None):
         """mode is either X.HostInsert or X.HostDelete. host_family is
-        one of X.FamilyInternet, X.FamilyDECnet or X.FamilyChaos.
+        one of X.FamilyInternet, X.FamilyDECnet, X.FamilyChaos,
+        X.FamilyServerInterpreted or X.FamilyInternetV6.
 
         host is a list of bytes. For the Internet family, it should be the
         four bytes of an IPv4 address."""
@@ -868,7 +869,7 @@ hosts
     The hosts on the access list. Each entry has the following attributes:
 
     family
-        X.FamilyInternet, X.FamilyDECnet, or X.FamilyChaos.
+        X.FamilyInternet, X.FamilyDECnet, X.FamilyChaos, X.FamilyServerInterpreted or X.FamilyInternetV6.
     name
         A list of byte values, the coding depends on family. For the Internet family, it is the 4 bytes of an IPv4 address.
 

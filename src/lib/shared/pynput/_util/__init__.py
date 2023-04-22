@@ -65,7 +65,6 @@ def backend(package):
 
     errors = []
     resolutions = []
-    print('MODULES', modules)
     for module in modules:
         try:
             return importlib.import_module('._' + module, package)
