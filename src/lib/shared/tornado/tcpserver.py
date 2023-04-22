@@ -140,7 +140,7 @@ class TCPServer(object):
                     'keyfile "%s" does not exist' % self.ssl_options["keyfile"]
                 )
 
-    def listen(self, port: int, address: str = "") -> None:
+    def listen(self, port: int, address: str = "", reuse_port: bool = False) -> None:
         """Starts accepting connections on the given port.
 
         This method may be called more than once to listen on multiple ports.
@@ -148,7 +148,7 @@ class TCPServer(object):
         `TCPServer.start` afterwards.  It is, however, necessary to start
         the `.IOLoop`.
         """
-        sockets = bind_sockets(port, address=address)
+        sockets = bind_sockets(port, address=address, reuse_port=reuse_port)
         self.add_sockets(sockets)
 
     def add_sockets(self, sockets: Iterable[socket.socket]) -> None:

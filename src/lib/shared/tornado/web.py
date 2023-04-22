@@ -2086,7 +2086,7 @@ class Application(ReversibleRouter):
 
             autoreload.start()
 
-    def listen(self, port: int, address: str = "", **kwargs: Any) -> HTTPServer:
+    def listen(self, port: int, address: str = "", reuse_port: bool = False, **kwargs: Any) -> HTTPServer:
         """Starts an HTTP server for this application on the given port.
 
         This is a convenience alias for creating an `.HTTPServer`
@@ -2106,7 +2106,7 @@ class Application(ReversibleRouter):
            Now returns the `.HTTPServer` object.
         """
         server = HTTPServer(self, **kwargs)
-        server.listen(port, address)
+        server.listen(port, address, reuse_port=reuse_port)
         return server
 
     def add_handlers(self, host_pattern: str, host_handlers: _RuleList) -> None:
