@@ -7,7 +7,7 @@ from pynput.keyboard import Key
 import anki
 import aqt
 from aqt.qt import *
-from aqt.utils import isMac, isWin, isLin
+from anki.utils import isMac, isWin, isLin
 
 from . import config
 from . import util
