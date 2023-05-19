@@ -15,6 +15,7 @@ from .ffmpeg_manager import ProgramManager
 from .info_provider import InfoProvider
 from .card_send import CardSender
 from .search_handler import SearchHandler
+from .srs_import import SrsCheckHandler, SrsImportInfoHandler, SrsSampleCardHandler, SrsImportHandler
 
 
 class MigakuServerThread(QThread):
@@ -29,7 +30,7 @@ class MigakuServerThread(QThread):
         self.loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self.loop)
 
-        self.server.listen(44432, reuse_port=True)
+        self.server.listen(44432)
         tornado.ioloop.IOLoop.instance().start()
 
 
@@ -137,6 +138,11 @@ class MigakuConnection(QObject):
         ('/info', InfoProvider),
         ('/sendcard', CardSender),
         ('/search', SearchHandler),
+
+        ('/srs-check', SrsCheckHandler),
+        ('/srs-import-info', SrsImportInfoHandler),
+        ('/srs-sample-card', SrsSampleCardHandler),
+        ('/srs-import', SrsImportHandler),
     ]
 
     PROTOCOL_VERSION = 2
