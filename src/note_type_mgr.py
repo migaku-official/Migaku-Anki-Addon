@@ -75,7 +75,8 @@ def nt_update(nt: NotetypeDict, lang: Language, commit=True) -> None:
             nt_mgr.add_field(nt, field)
 
     css_path = lang.file_path('card', 'styles.css')
-    css_data = open(css_path, 'r', encoding='utf-8').read()
+    with open(css_path, 'r', encoding='utf-8') as file:
+        css_data = file.read()
 
     # Set CSS
     nt['css'] = NOTE_TYPE_MARK_CSS + '\n\n' + css_data
@@ -98,7 +99,8 @@ def nt_update(nt: NotetypeDict, lang: Language, commit=True) -> None:
     # Set template html
     for fmt, html_name in [('qfmt', 'front.html'), ('afmt', 'back.html')]:
         html_path = lang.file_path('card', html_name)
-        html = open(html_path, 'r', encoding='utf-8').read()
+        with open(html_path, 'r', encoding='utf-8') as file:
+            html = file.read()
 
         fields_settings = nt_get_tmpl_fields_settings(nt, template_idx, fmt)
         nt['tmpls'][template_idx][fmt] = html
@@ -133,7 +135,9 @@ def nt_set_css_lang(nt: NotetypeDict, lang: Optional[Language], commit=True) -> 
 
     if lang:
         card_css_path = lang.file_path('card', 'support.css')
-        card_css = open(card_css_path, 'r', encoding='utf-8').read()
+
+        with open(card_css_path, 'r', encoding="utf-8") as file:
+            card_css = file.read()
 
         css_data += F'\n\n/*###MIGAKU {lang.name_en.upper()} SUPPORT CSS STARTS###*/'
         css_data += card_css
@@ -200,7 +204,8 @@ def nt_set_tmpl_lang(nt: NotetypeDict, lang: Optional[Language], tmpl_idx: int, 
     # Insert Formatting
     if lang:
         card_js_path = lang.file_path('card', 'support.html')
-        card_js = open(card_js_path, 'r', encoding='utf-8').read()
+        with open(card_js_path, 'r', encoding="utf-8") as file:
+            card_js = file.read()
 
         fmt_data += F'\n\n<!--###MIGAKU {lang.name_en.upper()} SUPPORT JS STARTS###-->'
         fmt_data += card_js
