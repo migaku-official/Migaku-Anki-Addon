@@ -1,3 +1,7 @@
+## Unreleased
+
+- [FIX] leaked file descriptors
+
 ## 0.2.4
 
 - [FEATURE] Endpoint for searching
