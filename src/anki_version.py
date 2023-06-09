@@ -6,7 +6,7 @@ from enum import Enum
 
 
 # Current recommended version
-recommended_version_tuple = (2, 1, 64)
+recommended_version_tuple = (2, 1, 65)
 
 # This can be used when older versions continue to be supported
 recommended_version_lower_tuple = (2, 1, 49)
