@@ -1,5 +1,6 @@
 import asyncio
 import tornado
+import socket
 from pathlib import Path
 
 import aqt
@@ -30,7 +31,7 @@ class MigakuServerThread(QThread):
         self.loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self.loop)
 
-        self.server.listen(44432)
+        self.server.listen(44432, reuse_port=hasattr(socket, 'SO_REUSEPORT'))
         tornado.ioloop.IOLoop.instance().start()
 
 
