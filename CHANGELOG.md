@@ -1,7 +1,8 @@
 ## Unreleased
 
 - [FIX] Increase timeout of generating descriptions request to 60s
-- [FIX] leaked file descriptors
+- [FIX] Leaked file descriptors
+- [FIX] Use SO_REUSEPORT if available
 
 ## 0.2.4
 
