@@ -4,6 +4,7 @@ from anki.notes import NotetypeDict
 import aqt
 from aqt.operations import CollectionOp
 from aqt.qt import *
+from aqt.utils import tooltip
 
 from .languages import Language
 from . import config
@@ -37,7 +38,7 @@ class DefinitionAddDialog(QDialog):
         super().__init__(parent)
         self.lang = lang
         self.note_ids = note_ids
-        
+
         note_type_fields = [fld['name'] for fld in note_type['flds']]
 
         self.current_idx = 0
@@ -175,7 +176,7 @@ class DefinitionAddDialog(QDialog):
             on_done=self.on_batch_delivery,
             on_error=self.on_batch_error,
             callback_on_main_thread=True,
-            timeout=15,
+            timeout=60,
         )
 
 
@@ -242,6 +243,7 @@ class DefinitionAddDialog(QDialog):
         self.finalize_checkpoint()
         aqt.mw.progress.finish()
         config.set('definition_adding', self.config, do_write=True)
+        tooltip('Successfully generated definitions', parent=self.parent())
         self.accept()
 
     def finalize_checkpoint(self):
