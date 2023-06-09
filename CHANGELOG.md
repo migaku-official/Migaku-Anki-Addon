@@ -1,5 +1,6 @@
 ## Unreleased
 
+- [FIX] Increase timeout of generating descriptions request to 60s
 - [FIX] leaked file descriptors
 
 ## 0.2.4
