@@ -56,7 +56,9 @@ def update_show_empty_fields():
 
 inplace_editor_css_uri = addon_web_uri('inplace_editor.css')
 inplace_editor_js = F'var inplace_editor_css_path = "{inplace_editor_css_uri}";\n'
-inplace_editor_js += open(addon_path('inplace_editor.js'), 'r').read()
+
+with open(addon_path('inplace_editor.js'), 'r', encoding='utf-8') as file:
+    inplace_editor_js += file.read()
 
 def init_reviewer_web(reviewer: Reviewer) -> None:
     reviewer.web.eval(inplace_editor_js + '\n' + show_empty_fields_js())

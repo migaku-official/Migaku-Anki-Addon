@@ -220,18 +220,22 @@ def _upload_media_single_attempt(fname, user_token, is_audio=False):
         if not os.path.exists(path):
             # ignore missing media
             return None
-        data = open(path, 'rb').read()
+        with open(path, 'rb') as file:
+            data = file.read()
 
     if is_audio and not fname.endswith('.mp3'):
         in_path = tmp_path(fname)
-        open(in_path, 'wb').write(data)
+        with open(in_path, 'wb') as file:
+            file.write(data)
         fname = os.path.splitext(fname)[0] + '.m4a'
         out_path = tmp_path(fname)
         r = aqt.mw.migaku_connection.ffmpeg.call('-y', '-i', in_path, out_path)
         if r != 0:
             # ignore failed conversions, most likely bad audio
             return None
-        data = open(out_path, 'rb').read()
+
+        with open(out_path, 'rb') as file:
+            data = file.read()
 
     r = request_retry(
         'GET',
