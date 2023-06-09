@@ -177,7 +177,8 @@ class CardCreator(MigakuHTTPHandler):
 
         sound = AudioSegment.from_file(source)
         normalized_sound = match_target_amplitude(sound, -25.0)
-        normalized_sound.export(path, format="mp3")
+        with open(path, 'wb') as file:
+            normalized_sound.export(file, format="mp3")
 
     def moveExtensionMp3ToMediaFolder(self, source, filename):
         path = util.col_media_path(filename)
