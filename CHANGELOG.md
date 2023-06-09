@@ -3,6 +3,7 @@
 - [FIX] Increase timeout of generating descriptions request to 60s
 - [FIX] Leaked file descriptors
 - [FIX] Use SO_REUSEPORT if available
+- [FEATURE] Add Migaku items to context menu for notes in browser
 
 ## 0.2.4
 
