@@ -7,7 +7,7 @@ from pynput.keyboard import Key
 import anki
 import aqt
 from aqt.qt import *
-from anki.utils import isMac, isWin, isLin
+from anki.utils import is_mac, is_win, is_lin
 
 from . import config
 from . import util
@@ -37,7 +37,7 @@ class KeySequence:
             return "Disabled"
 
         key_strings = []
-        if isMac:
+        if is_mac:
             join_char = ""
             if self.modifiers & self.Ctrl:
                 key_strings.append("⌃")
@@ -56,7 +56,7 @@ class KeySequence:
             if self.modifiers & self.Shift:
                 key_strings.append("Shift")
             if self.modifiers & self.Meta:
-                key_strings.append("Win" if isWin else "Meta")
+                key_strings.append("Win" if is_win else "Meta")
 
         key_segs = [seg.capitalize() for seg in self.key.split("_")]
         key_strings.append(" ".join(key_segs))
@@ -227,11 +227,11 @@ class HotkeyHandlerBase(QObject):
             Key.shift_r,
         ]
 
-        if not isLin:
+        if not is_lin:
             for key in modifier_keys:
                 self.keyboard_controller.release(key)
 
-        with self.keyboard_controller.pressed(Key.cmd if isMac else Key.ctrl):
+        with self.keyboard_controller.pressed(Key.cmd if is_mac else Key.ctrl):
             self.keyboard_controller.press("c")
             self.keyboard_controller.release("c")
 
@@ -261,7 +261,7 @@ class HotkeyHandlerBase(QObject):
         pass
 
 
-if isMac:
+if is_mac:
 
     class HotkeyHandlerMac(HotkeyHandlerBase):
         hotkeys = [
@@ -279,7 +279,7 @@ if isMac:
     HotkeyHandler = HotkeyHandlerMac
 
 
-elif isWin:
+elif is_win:
     import ctypes
 
     class HotkeyHandlerWindows(HotkeyHandlerBase):

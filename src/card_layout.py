@@ -13,7 +13,8 @@ def CardLayout_init_hook(self, mw: AnkiQt, note: Note, *args, **kwargs):
         note_type = note.note_type()
         if (
             nt_was_installed(note_type)
-            and not mw.app.queryKeyboardModifiers() & Qt.ControlModifier
+            and not mw.app.queryKeyboardModifiers()
+            & Qt.KeyboardModifier.ControlModifier
         ):
             parent = kwargs.get("parent", mw)
             util.show_info(

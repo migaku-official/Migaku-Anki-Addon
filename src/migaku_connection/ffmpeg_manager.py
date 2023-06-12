@@ -6,7 +6,7 @@ import appdirs
 from threading import Lock
 
 import aqt
-from anki.utils import isLin, isMac, isWin
+from anki.utils import is_lin, is_mac, is_win
 
 from .. import util
 from .. import config
@@ -25,7 +25,7 @@ class ProgramManager(aqt.qt.QObject):
         self.program_name = program_name
         self.download_uri = self.BASE_DOWNLOAD_URI + program_name + "/"
 
-        self.program_executable_name = f"{program_name}.exe" if isWin else program_name
+        self.program_executable_name = f"{program_name}.exe" if is_win else program_name
 
         self.local_program_path = util.user_path(self.program_executable_name)
 
@@ -137,18 +137,18 @@ class ProgramManager(aqt.qt.QObject):
             zf.extractall(self.migaku_shared_path)
 
         # make program executable
-        if not isWin:
+        if not is_win:
             try:
                 os.chmod(self.shared_user_program_name, 0o755)
             except OSError:
                 pass
 
     def os_download_uri(self):  # sourcery skip: use-fstring-for-concatenation
-        if isLin:
+        if is_lin:
             return self.download_uri + "linux.zip"
-        if isMac:
+        if is_mac:
             return self.download_uri + "macos.zip"
-        if isWin:
+        if is_win:
             return self.download_uri + "windows.zip"
         raise NotImplementedError("OS not supported")
 
