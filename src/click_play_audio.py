@@ -8,7 +8,6 @@ from .note_type_mgr import nt_get_lang
 
 
 def ctx_get_lang(ctx):
-
     note = None
 
     if isinstance(ctx, Reviewer):
@@ -16,10 +15,10 @@ def ctx_get_lang(ctx):
 
     elif isinstance(ctx, Previewer):
         card = ctx.card()
-    
+
     if not card:
         return None
-    
+
     note = card.note()
     if not note:
         return None
@@ -27,9 +26,10 @@ def ctx_get_lang(ctx):
     return nt_get_lang(card.note_type())
 
 
-def handle_js_message(handled: Tuple[bool, Any], message: str, ctx: Any) -> Tuple[bool, Any]:
-
-    if message.startswith('play_audio'):
+def handle_js_message(
+    handled: Tuple[bool, Any], message: str, ctx: Any
+) -> Tuple[bool, Any]:
+    if message.startswith("play_audio"):
         lang = ctx_get_lang(ctx)
 
         if lang:
@@ -39,5 +39,6 @@ def handle_js_message(handled: Tuple[bool, Any], message: str, ctx: Any) -> Tupl
         return (True, None)
 
     return handled
+
 
 aqt.gui_hooks.webview_did_receive_js_message.append(handle_js_message)

@@ -7,12 +7,10 @@ from .. import util
 
 
 class SearchHandler(MigakuHTTPHandler):
-
     def post(self):
-
         data = json.loads(self.request.body)
 
-        terms = data.get('terms', [])
+        terms = data.get("terms", [])
 
         if terms:
             for term in terms:
@@ -21,7 +19,7 @@ class SearchHandler(MigakuHTTPHandler):
             self.connection.open_dict()
 
         r_data = {
-            'status': 'ok',
+            "status": "ok",
         }
 
         self.write(json.dumps(r_data))

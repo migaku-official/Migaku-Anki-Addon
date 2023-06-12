@@ -21,8 +21,9 @@
 
 from Xlib.protocol import request
 
+
 class Resource(object):
-    def __init__(self, display, rid, owner = 0):
+    def __init__(self, display, rid, owner=0):
         self.display = display
         self.id = rid
         self.owner = owner
@@ -46,9 +47,7 @@ class Resource(object):
         return int(self.id)
 
     def __repr__(self):
-        return '<%s 0x%08x>' % (self.__class__.__name__, self.id)
+        return "<%s 0x%08x>" % (self.__class__.__name__, self.id)
 
-    def kill_client(self, onerror = None):
-        request.KillClient(display = self.display,
-                           onerror = onerror,
-                           resource = self.id)
+    def kill_client(self, onerror=None):
+        request.KillClient(display=self.display, onerror=onerror, resource=self.id)

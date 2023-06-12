@@ -25,4 +25,5 @@ from six.moves import _thread
 # return a basic Python lock, instead of the default dummy lock
 
 from Xlib.support import lock
+
 lock.allocate_lock = _thread.allocate_lock

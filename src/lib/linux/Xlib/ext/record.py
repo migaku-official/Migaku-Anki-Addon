@@ -21,49 +21,48 @@
 
 from Xlib.protocol import rq
 
-extname = 'RECORD'
+extname = "RECORD"
 
-FromServerTime          = 0x01
-FromClientTime          = 0x02
-FromClientSequence      = 0x04
+FromServerTime = 0x01
+FromClientTime = 0x02
+FromClientSequence = 0x04
 
-CurrentClients          = 1
-FutureClients           = 2
-AllClients              = 3
+CurrentClients = 1
+FutureClients = 2
+AllClients = 3
 
-FromServer              = 0
-FromClient              = 1
-ClientStarted           = 2
-ClientDied              = 3
-StartOfData             = 4
-EndOfData               = 5
+FromServer = 0
+FromClient = 1
+ClientStarted = 2
+ClientDied = 3
+StartOfData = 4
+EndOfData = 5
 
-Record_Range8 = rq.Struct(
-        rq.Card8('first'),
-        rq.Card8('last'))
-Record_Range16 = rq.Struct(
-        rq.Card16('first'),
-        rq.Card16('last'))
+Record_Range8 = rq.Struct(rq.Card8("first"), rq.Card8("last"))
+Record_Range16 = rq.Struct(rq.Card16("first"), rq.Card16("last"))
 Record_ExtRange = rq.Struct(
-        rq.Card8('major_range_first'),
-        rq.Card8('major_range_last'),
-        rq.Card16('minor_range_first'),
-        rq.Card16('minor_range_last'))
+    rq.Card8("major_range_first"),
+    rq.Card8("major_range_last"),
+    rq.Card16("minor_range_first"),
+    rq.Card16("minor_range_last"),
+)
 Record_Range = rq.Struct(
-        rq.Object('core_requests', Record_Range8),
-        rq.Object('core_replies', Record_Range8),
-        rq.Object('ext_requests', Record_ExtRange),
-        rq.Object('ext_replies', Record_ExtRange),
-        rq.Object('delivered_events', Record_Range8),
-        rq.Object('device_events', Record_Range8),
-        rq.Object('errors', Record_Range8),
-        rq.Bool('client_started'),
-        rq.Bool('client_died'))
+    rq.Object("core_requests", Record_Range8),
+    rq.Object("core_replies", Record_Range8),
+    rq.Object("ext_requests", Record_ExtRange),
+    rq.Object("ext_replies", Record_ExtRange),
+    rq.Object("delivered_events", Record_Range8),
+    rq.Object("device_events", Record_Range8),
+    rq.Object("errors", Record_Range8),
+    rq.Bool("client_started"),
+    rq.Bool("client_died"),
+)
 
 Record_ClientInfo = rq.Struct(
-        rq.Card32('client_resource'),
-        rq.LengthOf('ranges', 4),
-        rq.List('ranges', Record_Range))
+    rq.Card32("client_resource"),
+    rq.LengthOf("ranges", 4),
+    rq.List("ranges", Record_Range),
+)
 
 
 class RawField(rq.ValueField):
@@ -75,139 +74,152 @@ class RawField(rq.ValueField):
         return val, len(val), None
 
     def parse_binary_value(self, data, display, length, format):
-        return data, ''
+        return data, ""
 
 
 class GetVersion(rq.ReplyRequest):
     _request = rq.Struct(
-            rq.Card8('opcode'),
-            rq.Opcode(0),
-            rq.RequestLength(),
-            rq.Card16('major_version'),
-            rq.Card16('minor_version'))
+        rq.Card8("opcode"),
+        rq.Opcode(0),
+        rq.RequestLength(),
+        rq.Card16("major_version"),
+        rq.Card16("minor_version"),
+    )
     _reply = rq.Struct(
-            rq.Pad(2),
-            rq.Card16('sequence_number'),
-            rq.ReplyLength(),
-            rq.Card16('major_version'),
-            rq.Card16('minor_version'),
-            rq.Pad(20))
+        rq.Pad(2),
+        rq.Card16("sequence_number"),
+        rq.ReplyLength(),
+        rq.Card16("major_version"),
+        rq.Card16("minor_version"),
+        rq.Pad(20),
+    )
+
 
 def get_version(self, major, minor):
     return GetVersion(
-            display = self.display,
-            opcode = self.display.get_extension_major(extname),
-            major_version = major,
-            minor_version = minor)
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        major_version=major,
+        minor_version=minor,
+    )
 
 
 class CreateContext(rq.Request):
     _request = rq.Struct(
-            rq.Card8('opcode'),
-            rq.Opcode(1),
-            rq.RequestLength(),
-            rq.Card32('context'),           # Record_RC
-            rq.Card8('element_header'),     # Record_Element_Header
-            rq.Pad(3),
-            rq.LengthOf('clients', 4),
-            rq.LengthOf('ranges', 4),
-            rq.List('clients', rq.Card32Obj),
-            rq.List('ranges', Record_Range))
+        rq.Card8("opcode"),
+        rq.Opcode(1),
+        rq.RequestLength(),
+        rq.Card32("context"),  # Record_RC
+        rq.Card8("element_header"),  # Record_Element_Header
+        rq.Pad(3),
+        rq.LengthOf("clients", 4),
+        rq.LengthOf("ranges", 4),
+        rq.List("clients", rq.Card32Obj),
+        rq.List("ranges", Record_Range),
+    )
+
 
 def create_context(self, datum_flags, clients, ranges):
     context = self.display.allocate_resource_id()
     CreateContext(
-            display = self.display,
-            opcode = self.display.get_extension_major(extname),
-            context = context,
-            element_header = datum_flags,
-            clients = clients,
-            ranges = ranges)
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        context=context,
+        element_header=datum_flags,
+        clients=clients,
+        ranges=ranges,
+    )
     return context
 
 
 class RegisterClients(rq.Request):
     _request = rq.Struct(
-            rq.Card8('opcode'),
-            rq.Opcode(2),
-            rq.RequestLength(),
-            rq.Card32('context'),           # Record_RC
-            rq.Card8('element_header'),     # Record_Element_Header
-            rq.Pad(3),
-            rq.LengthOf('clients', 4),
-            rq.LengthOf('ranges', 4),
-            rq.List('clients', rq.Card32Obj),
-            rq.List('ranges', Record_Range))
+        rq.Card8("opcode"),
+        rq.Opcode(2),
+        rq.RequestLength(),
+        rq.Card32("context"),  # Record_RC
+        rq.Card8("element_header"),  # Record_Element_Header
+        rq.Pad(3),
+        rq.LengthOf("clients", 4),
+        rq.LengthOf("ranges", 4),
+        rq.List("clients", rq.Card32Obj),
+        rq.List("ranges", Record_Range),
+    )
+
 
 def register_clients(self, context, element_header, clients, ranges):
     RegisterClients(
-            display = self.display,
-            opcode = self.display.get_extension_major(extname),
-            context = context,
-            element_header = element_header,
-            clients = clients,
-            ranges = ranges)
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        context=context,
+        element_header=element_header,
+        clients=clients,
+        ranges=ranges,
+    )
 
 
 class UnregisterClients(rq.Request):
     _request = rq.Struct(
-            rq.Card8('opcode'),
-            rq.Opcode(3),
-            rq.RequestLength(),
-            rq.Card32('context'),           # Record_RC
-            rq.LengthOf('clients', 4),
-            rq.List('clients', rq.Card32Obj))
+        rq.Card8("opcode"),
+        rq.Opcode(3),
+        rq.RequestLength(),
+        rq.Card32("context"),  # Record_RC
+        rq.LengthOf("clients", 4),
+        rq.List("clients", rq.Card32Obj),
+    )
+
 
 def unregister_clients(self, context, clients):
     UnregisterClients(
-            display = self.display,
-            opcode = self.display.get_extension_major(extname),
-            context = context,
-            clients = clients)
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        context=context,
+        clients=clients,
+    )
 
 
 class GetContext(rq.ReplyRequest):
     _request = rq.Struct(
-            rq.Card8('opcode'),
-            rq.Opcode(4),
-            rq.RequestLength(),
-            rq.Card32('context'))           # Record_RC
+        rq.Card8("opcode"), rq.Opcode(4), rq.RequestLength(), rq.Card32("context")
+    )  # Record_RC
     _reply = rq.Struct(
-            rq.Pad(2),
-            rq.Card16('sequence_number'),
-            rq.ReplyLength(),
-            rq.Card8('element_header'),     # Record_Element_Header
-            rq.Pad(3),
-            rq.LengthOf('client_info', 4),
-            rq.Pad(16),
-            rq.List('client_info', Record_ClientInfo))
+        rq.Pad(2),
+        rq.Card16("sequence_number"),
+        rq.ReplyLength(),
+        rq.Card8("element_header"),  # Record_Element_Header
+        rq.Pad(3),
+        rq.LengthOf("client_info", 4),
+        rq.Pad(16),
+        rq.List("client_info", Record_ClientInfo),
+    )
+
 
 def get_context(self, context):
     return GetContext(
-            display = self.display,
-            opcode = self.display.get_extension_major(extname),
-            context = context)
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        context=context,
+    )
 
 
 class EnableContext(rq.ReplyRequest):
     _request = rq.Struct(
-            rq.Card8('opcode'),
-            rq.Opcode(5),
-            rq.RequestLength(),
-            rq.Card32('context'))           # Record_RC
+        rq.Card8("opcode"), rq.Opcode(5), rq.RequestLength(), rq.Card32("context")
+    )  # Record_RC
     _reply = rq.Struct(
-            rq.Pad(1),
-            rq.Card8('category'),
-            rq.Card16('sequence_number'),
-            rq.ReplyLength(),
-            rq.Card8('element_header'),     # Record_Element_Header
-            rq.Bool('client_swapped'),
-            rq.Pad(2),
-            rq.Card32('id_base'),           # Record_XIDBase
-            rq.Card32('server_time'),
-            rq.Card32('recorded_sequence_number'),
-            rq.Pad(8),
-            RawField('data'))
+        rq.Pad(1),
+        rq.Card8("category"),
+        rq.Card16("sequence_number"),
+        rq.ReplyLength(),
+        rq.Card8("element_header"),  # Record_Element_Header
+        rq.Bool("client_swapped"),
+        rq.Pad(2),
+        rq.Card32("id_base"),  # Record_XIDBase
+        rq.Card32("server_time"),
+        rq.Card32("recorded_sequence_number"),
+        rq.Pad(8),
+        RawField("data"),
+    )
 
     # This request receives multiple responses, so we need to keep
     # ourselves in the 'sent_requests' list in order to receive them all.
@@ -234,49 +246,53 @@ class EnableContext(rq.ReplyRequest):
         else:
             self._display.sent_requests.insert(0, self)
 
+
 def enable_context(self, context, callback):
     EnableContext(
-            callback = callback,
-            display = self.display,
-            opcode = self.display.get_extension_major(extname),
-            context = context)
+        callback=callback,
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        context=context,
+    )
 
 
 class DisableContext(rq.Request):
     _request = rq.Struct(
-            rq.Card8('opcode'),
-            rq.Opcode(6),
-            rq.RequestLength(),
-            rq.Card32('context'))           # Record_RC
+        rq.Card8("opcode"), rq.Opcode(6), rq.RequestLength(), rq.Card32("context")
+    )  # Record_RC
+
 
 def disable_context(self, context):
     DisableContext(
-            display = self.display,
-            opcode = self.display.get_extension_major(extname),
-            context = context)
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        context=context,
+    )
 
 
 class FreeContext(rq.Request):
     _request = rq.Struct(
-            rq.Card8('opcode'),
-            rq.Opcode(7),
-            rq.RequestLength(),
-            rq.Card32('context'))           # Record_RC
+        rq.Card8("opcode"), rq.Opcode(7), rq.RequestLength(), rq.Card32("context")
+    )  # Record_RC
+
 
 def free_context(self, context):
     FreeContext(
-            display = self.display,
-            opcode = self.display.get_extension_major(extname),
-            context = context)
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        context=context,
+    )
     self.display.free_resource_id(context)
 
 
 def init(disp, info):
-    disp.extension_add_method('display', 'record_get_version', get_version)
-    disp.extension_add_method('display', 'record_create_context', create_context)
-    disp.extension_add_method('display', 'record_register_clients', register_clients)
-    disp.extension_add_method('display', 'record_unregister_clients', unregister_clients)
-    disp.extension_add_method('display', 'record_get_context', get_context)
-    disp.extension_add_method('display', 'record_enable_context', enable_context)
-    disp.extension_add_method('display', 'record_disable_context', disable_context)
-    disp.extension_add_method('display', 'record_free_context', free_context)
+    disp.extension_add_method("display", "record_get_version", get_version)
+    disp.extension_add_method("display", "record_create_context", create_context)
+    disp.extension_add_method("display", "record_register_clients", register_clients)
+    disp.extension_add_method(
+        "display", "record_unregister_clients", unregister_clients
+    )
+    disp.extension_add_method("display", "record_get_context", get_context)
+    disp.extension_add_method("display", "record_enable_context", enable_context)
+    disp.extension_add_method("display", "record_disable_context", disable_context)
+    disp.extension_add_method("display", "record_free_context", free_context)

@@ -74,8 +74,7 @@ class TimeoutError(Exception):
 
 
 class ObjectDict(Dict[str, Any]):
-    """Makes a dictionary behave like an object, with attribute-style access.
-    """
+    """Makes a dictionary behave like an object, with attribute-style access."""
 
     def __getattr__(self, name: str) -> Any:
         try:
@@ -115,8 +114,7 @@ class GzipDecompressor(object):
 
     @property
     def unconsumed_tail(self) -> bytes:
-        """Returns the unconsumed portion left over
-        """
+        """Returns the unconsumed portion left over"""
         return self.decompressobj.unconsumed_tail
 
     def flush(self) -> bytes:

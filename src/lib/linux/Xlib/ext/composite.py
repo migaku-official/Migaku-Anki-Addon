@@ -36,147 +36,156 @@ graphics.
 from Xlib.protocol import rq
 from Xlib.xobject import drawable
 
-extname = 'Composite'
+extname = "Composite"
 
 RedirectAutomatic = 0
 RedirectManual = 1
 
+
 class QueryVersion(rq.ReplyRequest):
     _request = rq.Struct(
-            rq.Card8('opcode'),
-            rq.Opcode(0),
-            rq.RequestLength(),
-            rq.Card32('major_version'),
-            rq.Card32('minor_version')
-            )
+        rq.Card8("opcode"),
+        rq.Opcode(0),
+        rq.RequestLength(),
+        rq.Card32("major_version"),
+        rq.Card32("minor_version"),
+    )
 
     _reply = rq.Struct(
-            rq.ReplyCode(),
-            rq.Pad(1),
-            rq.Card16('sequence_number'),
-            rq.ReplyLength(),
-            rq.Card32('major_version'),
-            rq.Card32('minor_version'),
-            rq.Pad(16),
-            )
+        rq.ReplyCode(),
+        rq.Pad(1),
+        rq.Card16("sequence_number"),
+        rq.ReplyLength(),
+        rq.Card32("major_version"),
+        rq.Card32("minor_version"),
+        rq.Pad(16),
+    )
+
 
 def query_version(self):
     return QueryVersion(
-        display = self.display,
-        opcode = self.display.get_extension_major(extname),
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
         major_version=0,
-        minor_version=4
-        )
+        minor_version=4,
+    )
 
 
 class RedirectWindow(rq.Request):
     _request = rq.Struct(
-        rq.Card8('opcode'),
+        rq.Card8("opcode"),
         rq.Opcode(1),
         rq.RequestLength(),
-        rq.Window('window'),
-        rq.Set('update', 1, (RedirectAutomatic, RedirectManual)),
+        rq.Window("window"),
+        rq.Set("update", 1, (RedirectAutomatic, RedirectManual)),
         rq.Pad(3),
-        )
+    )
 
-def redirect_window(self, update, onerror = None):
+
+def redirect_window(self, update, onerror=None):
     """Redirect the hierarchy starting at this window to off-screen
     storage.
     """
-    RedirectWindow(display = self.display,
-                   onerror = onerror,
-                   opcode = self.display.get_extension_major(extname),
-                   window = self,
-                   update = update,
-                   )
+    RedirectWindow(
+        display=self.display,
+        onerror=onerror,
+        opcode=self.display.get_extension_major(extname),
+        window=self,
+        update=update,
+    )
 
 
 class RedirectSubwindows(rq.Request):
     _request = rq.Struct(
-        rq.Card8('opcode'),
+        rq.Card8("opcode"),
         rq.Opcode(2),
         rq.RequestLength(),
-        rq.Window('window'),
-        rq.Set('update', 1, (RedirectAutomatic, RedirectManual)),
+        rq.Window("window"),
+        rq.Set("update", 1, (RedirectAutomatic, RedirectManual)),
         rq.Pad(3),
-        )
+    )
 
-def redirect_subwindows(self, update, onerror = None):
+
+def redirect_subwindows(self, update, onerror=None):
     """Redirect the hierarchies starting at all current and future
     children to this window to off-screen storage.
     """
-    RedirectSubwindows(display = self.display,
-                       onerror = onerror,
-                       opcode = self.display.get_extension_major(extname),
-                       window = self,
-                       update = update,
-                       )
+    RedirectSubwindows(
+        display=self.display,
+        onerror=onerror,
+        opcode=self.display.get_extension_major(extname),
+        window=self,
+        update=update,
+    )
 
 
 class UnredirectWindow(rq.Request):
     _request = rq.Struct(
-        rq.Card8('opcode'),
+        rq.Card8("opcode"),
         rq.Opcode(3),
         rq.RequestLength(),
-        rq.Window('window'),
-        rq.Set('update', 1, (RedirectAutomatic, RedirectManual)),
+        rq.Window("window"),
+        rq.Set("update", 1, (RedirectAutomatic, RedirectManual)),
         rq.Pad(3),
-        )
+    )
 
-def unredirect_window(self, update, onerror = None):
-    """Stop redirecting this window hierarchy.
-    """
-    UnredirectWindow(display = self.display,
-                     onerror = onerror,
-                     opcode = self.display.get_extension_major(extname),
-                     window = self,
-                     update = update,
-                     )
+
+def unredirect_window(self, update, onerror=None):
+    """Stop redirecting this window hierarchy."""
+    UnredirectWindow(
+        display=self.display,
+        onerror=onerror,
+        opcode=self.display.get_extension_major(extname),
+        window=self,
+        update=update,
+    )
 
 
 class UnredirectSubindows(rq.Request):
     _request = rq.Struct(
-        rq.Card8('opcode'),
+        rq.Card8("opcode"),
         rq.Opcode(4),
         rq.RequestLength(),
-        rq.Window('window'),
-        rq.Set('update', 1, (RedirectAutomatic, RedirectManual)),
+        rq.Window("window"),
+        rq.Set("update", 1, (RedirectAutomatic, RedirectManual)),
         rq.Pad(3),
-        )
+    )
 
-def unredirect_subwindows(self, update, onerror = None):
-    """Stop redirecting the hierarchies of children to this window.
-    """
-    RedirectWindow(display = self.display,
-                   onerror = onerror,
-                   opcode = self.display.get_extension_major(extname),
-                   window = self,
-                   update = update,
-                   )
+
+def unredirect_subwindows(self, update, onerror=None):
+    """Stop redirecting the hierarchies of children to this window."""
+    RedirectWindow(
+        display=self.display,
+        onerror=onerror,
+        opcode=self.display.get_extension_major(extname),
+        window=self,
+        update=update,
+    )
 
 
 class CreateRegionFromBorderClip(rq.Request):
     _request = rq.Struct(
-        rq.Card8('opcode'),
+        rq.Card8("opcode"),
         rq.Opcode(5),
         rq.RequestLength(),
-        rq.Card32('region'), # FIXME: this should be a Region from XFIXES extension
-        rq.Window('window'),
-        )
+        rq.Card32("region"),  # FIXME: this should be a Region from XFIXES extension
+        rq.Window("window"),
+    )
 
-def create_region_from_border_clip(self, onerror = None):
+
+def create_region_from_border_clip(self, onerror=None):
     """Create a region of the border clip of the window, i.e. the area
     that is not clipped by the parent and any sibling windows.
     """
 
     rid = self.display.allocate_resource_id()
     CreateRegionFromBorderClip(
-        display = self.display,
-        onerror = onerror,
-        opcode = self.display.get_extension_major(extname),
-        region = rid,
-        window = self,
-        )
+        display=self.display,
+        onerror=onerror,
+        opcode=self.display.get_extension_major(extname),
+        region=rid,
+        window=self,
+    )
 
     # FIXME: create Region object and return it
     return rid
@@ -184,14 +193,15 @@ def create_region_from_border_clip(self, onerror = None):
 
 class NameWindowPixmap(rq.Request):
     _request = rq.Struct(
-        rq.Card8('opcode'),
+        rq.Card8("opcode"),
         rq.Opcode(6),
         rq.RequestLength(),
-        rq.Window('window'),
-        rq.Pixmap('pixmap'),
-        )
+        rq.Window("window"),
+        rq.Pixmap("pixmap"),
+    )
 
-def name_window_pixmap(self, onerror = None):
+
+def name_window_pixmap(self, onerror=None):
     """Create a new pixmap that refers to the off-screen storage of
     the window, including its border.
 
@@ -203,69 +213,69 @@ def name_window_pixmap(self, onerror = None):
     """
 
     pid = self.display.allocate_resource_id()
-    NameWindowPixmap(display = self.display,
-                     onerror = onerror,
-                     opcode = self.display.get_extension_major(extname),
-                     window = self,
-                     pixmap = pid,
-                     )
+    NameWindowPixmap(
+        display=self.display,
+        onerror=onerror,
+        opcode=self.display.get_extension_major(extname),
+        window=self,
+        pixmap=pid,
+    )
 
-    cls = self.display.get_resource_class('pixmap', drawable.Pixmap)
-    return cls(self.display, pid, owner = 1)
+    cls = self.display.get_resource_class("pixmap", drawable.Pixmap)
+    return cls(self.display, pid, owner=1)
+
 
 class GetOverlayWindow(rq.ReplyRequest):
     _request = rq.Struct(
-        rq.Card8('opcode'),
-        rq.Opcode(7),
-        rq.RequestLength(),
-        rq.Window('window')
+        rq.Card8("opcode"), rq.Opcode(7), rq.RequestLength(), rq.Window("window")
     )
     _reply = rq.Struct(
         rq.ReplyCode(),
         rq.Pad(1),
-        rq.Card16('sequence_number'),
+        rq.Card16("sequence_number"),
         rq.ReplyLength(),
-        rq.Window('overlay_window'),
+        rq.Window("overlay_window"),
         rq.Pad(20),
     )
 
-def get_overlay_window(self):
-    """Return the overlay window of the root window.
-    """
 
-    return GetOverlayWindow(display = self.display,
-                              opcode = self.display.get_extension_major(extname),
-                              window = self)
+def get_overlay_window(self):
+    """Return the overlay window of the root window."""
+
+    return GetOverlayWindow(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        window=self,
+    )
+
 
 def init(disp, info):
-    disp.extension_add_method('display',
-                              'composite_query_version',
-                              query_version)
+    disp.extension_add_method("display", "composite_query_version", query_version)
 
-    disp.extension_add_method('window',
-                              'composite_redirect_window',
-                              redirect_window)
+    disp.extension_add_method("window", "composite_redirect_window", redirect_window)
 
-    disp.extension_add_method('window',
-                              'composite_redirect_subwindows',
-                              redirect_subwindows)
+    disp.extension_add_method(
+        "window", "composite_redirect_subwindows", redirect_subwindows
+    )
 
-    disp.extension_add_method('window',
-                              'composite_unredirect_window',
-                              unredirect_window)
+    disp.extension_add_method(
+        "window", "composite_unredirect_window", unredirect_window
+    )
 
-    disp.extension_add_method('window',
-                              'composite_unredirect_subwindows',
-                              unredirect_subwindows)
+    disp.extension_add_method(
+        "window", "composite_unredirect_subwindows", unredirect_subwindows
+    )
 
-    disp.extension_add_method('window',
-                              'composite_create_region_from_border_clip',
-                              create_region_from_border_clip)
+    disp.extension_add_method(
+        "window",
+        "composite_create_region_from_border_clip",
+        create_region_from_border_clip,
+    )
 
-    disp.extension_add_method('window',
-                              'composite_name_window_pixmap',
-                              name_window_pixmap)
+    disp.extension_add_method(
+        "window", "composite_name_window_pixmap", name_window_pixmap
+    )
 
-    disp.extension_add_method('window',
-                              'composite_get_overlay_window',
-                              get_overlay_window)
+    disp.extension_add_method(
+        "window", "composite_get_overlay_window", get_overlay_window
+    )

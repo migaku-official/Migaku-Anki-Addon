@@ -25,34 +25,30 @@ import importlib
 # List the modules which contain the corresponding functions
 
 _display_mods = {
-    'OpenVMS': 'vms_connect',
-    }
+    "OpenVMS": "vms_connect",
+}
 
-_default_display_mod = 'unix_connect'
+_default_display_mod = "unix_connect"
 
-_socket_mods = {
-    'OpenVMS': 'vms_connect'
-    }
+_socket_mods = {"OpenVMS": "vms_connect"}
 
-_default_socket_mod = 'unix_connect'
+_default_socket_mod = "unix_connect"
 
-_auth_mods = {
-    'OpenVMS': 'vms_connect'
-    }
+_auth_mods = {"OpenVMS": "vms_connect"}
 
-_default_auth_mod = 'unix_connect'
+_default_auth_mod = "unix_connect"
 
 
 # Figure out which OS we're using.
 # sys.platform is either "OS-ARCH" or just "OS".
 
-_parts = sys.platform.split('-')
+_parts = sys.platform.split("-")
 platform = _parts[0]
 del _parts
 
 
 def _relative_import(modname):
-    return importlib.import_module('..' + modname, __name__)
+    return importlib.import_module(".." + modname, __name__)
 
 
 def get_display(display):

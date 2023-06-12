@@ -26,39 +26,43 @@ import socket
 from Xlib import error, xauth
 
 
-SUPPORTED_PROTOCOLS = (None, 'tcp', 'unix')
+SUPPORTED_PROTOCOLS = (None, "tcp", "unix")
 
 # Darwin funky socket.
 uname = platform.uname()
-if (uname[0] == 'Darwin') and ([int(x) for x in uname[2].split('.')] >= [9, 0]):
-    SUPPORTED_PROTOCOLS += ('darwin',)
-    DARWIN_DISPLAY_RE = re.compile(r'^/private/tmp/[-:a-zA-Z0-9._]*:(?P<dno>[0-9]+)(\.(?P<screen>[0-9]+))?$')
+if (uname[0] == "Darwin") and ([int(x) for x in uname[2].split(".")] >= [9, 0]):
+    SUPPORTED_PROTOCOLS += ("darwin",)
+    DARWIN_DISPLAY_RE = re.compile(
+        r"^/private/tmp/[-:a-zA-Z0-9._]*:(?P<dno>[0-9]+)(\.(?P<screen>[0-9]+))?$"
+    )
 
-DISPLAY_RE = re.compile(r'^((?P<proto>tcp|unix)/)?(?P<host>[-:a-zA-Z0-9._]*):(?P<dno>[0-9]+)(\.(?P<screen>[0-9]+))?$')
+DISPLAY_RE = re.compile(
+    r"^((?P<proto>tcp|unix)/)?(?P<host>[-:a-zA-Z0-9._]*):(?P<dno>[0-9]+)(\.(?P<screen>[0-9]+))?$"
+)
 
 
 def get_display(display):
     # Use $DISPLAY if display isn't provided
     if display is None:
-        display = os.environ.get('DISPLAY', '')
+        display = os.environ.get("DISPLAY", "")
 
     re_list = [(DISPLAY_RE, {})]
 
-    if 'darwin' in SUPPORTED_PROTOCOLS:
-        re_list.insert(0, (DARWIN_DISPLAY_RE, {'protocol': 'darwin'}))
+    if "darwin" in SUPPORTED_PROTOCOLS:
+        re_list.insert(0, (DARWIN_DISPLAY_RE, {"protocol": "darwin"}))
 
     for re, defaults in re_list:
         m = re.match(display)
         if m is not None:
             protocol, host, dno, screen = [
                 m.groupdict().get(field, defaults.get(field))
-                for field in ('proto', 'host', 'dno', 'screen')
+                for field in ("proto", "host", "dno", "screen")
             ]
             break
     else:
         raise error.DisplayNameError(display)
 
-    if protocol == 'tcp' and not host:
+    if protocol == "tcp" and not host:
         # Host is mandatory when protocol is TCP.
         raise error.DisplayNameError(display)
 
@@ -87,19 +91,19 @@ def get_socket(dname, protocol, host, dno):
     assert protocol in SUPPORTED_PROTOCOLS
     try:
         # Darwin funky socket.
-        if protocol == 'darwin':
+        if protocol == "darwin":
             s = _get_unix_socket(dname)
 
         # TCP socket, note the special case: `unix:0.0` is equivalent to `:0.0`.
-        elif (protocol is None or protocol != 'unix') and host and host != 'unix':
+        elif (protocol is None or protocol != "unix") and host and host != "unix":
             s = _get_tcp_socket(host, dno)
 
         # Unix socket.
         else:
-            address = '/tmp/.X11-unix/X%d' % dno
+            address = "/tmp/.X11-unix/X%d" % dno
             if not os.path.exists(address):
                 # Use abstract address.
-                address = '\0' + address
+                address = "\0" + address
             try:
                 s = _get_unix_socket(address)
             except socket.error:
@@ -127,35 +131,36 @@ def _ensure_not_inheritable(sock):
     #       sock.set_inheritable(False)
     #       return
     # We just check if the socket has `set_inheritable`.
-    if hasattr(sock, 'set_inheritable'):
+    if hasattr(sock, "set_inheritable"):
         sock.set_inheritable(False)
         return
 
     # On Windows,
     # Python doesn't support fcntl module because Windows doesn't have fcntl API.
     # At least by not importing fcntl, we will be able to import python-xlib on Windows.
-    if platform.system() == 'Windows':
+    if platform.system() == "Windows":
         # so.. unfortunately, for Python 3.3 and below, on Windows,
         # we can't make sure that the connection isn't inherited in child processes for now.
         return
 
     import fcntl
+
     fcntl.fcntl(sock.fileno(), fcntl.F_SETFD, fcntl.FD_CLOEXEC)
 
 
 def new_get_auth(sock, dname, protocol, host, dno):
     assert protocol in SUPPORTED_PROTOCOLS
     # Translate socket address into the xauth domain
-    if protocol == 'darwin':
+    if protocol == "darwin":
         family = xauth.FamilyLocal
         addr = socket.gethostname()
 
-    elif protocol == 'tcp':
+    elif protocol == "tcp":
         family = xauth.FamilyInternet
 
         # Convert the prettyprinted IP number into 4-octet string.
         # Sometimes these modules are too damn smart...
-        octets = sock.getpeername()[0].split('.')
+        octets = sock.getpeername()[0].split(".")
         addr = bytearray(int(x) for x in octets)
     else:
         family = xauth.FamilyLocal
@@ -164,7 +169,7 @@ def new_get_auth(sock, dname, protocol, host, dno):
     try:
         au = xauth.Xauthority()
     except error.XauthError:
-        return b'', b''
+        return b"", b""
 
     while 1:
         try:
@@ -176,42 +181,43 @@ def new_get_auth(sock, dname, protocol, host, dno):
         # $DISPLAY to localhost:10, but stores the xauth cookie as if
         # DISPLAY was :10.  Hence, if localhost and not found, try
         # again as a Unix socket.
-        if family == xauth.FamilyInternet and addr == b'\x7f\x00\x00\x01':
+        if family == xauth.FamilyInternet and addr == b"\x7f\x00\x00\x01":
             family = xauth.FamilyLocal
             addr = socket.gethostname().encode()
         else:
-            return b'', b''
+            return b"", b""
 
 
 def old_get_auth(sock, dname, host, dno):
     # Find authorization cookie
-    auth_name = auth_data = b''
+    auth_name = auth_data = b""
 
     try:
         # We could parse .Xauthority, but xauth is simpler
         # although more inefficient
-        data = os.popen('xauth list %s 2>/dev/null' % dname).read()
+        data = os.popen("xauth list %s 2>/dev/null" % dname).read()
 
         # If there's a cookie, it is of the format
         #      DISPLAY SCHEME COOKIE
         # We're interested in the two last parts for the
         # connection establishment
-        lines = data.split('\n')
+        lines = data.split("\n")
         if len(lines) >= 1:
             parts = lines[0].split(None, 2)
             if len(parts) == 3:
                 auth_name = parts[1]
                 hexauth = parts[2]
-                auth = b''
+                auth = b""
 
                 # Translate hexcode into binary
                 for i in range(0, len(hexauth), 2):
-                    auth = auth + chr(int(hexauth[i:i+2], 16))
+                    auth = auth + chr(int(hexauth[i : i + 2], 16))
 
                 auth_data = auth
     except os.error:
         pass
 
     return auth_name, auth_data
+
 
 get_auth = new_get_auth

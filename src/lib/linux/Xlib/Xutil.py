@@ -28,29 +28,37 @@ HeightValue = 0x0008
 AllValues = 0x000F
 XNegative = 0x0010
 YNegative = 0x0020
-USPosition = (1 << 0)
-USSize = (1 << 1)
-PPosition = (1 << 2)
-PSize = (1 << 3)
-PMinSize = (1 << 4)
-PMaxSize = (1 << 5)
-PResizeInc = (1 << 6)
-PAspect = (1 << 7)
-PBaseSize = (1 << 8)
-PWinGravity = (1 << 9)
-PAllHints = (PPosition|PSize|PMinSize|PMaxSize|PResizeInc|PAspect)
-InputHint = (1 << 0)
-StateHint = (1 << 1)
-IconPixmapHint = (1 << 2)
-IconWindowHint = (1 << 3)
-IconPositionHint = (1 << 4)
-IconMaskHint = (1 << 5)
-WindowGroupHint = (1 << 6)
-MessageHint = (1 << 7)
-UrgencyHint	= (1 << 8)
-AllHints = (InputHint|StateHint|IconPixmapHint|IconWindowHint|
-            IconPositionHint|IconMaskHint|WindowGroupHint|MessageHint|
-            UrgencyHint)
+USPosition = 1 << 0
+USSize = 1 << 1
+PPosition = 1 << 2
+PSize = 1 << 3
+PMinSize = 1 << 4
+PMaxSize = 1 << 5
+PResizeInc = 1 << 6
+PAspect = 1 << 7
+PBaseSize = 1 << 8
+PWinGravity = 1 << 9
+PAllHints = PPosition | PSize | PMinSize | PMaxSize | PResizeInc | PAspect
+InputHint = 1 << 0
+StateHint = 1 << 1
+IconPixmapHint = 1 << 2
+IconWindowHint = 1 << 3
+IconPositionHint = 1 << 4
+IconMaskHint = 1 << 5
+WindowGroupHint = 1 << 6
+MessageHint = 1 << 7
+UrgencyHint = 1 << 8
+AllHints = (
+    InputHint
+    | StateHint
+    | IconPixmapHint
+    | IconWindowHint
+    | IconPositionHint
+    | IconMaskHint
+    | WindowGroupHint
+    | MessageHint
+    | UrgencyHint
+)
 WithdrawnState = 0
 NormalState = 1
 IconicState = 3

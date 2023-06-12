@@ -45,17 +45,16 @@ from . import event
 if PY3:
 
     class bytesview(object):
-
         def __init__(self, data, offset=0, size=None):
             if size is None:
-                size = len(data)-offset
+                size = len(data) - offset
             if isinstance(data, bytes):
                 view = memoryview(data)
             elif isinstance(data, bytesview):
                 view = data.view
             else:
-                raise TypeError('unsupported type: {}'.format(type(data)))
-            self.view = view[offset:offset+size]
+                raise TypeError("unsupported type: {}".format(type(data)))
+            self.view = view[offset : offset + size]
 
         def __len__(self):
             return len(self.view)
@@ -69,9 +68,9 @@ else:
 
     def bytesview(data, offset=0, size=None):
         if not isinstance(data, (bytes, buffer)):
-            raise TypeError('unsupported type: {}'.format(type(data)))
+            raise TypeError("unsupported type: {}".format(type(data)))
         if size is None:
-            size = len(data)-offset
+            size = len(data) - offset
         return buffer(data, offset, size)
 
 
@@ -80,7 +79,7 @@ class Display(object):
     error_classes = error.xerror_class.copy()
     event_classes = event.event_class.copy()
 
-    def __init__(self, display = None):
+    def __init__(self, display=None):
         name, protocol, host, displayno, screenno = connect.get_display(display)
 
         self.display_name = name
@@ -88,8 +87,9 @@ class Display(object):
 
         self.socket = connect.get_socket(name, protocol, host, displayno)
 
-        auth_name, auth_data = connect.get_auth(self.socket, name,
-                                                protocol, host, displayno)
+        auth_name, auth_data = connect.get_auth(
+            self.socket, name, protocol, host, displayno
+        )
 
         # Internal structures for communication, grouped
         # by their function and locks
@@ -121,16 +121,15 @@ class Display(object):
         self.request_wait_lock = lock.allocate_lock()
 
         # Calculate optimal default buffer size for recv.
-        buffer_size = self.socket.getsockopt(socket.SOL_SOCKET,
-                                             socket.SO_RCVBUF)
+        buffer_size = self.socket.getsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF)
         buffer_size = math.pow(2, math.floor(math.log(buffer_size, 2)))
         self.recv_buffer_size = int(buffer_size)
 
         # Data used by the send-and-receive loop
         self.sent_requests = []
         self.recv_packet_len = 0
-        self.data_send = b''
-        self.data_recv = b''
+        self.data_send = b""
+        self.data_recv = b""
         self.data_sent_bytes = 0
 
         # Resource ID structures
@@ -141,25 +140,26 @@ class Display(object):
         # Use an default error handler, one which just prints the error
         self.error_handler = None
 
-
         # Right, now we're all set up for the connection setup
         # request with the server.
 
         # Figure out which endianness the hardware uses
-        self.big_endian = struct.unpack('BB', struct.pack('H', 0x0100))[0]
+        self.big_endian = struct.unpack("BB", struct.pack("H", 0x0100))[0]
 
         if self.big_endian:
             order = 0x42
         else:
-            order = 0x6c
+            order = 0x6C
 
         # Send connection setup
-        r = ConnectionSetupRequest(self,
-                                   byte_order = order,
-                                   protocol_major = 11,
-                                   protocol_minor = 0,
-                                   auth_prot_name = auth_name,
-                                   auth_prot_data = auth_data)
+        r = ConnectionSetupRequest(
+            self,
+            byte_order=order,
+            protocol_major=11,
+            protocol_minor=0,
+            auth_prot_name=auth_name,
+            auth_prot_data=auth_data,
+        )
 
         # Did connection fail?
         if r.status != 1:
@@ -168,7 +168,6 @@ class Display(object):
         # Set up remaining info
         self.info = r
         self.default_screen = min(self.default_screen, len(self.info.roots) - 1)
-
 
     #
     # Public interface
@@ -202,7 +201,6 @@ class Display(object):
         # we might be woken up when there is no event.
 
         while not self.event_queue:
-
             # Lock send_recv so no send_and_receive
             # can start or stop while we're checking
             # whether there are one active.
@@ -214,7 +212,7 @@ class Display(object):
 
             # Call send_and_recv, which will return when
             # something has occured
-            self.send_and_recv(event = True)
+            self.send_and_recv(event=True)
 
             # Before looping around, lock the event queue against
             # modifications.
@@ -240,7 +238,7 @@ class Display(object):
 
         # Make a send_and_recv pass, receiving any events
         self.send_recv_lock.acquire()
-        self.send_and_recv(recv = True)
+        self.send_and_recv(recv=True)
 
         # Lock the queue, get the event count, and unlock again.
         self.event_queue_write_lock.acquire()
@@ -252,15 +250,14 @@ class Display(object):
     def flush(self):
         self.check_for_error()
         self.send_recv_lock.acquire()
-        self.send_and_recv(flush = True)
+        self.send_and_recv(flush=True)
 
     def close(self):
         self.flush()
-        self.close_internal('client')
+        self.close_internal("client")
 
     def set_error_handler(self, handler):
         self.error_handler = handler
-
 
     def allocate_resource_id(self):
         """id = d.allocate_resource_id()
@@ -278,7 +275,7 @@ class Display(object):
                 if i > self.info.resource_id_mask:
                     i = 0
                 if i == self.last_resource_id:
-                    raise error.ResourceIDError('out of resource ids')
+                    raise error.ResourceIDError("out of resource ids")
 
             self.resource_ids[i] = None
             self.last_resource_id = i
@@ -308,9 +305,7 @@ class Display(object):
         finally:
             self.resource_id_lock.release()
 
-
-
-    def get_resource_class(self, class_name, default = None):
+    def get_resource_class(self, class_name, default=None):
         """class = d.get_resource_class(class_name, default = None)
 
         Return the class to be used for X resource objects of type
@@ -326,17 +321,16 @@ class Display(object):
         return self.extension_major_opcodes[extname]
 
     def add_extension_event(self, code, evt, subcode=None):
-       if subcode == None:
-           self.event_classes[code] = evt
-       else:
-           if not code in self.event_classes:
-               self.event_classes[code] = {subcode: evt}
-           else:
-               self.event_classes[code][subcode] = evt
+        if subcode == None:
+            self.event_classes[code] = evt
+        else:
+            if not code in self.event_classes:
+                self.event_classes[code] = {subcode: evt}
+            else:
+                self.event_classes[code][subcode] = evt
 
     def add_extension_error(self, code, err):
         self.error_classes[code] = err
-
 
     #
     # Private functions
@@ -364,8 +358,8 @@ class Display(object):
 
         self.request_queue_lock.release()
 
-#       if qlen > 10:
-#           self.flush()
+    #       if qlen > 10:
+    #           self.flush()
 
     def close_internal(self, whom):
         # Clear out data structures
@@ -383,8 +377,7 @@ class Display(object):
         self.socket_error = error.ConnectionClosedError(whom)
         self.socket_error_lock.release()
 
-
-    def send_and_recv(self, flush = False, event = False, request = None, recv = False):
+    def send_and_recv(self, flush=False, event=False, request=None, recv=False):
         """send_and_recv(flush = None, event = None, request = None, recv = None)
 
         Perform I/O, or wait for some other thread to do it for us.
@@ -426,9 +419,9 @@ class Display(object):
         # FIXME: It would be good if we could also sleep when we're waiting on
         # a response to a request that has already been sent.
 
-        if (((flush or request is not None) and self.send_active)
-            or ((event or recv) and self.recv_active)):
-
+        if ((flush or request is not None) and self.send_active) or (
+            (event or recv) and self.recv_active
+        ):
             # Signal that we are waiting for something.  These locks
             # together with the *_waiting variables are used as
             # semaphores.  When an event or a request response arrives,
@@ -480,7 +473,6 @@ class Display(object):
             # got the data it was waiting for
             return
 
-
         # There's no thread doing what we need to do.  Find out exactly
         # what to do
 
@@ -498,10 +490,8 @@ class Display(object):
 
         # Loop, receiving and sending data.
         while 1:
-
             # We might want to start sending data
             if sending or not self.send_active:
-
                 # Turn all requests on request queue into binary form
                 # and append them to self.data_send
 
@@ -536,7 +526,6 @@ class Display(object):
             # loop if other threads continuously append requests.
             if flush and flush_bytes is None:
                 flush_bytes = self.data_sent_bytes + len(self.data_send)
-
 
             try:
                 # We're only checking for the socket to be writable
@@ -576,23 +565,20 @@ class Display(object):
                 self.send_recv_lock.acquire()
                 continue
 
-
             # Socket is ready for sending data, send as much as possible.
             if ws:
                 try:
                     i = self.socket.send(self.data_send)
                 except socket.error as err:
-                    self.close_internal('server: %s' % err)
+                    self.close_internal("server: %s" % err)
                     raise self.socket_error
 
                 self.data_send = self.data_send[i:]
                 self.data_sent_bytes = self.data_sent_bytes + i
 
-
             # There is data to read
             gotreq = 0
             if rs:
-
                 # We're the receiving thread, parse the data
                 if receiving:
                     try:
@@ -600,12 +586,12 @@ class Display(object):
                         count = max(self.recv_buffer_size, count)
                         bytes_recv = self.socket.recv(count)
                     except socket.error as err:
-                        self.close_internal('server: %s' % err)
+                        self.close_internal("server: %s" % err)
                         raise self.socket_error
 
                     if not bytes_recv:
                         # Clear up, set a connection closed indicator and raise it
-                        self.close_internal('server')
+                        self.close_internal("server")
                         raise self.socket_error
 
                     self.data_recv = bytes(self.data_recv) + bytes_recv
@@ -622,7 +608,6 @@ class Display(object):
 
                     # And return to the caller
                     return
-
 
             # There are three different end of send-recv-loop conditions.
             # However, we don't leave the loop immediately, instead we
@@ -651,7 +636,6 @@ class Display(object):
 
             self.send_recv_lock.acquire()
 
-
         # We have accomplished the callers request.
         # Record that there are now no active send_and_recv,
         # and wake up all waiting thread
@@ -672,7 +656,6 @@ class Display(object):
             self.request_wait_lock.release()
 
         self.send_recv_lock.release()
-
 
     def parse_response(self, request):
         """Internal method.
@@ -703,7 +686,7 @@ class Display(object):
                 if rtype == 1:
                     gotreq = self.parse_request_response(request) or gotreq
                     continue
-                elif rtype & 0x7f == ge.GenericEventCode:
+                elif rtype & 0x7F == ge.GenericEventCode:
                     self.parse_event_response(rtype)
                     continue
                 else:
@@ -719,16 +702,15 @@ class Display(object):
                 gotreq = self.parse_error_response(request) or gotreq
 
             # Request response or generic event.
-            elif rtype == 1 or rtype & 0x7f == ge.GenericEventCode:
+            elif rtype == 1 or rtype & 0x7F == ge.GenericEventCode:
                 # Set reply length, and loop around to see if
                 # we have got the full response
-                rlen = int(struct.unpack('=L', self.data_recv[4:8])[0])
+                rlen = int(struct.unpack("=L", self.data_recv[4:8])[0])
                 self.recv_packet_len = 32 + rlen * 4
 
             # Else non-generic event
             else:
                 self.parse_event_response(rtype)
-
 
     def parse_error_response(self, request):
         # Code is second byte
@@ -750,7 +732,6 @@ class Display(object):
         # error, pass it on to the default error handler
 
         if req and req._set_error(e):
-
             # If this was a ReplyRequest, unlock any threads waiting
             # for a request to finish
 
@@ -774,27 +755,26 @@ class Display(object):
 
             return False
 
-
     def default_error_handler(self, err):
-        sys.stderr.write('X protocol error:\n%s\n' % err)
-
+        sys.stderr.write("X protocol error:\n%s\n" % err)
 
     def parse_request_response(self, request):
         req = self.get_waiting_replyrequest()
 
         # Sequence number is always data[2:4]
         # Do sanity check before trying to parse the data
-        sno = struct.unpack('=H', self.data_recv[2:4])[0]
+        sno = struct.unpack("=H", self.data_recv[2:4])[0]
         if sno != req._serial:
-            raise RuntimeError("Expected reply for request %s, but got %s.  Can't happen!"
-                               % (req._serial, sno))
+            raise RuntimeError(
+                "Expected reply for request %s, but got %s.  Can't happen!"
+                % (req._serial, sno)
+            )
 
-        req._parse_response(self.data_recv[:self.recv_packet_len])
+        req._parse_response(self.data_recv[: self.recv_packet_len])
         # print 'recv Request:', req
 
         self.data_recv = bytesview(self.data_recv, self.recv_packet_len)
         self.recv_packet_len = 0
-
 
         # Unlock any response waiting threads
 
@@ -806,13 +786,11 @@ class Display(object):
 
         self.send_recv_lock.release()
 
-
         return req.sequence_number == request
-
 
     def parse_event_response(self, etype):
         # Skip bit 8, that is set if this event came from an SendEvent
-        etype = etype & 0x7f
+        etype = etype & 0x7F
 
         if etype == ge.GenericEventCode:
             length = self.recv_packet_len
@@ -830,7 +808,7 @@ class Display(object):
             # this etype refers to a set of sub-events with individual subcodes
             estruct = estruct[subcode]
 
-        e = estruct(display = self, binarydata = self.data_recv[:length])
+        e = estruct(display=self, binarydata=self.data_recv[:length])
 
         if etype == ge.GenericEventCode:
             self.recv_packet_len = 0
@@ -845,7 +823,7 @@ class Display(object):
         # Bug reported by Ilpo Nyyssönen
         # Note: not all events have a sequence_number field!
         # (e.g. KeymapNotify).
-        if hasattr(e, 'sequence_number'):
+        if hasattr(e, "sequence_number"):
             self.get_waiting_request((e.sequence_number - 1) % 65536)
 
         # print 'recv Event:', e
@@ -863,7 +841,6 @@ class Display(object):
             self.event_wait_lock.release()
 
         self.send_recv_lock.release()
-
 
     def get_waiting_request(self, sno):
         if not self.sent_requests:
@@ -921,9 +898,9 @@ class Display(object):
 
     def get_waiting_replyrequest(self):
         for i in range(0, len(self.sent_requests)):
-            if hasattr(self.sent_requests[i], '_reply'):
+            if hasattr(self.sent_requests[i], "_reply"):
                 req = self.sent_requests[i]
-                del self.sent_requests[:i + 1]
+                del self.sent_requests[: i + 1]
                 return req
 
         # Reply for an unknown request?  No, that can't happen.
@@ -931,8 +908,7 @@ class Display(object):
             raise RuntimeError("Request reply to unknown request.  Can't happen!")
 
     def parse_connection_setup(self):
-        """Internal function used to parse connection setup response.
-        """
+        """Internal function used to parse connection setup response."""
 
         # Only the ConnectionSetupRequest has been sent so far
         r = self.sent_requests[0]
@@ -942,7 +918,7 @@ class Display(object):
             # print 'data_recv:', repr(self.data_recv)
 
             if r._data:
-                alen = r._data['additional_length'] * 4
+                alen = r._data["additional_length"] * 4
 
                 # The full response haven't arrived yet
                 if len(self.data_recv) < alen:
@@ -950,13 +926,14 @@ class Display(object):
 
                 # Connection failed or further authentication is needed.
                 # Set reason to the reason string
-                if r._data['status'] != 1:
-                    r._data['reason'] = self.data_recv[:r._data['reason_length']]
+                if r._data["status"] != 1:
+                    r._data["reason"] = self.data_recv[: r._data["reason_length"]]
 
                 # Else connection succeeded, parse the reply
                 else:
-                    x, d = r._success_reply.parse_binary(self.data_recv[:alen],
-                                                         self, rawdict = True)
+                    x, d = r._success_reply.parse_binary(
+                        self.data_recv[:alen], self, rawdict=True
+                    )
                     r._data.update(x)
 
                 del self.sent_requests[0]
@@ -970,94 +947,100 @@ class Display(object):
                 if len(self.data_recv) < 8:
                     return False
 
-                r._data, d = r._reply.parse_binary(self.data_recv[:8],
-                                                   self, rawdict = True)
+                r._data, d = r._reply.parse_binary(
+                    self.data_recv[:8], self, rawdict=True
+                )
                 self.data_recv = self.data_recv[8:]
 
                 # Loop around to see if we have got the additional data
                 # already
 
 
-PixmapFormat = rq.Struct( rq.Card8('depth'),
-                          rq.Card8('bits_per_pixel'),
-                          rq.Card8('scanline_pad'),
-                          rq.Pad(5)
-                          )
+PixmapFormat = rq.Struct(
+    rq.Card8("depth"), rq.Card8("bits_per_pixel"), rq.Card8("scanline_pad"), rq.Pad(5)
+)
 
-VisualType = rq.Struct ( rq.Card32('visual_id'),
-                         rq.Card8('visual_class'),
-                         rq.Card8('bits_per_rgb_value'),
-                         rq.Card16('colormap_entries'),
-                         rq.Card32('red_mask'),
-                         rq.Card32('green_mask'),
-                         rq.Card32('blue_mask'),
-                         rq.Pad(4)
-                         )
+VisualType = rq.Struct(
+    rq.Card32("visual_id"),
+    rq.Card8("visual_class"),
+    rq.Card8("bits_per_rgb_value"),
+    rq.Card16("colormap_entries"),
+    rq.Card32("red_mask"),
+    rq.Card32("green_mask"),
+    rq.Card32("blue_mask"),
+    rq.Pad(4),
+)
 
-Depth = rq.Struct( rq.Card8('depth'),
-                   rq.Pad(1),
-                   rq.LengthOf('visuals', 2),
-                   rq.Pad(4),
-                   rq.List('visuals', VisualType)
-                   )
+Depth = rq.Struct(
+    rq.Card8("depth"),
+    rq.Pad(1),
+    rq.LengthOf("visuals", 2),
+    rq.Pad(4),
+    rq.List("visuals", VisualType),
+)
 
-Screen = rq.Struct( rq.Window('root'),
-                    rq.Colormap('default_colormap'),
-                    rq.Card32('white_pixel'),
-                    rq.Card32('black_pixel'),
-                    rq.Card32('current_input_mask'),
-                    rq.Card16('width_in_pixels'),
-                    rq.Card16('height_in_pixels'),
-                    rq.Card16('width_in_mms'),
-                    rq.Card16('height_in_mms'),
-                    rq.Card16('min_installed_maps'),
-                    rq.Card16('max_installed_maps'),
-                    rq.Card32('root_visual'),
-                    rq.Card8('backing_store'),
-                    rq.Card8('save_unders'),
-                    rq.Card8('root_depth'),
-                    rq.LengthOf('allowed_depths', 1),
-                    rq.List('allowed_depths', Depth)
-                    )
+Screen = rq.Struct(
+    rq.Window("root"),
+    rq.Colormap("default_colormap"),
+    rq.Card32("white_pixel"),
+    rq.Card32("black_pixel"),
+    rq.Card32("current_input_mask"),
+    rq.Card16("width_in_pixels"),
+    rq.Card16("height_in_pixels"),
+    rq.Card16("width_in_mms"),
+    rq.Card16("height_in_mms"),
+    rq.Card16("min_installed_maps"),
+    rq.Card16("max_installed_maps"),
+    rq.Card32("root_visual"),
+    rq.Card8("backing_store"),
+    rq.Card8("save_unders"),
+    rq.Card8("root_depth"),
+    rq.LengthOf("allowed_depths", 1),
+    rq.List("allowed_depths", Depth),
+)
 
 
 class ConnectionSetupRequest(rq.GetAttrData):
-    _request = rq.Struct( rq.Set('byte_order', 1, (0x42, 0x6c)),
-                          rq.Pad(1),
-                          rq.Card16('protocol_major'),
-                          rq.Card16('protocol_minor'),
-                          rq.LengthOf('auth_prot_name', 2),
-                          rq.LengthOf('auth_prot_data', 2),
-                          rq.Pad(2),
-                          rq.String8('auth_prot_name'),
-                          rq.String8('auth_prot_data') )
+    _request = rq.Struct(
+        rq.Set("byte_order", 1, (0x42, 0x6C)),
+        rq.Pad(1),
+        rq.Card16("protocol_major"),
+        rq.Card16("protocol_minor"),
+        rq.LengthOf("auth_prot_name", 2),
+        rq.LengthOf("auth_prot_data", 2),
+        rq.Pad(2),
+        rq.String8("auth_prot_name"),
+        rq.String8("auth_prot_data"),
+    )
 
-    _reply = rq.Struct ( rq.Card8('status'),
-                         rq.Card8('reason_length'),
-                         rq.Card16('protocol_major'),
-                         rq.Card16('protocol_minor'),
-                         rq.Card16('additional_length') )
+    _reply = rq.Struct(
+        rq.Card8("status"),
+        rq.Card8("reason_length"),
+        rq.Card16("protocol_major"),
+        rq.Card16("protocol_minor"),
+        rq.Card16("additional_length"),
+    )
 
-    _success_reply = rq.Struct( rq.Card32('release_number'),
-                                rq.Card32('resource_id_base'),
-                                rq.Card32('resource_id_mask'),
-                                rq.Card32('motion_buffer_size'),
-                                rq.LengthOf('vendor', 2),
-                                rq.Card16('max_request_length'),
-                                rq.LengthOf('roots', 1),
-                                rq.LengthOf('pixmap_formats', 1),
-                                rq.Card8('image_byte_order'),
-                                rq.Card8('bitmap_format_bit_order'),
-                                rq.Card8('bitmap_format_scanline_unit'),
-                                rq.Card8('bitmap_format_scanline_pad'),
-                                rq.Card8('min_keycode'),
-                                rq.Card8('max_keycode'),
-                                rq.Pad(4),
-                                rq.String8('vendor'),
-                                rq.List('pixmap_formats', PixmapFormat),
-                                rq.List('roots', Screen),
-                                )
-
+    _success_reply = rq.Struct(
+        rq.Card32("release_number"),
+        rq.Card32("resource_id_base"),
+        rq.Card32("resource_id_mask"),
+        rq.Card32("motion_buffer_size"),
+        rq.LengthOf("vendor", 2),
+        rq.Card16("max_request_length"),
+        rq.LengthOf("roots", 1),
+        rq.LengthOf("pixmap_formats", 1),
+        rq.Card8("image_byte_order"),
+        rq.Card8("bitmap_format_bit_order"),
+        rq.Card8("bitmap_format_scanline_unit"),
+        rq.Card8("bitmap_format_scanline_pad"),
+        rq.Card8("min_keycode"),
+        rq.Card8("max_keycode"),
+        rq.Pad(4),
+        rq.String8("vendor"),
+        rq.List("pixmap_formats", PixmapFormat),
+        rq.List("roots", Screen),
+    )
 
     def __init__(self, display, *args, **keys):
         self._binary = self._request.to_binary(*args, **keys)
@@ -1072,4 +1055,4 @@ class ConnectionSetupRequest(rq.GetAttrData):
         # to loop.
 
         display.send_recv_lock.acquire()
-        display.send_and_recv(request = -1)
+        display.send_and_recv(request=-1)

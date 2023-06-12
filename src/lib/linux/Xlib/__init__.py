@@ -21,19 +21,19 @@
 
 __version__ = (0, 33)
 
-__version_extra__ = ''
+__version_extra__ = ""
 
-__version_string__ = '.'.join(map(str, __version__)) + __version_extra__
+__version_string__ = ".".join(map(str, __version__)) + __version_extra__
 
 __all__ = [
-    'X',
-    'XK',
-    'Xatom',
-    'Xcursorfont',
-    'Xutil',
-    'display',
-    'error',
-    'rdb',
+    "X",
+    "XK",
+    "Xatom",
+    "Xcursorfont",
+    "Xutil",
+    "display",
+    "error",
+    "rdb",
     # Explicitly exclude threaded, so that it isn't imported by
     #  from Xlib import *
-    ]
+]

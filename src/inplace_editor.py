@@ -31,14 +31,20 @@ from aqt.operations.note import update_note
 
 # Apply div around editable fields
 
-def apply_edit_filter(field_content: str, field_name: str, field_filter: str, ctx: anki.template.TemplateRenderContext) -> str:
-    if field_filter != 'editable' or not config.get('inplace_editor_enabled', True):
+
+def apply_edit_filter(
+    field_content: str,
+    field_name: str,
+    field_filter: str,
+    ctx: anki.template.TemplateRenderContext,
+) -> str:
+    if field_filter != "editable" or not config.get("inplace_editor_enabled", True):
         return field_content
 
-    field_content_b64_b = base64.b64encode(field_content.encode('utf-8'))
-    field_content_b64 = str(field_content_b64_b, 'utf-8')
+    field_content_b64_b = base64.b64encode(field_content.encode("utf-8"))
+    field_content_b64 = str(field_content_b64_b, "utf-8")
 
-    return F'<div class="editable-field" data-field-name="{field_name}" data-content="{field_content_b64}">{field_content}</div>'
+    return f'<div class="editable-field" data-field-name="{field_name}" data-content="{field_content_b64}">{field_content}</div>'
 
 
 anki.hooks.field_filter.append(apply_edit_filter)
@@ -46,26 +52,32 @@ anki.hooks.field_filter.append(apply_edit_filter)
 
 # Inject JS into reviewer and init editable fields when card side is shown
 
+
 def show_empty_fields_js():
-    show_empty_fields = config.get('inplace_editor_show_empty_fields', False)
-    value = 'true' if show_empty_fields else 'false'
-    return F'try {{ document.querySelector("#qa").classList.toggle("show-empty-editable-field", {value}); }} catch (e) {{ }}'
+    show_empty_fields = config.get("inplace_editor_show_empty_fields", False)
+    value = "true" if show_empty_fields else "false"
+    return f'try {{ document.querySelector("#qa").classList.toggle("show-empty-editable-field", {value}); }} catch (e) {{ }}'
+
 
 def update_show_empty_fields():
     aqt.mw.reviewer.web.eval(show_empty_fields_js())
 
-inplace_editor_css_uri = addon_web_uri('inplace_editor.css')
-inplace_editor_js = F'var inplace_editor_css_path = "{inplace_editor_css_uri}";\n'
 
-with open(addon_path('inplace_editor.js'), 'r', encoding='utf-8') as file:
+inplace_editor_css_uri = addon_web_uri("inplace_editor.css")
+inplace_editor_js = f'var inplace_editor_css_path = "{inplace_editor_css_uri}";\n'
+
+with open(addon_path("inplace_editor.js"), "r", encoding="utf-8") as file:
     inplace_editor_js += file.read()
 
+
 def init_reviewer_web(reviewer: Reviewer) -> None:
-    reviewer.web.eval(inplace_editor_js + '\n' + show_empty_fields_js())
+    reviewer.web.eval(inplace_editor_js + "\n" + show_empty_fields_js())
+
 
 def init_reviewer_fields(*args, **kwargs) -> None:
     reviewer = aqt.mw.reviewer
-    reviewer.web.eval('init_editable_fields();\n' + show_empty_fields_js())
+    reviewer.web.eval("init_editable_fields();\n" + show_empty_fields_js())
+
 
 Reviewer._initWeb = anki.hooks.wrap(Reviewer._initWeb, init_reviewer_web)
 aqt.gui_hooks.reviewer_did_show_question.append(init_reviewer_fields)
@@ -74,34 +86,35 @@ aqt.gui_hooks.reviewer_did_show_answer.append(init_reviewer_fields)
 
 # Manage edited field content
 
+
 def handle_inplace_edit(reviewer: Reviewer, message: str):
     card = reviewer.card
 
     if not card:
-        return 
+        return
 
     note = card.note()
 
     if not note:
         return
 
-    message_parts = message.split('|')
+    message_parts = message.split("|")
 
     command = message_parts[0]
     field_name = message_parts[1]
     field_content_b64 = message_parts[2]
-    field_content = base64.b64decode(field_content_b64).decode('utf-8')
+    field_content = base64.b64decode(field_content_b64).decode("utf-8")
     should_reload = True
 
     def maybe_reshow_card():
-        if reviewer.mw.state == 'review' and reviewer.card:
+        if reviewer.mw.state == "review" and reviewer.card:
             reviewer.card.load()
 
-            if should_reload or config.get('inplace_editor_always_reload', False):
+            if should_reload or config.get("inplace_editor_always_reload", False):
                 reviewer_reshow(reviewer, mute=True, reload_card=False)
 
     def set_content(new_field_content, checkpoint_name=None):
-        if field_name == 'Tags':
+        if field_name == "Tags":
             note.tags = new_field_content
             note.tags = aqt.mw.col.tags.split(new_field_content)
         else:
@@ -120,10 +133,12 @@ def handle_inplace_edit(reviewer: Reviewer, message: str):
                 aqt.mw.col.merge_undo_entries(checkpoint_id)
             maybe_reshow_card()
 
-        update_note(parent=aqt.mw, note=note).success(on_note_flushed).run_in_background()
+        update_note(parent=aqt.mw, note=note).success(
+            on_note_flushed
+        ).run_in_background()
 
     def on_syntax_delivery(result):
-        set_content(result[0][field_name], F'Add {lang.name_en} Syntax')
+        set_content(result[0][field_name], f"Add {lang.name_en} Syntax")
         aqt.mw.progress.finish()
 
     def on_syntax_error(msg):
@@ -131,89 +146,80 @@ def handle_inplace_edit(reviewer: Reviewer, message: str):
         util.show_critical(msg)
         maybe_reshow_card()
 
-    if command == 'inplace-edit-submit':
-        should_reload = message_parts[3] == 'true'
-        set_content(field_content, 'Edit Field')
-    elif command == 'inplace-edit-syntax-add':
+    if command == "inplace-edit-submit":
+        should_reload = message_parts[3] == "true"
+        set_content(field_content, "Edit Field")
+    elif command == "inplace-edit-syntax-add":
         lang = nt_get_lang(card.note_type())
         if lang is None:
             return
         if not aqt.mw.migaku_connection.is_connected():
-            util.show_critical('Anki is not connected to the Browser Extension.')
+            util.show_critical("Anki is not connected to the Browser Extension.")
             return
-        aqt.mw.progress.start(label=F'Adding {lang.name_en} syntax to field...')
+        aqt.mw.progress.start(label=f"Adding {lang.name_en} syntax to field...")
         field_content = lang.remove_syntax(field_content)
         aqt.mw.migaku_connection.request_syntax(
-            [{ field_name: field_content }],
+            [{field_name: field_content}],
             lang.code,
-            on_done = on_syntax_delivery,
-            on_error = on_syntax_error,
-            callback_on_main_thread = True,
+            on_done=on_syntax_delivery,
+            on_error=on_syntax_error,
+            callback_on_main_thread=True,
             timeout=20,
         )
-    elif command == 'inplace-edit-syntax-remove':
+    elif command == "inplace-edit-syntax-remove":
         lang = nt_get_lang(card.note_type())
         if lang is None:
             return
         field_content = lang.remove_syntax(field_content)
-        set_content(field_content, F'Remove {lang.name_en} Syntax')
+        set_content(field_content, f"Remove {lang.name_en} Syntax")
     else:
-        raise ValueError('Invalid inplace edit')
+        raise ValueError("Invalid inplace edit")
 
 
-def handle_js_message(handled: Tuple[bool, Any], message: str, ctx: Any) -> Tuple[bool, Any]:
-
+def handle_js_message(
+    handled: Tuple[bool, Any], message: str, ctx: Any
+) -> Tuple[bool, Any]:
     if not isinstance(ctx, Reviewer):
         return handled
 
     reviewer: Reviewer = ctx
-    
-    if message.startswith('inplace-edit'):
+
+    if message.startswith("inplace-edit"):
         handle_inplace_edit(reviewer, message)
         return (True, None)
 
-    elif message == 'inplace-paste':
-        js = 'inplace_' + paste_handler.onPaste()
+    elif message == "inplace-paste":
+        js = "inplace_" + paste_handler.onPaste()
         reviewer.web.eval(js)
         return (True, None)
 
     return handled
 
+
 aqt.gui_hooks.webview_did_receive_js_message.append(handle_js_message)
 
 
 def reviewer_reshow(reviewer: Reviewer, mute=False, reload_card=True) -> None:
-    if reviewer.mw.state != 'review':
+    if reviewer.mw.state != "review":
         return
 
     if reviewer.card and reload_card:
         reviewer.card.load()
 
-    elif reviewer.state == 'question':
+    elif reviewer.state == "question":
         reviewer._showQuestion()
-    if reviewer.state == 'answer':
+    if reviewer.state == "answer":
         reviewer._showAnswer()
 
     if mute:
         av_player.stop_and_clear_queue()
 
 
-
 # Copied from aqt.editor.Editor and aqt.editor.EditorWebView with minimal changes
 
-class PasteHandler:
 
-    pics = (
-        "jpg",
-        "jpeg",
-        "png",
-        "tif",
-        "tiff",
-        "gif",
-        "svg",
-        "webp",
-        "ico"
-    )
+class PasteHandler:
+    pics = ("jpg", "jpeg", "png", "tif", "tiff", "gif", "svg", "webp", "ico")
 
     audio = (
         "3gp",
@@ -245,9 +251,7 @@ class PasteHandler:
         return self._onPaste(QClipboard.Clipboard)
 
     def _wantsExtendedPaste(self) -> bool:
-        strip_html = self.mw.col.get_config_bool(
-            Config.Bool.PASTE_STRIPS_FORMATTING
-        )
+        strip_html = self.mw.col.get_config_bool(Config.Bool.PASTE_STRIPS_FORMATTING)
         if KeyboardModifiersPressed().shift:
             strip_html = not strip_html
         return not strip_html
@@ -367,6 +371,7 @@ class PasteHandler:
                         processed.append(link)
                 else:
                     token = html.escape(token).replace("\t", " " * 4)
+
                     # if there's more than one consecutive space,
                     # use non-breaking spaces for the second one on
                     def repl(match: Match) -> str:
