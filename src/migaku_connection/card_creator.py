@@ -234,18 +234,21 @@ class CardCreator(MigakuHTTPHandler):
             field_contents = text
         note[field_name] = field_contents
 
-        # TODO: Refactor
-        if "editor" in current_note_info:
-            editor = current_note_info["editor"]
-            editor.loadNote()
-            if not editor.addMode:
-                editor._save_current_note()
-        if "reviewer" in current_note_info:
-            # NOTE: cannot use aqt.operations.update_note as it invalidates mw
-            note.flush()
-            aqt.mw.col.save()
-            reviewer_reshow(current_note_info["reviewer"], mute=True)
+        def update():
+            # runs GUI code, so it needs to run on main thread
+            if "editor" in current_note_info:
+                editor = current_note_info["editor"]
+                editor.loadNote()
+                if not editor.addMode:
+                    editor._save_current_note()
 
+            if "reviewer" in current_note_info:
+                # NOTE: cannot use aqt.operations.update_note as it invalidates mw
+                note.flush()
+                aqt.mw.col.save()
+                reviewer_reshow(current_note_info["reviewer"], mute=True)
+
+        aqt.mw.taskman.run_on_main(update)
         return "Added data to note."
 
     def handle_audio_delivery(self, text):
