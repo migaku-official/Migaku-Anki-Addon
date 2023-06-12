@@ -42,7 +42,7 @@ class WelcomeWizard(QWizard):
     def check_show_modal(cls):
         if (
             config.get("first_run", True)
-            or aqt.mw.app.queryKeyboardModifiers() & Qt.ControlModifier
+            or aqt.mw.app.queryKeyboardModifiers() & Qt.KeyboardModifier.ControlModifier
         ):
             wizard = cls()
             return wizard.exec_()

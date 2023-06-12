@@ -83,7 +83,7 @@ def show_msg_box(
     text: str,
     title: str = "Migaku",
     parent: Optional[QWidget] = None,
-    icon: QMessageBox.Icon = QMessageBox.NoIcon,
+    icon: QMessageBox.Icon = QMessageBox.Icon.NoIcon,
     buttons: Optional[List[QMessageBox.StandardButton]] = None,
 ) -> int:
     if parent is None:

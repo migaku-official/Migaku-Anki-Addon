@@ -56,7 +56,7 @@ class SettingsWindow(QDialog):
 
 
 action = QAction("Settings/Help", aqt.mw)
-action.setMenuRole(QAction.NoRole)
+action.setMenuRole(QAction.MenuRole.NoRole)
 action.triggered.connect(SettingsWindow.show_modal)
 
 aqt.mw.addonManager.setConfigAction(__name__, SettingsWindow.show_modal)
