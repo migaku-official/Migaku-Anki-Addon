@@ -24,15 +24,15 @@ import socket
 
 from Xlib import error
 
-display_re = re.compile(r'^([-a-zA-Z0-9._]*):([0-9]+)(\.([0-9]+))?$')
+display_re = re.compile(r"^([-a-zA-Z0-9._]*):([0-9]+)(\.([0-9]+))?$")
+
 
 def get_display(display):
-
     # Use dummy display if none is set.  We really should
     # check DECW$DISPLAY instead, but that has to wait
 
     if display is None:
-        return ':0.0', None, 'localhost', 0, 0
+        return ":0.0", None, "localhost", 0, 0
 
     m = display_re.match(display)
     if not m:
@@ -43,7 +43,7 @@ def get_display(display):
     # Always return a host, since we don't have AF_UNIX sockets
     host = m.group(1)
     if not host:
-        host = 'localhost'
+        host = "localhost"
 
     dno = int(m.group(2))
     screen = m.group(4)
@@ -71,4 +71,4 @@ def get_socket(dname, protocol, host, dno):
 
 def get_auth(sock, dname, host, dno):
     # VMS doesn't have xauth
-    return '', ''
+    return "", ""

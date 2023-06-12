@@ -12,4 +12,5 @@ def fix_video_driver():
         aqt.mw.pm.set_video_driver(driver)
         # aqt.mw.pm.save() not required, set_video_driver directly writes to a file
 
+
 fix_video_driver()

@@ -19,20 +19,20 @@ from .. import note_type_mgr
 from ..languages import Languages
 from ..util import tmp_path
 
-IMG_RE = re.compile(r'<img (.*?)src=\"(.*?)\"(.*?)>', re.IGNORECASE)
-SOUND_RE = re.compile(r'\[sound:(.*?)\]')
+IMG_RE = re.compile(r"<img (.*?)src=\"(.*?)\"(.*?)>", re.IGNORECASE)
+SOUND_RE = re.compile(r"\[sound:(.*?)\]")
 
 
 auto_field_map = [
-    ('Sentence', 'Sentence'),
-    ('Translation', 'Translated Sentence'),
-    ('Target Word', 'Word'),
-    ('Definitions', 'Definitions'),
-    ('Screenshot', 'Images'),
-    ('Sentence Audio', 'Sentence Audio'),
-    ('Word Audio', 'Word Audio'),
-    ('Images', 'Images'),
-    ('Example Sentences', 'Example Sentences'),
+    ("Sentence", "Sentence"),
+    ("Translation", "Translated Sentence"),
+    ("Target Word", "Word"),
+    ("Definitions", "Definitions"),
+    ("Screenshot", "Images"),
+    ("Sentence Audio", "Sentence Audio"),
+    ("Word Audio", "Word Audio"),
+    ("Images", "Images"),
+    ("Example Sentences", "Example Sentences"),
 ]
 
 
@@ -52,10 +52,7 @@ async def build_syntax_cache(entries):
     def on_done(syntax_data):
         nonlocal result
         if isinstance(syntax_data, list) and len(syntax_data) == len(entries_list):
-            result = {
-                e: syntax_data[i]['42']
-                for i, e in enumerate(entries_list)
-            }
+            result = {e: syntax_data[i]["42"] for i, e in enumerate(entries_list)}
         lock.release()
 
     def on_error():
@@ -65,18 +62,19 @@ async def build_syntax_cache(entries):
     def do_request():
         def do_main():
             aqt.mw.migaku_connection.request_syntax(
-                [{ '42': e[1] } for e in entries_list],
+                [{"42": e[1]} for e in entries_list],
                 lang,
-                on_done = on_done,
-                on_error = on_error
+                on_done=on_done,
+                on_error=on_error,
             )
+
         lock.acquire()
         aqt.mw.taskman.run_on_main(do_main)
         lock.acquire()
 
     await tornado.ioloop.IOLoop.current().run_in_executor(None, do_request)
 
-    print('syntax took', time.time() - t)
+    print("syntax took", time.time() - t)
 
     return result
 
@@ -104,23 +102,21 @@ async def get_syntax(lang, text):
     def do_request():
         def do_main():
             aqt.mw.migaku_connection.request_syntax(
-                [{ "42": text }],
-                lang,
-                on_done = on_done,
-                on_error = on_error
+                [{"42": text}], lang, on_done=on_done, on_error=on_error
             )
+
         lock.acquire()
         aqt.mw.taskman.run_on_main(do_main)
         lock.acquire()
 
     await tornado.ioloop.IOLoop.current().run_in_executor(None, do_request)
 
-    print('syntax took', time.time() - t)
+    print("syntax took", time.time() - t)
 
     return result
 
 
-upload_host = 'https://file-sync-function-mohegkboza-uc.a.run.app'
+upload_host = "https://file-sync-function-mohegkboza-uc.a.run.app"
 upload_num_threads = 25
 upload_data_size = 0
 
@@ -144,7 +140,7 @@ def request_retry(method, url, **kwargs):
     sleep_time = 0.25
     timeout_time = 10
 
-    max_retries = kwargs.pop('max_retries', 5)
+    max_retries = kwargs.pop("max_retries", 5)
 
     for i in range(max_retries):
         try:
@@ -156,7 +152,7 @@ def request_retry(method, url, **kwargs):
                 **kwargs,
             )
         except requests.exceptions.Timeout:
-            print(f'Request timeout ({i+1}): {method} {url}')
+            print(f"Request timeout ({i+1}): {method} {url}")
             time.sleep(sleep_time)
             sleep_time *= 2
             timeout_time *= 1.5
@@ -167,10 +163,10 @@ def request_retry(method, url, **kwargs):
 
         # no point in retrying on client errors
         if r.status_code >= 400 and r.status_code < 500:
-            print(f'Request failed (client error): {method} {url} -> {r.status_code}')
+            print(f"Request failed (client error): {method} {url} -> {r.status_code}")
             return r
 
-        print(f'Request failed ({i+1}): {method} {url} -> {r.status_code}')
+        print(f"Request failed ({i+1}): {method} {url} -> {r.status_code}")
         time.sleep(sleep_time)
         sleep_time *= 2
 
@@ -179,11 +175,11 @@ def request_retry(method, url, **kwargs):
 
 def put_with_curl(url, data):
     tmp = tmp_path(uuid.uuid4().hex)
-    
-    with open(tmp, 'wb') as f:
+
+    with open(tmp, "wb") as f:
         f.write(data)
-    
-    cmd = [curl_path, '-X', 'PUT', '-T', tmp, url]
+
+    cmd = [curl_path, "-X", "PUT", "-T", tmp, url]
     r = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     os.remove(tmp)
@@ -198,16 +194,14 @@ def _upload_media_single_attempt(fname, user_token, is_audio=False):
     if use_curl is None:
         use_curl = False
         if isMac:
-            curl_path = shutil.which('curl')
+            curl_path = shutil.which("curl")
             if curl_path:
                 use_curl = True
 
-    headers = {
-        'Authorization': F'Bearer {user_token}'
-    }
+    headers = {"Authorization": f"Bearer {user_token}"}
 
-    if fname.startswith('http'):
-        r = request_retry('GET', fname, max_retries=2)
+    if fname.startswith("http"):
+        r = request_retry("GET", fname, max_retries=2)
         if not r.ok:
             # ignore remote media that doesn't download correctly
             return None
@@ -220,55 +214,55 @@ def _upload_media_single_attempt(fname, user_token, is_audio=False):
         if not os.path.exists(path):
             # ignore missing media
             return None
-        with open(path, 'rb') as file:
+        with open(path, "rb") as file:
             data = file.read()
 
-    if is_audio and not fname.endswith('.mp3'):
+    if is_audio and not fname.endswith(".mp3"):
         in_path = tmp_path(fname)
-        with open(in_path, 'wb') as file:
+        with open(in_path, "wb") as file:
             file.write(data)
-        fname = os.path.splitext(fname)[0] + '.m4a'
+        fname = os.path.splitext(fname)[0] + ".m4a"
         out_path = tmp_path(fname)
-        r = aqt.mw.migaku_connection.ffmpeg.call('-y', '-i', in_path, out_path)
+        r = aqt.mw.migaku_connection.ffmpeg.call("-y", "-i", in_path, out_path)
         if r != 0:
             # ignore failed conversions, most likely bad audio
             return None
 
-        with open(out_path, 'rb') as file:
+        with open(out_path, "rb") as file:
             data = file.read()
 
     r = request_retry(
-        'GET',
-        F'{upload_host}/upload-link/{fname}',
+        "GET",
+        f"{upload_host}/upload-link/{fname}",
         headers=headers,
     )
 
     if not r.ok:
-        raise Exception(f'upload link failed, {r.status_code}, {r.text}')
+        raise Exception(f"upload link failed, {r.status_code}, {r.text}")
 
     upload_info = r.json()
 
     # The built in requests library on macOS has issues with SSL, using curl isntead when available
     if use_curl:
-        r = put_with_curl(upload_info['uploadUrl'], data)
+        r = put_with_curl(upload_info["uploadUrl"], data)
         if r != 0:
-            raise Exception(f'upload failed, curl, {r}')
+            raise Exception(f"upload failed, curl, {r}")
     else:
         r = request_retry(
-            'PUT',
-            url=upload_info['uploadUrl'],
+            "PUT",
+            url=upload_info["uploadUrl"],
             data=data,
         )
 
         if not r.ok:
-            raise Exception(f'upload failed, requests, {r.status_code}, {r.text}')
+            raise Exception(f"upload failed, requests, {r.status_code}, {r.text}")
 
     global upload_data_size
     upload_data_size += len(data)
 
-    objectPath = upload_info['objectPath']
+    objectPath = upload_info["objectPath"]
 
-    return 'r2://' + objectPath
+    return "r2://" + objectPath
 
 
 def _upload_media(fname, user_token, is_audio=False, max_attempts=5):
@@ -278,7 +272,7 @@ def _upload_media(fname, user_token, is_audio=False, max_attempts=5):
         try:
             return _upload_media_single_attempt(fname, user_token, is_audio)
         except Exception as e:
-            print(f'WARNING: Upload failed ({i +1}):', e)
+            print(f"WARNING: Upload failed ({i +1}):", e)
 
             if i == max_attempts - 1:
                 # RIP
@@ -291,7 +285,9 @@ def _upload_media(fname, user_token, is_audio=False, max_attempts=5):
 
 
 async def upload_media(fname, user_token, is_audio=False):
-    return await tornado.ioloop.IOLoop.current().run_in_executor(None, _upload_media, fname, user_token, is_audio)
+    return await tornado.ioloop.IOLoop.current().run_in_executor(
+        None, _upload_media, fname, user_token, is_audio
+    )
 
 
 def _build_media_cache(media, user_token):
@@ -311,23 +307,26 @@ def _build_media_cache(media, user_token):
 
     return r
 
+
 async def build_media_cache(media, user_token):
-    return await tornado.ioloop.IOLoop.current().run_in_executor(None, _build_media_cache, media, user_token)
+    return await tornado.ioloop.IOLoop.current().run_in_executor(
+        None, _build_media_cache, media, user_token
+    )
 
 
 def nt_migaku_lang(nt):
-    if not nt['name'].startswith(note_type_mgr.NOTE_TYPE_PREFIX):
+    if not nt["name"].startswith(note_type_mgr.NOTE_TYPE_PREFIX):
         return None
-    if not nt['css'].startswith(note_type_mgr.NOTE_TYPE_MARK_CSS):
+    if not nt["css"].startswith(note_type_mgr.NOTE_TYPE_MARK_CSS):
         return None
     lang = note_type_mgr.nt_get_lang(nt)
     if not lang:
         return None
-    nt_flds = nt['flds']
+    nt_flds = nt["flds"]
     if len(lang.fields) != len(nt_flds):
         return None
     for fld_name in lang.fields:
-        if not any(f['name'] == fld_name for f in nt_flds):
+        if not any(f["name"] == fld_name for f in nt_flds):
             return None
     return lang
 
@@ -340,8 +339,10 @@ async def handle_card(
     mappings=None,
     card_types=None,
     preview=False,
-    gather_media=None, gather_syntax=None,
-    media_cache=None, syntax_cache=None,
+    gather_media=None,
+    gather_syntax=None,
+    media_cache=None,
+    syntax_cache=None,
 ):
     if not mappings:
         mappings = []
@@ -361,115 +362,121 @@ async def handle_card(
     field_map = None
 
     # try to use automatic mapping
-    nt_lang = nt_migaku_lang(note_type) # only set if note type is a Migaku note type
+    nt_lang = nt_migaku_lang(note_type)  # only set if note type is a Migaku note type
     if nt_lang:
         sub_id = 0
         try:
-            if note['Is Vocabulary Card']:
+            if note["Is Vocabulary Card"]:
                 sub_id += 1
-            if note['Is Audio Card']:
+            if note["Is Audio Card"]:
                 sub_id += 2
         except KeyError:
             pass
         for ctype in card_types:
-            if ctype['lang'] == nt_lang.code.split('_')[0] and ctype['id'] & 0xF == sub_id:
-                dst_id = ctype['id']
+            if (
+                ctype["lang"] == nt_lang.code.split("_")[0]
+                and ctype["id"] & 0xF == sub_id
+            ):
+                dst_id = ctype["id"]
                 field_map = []
                 for src, dst in auto_field_map:
-                    for i, field in enumerate(note_type['flds']):
-                        if field['name'] == src:
+                    for i, field in enumerate(note_type["flds"]):
+                        if field["name"] == src:
                             src_idx = i
                             break
                     else:
                         continue
-                    for i, field in enumerate(ctype['fields']):
-                        if field['name'] == dst:
+                    for i, field in enumerate(ctype["fields"]):
+                        if field["name"] == dst:
                             dst_idx = i
                             break
                     else:
                         continue
-                    field_map.append({
-                        'srcIdx': src_idx,
-                        'dstIdx': dst_idx,
-                    })
+                    field_map.append(
+                        {
+                            "srcIdx": src_idx,
+                            "dstIdx": dst_idx,
+                        }
+                    )
                 break
 
     # Also set if note type is not a Migaku note type but has the JS applied
     lang_obj = nt_lang or note_type_mgr.nt_get_lang(note_type)
     if lang_obj:
-        if lang_obj.code.split('_')[0] != lang:
-            print(f'skipped {card.id}: note type language does not match current language', lang_obj.code, lang)
+        if lang_obj.code.split("_")[0] != lang:
+            print(
+                f"skipped {card.id}: note type language does not match current language",
+                lang_obj.code,
+                lang,
+            )
             return None
     if lang_obj is None:
         for lang_candidate in Languages:
-            if lang_candidate.code.split('_')[0] == lang:
+            if lang_candidate.code.split("_")[0] == lang:
                 lang_obj = lang_candidate
                 break
     if lang_obj is None:
-        print(f'skipped {card.id}: no anki side language found')
+        print(f"skipped {card.id}: no anki side language found")
         return None
-    
 
     # try to use manual mapping
     if not dst_id:
         # get the correct mapping
-        src_id = f'{note.mid}\u001f{card.ord}'
+        src_id = f"{note.mid}\u001f{card.ord}"
 
         for mapping in mappings:
-            if mapping['srcId'] == src_id:
-                field_map = mapping['fields']
-                dst_id = mapping['dstId']
+            if mapping["srcId"] == src_id:
+                field_map = mapping["fields"]
+                dst_id = mapping["dstId"]
                 break
-    
+
     # no usable mapping found
     if not dst_id:
-        print(f'skipped {card.id}: no mapping for {src_id}')
+        print(f"skipped {card.id}: no mapping for {src_id}")
         print(mappings)
         return None
 
     # get the correct card type
     for ctype in card_types:
-        if ctype['id'] == dst_id:
+        if ctype["id"] == dst_id:
             card_type = ctype
             break
     else:
-        print(f'skipped {card.id}: no card type for {dst_id}')
+        print(f"skipped {card.id}: no card type for {dst_id}")
         return None
 
-    data = [''] * len(card_type['fields'])
+    data = [""] * len(card_type["fields"])
 
     for fm in field_map:
-        src_idx = fm['srcIdx']
-        dst_idx = fm['dstIdx']
+        src_idx = fm["srcIdx"]
+        dst_idx = fm["dstIdx"]
         if data[dst_idx]:
-            data[dst_idx] += '<br>'
+            data[dst_idx] += "<br>"
         data[dst_idx] += note.fields[src_idx].strip()
 
     # recovered audio/images get appended to the first fitting field
     recovered_audio_src = []
     recovered_images_src = []
 
-    for i, field in enumerate(card_type['fields']):
-        if not field['type'].startswith('IMAGE'):
+    for i, field in enumerate(card_type["fields"]):
+        if not field["type"].startswith("IMAGE"):
             for _, src, _ in IMG_RE.findall(data[i]):
                 recovered_images_src.append(src)
-            data[i] = IMG_RE.sub('', data[i])
-        if not field['type'].startswith('AUDIO'):
+            data[i] = IMG_RE.sub("", data[i])
+        if not field["type"].startswith("AUDIO"):
             for src in SOUND_RE.findall(data[i]):
                 recovered_audio_src.append(src)
-            data[i] = SOUND_RE.sub('', data[i])
+            data[i] = SOUND_RE.sub("", data[i])
 
     # upload media, including recovered, format as required by field type
-    for i, field in enumerate(card_type['fields']):
-        if field['type'].startswith('IMAGE'):
+    for i, field in enumerate(card_type["fields"]):
+        if field["type"].startswith("IMAGE"):
             hashes = []
             srcs = [src for _, src, _ in IMG_RE.findall(data[i])] + recovered_images_src
             recovered_images_src = []
             for src in srcs:
                 if preview:
-                    hashes.append(
-                        aqt.mw.serverURL() + src
-                    )
+                    hashes.append(aqt.mw.serverURL() + src)
                 else:
                     if gather_media is None:
                         hash_ = media_cache.get(src)
@@ -480,16 +487,14 @@ async def handle_card(
                     else:
                         gather_media.add((src, False))
             if hashes:
-                data[i] = '|'.join(hashes)
-        elif field['type'].startswith('AUDIO'):
+                data[i] = "|".join(hashes)
+        elif field["type"].startswith("AUDIO"):
             hashes = []
             srcs = SOUND_RE.findall(data[i]) + recovered_audio_src
             recovered_audio_src = []
             for src in srcs:
                 if preview:
-                    hashes.append(
-                        aqt.mw.serverURL() + src
-                    )
+                    hashes.append(aqt.mw.serverURL() + src)
                 else:
                     if gather_media is None:
                         hash_ = media_cache.get(src)
@@ -500,9 +505,9 @@ async def handle_card(
                     else:
                         gather_media.add((src, True))
             if hashes:
-                data[i] = '|'.join(hashes)
-        elif field['type'] == 'SYNTAX':
-            if data[i].strip() and not '[' in data[i]:
+                data[i] = "|".join(hashes)
+        elif field["type"] == "SYNTAX":
+            if data[i].strip() and not "[" in data[i]:
                 if gather_syntax is None:
                     syntax = syntax_cache.get((lang, data[i]))
                     if syntax is None:
@@ -518,15 +523,14 @@ async def handle_card(
         return None
 
     card_data = {
-        'deckId': 0,        # set by core
-        'typeId': dst_id,
-        'fields': data,
+        "deckId": 0,  # set by core
+        "typeId": dst_id,
+        "fields": data,
     }
 
     # preview cards are not supplied with any scheduling data
     if preview:
         return card_data
-
 
     # New or learning
     if card.queue == 0 or card.queue == 1:
@@ -540,13 +544,13 @@ async def handle_card(
         interval = max(1, card.ivl)
 
     else:
-        print(f'skipped {card.id}: unsupported queue {card.queue}')
+        print(f"skipped {card.id}: unsupported queue {card.queue}")
         return None
 
     return {
-        'first': card_data,
-        'second': {
-            'due': due,
-            'interval': interval,
-        }
+        "first": card_data,
+        "second": {
+            "due": due,
+            "interval": interval,
+        },
     }

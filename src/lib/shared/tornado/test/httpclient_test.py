@@ -285,7 +285,7 @@ Transfer-Encoding: chunked
 
         # The standard mandates NFC. Give it a decomposed username
         # and ensure it is normalized to composed form.
-        username = unicodedata.normalize("NFD", u"josé")
+        username = unicodedata.normalize("NFD", "josé")
         self.assertEqual(
             self.fetch("/auth", auth_username=username, auth_password="səcrət").body,
             b"Basic am9zw6k6c8mZY3LJmXQ=",
@@ -374,7 +374,7 @@ Transfer-Encoding: chunked
         self.assertEqual(b"Basic " + base64.b64encode(b"me:secret"), response.body)
 
     def test_body_encoding(self):
-        unicode_body = u"\xe9"
+        unicode_body = "\xe9"
         byte_body = binascii.a2b_hex(b"e9")
 
         # unicode string in body gets converted to utf8
@@ -404,7 +404,7 @@ Transfer-Encoding: chunked
             method="POST",
             body=byte_body,
             headers={"Content-Type": "application/blah"},
-            user_agent=u"foo",
+            user_agent="foo",
         )
         self.assertEqual(response.headers["Content-Length"], "1")
         self.assertEqual(response.body, byte_body)
@@ -493,7 +493,7 @@ Transfer-Encoding: chunked
         # in a plain dictionary or an HTTPHeaders object.
         # Keys must always be the native str type.
         # All combinations should have the same results on the wire.
-        for value in [u"MyUserAgent", b"MyUserAgent"]:
+        for value in ["MyUserAgent", b"MyUserAgent"]:
             for container in [dict, HTTPHeaders]:
                 headers = container()
                 headers["User-Agent"] = value
@@ -665,7 +665,7 @@ X-XSS-Protection: 1;
         # Non-ascii headers are sent as latin1.
         response = self.fetch("/set_header?k=foo&v=%E9")
         response.rethrow()
-        self.assertEqual(response.headers["Foo"], native_str(u"\u00e9"))
+        self.assertEqual(response.headers["Foo"], native_str("\u00e9"))
 
     def test_response_times(self):
         # A few simple sanity checks of the response time fields to

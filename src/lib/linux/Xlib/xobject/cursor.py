@@ -23,25 +23,26 @@ from Xlib.protocol import request
 
 from . import resource
 
+
 class Cursor(resource.Resource):
     __cursor__ = resource.Resource.__resource__
 
-    def free(self, onerror = None):
-        request.FreeCursor(display = self.display,
-                           onerror = onerror,
-                           cursor = self.id)
+    def free(self, onerror=None):
+        request.FreeCursor(display=self.display, onerror=onerror, cursor=self.id)
         self.display.free_resource_id(self.id)
 
     def recolor(self, foreground, background, onerror=None):
         fore_red, fore_green, fore_blue = foreground
         back_red, back_green, back_blue = background
 
-        request.RecolorCursor(display = self.display,
-                              onerror = onerror,
-                              cursor = self.id,
-                              fore_red = fore_red,
-                              fore_green = fore_green,
-                              fore_blue = fore_blue,
-                              back_red = back_red,
-                              back_green = back_green,
-                              back_blue = back_blue)
+        request.RecolorCursor(
+            display=self.display,
+            onerror=onerror,
+            cursor=self.id,
+            fore_red=fore_red,
+            fore_green=fore_green,
+            fore_blue=fore_blue,
+            back_red=back_red,
+            back_green=back_green,
+            back_blue=back_blue,
+        )

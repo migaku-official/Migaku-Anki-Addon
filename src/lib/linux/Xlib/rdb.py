@@ -33,10 +33,10 @@ from .support import lock
 
 # Set up a few regexpes for parsing string representation of resources
 
-comment_re = re.compile(r'^\s*!')
-resource_spec_re = re.compile(r'^\s*([-_a-zA-Z0-9?.*]+)\s*:\s*(.*)$')
-value_escape_re = re.compile('\\\\([ \tn\\\\]|[0-7]{3,3})')
-resource_parts_re = re.compile(r'([.*]+)')
+comment_re = re.compile(r"^\s*!")
+resource_spec_re = re.compile(r"^\s*([-_a-zA-Z0-9?.*]+)\s*:\s*(.*)$")
+value_escape_re = re.compile("\\\\([ \tn\\\\]|[0-7]{3,3})")
+resource_parts_re = re.compile(r"([.*]+)")
 
 # Constants used for determining which match is best
 
@@ -45,13 +45,14 @@ CLASS_MATCH = 2
 WILD_MATCH = 4
 MATCH_SKIP = 6
 
+
 # Option error class
 class OptionError(Exception):
     pass
 
 
 class ResourceDB(object):
-    def __init__(self, file = None, string = None, resources = None):
+    def __init__(self, file=None, string=None, resources=None):
         self.db = {}
         self.lock = lock.allocate_lock()
 
@@ -71,10 +72,9 @@ class ResourceDB(object):
         """
 
         if type(file) is bytes:
-            file = open(file, 'r')
+            file = open(file, "r")
 
         self.insert_string(file.read())
-
 
     def insert_string(self, data):
         """insert_string(data)
@@ -85,7 +85,7 @@ class ResourceDB(object):
         """
 
         # First split string into lines
-        lines = data.split('\n')
+        lines = data.split("\n")
 
         while lines:
             line = lines[0]
@@ -100,7 +100,7 @@ class ResourceDB(object):
                 continue
 
             # Handle continued lines
-            while line[-1] == '\\':
+            while line[-1] == "\\":
                 if lines:
                     line = line[:-1] + lines[0]
                     del lines[0]
@@ -124,17 +124,16 @@ class ResourceDB(object):
                 s = splits[i]
                 if len(s) == 3:
                     splits[i] = chr(int(s, 8))
-                elif s == 'n':
-                    splits[i] = '\n'
+                elif s == "n":
+                    splits[i] = "\n"
 
             # strip the last value part to get rid of any
             # unescaped blanks
             splits[-1] = splits[-1].rstrip()
 
-            value = ''.join(splits)
+            value = "".join(splits)
 
             self.insert(res, value)
-
 
     def insert_resources(self, resources):
         """insert_resources(resources)
@@ -164,27 +163,26 @@ class ResourceDB(object):
 
         # If the last part is empty, this is an invalid resource
         # which we simply ignore
-        if parts[-1] == '':
+        if parts[-1] == "":
             return
 
         self.lock.acquire()
 
         db = self.db
         for i in range(1, len(parts), 2):
-
             # Create a new mapping/value group
             if parts[i - 1] not in db:
                 db[parts[i - 1]] = ({}, {})
 
             # Use second mapping if a loose binding, first otherwise
-            if '*' in parts[i]:
+            if "*" in parts[i]:
                 db = db[parts[i - 1]][1]
             else:
                 db = db[parts[i - 1]][0]
 
         # Insert value into the derived db
         if parts[-1] in db:
-            db[parts[-1]] = db[parts[-1]][:2] + (value, )
+            db[parts[-1]] = db[parts[-1]][:2] + (value,)
         else:
             db[parts[-1]] = ({}, {}, value)
 
@@ -200,14 +198,16 @@ class ResourceDB(object):
         # Split name and class into their parts
         name, cls = keys_tuple
 
-        namep = name.split('.')
-        clsp = cls.split('.')
+        namep = name.split(".")
+        clsp = cls.split(".")
 
         # It is an error for name and class to have different number
         # of parts
 
         if len(namep) != len(clsp):
-            raise ValueError('Different number of parts in resource name/class: %s/%s' % (name, cls))
+            raise ValueError(
+                "Different number of parts in resource name/class: %s/%s" % (name, cls)
+            )
 
         complen = len(namep)
         matches = []
@@ -217,18 +217,16 @@ class ResourceDB(object):
 
         self.lock.acquire()
         try:
-
             # Precedence order: name -> class -> ?
 
             if namep[0] in self.db:
-                bin_insert(matches, _Match((NAME_MATCH, ), self.db[namep[0]]))
+                bin_insert(matches, _Match((NAME_MATCH,), self.db[namep[0]]))
 
             if clsp[0] in self.db:
-                bin_insert(matches, _Match((CLASS_MATCH, ), self.db[clsp[0]]))
+                bin_insert(matches, _Match((CLASS_MATCH,), self.db[clsp[0]]))
 
-            if '?' in self.db:
-                bin_insert(matches, _Match((WILD_MATCH, ), self.db['?']))
-
+            if "?" in self.db:
+                bin_insert(matches, _Match((WILD_MATCH,), self.db["?"]))
 
             # Special case for the unlikely event that the resource
             # only has one component
@@ -239,12 +237,10 @@ class ResourceDB(object):
                 else:
                     raise KeyError((name, cls))
 
-
             # Special case for resources which begins with a loose
             # binding, e.g. '*foo.bar'
-            if '' in self.db:
-                bin_insert(matches, _Match((), self.db[''][1]))
-
+            if "" in self.db:
+                bin_insert(matches, _Match((), self.db[""][1]))
 
             # Now iterate over all components until we find the best match.
 
@@ -262,7 +258,6 @@ class ResourceDB(object):
             # bindings.
 
             while matches:
-
                 # Work on the first element == the best current match
 
                 x = matches[0]
@@ -277,10 +272,11 @@ class ResourceDB(object):
 
                 i = x.match_length()
 
-                for part, score in ((namep[i], NAME_MATCH),
-                                    (clsp[i], CLASS_MATCH),
-                                    ('?', WILD_MATCH)):
-
+                for part, score in (
+                    (namep[i], NAME_MATCH),
+                    (clsp[i], CLASS_MATCH),
+                    ("?", WILD_MATCH),
+                ):
                     # Attempt to find a match in x
                     match = x.match(part, score)
                     if match:
@@ -303,7 +299,7 @@ class ResourceDB(object):
         finally:
             self.lock.release()
 
-    def get(self, res, cls, default = None):
+    def get(self, res, cls, default=None):
         """get(name, class [, default])
 
         Return the value matching the resource identified by NAME and
@@ -336,7 +332,7 @@ class ResourceDB(object):
         """
 
         self.lock.acquire()
-        text = output_db('', self.db)
+        text = output_db("", self.db)
         self.lock.release()
         return text
 
@@ -367,13 +363,13 @@ class ResourceDB(object):
         rdb.OptionError is raised if there is an error in the argument list.
         """
 
-        while argv and argv[0] and argv[0][0] == '-':
+        while argv and argv[0] and argv[0][0] == "-":
             try:
                 argv = opts[argv[0]].parse(name, self, argv)
             except KeyError:
-                raise OptionError('unknown option: %s' % argv[0])
+                raise OptionError("unknown option: %s" % argv[0])
             except IndexError:
-                raise OptionError('missing argument to option: %s' % argv[0])
+                raise OptionError("missing argument to option: %s" % argv[0])
 
         return argv
 
@@ -405,14 +401,14 @@ class _Match(object):
     def match(self, part, score):
         if self.skip:
             if part in self.db:
-                return _Match(self.path + (score, ), self.db[part])
+                return _Match(self.path + (score,), self.db[part])
             else:
                 return None
         else:
             if part in self.group[0]:
-                return _Match(self.path + (score, ), self.group[0][part])
+                return _Match(self.path + (score,), self.group[0][part])
             elif part in self.group[1]:
-                return _Match(self.path + (score + 1, ), self.group[1][part])
+                return _Match(self.path + (score + 1,), self.group[1][part])
             else:
                 return None
 
@@ -424,14 +420,14 @@ class _Match(object):
         # If this already is a skip match, clone a new one
         if self.skip:
             if self.db:
-                return _Match(self.path + (MATCH_SKIP, ), self.db)
+                return _Match(self.path + (MATCH_SKIP,), self.db)
             else:
                 return None
 
         # Only generate a skip match if the loose binding mapping
         # is non-empty
         elif self.group[1]:
-            return _Match(self.path + (MATCH_SKIP, ), self.group[1])
+            return _Match(self.path + (MATCH_SKIP,), self.group[1])
 
         # This is a dead end match
         else:
@@ -450,6 +446,7 @@ class _Match(object):
 #
 # Helper function for ResourceDB.__getitem__()
 #
+
 
 def bin_insert(list, element):
     """bin_insert(list, element)
@@ -486,12 +483,11 @@ def bin_insert(list, element):
 # Helper functions for ResourceDB.update()
 #
 
+
 def update_db(dest, src):
     for comp, group in src.items():
-
         # DEST already contains this component, update it
         if comp in dest:
-
             # Update tight and loose binding databases
             update_db(dest[comp][0], group[0])
             update_db(dest[comp][1], group[1])
@@ -506,8 +502,10 @@ def update_db(dest, src):
         else:
             dest[comp] = copy_group(group)
 
+
 def copy_group(group):
     return (copy_db(group[0]), copy_db(group[1])) + group[2:]
+
 
 def copy_db(db):
     newdb = {}
@@ -521,36 +519,34 @@ def copy_db(db):
 # Helper functions for output
 #
 
-def output_db(prefix, db):
-    res = ''
-    for comp, group in db.items():
 
+def output_db(prefix, db):
+    res = ""
+    for comp, group in db.items():
         # There's a value for this component
         if len(group) > 2:
-            res = res + '%s%s: %s\n' % (prefix, comp, output_escape(group[2]))
+            res = res + "%s%s: %s\n" % (prefix, comp, output_escape(group[2]))
 
         # Output tight and loose bindings
-        res = res + output_db(prefix + comp + '.', group[0])
-        res = res + output_db(prefix + comp + '*', group[1])
+        res = res + output_db(prefix + comp + ".", group[0])
+        res = res + output_db(prefix + comp + "*", group[1])
 
     return res
+
 
 def output_escape(value):
     value = str(value)
     if not value:
         return value
 
-    for char, esc in (('\\', '\\\\'),
-                      ('\000', '\\000'),
-                      ('\n', '\\n')):
-
+    for char, esc in (("\\", "\\\\"), ("\000", "\\000"), ("\n", "\\n")):
         value = value.replace(char, esc)
 
     # If first or last character is space or tab, escape them.
-    if value[0] in ' \t':
-        value = '\\' + value
-    if value[-1] in ' \t' and value[-2:-1] != '\\':
-        value = value[:-1] + '\\' + value[-1]
+    if value[0] in " \t":
+        value = "\\" + value
+    if value[-1] in " \t" and value[-2:-1] != "\\":
+        value = value[:-1] + "\\" + value[-1]
 
     return value
 
@@ -559,6 +555,7 @@ def output_escape(value):
 # Option type definitions
 #
 
+
 class Option(object):
     def __init__(self):
         pass
@@ -566,8 +563,10 @@ class Option(object):
     def parse(self, name, db, args):
         pass
 
+
 class NoArg(Option):
     """Value is provided to constructor."""
+
     def __init__(self, specifier, value):
         self.specifier = specifier
         self.value = value
@@ -576,8 +575,10 @@ class NoArg(Option):
         db.insert(name + self.specifier, self.value)
         return args[1:]
 
+
 class IsArg(Option):
     """Value is the option string itself."""
+
     def __init__(self, specifier):
         self.specifier = specifier
 
@@ -585,8 +586,10 @@ class IsArg(Option):
         db.insert(name + self.specifier, args[0])
         return args[1:]
 
+
 class SepArg(Option):
     """Value is the next argument."""
+
     def __init__(self, specifier):
         self.specifier = specifier
 
@@ -594,39 +597,49 @@ class SepArg(Option):
         db.insert(name + self.specifier, args[1])
         return args[2:]
 
+
 class ResArgClass(Option):
     """Resource and value in the next argument."""
+
     def parse(self, name, db, args):
         db.insert_string(args[1])
         return args[2:]
 
+
 ResArg = ResArgClass()
+
 
 class SkipArgClass(Option):
     """Ignore this option and next argument."""
+
     def parse(self, name, db, args):
         return args[2:]
 
+
 SkipArg = SkipArgClass()
+
 
 class SkipLineClass(Option):
     """Ignore rest of the arguments."""
+
     def parse(self, name, db, args):
         return []
 
+
 SkipLine = SkipLineClass()
+
 
 class SkipNArgs(Option):
     """Ignore this option and the next COUNT arguments."""
+
     def __init__(self, count):
         self.count = count
 
     def parse(self, name, db, args):
-        return args[1 + self.count:]
+        return args[1 + self.count :]
 
 
-
-def get_display_opts(options, argv = sys.argv):
+def get_display_opts(options, argv=sys.argv):
     """display, name, db, args = get_display_opts(options, [argv])
 
     Parse X OPTIONS from ARGV (or sys.argv if not provided).
@@ -650,36 +663,36 @@ def get_display_opts(options, argv = sys.argv):
     optdb = ResourceDB()
     leftargv = optdb.getopt(name, argv[1:], options)
 
-    dname = optdb.get(name + '.display', name + '.Display', None)
+    dname = optdb.get(name + ".display", name + ".Display", None)
     d = display.Display(dname)
 
-    rdbstring = d.screen(0).root.get_full_property(Xatom.RESOURCE_MANAGER,
-                                                   Xatom.STRING)
+    rdbstring = d.screen(0).root.get_full_property(Xatom.RESOURCE_MANAGER, Xatom.STRING)
     if rdbstring:
         data = rdbstring.value
     else:
         data = None
 
-    db = ResourceDB(string = data)
+    db = ResourceDB(string=data)
     db.update(optdb)
 
     return d, name, db, leftargv
 
 
 # Common X options
-stdopts = {'-bg': SepArg('*background'),
-           '-background': SepArg('*background'),
-           '-fg': SepArg('*foreground'),
-           '-foreground': SepArg('*foreground'),
-           '-fn': SepArg('*font'),
-           '-font': SepArg('*font'),
-           '-name': SepArg('.name'),
-           '-title': SepArg('.title'),
-           '-synchronous': NoArg('*synchronous', 'on'),
-           '-xrm': ResArg,
-           '-display': SepArg('.display'),
-           '-d': SepArg('.display'),
-           }
+stdopts = {
+    "-bg": SepArg("*background"),
+    "-background": SepArg("*background"),
+    "-fg": SepArg("*foreground"),
+    "-foreground": SepArg("*foreground"),
+    "-fn": SepArg("*font"),
+    "-font": SepArg("*font"),
+    "-name": SepArg(".name"),
+    "-title": SepArg(".title"),
+    "-synchronous": NoArg("*synchronous", "on"),
+    "-xrm": ResArg,
+    "-display": SepArg(".display"),
+    "-d": SepArg(".display"),
+}
 
 
 # Notes on the implementation:

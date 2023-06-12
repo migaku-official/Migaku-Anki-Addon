@@ -12,7 +12,6 @@ from .settings_widgets import TUTORIAL_WIDGETS
 
 
 class WelcomeWizard(QWizard):
-
     INITIAL_SIZE = (625, 440)
 
     def __init__(self, parent=None):
@@ -20,7 +19,7 @@ class WelcomeWizard(QWizard):
 
         self.setWizardStyle(QWizard.ModernStyle)
 
-        self.setWindowTitle('Welcome! - Migaku Anki')
+        self.setWindowTitle("Welcome! - Migaku Anki")
         self.setWindowIcon(util.default_icon())
 
         self.setMinimumSize(*self.INITIAL_SIZE)
@@ -37,12 +36,16 @@ class WelcomeWizard(QWizard):
     def save(self):
         for p in self.pages:
             p.save()
-        config.set('first_run', False, do_write=True)
+        config.set("first_run", False, do_write=True)
 
     @classmethod
     def check_show_modal(cls):
-        if config.get('first_run', True) or aqt.mw.app.queryKeyboardModifiers() & Qt.ControlModifier:
+        if (
+            config.get("first_run", True)
+            or aqt.mw.app.queryKeyboardModifiers() & Qt.ControlModifier
+        ):
             wizard = cls()
             return wizard.exec_()
+
 
 aqt.gui_hooks.profile_did_open.append(WelcomeWizard.check_show_modal)

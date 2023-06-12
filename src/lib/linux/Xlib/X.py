@@ -20,117 +20,117 @@
 #    Boston, MA 02111-1307 USA
 
 # Avoid overwriting None if doing "from Xlib.X import *"
-NONE                = 0
+NONE = 0
 
-ParentRelative      = 1  # background pixmap in CreateWindow
-                         # and ChangeWindowAttributes
+ParentRelative = 1  # background pixmap in CreateWindow
+# and ChangeWindowAttributes
 
-CopyFromParent      = 0  # border pixmap in CreateWindow
-                         # and ChangeWindowAttributes
-                         # special VisualID and special window
-                         # class passed to CreateWindow
+CopyFromParent = 0  # border pixmap in CreateWindow
+# and ChangeWindowAttributes
+# special VisualID and special window
+# class passed to CreateWindow
 
-PointerWindow       = 0  # destination window in SendEvent
-InputFocus          = 1  # destination window in SendEvent
-PointerRoot         = 1  # focus window in SetInputFocus
-AnyPropertyType     = 0  # special Atom, passed to GetProperty
-AnyKey              = 0  # special Key Code, passed to GrabKey
-AnyButton           = 0  # special Button Code, passed to GrabButton
-AllTemporary        = 0  # special Resource ID passed to KillClient
-CurrentTime         = 0  # special Time
-NoSymbol            = 0  # special KeySym
+PointerWindow = 0  # destination window in SendEvent
+InputFocus = 1  # destination window in SendEvent
+PointerRoot = 1  # focus window in SetInputFocus
+AnyPropertyType = 0  # special Atom, passed to GetProperty
+AnyKey = 0  # special Key Code, passed to GrabKey
+AnyButton = 0  # special Button Code, passed to GrabButton
+AllTemporary = 0  # special Resource ID passed to KillClient
+CurrentTime = 0  # special Time
+NoSymbol = 0  # special KeySym
 
 
-#-----------------------------------------------------------------------
+# -----------------------------------------------------------------------
 # Event masks:
 #
-NoEventMask               = 0
-KeyPressMask              = (1<<0)
-KeyReleaseMask            = (1<<1)
-ButtonPressMask           = (1<<2)
-ButtonReleaseMask         = (1<<3)
-EnterWindowMask           = (1<<4)
-LeaveWindowMask           = (1<<5)
-PointerMotionMask         = (1<<6)
-PointerMotionHintMask     = (1<<7)
-Button1MotionMask         = (1<<8)
-Button2MotionMask         = (1<<9)
-Button3MotionMask         = (1<<10)
-Button4MotionMask         = (1<<11)
-Button5MotionMask         = (1<<12)
-ButtonMotionMask          = (1<<13)
-KeymapStateMask           = (1<<14)
-ExposureMask              = (1<<15)
-VisibilityChangeMask      = (1<<16)
-StructureNotifyMask       = (1<<17)
-ResizeRedirectMask        = (1<<18)
-SubstructureNotifyMask    = (1<<19)
-SubstructureRedirectMask  = (1<<20)
-FocusChangeMask           = (1<<21)
-PropertyChangeMask        = (1<<22)
-ColormapChangeMask        = (1<<23)
-OwnerGrabButtonMask       = (1<<24)
+NoEventMask = 0
+KeyPressMask = 1 << 0
+KeyReleaseMask = 1 << 1
+ButtonPressMask = 1 << 2
+ButtonReleaseMask = 1 << 3
+EnterWindowMask = 1 << 4
+LeaveWindowMask = 1 << 5
+PointerMotionMask = 1 << 6
+PointerMotionHintMask = 1 << 7
+Button1MotionMask = 1 << 8
+Button2MotionMask = 1 << 9
+Button3MotionMask = 1 << 10
+Button4MotionMask = 1 << 11
+Button5MotionMask = 1 << 12
+ButtonMotionMask = 1 << 13
+KeymapStateMask = 1 << 14
+ExposureMask = 1 << 15
+VisibilityChangeMask = 1 << 16
+StructureNotifyMask = 1 << 17
+ResizeRedirectMask = 1 << 18
+SubstructureNotifyMask = 1 << 19
+SubstructureRedirectMask = 1 << 20
+FocusChangeMask = 1 << 21
+PropertyChangeMask = 1 << 22
+ColormapChangeMask = 1 << 23
+OwnerGrabButtonMask = 1 << 24
 
-#-----------------------------------------------------------------------
+# -----------------------------------------------------------------------
 # Event names:
 #
 # Used in "type" field in XEvent structures.  Not to be confused with event
 # masks above.  They start from 2 because 0 and 1 are reserved in the
 # protocol for errors and replies.
 #
-KeyPress               = 2
-KeyRelease             = 3
-ButtonPress            = 4
-ButtonRelease          = 5
-MotionNotify           = 6
-EnterNotify            = 7
-LeaveNotify            = 8
-FocusIn                = 9
-FocusOut               = 10
-KeymapNotify           = 11
-Expose                 = 12
-GraphicsExpose         = 13
-NoExpose               = 14
-VisibilityNotify       = 15
-CreateNotify           = 16
-DestroyNotify          = 17
-UnmapNotify            = 18
-MapNotify              = 19
-MapRequest             = 20
-ReparentNotify         = 21
-ConfigureNotify        = 22
-ConfigureRequest       = 23
-GravityNotify          = 24
-ResizeRequest          = 25
-CirculateNotify        = 26
-CirculateRequest       = 27
-PropertyNotify         = 28
-SelectionClear         = 29
-SelectionRequest       = 30
-SelectionNotify        = 31
-ColormapNotify         = 32
-ClientMessage          = 33
-MappingNotify          = 34
-LASTEvent              = 35    # must be bigger than any event
+KeyPress = 2
+KeyRelease = 3
+ButtonPress = 4
+ButtonRelease = 5
+MotionNotify = 6
+EnterNotify = 7
+LeaveNotify = 8
+FocusIn = 9
+FocusOut = 10
+KeymapNotify = 11
+Expose = 12
+GraphicsExpose = 13
+NoExpose = 14
+VisibilityNotify = 15
+CreateNotify = 16
+DestroyNotify = 17
+UnmapNotify = 18
+MapNotify = 19
+MapRequest = 20
+ReparentNotify = 21
+ConfigureNotify = 22
+ConfigureRequest = 23
+GravityNotify = 24
+ResizeRequest = 25
+CirculateNotify = 26
+CirculateRequest = 27
+PropertyNotify = 28
+SelectionClear = 29
+SelectionRequest = 30
+SelectionNotify = 31
+ColormapNotify = 32
+ClientMessage = 33
+MappingNotify = 34
+LASTEvent = 35  # must be bigger than any event
 
 
-#-----------------------------------------------------------------------
+# -----------------------------------------------------------------------
 # Key masks:
 #
 # Used as modifiers to GrabButton and GrabKey, results of QueryPointer,
 # state in various key-, mouse-, and button-related events.
 #
-ShiftMask = (1<<0)
-LockMask = (1<<1)
-ControlMask = (1<<2)
-Mod1Mask = (1<<3)
-Mod2Mask = (1<<4)
-Mod3Mask = (1<<5)
-Mod4Mask = (1<<6)
-Mod5Mask = (1<<7)
+ShiftMask = 1 << 0
+LockMask = 1 << 1
+ControlMask = 1 << 2
+Mod1Mask = 1 << 3
+Mod2Mask = 1 << 4
+Mod3Mask = 1 << 5
+Mod4Mask = 1 << 6
+Mod5Mask = 1 << 7
 
 
-#-----------------------------------------------------------------------
+# -----------------------------------------------------------------------
 # Modifier names:
 #
 # Used to build a SetModifierMapping request or to read a
@@ -145,35 +145,35 @@ Mod3MapIndex = 5
 Mod4MapIndex = 6
 Mod5MapIndex = 7
 
-#-----------------------------------------------------------------------
+# -----------------------------------------------------------------------
 # Button masks:
 #
 # Used in same manner as Key masks above. Not to be confused with button
 # names below.  Note that 0 is already defined above as "AnyButton".
 #
-Button1Mask            = (1<<8)
-Button2Mask            = (1<<9)
-Button3Mask            = (1<<10)
-Button4Mask            = (1<<11)
-Button5Mask            = (1<<12)
+Button1Mask = 1 << 8
+Button2Mask = 1 << 9
+Button3Mask = 1 << 10
+Button4Mask = 1 << 11
+Button5Mask = 1 << 12
 
-AnyModifier            = (1<<15)  # used in GrabButton, GrabKey
+AnyModifier = 1 << 15  # used in GrabButton, GrabKey
 
-#-----------------------------------------------------------------------
+# -----------------------------------------------------------------------
 # Button names:
 #
 # Used as arguments to GrabButton and as detail in ButtonPress and
 # ButtonRelease events.  Not to be confused with button masks above.
 # Note that 0 is already defined above as "AnyButton".
 #
-Button1                = 1
-Button2                = 2
-Button3                = 3
-Button4                = 4
-Button5                = 5
+Button1 = 1
+Button2 = 2
+Button3 = 3
+Button4 = 4
+Button5 = 5
 
 
-#-----------------------------------------------------------------------
+# -----------------------------------------------------------------------
 # XXX These still need documentation -- for now, read <X11/X.h>
 #
 NotifyNormal = 0
@@ -243,28 +243,28 @@ FirstExtensionError = 128
 LastExtensionError = 255
 InputOutput = 1
 InputOnly = 2
-CWBackPixmap = (1<<0)
-CWBackPixel = (1<<1)
-CWBorderPixmap = (1<<2)
-CWBorderPixel = (1<<3)
-CWBitGravity = (1<<4)
-CWWinGravity = (1<<5)
-CWBackingStore = (1<<6)
-CWBackingPlanes = (1<<7)
-CWBackingPixel = (1<<8)
-CWOverrideRedirect = (1<<9)
-CWSaveUnder = (1<<10)
-CWEventMask = (1<<11)
-CWDontPropagate = (1<<12)
-CWColormap = (1<<13)
-CWCursor = (1<<14)
-CWX = (1<<0)
-CWY = (1<<1)
-CWWidth = (1<<2)
-CWHeight = (1<<3)
-CWBorderWidth = (1<<4)
-CWSibling = (1<<5)
-CWStackMode = (1<<6)
+CWBackPixmap = 1 << 0
+CWBackPixel = 1 << 1
+CWBorderPixmap = 1 << 2
+CWBorderPixel = 1 << 3
+CWBitGravity = 1 << 4
+CWWinGravity = 1 << 5
+CWBackingStore = 1 << 6
+CWBackingPlanes = 1 << 7
+CWBackingPixel = 1 << 8
+CWOverrideRedirect = 1 << 9
+CWSaveUnder = 1 << 10
+CWEventMask = 1 << 11
+CWDontPropagate = 1 << 12
+CWColormap = 1 << 13
+CWCursor = 1 << 14
+CWX = 1 << 0
+CWY = 1 << 1
+CWWidth = 1 << 2
+CWHeight = 1 << 3
+CWBorderWidth = 1 << 4
+CWSibling = 1 << 5
+CWStackMode = 1 << 6
 ForgetGravity = 0
 NorthWestGravity = 1
 NorthGravity = 2
@@ -308,12 +308,12 @@ GXxor = 0x6
 GXor = 0x7
 GXnor = 0x8
 GXequiv = 0x9
-GXinvert = 0xa
-GXorReverse = 0xb
-GXcopyInverted = 0xc
-GXorInverted = 0xd
-GXnand = 0xe
-GXset = 0xf
+GXinvert = 0xA
+GXorReverse = 0xB
+GXcopyInverted = 0xC
+GXorInverted = 0xD
+GXnand = 0xE
+GXset = 0xF
 LineSolid = 0
 LineOnOffDash = 1
 LineDoubleDash = 2
@@ -343,29 +343,29 @@ Nonconvex = 1
 Convex = 2
 ArcChord = 0
 ArcPieSlice = 1
-GCFunction = (1<<0)
-GCPlaneMask = (1<<1)
-GCForeground = (1<<2)
-GCBackground = (1<<3)
-GCLineWidth = (1<<4)
-GCLineStyle = (1<<5)
-GCCapStyle = (1<<6)
-GCJoinStyle = (1<<7)
-GCFillStyle = (1<<8)
-GCFillRule = (1<<9)
-GCTile = (1<<10)
-GCStipple = (1<<11)
-GCTileStipXOrigin = (1<<12)
-GCTileStipYOrigin = (1<<13)
-GCFont = (1<<14)
-GCSubwindowMode = (1<<15)
-GCGraphicsExposures = (1<<16)
-GCClipXOrigin = (1<<17)
-GCClipYOrigin = (1<<18)
-GCClipMask = (1<<19)
-GCDashOffset = (1<<20)
-GCDashList = (1<<21)
-GCArcMode = (1<<22)
+GCFunction = 1 << 0
+GCPlaneMask = 1 << 1
+GCForeground = 1 << 2
+GCBackground = 1 << 3
+GCLineWidth = 1 << 4
+GCLineStyle = 1 << 5
+GCCapStyle = 1 << 6
+GCJoinStyle = 1 << 7
+GCFillStyle = 1 << 8
+GCFillRule = 1 << 9
+GCTile = 1 << 10
+GCStipple = 1 << 11
+GCTileStipXOrigin = 1 << 12
+GCTileStipYOrigin = 1 << 13
+GCFont = 1 << 14
+GCSubwindowMode = 1 << 15
+GCGraphicsExposures = 1 << 16
+GCClipXOrigin = 1 << 17
+GCClipYOrigin = 1 << 18
+GCClipMask = 1 << 19
+GCDashOffset = 1 << 20
+GCDashList = 1 << 21
+GCArcMode = 1 << 22
 GCLastBit = 22
 FontLeftToRight = 0
 FontRightToLeft = 1
@@ -375,9 +375,9 @@ XYPixmap = 1
 ZPixmap = 2
 AllocNone = 0
 AllocAll = 1
-DoRed = (1<<0)
-DoGreen = (1<<1)
-DoBlue = (1<<2)
+DoRed = 1 << 0
+DoGreen = 1 << 1
+DoBlue = 1 << 2
 CursorShape = 0
 TileShape = 1
 StippleShape = 2
@@ -386,14 +386,14 @@ AutoRepeatModeOn = 1
 AutoRepeatModeDefault = 2
 LedModeOff = 0
 LedModeOn = 1
-KBKeyClickPercent = (1<<0)
-KBBellPercent = (1<<1)
-KBBellPitch = (1<<2)
-KBBellDuration = (1<<3)
-KBLed = (1<<4)
-KBLedMode = (1<<5)
-KBKey = (1<<6)
-KBAutoRepeatMode = (1<<7)
+KBKeyClickPercent = 1 << 0
+KBBellPercent = 1 << 1
+KBBellPitch = 1 << 2
+KBBellDuration = 1 << 3
+KBLed = 1 << 4
+KBLedMode = 1 << 5
+KBKey = 1 << 6
+KBAutoRepeatMode = 1 << 7
 MappingSuccess = 0
 MappingBusy = 1
 MappingFailed = 2

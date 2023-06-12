@@ -8,11 +8,10 @@ from .settings_widgets import SETTINGS_WIDGETS
 
 
 class SettingsWindow(QDialog):
-
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.setWindowTitle('Settings/Help - Migaku Anki')
+        self.setWindowTitle("Settings/Help - Migaku Anki")
         self.setWindowIcon(util.default_icon())
 
         lyt = QHBoxLayout()
@@ -36,7 +35,7 @@ class SettingsWindow(QDialog):
             self.stack_selector.addItem(w.TITLE)
             self.stack.addWidget(w)
 
-        self.toggle_advanced(config.get('show_advanced', False))
+        self.toggle_advanced(config.get("show_advanced", False))
 
     def closeEvent(self, _evt):
         self.accept()
@@ -56,7 +55,7 @@ class SettingsWindow(QDialog):
         window.exec_()
 
 
-action = QAction('Settings/Help', aqt.mw)
+action = QAction("Settings/Help", aqt.mw)
 action.setMenuRole(QAction.NoRole)
 action.triggered.connect(SettingsWindow.show_modal)
 

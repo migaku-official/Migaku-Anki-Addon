@@ -24,91 +24,105 @@
 
 from Xlib.protocol import rq
 
-extname = 'NV-CONTROL'
+extname = "NV-CONTROL"
 
 
 def query_target_count(self, target):
     """Return the target count"""
-    reply = NVCtrlQueryTargetCountReplyRequest(display=self.display,
-                                               opcode=self.display.get_extension_major(extname),
-                                               target_type=target.type())
-    return int(reply._data.get('count'))
+    reply = NVCtrlQueryTargetCountReplyRequest(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        target_type=target.type(),
+    )
+    return int(reply._data.get("count"))
 
 
 def query_int_attribute(self, target, display_mask, attr):
     """Return the value of an integer attribute"""
-    reply = NVCtrlQueryAttributeReplyRequest(display=self.display,
-                                             opcode=self.display.get_extension_major(extname),
-                                             target_id=target.id(),
-                                             target_type=target.type(),
-                                             display_mask=display_mask,
-                                             attr=attr)
-    if not reply._data.get('flags'):
+    reply = NVCtrlQueryAttributeReplyRequest(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        target_id=target.id(),
+        target_type=target.type(),
+        display_mask=display_mask,
+        attr=attr,
+    )
+    if not reply._data.get("flags"):
         return None
-    return int(reply._data.get('value'))
+    return int(reply._data.get("value"))
 
 
 def set_int_attribute(self, target, display_mask, attr, value):
     """Set the value of an integer attribute"""
-    reply = NVCtrlSetAttributeAndGetStatusReplyRequest(display=self.display,
-                                                       opcode=self.display.get_extension_major(extname),
-                                                       target_id=target.id(),
-                                                       target_type=target.type(),
-                                                       display_mask=display_mask,
-                                                       attr=attr,
-                                                       value=value)
-    return reply._data.get('flags') != 0
+    reply = NVCtrlSetAttributeAndGetStatusReplyRequest(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        target_id=target.id(),
+        target_type=target.type(),
+        display_mask=display_mask,
+        attr=attr,
+        value=value,
+    )
+    return reply._data.get("flags") != 0
 
 
 def query_string_attribute(self, target, display_mask, attr):
     """Return the value of a string attribute"""
-    reply = NVCtrlQueryStringAttributeReplyRequest(display=self.display,
-                                                   opcode=self.display.get_extension_major(extname),
-                                                   target_id=target.id(),
-                                                   target_type=target.type(),
-                                                   display_mask=display_mask,
-                                                   attr=attr)
-    if not reply._data.get('flags'):
+    reply = NVCtrlQueryStringAttributeReplyRequest(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        target_id=target.id(),
+        target_type=target.type(),
+        display_mask=display_mask,
+        attr=attr,
+    )
+    if not reply._data.get("flags"):
         return None
-    return str(reply._data.get('string')).strip('\0')
+    return str(reply._data.get("string")).strip("\0")
 
 
 def query_valid_attr_values(self, target, display_mask, attr):
     """Return the value of an integer attribute"""
-    reply = NVCtrlQueryValidAttributeValuesReplyRequest(display=self.display,
-                                                        opcode=self.display.get_extension_major(extname),
-                                                        target_id=target.id(),
-                                                        target_type=target.type(),
-                                                        display_mask=display_mask,
-                                                        attr=attr)
-    if not reply._data.get('flags'):
+    reply = NVCtrlQueryValidAttributeValuesReplyRequest(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        target_id=target.id(),
+        target_type=target.type(),
+        display_mask=display_mask,
+        attr=attr,
+    )
+    if not reply._data.get("flags"):
         return None
-    return int(reply._data.get('min')), int(reply._data.get('max'))
+    return int(reply._data.get("min")), int(reply._data.get("max"))
 
 
 def query_binary_data(self, target, display_mask, attr):
     """Return binary data"""
-    reply = NVCtrlQueryBinaryDataReplyRequest(display=self.display,
-                                              opcode=self.display.get_extension_major(extname),
-                                              target_id=target.id(),
-                                              target_type=target.type(),
-                                              display_mask=display_mask,
-                                              attr=attr)
-    if not reply._data.get('flags'):
+    reply = NVCtrlQueryBinaryDataReplyRequest(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        target_id=target.id(),
+        target_type=target.type(),
+        display_mask=display_mask,
+        attr=attr,
+    )
+    if not reply._data.get("flags"):
         return None
-    return reply._data.get('data')
+    return reply._data.get("data")
 
 
 def get_coolers_used_by_gpu(self, target):
-    reply = NVCtrlQueryListCard32ReplyRequest(display=self.display,
-                                              opcode=self.display.get_extension_major(extname),
-                                              target_id=target.id(),
-                                              target_type=target.type(),
-                                              display_mask=0,
-                                              attr=NV_CTRL_BINARY_DATA_COOLERS_USED_BY_GPU)
-    if not reply._data.get('flags'):
+    reply = NVCtrlQueryListCard32ReplyRequest(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        target_id=target.id(),
+        target_type=target.type(),
+        display_mask=0,
+        attr=NV_CTRL_BINARY_DATA_COOLERS_USED_BY_GPU,
+    )
+    if not reply._data.get("flags"):
         return None
-    fans = reply._data.get('list')
+    fans = reply._data.get("list")
     if len(fans) > 1:
         return fans[1:]
     else:
@@ -142,9 +156,9 @@ def get_gpu_uuid(self, target):
 def get_utilization_rates(self, target):
     string = query_string_attribute(self, target, 0, NV_CTRL_STRING_GPU_UTILIZATION)
     result = {}
-    if string is not None and string != '':
-        for line in string.split(','):
-            [key, value] = line.split('=')[:2]
+    if string is not None and string != "":
+        for line in string.split(","):
+            [key, value] = line.split("=")[:2]
             result[key.strip()] = int(value) if value.isdigit() else value
     return result
 
@@ -152,22 +166,24 @@ def get_utilization_rates(self, target):
 def get_performance_modes(self, target):
     string = query_string_attribute(self, target, 0, NV_CTRL_STRING_PERFORMANCE_MODES)
     result = []
-    if string is not None and string != '':
-        for perf in string.split(';'):
+    if string is not None and string != "":
+        for perf in string.split(";"):
             perf_dict = {}
-            for line in perf.split(','):
-                [key, value] = line.split('=')[:2]
+            for line in perf.split(","):
+                [key, value] = line.split("=")[:2]
                 perf_dict[key.strip()] = int(value) if value.isdigit() else value
             result.append(perf_dict)
     return result
 
 
 def get_clock_info(self, target):
-    string = query_string_attribute(self, target, 0, NV_CTRL_STRING_GPU_CURRENT_CLOCK_FREQS)
+    string = query_string_attribute(
+        self, target, 0, NV_CTRL_STRING_GPU_CURRENT_CLOCK_FREQS
+    )
     result = {}
-    if string is not None and string != '':
-        for line in string.split(','):
-            [key, value] = line.split('=')[:2]
+    if string is not None and string != "":
+        for line in string.split(","):
+            [key, value] = line.split("=")[:2]
             result[key.strip()] = int(value) if value.isdigit() else value
     return result
 
@@ -270,11 +286,15 @@ def get_gpu_nvclock_offset(self, target, perf_level):
 
 
 def set_gpu_nvclock_offset(self, target, perf_level, offset):
-    return set_int_attribute(self, target, perf_level, NV_CTRL_GPU_NVCLOCK_OFFSET, offset)
+    return set_int_attribute(
+        self, target, perf_level, NV_CTRL_GPU_NVCLOCK_OFFSET, offset
+    )
 
 
 def set_gpu_nvclock_offset_all_levels(self, target, offset):
-    return set_int_attribute(self, target, 0, NV_CTRL_GPU_NVCLOCK_OFFSET_ALL_PERFORMANCE_LEVELS, offset)
+    return set_int_attribute(
+        self, target, 0, NV_CTRL_GPU_NVCLOCK_OFFSET_ALL_PERFORMANCE_LEVELS, offset
+    )
 
 
 def get_gpu_nvclock_offset_range(self, target, perf_level):
@@ -282,19 +302,31 @@ def get_gpu_nvclock_offset_range(self, target, perf_level):
 
 
 def get_mem_transfer_rate_offset(self, target, perf_level):
-    return query_int_attribute(self, target, perf_level, NV_CTRL_GPU_MEM_TRANSFER_RATE_OFFSET)
+    return query_int_attribute(
+        self, target, perf_level, NV_CTRL_GPU_MEM_TRANSFER_RATE_OFFSET
+    )
 
 
 def set_mem_transfer_rate_offset(self, target, perf_level, offset):
-    return set_int_attribute(self, target, perf_level, NV_CTRL_GPU_MEM_TRANSFER_RATE_OFFSET, offset)
+    return set_int_attribute(
+        self, target, perf_level, NV_CTRL_GPU_MEM_TRANSFER_RATE_OFFSET, offset
+    )
 
 
 def set_mem_transfer_rate_offset_all_levels(self, target, offset):
-    return set_int_attribute(self, target, 0, NV_CTRL_GPU_MEM_TRANSFER_RATE_OFFSET_ALL_PERFORMANCE_LEVELS, offset)
+    return set_int_attribute(
+        self,
+        target,
+        0,
+        NV_CTRL_GPU_MEM_TRANSFER_RATE_OFFSET_ALL_PERFORMANCE_LEVELS,
+        offset,
+    )
 
 
 def get_mem_transfer_rate_offset_range(self, target, perf_level):
-    return query_valid_attr_values(self, target, perf_level, NV_CTRL_GPU_MEM_TRANSFER_RATE_OFFSET)
+    return query_valid_attr_values(
+        self, target, perf_level, NV_CTRL_GPU_MEM_TRANSFER_RATE_OFFSET
+    )
 
 
 def get_cooler_manual_control_enabled(self, target):
@@ -302,7 +334,12 @@ def get_cooler_manual_control_enabled(self, target):
 
 
 def set_cooler_manual_control_enabled(self, target, enabled):
-    return set_int_attribute(self, target, 0, NV_CTRL_GPU_COOLER_MANUAL_CONTROL, 1 if enabled else 0) == 1
+    return (
+        set_int_attribute(
+            self, target, 0, NV_CTRL_GPU_COOLER_MANUAL_CONTROL, 1 if enabled else 0
+        )
+        == 1
+    )
 
 
 def get_fan_duty(self, target):
@@ -330,10 +367,10 @@ def get_max_displays(self, target):
 def _displaystr2num(st):
     """Return a display number from a string"""
     num = None
-    for s, n in [('DFP-', 16), ('TV-', 8), ('CRT-', 0)]:
+    for s, n in [("DFP-", 16), ("TV-", 8), ("CRT-", 0)]:
         if st.startswith(s):
             try:
-                curnum = int(st[len(s):])
+                curnum = int(st[len(s) :])
                 if 0 <= curnum <= 7:
                     num = n + curnum
                     break
@@ -342,68 +379,154 @@ def _displaystr2num(st):
     if num is not None:
         return num
     else:
-        raise ValueError('Unrecognised display name: ' + st)
+        raise ValueError("Unrecognised display name: " + st)
 
 
 def _displays2mask(displays):
     """Return a display mask from an array of display numbers."""
     mask = 0
     for d in displays:
-        mask += (1 << _displaystr2num(d))
+        mask += 1 << _displaystr2num(d)
     return mask
 
 
 def init(disp, info):
-    disp.extension_add_method('display', 'nvcontrol_query_target_count', query_target_count)
-    disp.extension_add_method('display', 'nvcontrol_query_int_attribute', query_int_attribute)
-    disp.extension_add_method('display', 'nvcontrol_query_string_attribute', query_string_attribute)
-    disp.extension_add_method('display', 'nvcontrol_query_valid_attr_values', query_valid_attr_values)
-    disp.extension_add_method('display', 'nvcontrol_query_binary_data', query_binary_data)
-    disp.extension_add_method('display', 'nvcontrol_get_gpu_count', get_gpu_count)
-    disp.extension_add_method('display', 'nvcontrol_get_vram', get_vram)
-    disp.extension_add_method('display', 'nvcontrol_get_irq', get_irq)
-    disp.extension_add_method('display', 'nvcontrol_supports_framelock', supports_framelock)
-    disp.extension_add_method('display', 'nvcontrol_get_core_temp', get_core_temp)
-    disp.extension_add_method('display', 'nvcontrol_get_core_threshold', get_core_threshold)
-    disp.extension_add_method('display', 'nvcontrol_get_default_core_threshold', get_default_core_threshold)
-    disp.extension_add_method('display', 'nvcontrol_get_max_core_threshold', get_max_core_threshold)
-    disp.extension_add_method('display', 'nvcontrol_get_ambient_temp', get_ambient_temp)
-    disp.extension_add_method('display', 'nvcontrol_get_cuda_cores', get_cuda_cores)
-    disp.extension_add_method('display', 'nvcontrol_get_memory_bus_width', get_memory_bus_width)
-    disp.extension_add_method('display', 'nvcontrol_get_total_dedicated_gpu_memory', get_total_dedicated_gpu_memory)
-    disp.extension_add_method('display', 'nvcontrol_get_used_dedicated_gpu_memory', get_used_dedicated_gpu_memory)
-    disp.extension_add_method('display', 'nvcontrol_get_curr_pcie_link_width', get_curr_pcie_link_width)
-    disp.extension_add_method('display', 'nvcontrol_get_max_pcie_link_width', get_max_pcie_link_width)
-    disp.extension_add_method('display', 'nvcontrol_get_curr_pcie_link_generation', get_curr_pcie_link_generation)
-    disp.extension_add_method('display', 'nvcontrol_get_encoder_utilization', get_encoder_utilization)
-    disp.extension_add_method('display', 'nvcontrol_get_decoder_utilization', get_decoder_utilization)
-    disp.extension_add_method('display', 'nvcontrol_get_current_performance_level', get_current_performance_level)
-    disp.extension_add_method('display', 'nvcontrol_get_gpu_nvclock_offset', get_gpu_nvclock_offset)
-    disp.extension_add_method('display', 'nvcontrol_set_gpu_nvclock_offset', set_gpu_nvclock_offset)
-    disp.extension_add_method('display', 'nvcontrol_set_gpu_nvclock_offset_all_levels', set_gpu_nvclock_offset_all_levels)
-    disp.extension_add_method('display', 'nvcontrol_get_mem_transfer_rate_offset', get_mem_transfer_rate_offset)
-    disp.extension_add_method('display', 'nvcontrol_set_mem_transfer_rate_offset', set_mem_transfer_rate_offset)
-    disp.extension_add_method('display', 'nvcontrol_set_mem_transfer_rate_offset_all_levels', set_mem_transfer_rate_offset_all_levels)
-    disp.extension_add_method('display', 'nvcontrol_get_cooler_manual_control_enabled',
-                              get_cooler_manual_control_enabled)
-    disp.extension_add_method('display', 'nvcontrol_get_fan_duty', get_fan_duty)
-    disp.extension_add_method('display', 'nvcontrol_set_fan_duty', set_fan_duty)
-    disp.extension_add_method('display', 'nvcontrol_get_fan_rpm', get_fan_rpm)
-    disp.extension_add_method('display', 'nvcontrol_get_coolers_used_by_gpu', get_coolers_used_by_gpu)
-    disp.extension_add_method('display', 'nvcontrol_get_max_displays', get_max_displays)
-    disp.extension_add_method('display', 'nvcontrol_get_name', get_name)
-    disp.extension_add_method('display', 'nvcontrol_get_driver_version', get_driver_version)
-    disp.extension_add_method('display', 'nvcontrol_get_vbios_version', get_vbios_version)
-    disp.extension_add_method('display', 'nvcontrol_get_gpu_uuid', get_gpu_uuid)
-    disp.extension_add_method('display', 'nvcontrol_get_utilization_rates', get_utilization_rates)
-    disp.extension_add_method('display', 'nvcontrol_get_performance_modes', get_performance_modes)
-    disp.extension_add_method('display', 'nvcontrol_get_clock_info', get_clock_info)
-    disp.extension_add_method('display', 'nvcontrol_set_cooler_manual_control_enabled',
-                              set_cooler_manual_control_enabled)
-    disp.extension_add_method('display', 'nvcontrol_get_gpu_nvclock_offset_range',
-                              get_gpu_nvclock_offset_range)
-    disp.extension_add_method('display', 'nvcontrol_get_mem_transfer_rate_offset_range',
-                              get_mem_transfer_rate_offset_range)
+    disp.extension_add_method(
+        "display", "nvcontrol_query_target_count", query_target_count
+    )
+    disp.extension_add_method(
+        "display", "nvcontrol_query_int_attribute", query_int_attribute
+    )
+    disp.extension_add_method(
+        "display", "nvcontrol_query_string_attribute", query_string_attribute
+    )
+    disp.extension_add_method(
+        "display", "nvcontrol_query_valid_attr_values", query_valid_attr_values
+    )
+    disp.extension_add_method(
+        "display", "nvcontrol_query_binary_data", query_binary_data
+    )
+    disp.extension_add_method("display", "nvcontrol_get_gpu_count", get_gpu_count)
+    disp.extension_add_method("display", "nvcontrol_get_vram", get_vram)
+    disp.extension_add_method("display", "nvcontrol_get_irq", get_irq)
+    disp.extension_add_method(
+        "display", "nvcontrol_supports_framelock", supports_framelock
+    )
+    disp.extension_add_method("display", "nvcontrol_get_core_temp", get_core_temp)
+    disp.extension_add_method(
+        "display", "nvcontrol_get_core_threshold", get_core_threshold
+    )
+    disp.extension_add_method(
+        "display", "nvcontrol_get_default_core_threshold", get_default_core_threshold
+    )
+    disp.extension_add_method(
+        "display", "nvcontrol_get_max_core_threshold", get_max_core_threshold
+    )
+    disp.extension_add_method("display", "nvcontrol_get_ambient_temp", get_ambient_temp)
+    disp.extension_add_method("display", "nvcontrol_get_cuda_cores", get_cuda_cores)
+    disp.extension_add_method(
+        "display", "nvcontrol_get_memory_bus_width", get_memory_bus_width
+    )
+    disp.extension_add_method(
+        "display",
+        "nvcontrol_get_total_dedicated_gpu_memory",
+        get_total_dedicated_gpu_memory,
+    )
+    disp.extension_add_method(
+        "display",
+        "nvcontrol_get_used_dedicated_gpu_memory",
+        get_used_dedicated_gpu_memory,
+    )
+    disp.extension_add_method(
+        "display", "nvcontrol_get_curr_pcie_link_width", get_curr_pcie_link_width
+    )
+    disp.extension_add_method(
+        "display", "nvcontrol_get_max_pcie_link_width", get_max_pcie_link_width
+    )
+    disp.extension_add_method(
+        "display",
+        "nvcontrol_get_curr_pcie_link_generation",
+        get_curr_pcie_link_generation,
+    )
+    disp.extension_add_method(
+        "display", "nvcontrol_get_encoder_utilization", get_encoder_utilization
+    )
+    disp.extension_add_method(
+        "display", "nvcontrol_get_decoder_utilization", get_decoder_utilization
+    )
+    disp.extension_add_method(
+        "display",
+        "nvcontrol_get_current_performance_level",
+        get_current_performance_level,
+    )
+    disp.extension_add_method(
+        "display", "nvcontrol_get_gpu_nvclock_offset", get_gpu_nvclock_offset
+    )
+    disp.extension_add_method(
+        "display", "nvcontrol_set_gpu_nvclock_offset", set_gpu_nvclock_offset
+    )
+    disp.extension_add_method(
+        "display",
+        "nvcontrol_set_gpu_nvclock_offset_all_levels",
+        set_gpu_nvclock_offset_all_levels,
+    )
+    disp.extension_add_method(
+        "display",
+        "nvcontrol_get_mem_transfer_rate_offset",
+        get_mem_transfer_rate_offset,
+    )
+    disp.extension_add_method(
+        "display",
+        "nvcontrol_set_mem_transfer_rate_offset",
+        set_mem_transfer_rate_offset,
+    )
+    disp.extension_add_method(
+        "display",
+        "nvcontrol_set_mem_transfer_rate_offset_all_levels",
+        set_mem_transfer_rate_offset_all_levels,
+    )
+    disp.extension_add_method(
+        "display",
+        "nvcontrol_get_cooler_manual_control_enabled",
+        get_cooler_manual_control_enabled,
+    )
+    disp.extension_add_method("display", "nvcontrol_get_fan_duty", get_fan_duty)
+    disp.extension_add_method("display", "nvcontrol_set_fan_duty", set_fan_duty)
+    disp.extension_add_method("display", "nvcontrol_get_fan_rpm", get_fan_rpm)
+    disp.extension_add_method(
+        "display", "nvcontrol_get_coolers_used_by_gpu", get_coolers_used_by_gpu
+    )
+    disp.extension_add_method("display", "nvcontrol_get_max_displays", get_max_displays)
+    disp.extension_add_method("display", "nvcontrol_get_name", get_name)
+    disp.extension_add_method(
+        "display", "nvcontrol_get_driver_version", get_driver_version
+    )
+    disp.extension_add_method(
+        "display", "nvcontrol_get_vbios_version", get_vbios_version
+    )
+    disp.extension_add_method("display", "nvcontrol_get_gpu_uuid", get_gpu_uuid)
+    disp.extension_add_method(
+        "display", "nvcontrol_get_utilization_rates", get_utilization_rates
+    )
+    disp.extension_add_method(
+        "display", "nvcontrol_get_performance_modes", get_performance_modes
+    )
+    disp.extension_add_method("display", "nvcontrol_get_clock_info", get_clock_info)
+    disp.extension_add_method(
+        "display",
+        "nvcontrol_set_cooler_manual_control_enabled",
+        set_cooler_manual_control_enabled,
+    )
+    disp.extension_add_method(
+        "display",
+        "nvcontrol_get_gpu_nvclock_offset_range",
+        get_gpu_nvclock_offset_range,
+    )
+    disp.extension_add_method(
+        "display",
+        "nvcontrol_get_mem_transfer_rate_offset_range",
+        get_mem_transfer_rate_offset_range,
+    )
 
 
 ############################################################################
@@ -2739,7 +2862,11 @@ NV_CTRL_THERMAL_COOLER_TARGET_NONE = 0
 NV_CTRL_THERMAL_COOLER_TARGET_GPU = 1
 NV_CTRL_THERMAL_COOLER_TARGET_MEMORY = 2
 NV_CTRL_THERMAL_COOLER_TARGET_POWER_SUPPLY = 4
-NV_CTRL_THERMAL_COOLER_TARGET_GPU_RELATED = NV_CTRL_THERMAL_COOLER_TARGET_GPU | NV_CTRL_THERMAL_COOLER_TARGET_MEMORY | NV_CTRL_THERMAL_COOLER_TARGET_POWER_SUPPLY
+NV_CTRL_THERMAL_COOLER_TARGET_GPU_RELATED = (
+    NV_CTRL_THERMAL_COOLER_TARGET_GPU
+    | NV_CTRL_THERMAL_COOLER_TARGET_MEMORY
+    | NV_CTRL_THERMAL_COOLER_TARGET_POWER_SUPPLY
+)
 
 #
 # NV_CTRL_GPU_ECC_SUPPORTED - Reports whether ECC is supported by the
@@ -3100,7 +3227,10 @@ NV_CTRL_GVIO_VIDEO_FORMAT_FLAGS_PROGRESSIVE = 0x00000002
 NV_CTRL_GVIO_VIDEO_FORMAT_FLAGS_PSF = 0x00000004
 NV_CTRL_GVIO_VIDEO_FORMAT_FLAGS_3G_LEVEL_A = 0x00000008
 NV_CTRL_GVIO_VIDEO_FORMAT_FLAGS_3G_LEVEL_B = 0x00000010
-NV_CTRL_GVIO_VIDEO_FORMAT_FLAGS_3G = NV_CTRL_GVIO_VIDEO_FORMAT_FLAGS_3G_LEVEL_A | NV_CTRL_GVIO_VIDEO_FORMAT_FLAGS_3G_LEVEL_B
+NV_CTRL_GVIO_VIDEO_FORMAT_FLAGS_3G = (
+    NV_CTRL_GVIO_VIDEO_FORMAT_FLAGS_3G_LEVEL_A
+    | NV_CTRL_GVIO_VIDEO_FORMAT_FLAGS_3G_LEVEL_B
+)
 NV_CTRL_GVIO_VIDEO_FORMAT_FLAGS_3G_1080P_NO_12BPC = 0x00000020
 
 #
@@ -4099,7 +4229,9 @@ NV_CTRL_STRING_XINERAMA_SCREEN_INFO = 26  # renamed
 
 NV_CTRL_STRING_NVIDIA_XINERAMA_INFO_ORDER = 27  # RW--
 
-NV_CTRL_STRING_TWINVIEW_XINERAMA_INFO_ORDER = NV_CTRL_STRING_NVIDIA_XINERAMA_INFO_ORDER  # for backwards compatibility:
+NV_CTRL_STRING_TWINVIEW_XINERAMA_INFO_ORDER = (
+    NV_CTRL_STRING_NVIDIA_XINERAMA_INFO_ORDER  # for backwards compatibility:
+)
 
 #
 # NV_CTRL_STRING_SLI_MODE - returns a string describing the current
@@ -5185,7 +5317,7 @@ class Target(object):
     def __init__(self):
         self._id = -1
         self._type = -1
-        self._name = ''
+        self._name = ""
 
     def id(self):
         return self._id
@@ -5194,7 +5326,7 @@ class Target(object):
         return self._type
 
     def __str__(self):
-        return '<nVidia {} #{}>'.format(self._name, self.id())
+        return "<nVidia {} #{}>".format(self._name, self.id())
 
 
 class Gpu(Target):
@@ -5203,7 +5335,7 @@ class Gpu(Target):
         super(self.__class__, self).__init__()
         self._id = ngpu
         self._type = NV_CTRL_TARGET_TYPE_GPU
-        self._name = 'GPU'
+        self._name = "GPU"
 
 
 class Screen(Target):
@@ -5212,7 +5344,7 @@ class Screen(Target):
         super(self.__class__, self).__init__()
         self._id = nscr
         self._type = NV_CTRL_TARGET_TYPE_X_SCREEN
-        self._name = 'X screen'
+        self._name = "X screen"
 
 
 class Cooler(Target):
@@ -5221,173 +5353,173 @@ class Cooler(Target):
         super(self.__class__, self).__init__()
         self._id = nfan
         self._type = NV_CTRL_TARGET_TYPE_COOLER
-        self._name = 'Cooler'
+        self._name = "Cooler"
 
 
 class NVCtrlQueryTargetCountReplyRequest(rq.ReplyRequest):
     _request = rq.Struct(
-        rq.Card8('opcode'),
+        rq.Card8("opcode"),
         rq.Opcode(X_nvCtrlQueryTargetCount),
         rq.RequestLength(),
-        rq.Card32('target_type'),
+        rq.Card32("target_type"),
     )
     _reply = rq.Struct(
         rq.ReplyCode(),
-        rq.Card8('padb1'),
-        rq.Card16('sequence_number'),
+        rq.Card8("padb1"),
+        rq.Card16("sequence_number"),
         rq.ReplyLength(),
-        rq.Card32('count'),
-        rq.Card32('pad4'),
-        rq.Card32('pad5'),
-        rq.Card32('pad6'),
-        rq.Card32('pad7'),
-        rq.Card32('pad8'),
+        rq.Card32("count"),
+        rq.Card32("pad4"),
+        rq.Card32("pad5"),
+        rq.Card32("pad6"),
+        rq.Card32("pad7"),
+        rq.Card32("pad8"),
     )
 
 
 class NVCtrlQueryAttributeReplyRequest(rq.ReplyRequest):
     _request = rq.Struct(
-        rq.Card8('opcode'),
+        rq.Card8("opcode"),
         rq.Opcode(X_nvCtrlQueryAttribute),
         rq.RequestLength(),
-        rq.Card16('target_id'),
-        rq.Card16('target_type'),
-        rq.Card32('display_mask'),
-        rq.Card32('attr'),
+        rq.Card16("target_id"),
+        rq.Card16("target_type"),
+        rq.Card32("display_mask"),
+        rq.Card32("attr"),
     )
     _reply = rq.Struct(
         rq.ReplyCode(),
-        rq.Card8('pad0'),
-        rq.Card16('sequence_number'),
+        rq.Card8("pad0"),
+        rq.Card16("sequence_number"),
         rq.ReplyLength(),
-        rq.Card32('flags'),
-        rq.Int32('value'),
-        rq.Card32('pad4'),
-        rq.Card32('pad5'),
-        rq.Card32('pad6'),
-        rq.Card32('pad7'),
+        rq.Card32("flags"),
+        rq.Int32("value"),
+        rq.Card32("pad4"),
+        rq.Card32("pad5"),
+        rq.Card32("pad6"),
+        rq.Card32("pad7"),
     )
 
 
 class NVCtrlSetAttributeAndGetStatusReplyRequest(rq.ReplyRequest):
     _request = rq.Struct(
-        rq.Card8('opcode'),
+        rq.Card8("opcode"),
         rq.Opcode(X_nvCtrlSetAttributeAndGetStatus),
         rq.RequestLength(),
-        rq.Card16('target_id'),
-        rq.Card16('target_type'),
-        rq.Card32('display_mask'),
-        rq.Card32('attr'),
-        rq.Int32('value')
+        rq.Card16("target_id"),
+        rq.Card16("target_type"),
+        rq.Card32("display_mask"),
+        rq.Card32("attr"),
+        rq.Int32("value"),
     )
     _reply = rq.Struct(
         rq.ReplyCode(),
-        rq.Card8('pad0'),
-        rq.Card16('sequence_number'),
+        rq.Card8("pad0"),
+        rq.Card16("sequence_number"),
         rq.ReplyLength(),
-        rq.Card32('flags'),
-        rq.Card32('pad3'),
-        rq.Card32('pad4'),
-        rq.Card32('pad5'),
-        rq.Card32('pad6'),
-        rq.Card32('pad7'),
+        rq.Card32("flags"),
+        rq.Card32("pad3"),
+        rq.Card32("pad4"),
+        rq.Card32("pad5"),
+        rq.Card32("pad6"),
+        rq.Card32("pad7"),
     )
 
 
 class NVCtrlQueryStringAttributeReplyRequest(rq.ReplyRequest):
     _request = rq.Struct(
-        rq.Card8('opcode'),
+        rq.Card8("opcode"),
         rq.Opcode(X_nvCtrlQueryStringAttribute),
         rq.RequestLength(),
-        rq.Card16('target_id'),
-        rq.Card16('target_type'),
-        rq.Card32('display_mask'),
-        rq.Card32('attr'),
+        rq.Card16("target_id"),
+        rq.Card16("target_type"),
+        rq.Card32("display_mask"),
+        rq.Card32("attr"),
     )
     _reply = rq.Struct(
         rq.ReplyCode(),
-        rq.Card8('pad0'),
-        rq.Card16('sequence_number'),
+        rq.Card8("pad0"),
+        rq.Card16("sequence_number"),
         rq.ReplyLength(),
-        rq.Card32('flags'),
-        rq.Card32('string', 4),
-        rq.Card32('pad4'),
-        rq.Card32('pad5'),
-        rq.Card32('pad6'),
-        rq.Card32('pad7'),
-        rq.String8('string'),
+        rq.Card32("flags"),
+        rq.Card32("string", 4),
+        rq.Card32("pad4"),
+        rq.Card32("pad5"),
+        rq.Card32("pad6"),
+        rq.Card32("pad7"),
+        rq.String8("string"),
     )
 
 
 class NVCtrlQueryValidAttributeValuesReplyRequest(rq.ReplyRequest):
     _request = rq.Struct(
-        rq.Card8('opcode'),
+        rq.Card8("opcode"),
         rq.Opcode(X_nvCtrlQueryValidAttributeValues),
         rq.RequestLength(),
-        rq.Card16('target_id'),
-        rq.Card16('target_type'),
-        rq.Card32('display_mask'),
-        rq.Card32('attr'),
+        rq.Card16("target_id"),
+        rq.Card16("target_type"),
+        rq.Card32("display_mask"),
+        rq.Card32("attr"),
     )
     _reply = rq.Struct(
         rq.ReplyCode(),
-        rq.Card8('pad0'),
-        rq.Card16('sequence_number'),
+        rq.Card8("pad0"),
+        rq.Card16("sequence_number"),
         rq.ReplyLength(),
-        rq.Card32('flags'),
-        rq.Int32('attr_type'),
-        rq.Int32('min'),
-        rq.Int32('max'),
-        rq.Card32('bits'),
-        rq.Card32('perms'),
+        rq.Card32("flags"),
+        rq.Int32("attr_type"),
+        rq.Int32("min"),
+        rq.Int32("max"),
+        rq.Card32("bits"),
+        rq.Card32("perms"),
     )
 
 
 class NVCtrlQueryBinaryDataReplyRequest(rq.ReplyRequest):
     _request = rq.Struct(
-        rq.Card8('opcode'),
+        rq.Card8("opcode"),
         rq.Opcode(X_nvCtrlQueryBinaryData),
         rq.RequestLength(),
-        rq.Card16('target_id'),
-        rq.Card16('target_type'),
-        rq.Card32('display_mask'),
-        rq.Card32('attr'),
+        rq.Card16("target_id"),
+        rq.Card16("target_type"),
+        rq.Card32("display_mask"),
+        rq.Card32("attr"),
     )
     _reply = rq.Struct(
         rq.ReplyCode(),
-        rq.Card8('pad0'),
-        rq.Card16('sequence_number'),
+        rq.Card8("pad0"),
+        rq.Card16("sequence_number"),
         rq.ReplyLength(),
-        rq.Card32('flags'),
-        rq.Card32('data', 4),
-        rq.Card32('pad4'),
-        rq.Card32('pad5'),
-        rq.Card32('pad6'),
-        rq.Card32('pad7'),
-        rq.Binary('data'),
+        rq.Card32("flags"),
+        rq.Card32("data", 4),
+        rq.Card32("pad4"),
+        rq.Card32("pad5"),
+        rq.Card32("pad6"),
+        rq.Card32("pad7"),
+        rq.Binary("data"),
     )
 
 
 class NVCtrlQueryListCard32ReplyRequest(rq.ReplyRequest):
     _request = rq.Struct(
-        rq.Card8('opcode'),
+        rq.Card8("opcode"),
         rq.Opcode(X_nvCtrlQueryBinaryData),
         rq.RequestLength(),
-        rq.Card16('target_id'),
-        rq.Card16('target_type'),
-        rq.Card32('display_mask'),
-        rq.Card32('attr'),
+        rq.Card16("target_id"),
+        rq.Card16("target_type"),
+        rq.Card32("display_mask"),
+        rq.Card32("attr"),
     )
     _reply = rq.Struct(
         rq.ReplyCode(),
-        rq.Card8('pad0'),
-        rq.Card16('sequence_number'),
+        rq.Card8("pad0"),
+        rq.Card16("sequence_number"),
         rq.ReplyLength(),
-        rq.Card32('flags'),
-        rq.Card32('list', 4),
-        rq.Card32('pad4'),
-        rq.Card32('pad5'),
-        rq.Card32('pad6'),
-        rq.Card32('pad7'),
-        rq.List('list', rq.Card32),
+        rq.Card32("flags"),
+        rq.Card32("list", 4),
+        rq.Card32("pad4"),
+        rq.Card32("pad5"),
+        rq.Card32("pad6"),
+        rq.Card32("pad7"),
+        rq.List("list", rq.Card32),
     )

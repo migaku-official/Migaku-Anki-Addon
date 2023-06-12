@@ -1,11 +1,12 @@
 import re
 
-REMOVE_RE = re.compile(r'( +|\[(?!sound:).*?\])(?![^{]*})')
+REMOVE_RE = re.compile(r"( +|\[(?!sound:).*?\])(?![^{]*})")
+
 
 def remove_syntax(text):
-    if not any(c in text for c in '{}[]'):
+    if not any(c in text for c in "{}[]"):
         return text
-    text = REMOVE_RE.sub('', text)
-    text = text.replace('{', '')
-    text = text.replace('}', '')
+    text = REMOVE_RE.sub("", text)
+    text = text.replace("{", "")
+    text = text.replace("}", "")
     return text

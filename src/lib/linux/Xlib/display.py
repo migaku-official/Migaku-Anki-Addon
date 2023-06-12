@@ -42,27 +42,34 @@ from .xobject import colormap
 from .xobject import cursor
 
 _resource_baseclasses = {
-    'resource': resource.Resource,
-    'drawable': drawable.Drawable,
-    'window': drawable.Window,
-    'pixmap': drawable.Pixmap,
-    'fontable': fontable.Fontable,
-    'font': fontable.Font,
-    'gc': fontable.GC,
-    'colormap': colormap.Colormap,
-    'cursor': cursor.Cursor,
-    }
+    "resource": resource.Resource,
+    "drawable": drawable.Drawable,
+    "window": drawable.Window,
+    "pixmap": drawable.Pixmap,
+    "fontable": fontable.Fontable,
+    "font": fontable.Font,
+    "gc": fontable.GC,
+    "colormap": colormap.Colormap,
+    "cursor": cursor.Cursor,
+}
 
 _resource_hierarchy = {
-    'resource': ('drawable', 'window', 'pixmap',
-                 'fontable', 'font', 'gc',
-                 'colormap', 'cursor'),
-    'drawable': ('window', 'pixmap'),
-    'fontable': ('font', 'gc')
-    }
+    "resource": (
+        "drawable",
+        "window",
+        "pixmap",
+        "fontable",
+        "font",
+        "gc",
+        "colormap",
+        "cursor",
+    ),
+    "drawable": ("window", "pixmap"),
+    "fontable": ("font", "gc"),
+}
+
 
 class _BaseDisplay(protocol_display.Display):
-
     # Implement a cache of atom names, used by Window objects when
     # dealing with some ICCCM properties not defined in Xlib.Xatom
 
@@ -75,9 +82,11 @@ class _BaseDisplay(protocol_display.Display):
         if atomname in self._atom_cache:
             return self._atom_cache[atomname]
 
-        r = request.InternAtom(display = self, name = atomname, only_if_exists = only_if_exists)
+        r = request.InternAtom(
+            display=self, name=atomname, only_if_exists=only_if_exists
+        )
 
-         # don't cache NONE responses in case someone creates this later
+        # don't cache NONE responses in case someone creates this later
         if r.atom != X.NONE:
             self._atom_cache[atomname] = r.atom
 
@@ -85,15 +94,16 @@ class _BaseDisplay(protocol_display.Display):
 
 
 class Display(object):
-    def __init__(self, display = None):
+    def __init__(self, display=None):
         self.display = _BaseDisplay(display)
 
         # Create the keymap cache
         self._keymap_codes = [()] * 256
         self._keymap_syms = {}
-        self._update_keymap(self.display.info.min_keycode,
-                            (self.display.info.max_keycode
-                             - self.display.info.min_keycode + 1))
+        self._update_keymap(
+            self.display.info.min_keycode,
+            (self.display.info.max_keycode - self.display.info.min_keycode + 1),
+        )
 
         # Translations for keysyms to strings.
         self.keysym_translations = {}
@@ -115,9 +125,8 @@ class Display(object):
         # Go through all extension modules
         for extname, modname in ext.__extensions__:
             if extname in exts:
-
                 # Import the module and fetch it
-                __import__('Xlib.ext.' + modname)
+                __import__("Xlib.ext." + modname)
                 mod = getattr(ext, modname)
 
                 info = self.query_extension(extname)
@@ -128,21 +137,23 @@ class Display(object):
 
                 self.extensions.append(extname)
 
-
         # Finalize extensions by creating new classes
         for class_name, dictionary in self.class_extension_dicts.items():
             origcls = self.display.resource_classes[class_name]
-            self.display.resource_classes[class_name] = type(origcls.__name__,
-                                                             (origcls,),
-                                                             dictionary)
+            self.display.resource_classes[class_name] = type(
+                origcls.__name__, (origcls,), dictionary
+            )
 
         # Problem: we have already created some objects without the
         # extensions: the screen roots and default colormaps.
         # Fix that by reinstantiating them.
         for screen in self.display.info.roots:
-            screen.root = self.display.resource_classes['window'](self.display, screen.root.id)
-            screen.default_colormap = self.display.resource_classes['colormap'](self.display, screen.default_colormap.id)
-
+            screen.root = self.display.resource_classes["window"](
+                self.display, screen.root.id
+            )
+            screen.default_colormap = self.display.resource_classes["colormap"](
+                self.display, screen.default_colormap.id
+            )
 
     def get_display_name(self):
         """Returns the name used to connect to the server, either
@@ -230,7 +241,7 @@ class Display(object):
     ### display information retrieval
     ###
 
-    def screen(self, sno = None):
+    def screen(self, sno=None):
         if sno is None:
             return self.display.info.roots[self.display.default_screen]
         else:
@@ -270,18 +281,20 @@ class Display(object):
         normal function whose first argument is a 'self'.
         """
 
-        if object == 'display':
+        if object == "display":
             if hasattr(self, name):
-                raise AssertionError('attempting to replace display method: %s' % name)
+                raise AssertionError("attempting to replace display method: %s" % name)
 
             self.display_extension_methods[name] = function
 
         else:
-            class_list = (object, ) + _resource_hierarchy.get(object, ())
+            class_list = (object,) + _resource_hierarchy.get(object, ())
             for class_name in class_list:
                 cls = _resource_baseclasses[class_name]
                 if hasattr(cls, name):
-                    raise AssertionError('attempting to replace %s method: %s' % (class_name, name))
+                    raise AssertionError(
+                        "attempting to replace %s method: %s" % (class_name, name)
+                    )
 
                 method = create_unbound_method(function, cls)
 
@@ -289,9 +302,9 @@ class Display(object):
                 try:
                     self.class_extension_dicts[class_name][name] = method
                 except KeyError:
-                    self.class_extension_dicts[class_name] = { name: method }
+                    self.class_extension_dicts[class_name] = {name: method}
 
-    def extension_add_event(self, code, evt, name = None):
+    def extension_add_event(self, code, evt, name=None):
         """extension_add_event(code, evt, [name])
 
         Add an extension event.  CODE is the numeric code, and EVT is
@@ -303,8 +316,7 @@ class Display(object):
         extension_event.
         """
 
-        newevt = type(evt.__name__, evt.__bases__,
-                      evt.__dict__.copy())
+        newevt = type(evt.__name__, evt.__bases__, evt.__dict__.copy())
         newevt._code = code
 
         self.display.add_extension_event(code, newevt)
@@ -314,7 +326,7 @@ class Display(object):
 
         setattr(self.extension_event, name, code)
 
-    def extension_add_subevent(self, code, subcode, evt, name = None):
+    def extension_add_subevent(self, code, subcode, evt, name=None):
         """extension_add_subevent(code, evt, [name])
 
         Add an extension subevent.  CODE is the numeric code, subcode
@@ -327,8 +339,7 @@ class Display(object):
         extension_event.
         """
 
-        newevt = type(evt.__name__, evt.__bases__,
-                      evt.__dict__.copy())
+        newevt = type(evt.__name__, evt.__bases__, evt.__dict__.copy())
         newevt._code = code
 
         self.display.add_extension_event(code, newevt, subcode)
@@ -338,7 +349,7 @@ class Display(object):
 
         # store subcodes as a tuple of (event code, subcode) in the
         # extension dict maintained in the display object
-        setattr(self.extension_event, name, (code,subcode))
+        setattr(self.extension_event, name, (code, subcode))
 
     def extension_add_error(self, code, err):
         """extension_add_error(code, err)
@@ -401,11 +412,10 @@ class Display(object):
             if evt.request == X.MappingKeyboard:
                 self._update_keymap(evt.first_keycode, evt.count)
         else:
-            raise TypeError('expected a MappingNotify event')
+            raise TypeError("expected a MappingNotify event")
 
     def _update_keymap(self, first_keycode, count):
-        """Internal function, called to refresh the keymap cache.
-        """
+        """Internal function, called to refresh the keymap cache."""
 
         # Delete all sym->code maps for the changed codes
 
@@ -454,6 +464,7 @@ class Display(object):
             return s
 
         import Xlib.XK
+
         return Xlib.XK.keysym_to_string(keysym)
 
     def rebind_string(self, keysym, newstring):
@@ -468,101 +479,102 @@ class Display(object):
         else:
             self.keysym_translations[keysym] = newstring
 
-
     ###
     ### X requests
     ###
 
-    def intern_atom(self, name, only_if_exists = False):
+    def intern_atom(self, name, only_if_exists=False):
         """Intern the string name, returning its atom number. If
         only_if_exists is true and the atom does not already exist, it
         will not be created and X.NONE is returned."""
-        r = request.InternAtom(display = self.display,
-                               name = name,
-                               only_if_exists = only_if_exists)
+        r = request.InternAtom(
+            display=self.display, name=name, only_if_exists=only_if_exists
+        )
         return r.atom
 
-    def get_atom(self, atom, only_if_exists = False):
+    def get_atom(self, atom, only_if_exists=False):
         """Alias for intern_atom, using internal cache"""
         return self.display.get_atom(atom, only_if_exists)
-
 
     def get_atom_name(self, atom):
         """Look up the name of atom, returning it as a string. Will raise
         BadAtom if atom does not exist."""
-        r = request.GetAtomName(display = self.display,
-                                atom = atom)
+        r = request.GetAtomName(display=self.display, atom=atom)
         return r.name
 
     def get_selection_owner(self, selection):
         """Return the window that owns selection (an atom), or X.NONE if
         there is no owner for the selection. Can raise BadAtom."""
-        r = request.GetSelectionOwner(display = self.display,
-                                      selection = selection)
+        r = request.GetSelectionOwner(display=self.display, selection=selection)
         return r.owner
 
-    def send_event(self, destination, event, event_mask = 0, propagate = False,
-                   onerror = None):
+    def send_event(
+        self, destination, event, event_mask=0, propagate=False, onerror=None
+    ):
         """Send a synthetic event to the window destination which can be
         a window object, or X.PointerWindow or X.InputFocus. event is the
         event object to send, instantiated from one of the classes in
         protocol.events. See XSendEvent(3X11) for details.
 
         There is also a Window.send_event() method."""
-        request.SendEvent(display = self.display,
-                          onerror = onerror,
-                          propagate = propagate,
-                          destination = destination,
-                          event_mask = event_mask,
-                          event = event)
+        request.SendEvent(
+            display=self.display,
+            onerror=onerror,
+            propagate=propagate,
+            destination=destination,
+            event_mask=event_mask,
+            event=event,
+        )
 
-    def ungrab_pointer(self, time, onerror = None):
+    def ungrab_pointer(self, time, onerror=None):
         """Release a grabbed pointer and any queued events. See
         XUngrabPointer(3X11)."""
-        request.UngrabPointer(display = self.display,
-                              onerror = onerror,
-                              time = time)
+        request.UngrabPointer(display=self.display, onerror=onerror, time=time)
 
-    def change_active_pointer_grab(self, event_mask, cursor, time, onerror = None):
+    def change_active_pointer_grab(self, event_mask, cursor, time, onerror=None):
         """Change the dynamic parameters of a pointer grab. See
         XChangeActivePointerGrab(3X11)."""
-        request.ChangeActivePointerGrab(display = self.display,
-                                        onerror = onerror,
-                                        cursor = cursor,
-                                        time = time,
-                                        event_mask = event_mask)
+        request.ChangeActivePointerGrab(
+            display=self.display,
+            onerror=onerror,
+            cursor=cursor,
+            time=time,
+            event_mask=event_mask,
+        )
 
-    def ungrab_keyboard(self, time, onerror = None):
+    def ungrab_keyboard(self, time, onerror=None):
         """Ungrab a grabbed keyboard and any queued events. See
         XUngrabKeyboard(3X11)."""
-        request.UngrabKeyboard(display = self.display,
-                               onerror = onerror,
-                               time = time)
+        request.UngrabKeyboard(display=self.display, onerror=onerror, time=time)
 
-    def allow_events(self, mode, time, onerror = None):
+    def allow_events(self, mode, time, onerror=None):
         """Release some queued events. mode should be one of
         X.AsyncPointer, X.SyncPointer, X.AsyncKeyboard, X.SyncKeyboard,
         X.ReplayPointer, X.ReplayKeyboard, X.AsyncBoth, or X.SyncBoth.
         time should be a timestamp or X.CurrentTime."""
-        request.AllowEvents(display = self.display,
-                            onerror = onerror,
-                            mode = mode,
-                            time = time)
+        request.AllowEvents(display=self.display, onerror=onerror, mode=mode, time=time)
 
-    def grab_server(self, onerror = None):
+    def grab_server(self, onerror=None):
         """Disable processing of requests on all other client connections
         until the server is ungrabbed. Server grabbing should be avoided
         as much as possible."""
-        request.GrabServer(display = self.display,
-                           onerror = onerror)
+        request.GrabServer(display=self.display, onerror=onerror)
 
-    def ungrab_server(self, onerror = None):
+    def ungrab_server(self, onerror=None):
         """Release the server if it was previously grabbed by this client."""
-        request.UngrabServer(display = self.display,
-                             onerror = onerror)
+        request.UngrabServer(display=self.display, onerror=onerror)
 
-    def warp_pointer(self, x, y, src_window = X.NONE, src_x = 0, src_y = 0,
-                     src_width = 0, src_height = 0, onerror = None):
+    def warp_pointer(
+        self,
+        x,
+        y,
+        src_window=X.NONE,
+        src_x=0,
+        src_y=0,
+        src_width=0,
+        src_height=0,
+        onerror=None,
+    ):
         """Move the pointer relative its current position by the offsets
         (x, y). However, if src_window is a window the pointer is only
         moved if the specified rectangle in src_window contains it. If
@@ -570,18 +582,20 @@ class Display(object):
         src_x. src_height is treated in a similar way.
 
         To move the pointer to absolute coordinates, use Window.warp_pointer()."""
-        request.WarpPointer(display = self.display,
-                            onerror = onerror,
-                            src_window = src_window,
-                            dst_window = X.NONE,
-                            src_x = src_x,
-                            src_y = src_y,
-                            src_width = src_width,
-                            src_height = src_height,
-                            dst_x = x,
-                            dst_y = y)
+        request.WarpPointer(
+            display=self.display,
+            onerror=onerror,
+            src_window=src_window,
+            dst_window=X.NONE,
+            src_x=src_x,
+            src_y=src_y,
+            src_width=src_width,
+            src_height=src_height,
+            dst_x=x,
+            dst_y=y,
+        )
 
-    def set_input_focus(self, focus, revert_to, time, onerror = None):
+    def set_input_focus(self, focus, revert_to, time, onerror=None):
         """Set input focus to focus, which should be a window,
         X.PointerRoot or X.NONE. revert_to specifies where the focus
         reverts to if the focused window becomes not visible, and should
@@ -589,11 +603,13 @@ class Display(object):
         XSetInputFocus(3X11) for details.
 
         There is also a Window.set_input_focus()."""
-        request.SetInputFocus(display = self.display,
-                              onerror = onerror,
-                              revert_to = revert_to,
-                              focus = focus,
-                              time = time)
+        request.SetInputFocus(
+            display=self.display,
+            onerror=onerror,
+            revert_to=revert_to,
+            focus=focus,
+            time=time,
+        )
 
     def get_input_focus(self):
         """Return an object with the following attributes:
@@ -603,8 +619,8 @@ class Display(object):
             focus, X.NONE or X.PointerRoot.
         revert_to
             Where the focus will revert, one of X.RevertToParent,
-            RevertToPointerRoot, or RevertToNone. """
-        return request.GetInputFocus(display = self.display)
+            RevertToPointerRoot, or RevertToNone."""
+        return request.GetInputFocus(display=self.display)
 
     def query_keymap(self):
         """Return a bit vector for the logical state of the keyboard,
@@ -612,7 +628,7 @@ class Display(object):
         currently pressed down. The vector is represented as a list of 32
         integers. List item N contains the bits for keys 8N to 8N + 7
         with the least significant bit in the byte representing key 8N."""
-        r = request.QueryKeymap(display = self.display)
+        r = request.QueryKeymap(display=self.display)
         return r.map
 
     def open_font(self, name):
@@ -621,25 +637,22 @@ class Display(object):
         fid = self.display.allocate_resource_id()
         ec = error.CatchError(error.BadName)
 
-        request.OpenFont(display = self.display,
-                         onerror = ec,
-                         fid = fid,
-                         name = name)
+        request.OpenFont(display=self.display, onerror=ec, fid=fid, name=name)
         self.sync()
 
         if ec.get_error():
             self.display.free_resource_id(fid)
             return None
         else:
-            cls = self.display.get_resource_class('font', fontable.Font)
-            return cls(self.display, fid, owner = 1)
+            cls = self.display.get_resource_class("font", fontable.Font)
+            return cls(self.display, fid, owner=1)
 
     def list_fonts(self, pattern, max_names):
         """Return a list of font names matching pattern. No more than
         max_names will be returned."""
-        r = request.ListFonts(display = self.display,
-                              max_names = max_names,
-                              pattern = pattern)
+        r = request.ListFonts(
+            display=self.display, max_names=max_names, pattern=pattern
+        )
         return r.fonts
 
     def list_fonts_with_info(self, pattern, max_names):
@@ -671,21 +684,19 @@ class Display(object):
             value
                 A 32-bit unsigned value.
         """
-        return request.ListFontsWithInfo(display = self.display,
-                                         max_names = max_names,
-                                         pattern = pattern)
+        return request.ListFontsWithInfo(
+            display=self.display, max_names=max_names, pattern=pattern
+        )
 
-    def set_font_path(self, path, onerror = None):
+    def set_font_path(self, path, onerror=None):
         """Set the font path to path, which should be a list of strings.
         If path is empty, the default font path of the server will be
         restored."""
-        request.SetFontPath(display = self.display,
-                            onerror = onerror,
-                            path = path)
+        request.SetFontPath(display=self.display, onerror=onerror, path=path)
 
     def get_font_path(self):
         """Return the current font path as a list of strings."""
-        r = request.GetFontPath(display = self.display)
+        r = request.GetFontPath(display=self.display)
         return r.paths
 
     def query_extension(self, name):
@@ -700,8 +711,7 @@ class Display(object):
             The base error code if the extension have additional errors, or 0.
 
         If the extension is not supported, None is returned."""
-        r = request.QueryExtension(display = self.display,
-                                   name = name)
+        r = request.QueryExtension(display=self.display, name=name)
         if r.present:
             return r
         else:
@@ -709,27 +719,29 @@ class Display(object):
 
     def list_extensions(self):
         """Return a list of all the extensions provided by the server."""
-        r = request.ListExtensions(display = self.display)
+        r = request.ListExtensions(display=self.display)
         return r.names
 
-    def change_keyboard_mapping(self, first_keycode, keysyms, onerror = None):
+    def change_keyboard_mapping(self, first_keycode, keysyms, onerror=None):
         """Modify the keyboard mapping, starting with first_keycode.
         keysyms is a list of tuples of keysyms. keysyms[n][i] will be
         assigned to keycode first_keycode+n at index i."""
-        request.ChangeKeyboardMapping(display = self.display,
-                                      onerror = onerror,
-                                      first_keycode = first_keycode,
-                                      keysyms = keysyms)
+        request.ChangeKeyboardMapping(
+            display=self.display,
+            onerror=onerror,
+            first_keycode=first_keycode,
+            keysyms=keysyms,
+        )
 
     def get_keyboard_mapping(self, first_keycode, count):
         """Return the current keyboard mapping as a list of tuples,
         starting at first_keycount and no more than count."""
-        r = request.GetKeyboardMapping(display = self.display,
-                                       first_keycode = first_keycode,
-                                       count = count)
+        r = request.GetKeyboardMapping(
+            display=self.display, first_keycode=first_keycode, count=count
+        )
         return r.keysyms
 
-    def change_keyboard_control(self, onerror = None, **keys):
+    def change_keyboard_control(self, onerror=None, **keys):
         """Change the parameters provided as keyword arguments:
 
         key_click_percent
@@ -755,9 +767,7 @@ class Display(object):
             X.AutoRepeatModeOn, or X.AutoRepeatModeDefault. If key is
             provided, that key will be modified, otherwise the global
             state for the entire keyboard will be modified."""
-        request.ChangeKeyboardControl(display = self.display,
-                                      onerror = onerror,
-                                      attrs = keys)
+        request.ChangeKeyboardControl(display=self.display, onerror=onerror, attrs=keys)
 
     def get_keyboard_control(self):
         """Return an object with the following attributes:
@@ -782,17 +792,15 @@ class Display(object):
         bell_pitch
 
         bell_duration
-            The volume, pitch and duration of the bell. """
-        return request.GetKeyboardControl(display = self.display)
+            The volume, pitch and duration of the bell."""
+        return request.GetKeyboardControl(display=self.display)
 
-    def bell(self, percent = 0, onerror = None):
+    def bell(self, percent=0, onerror=None):
         """Ring the bell at the volume percent which is relative the base
         volume. See XBell(3X11)."""
-        request.Bell(display = self.display,
-                     onerror = onerror,
-                     percent = percent)
+        request.Bell(display=self.display, onerror=onerror, percent=percent)
 
-    def change_pointer_control(self, accel = None, threshold = None, onerror = None):
+    def change_pointer_control(self, accel=None, threshold=None, onerror=None):
         """To change the pointer acceleration, set accel to a tuple (num,
         denum). The pointer will then move num/denum times the normal
         speed if it moves beyond the threshold number of pixels at once.
@@ -811,13 +819,15 @@ class Display(object):
         else:
             do_threshold = 1
 
-        request.ChangePointerControl(display = self.display,
-                                     onerror = onerror,
-                                     do_accel = do_accel,
-                                     do_thresh = do_threshold,
-                                     accel_num = accel_num,
-                                     accel_denum = accel_denum,
-                                     threshold = threshold)
+        request.ChangePointerControl(
+            display=self.display,
+            onerror=onerror,
+            do_accel=do_accel,
+            do_thresh=do_threshold,
+            accel_num=accel_num,
+            accel_denum=accel_denum,
+            threshold=threshold,
+        )
 
     def get_pointer_control(self):
         """Return an object with the following attributes:
@@ -830,74 +840,73 @@ class Display(object):
         threshold
             The number of pixels the pointer must move before the
             acceleration kicks in."""
-        return request.GetPointerControl(display = self.display)
+        return request.GetPointerControl(display=self.display)
 
-    def set_screen_saver(self, timeout, interval, prefer_blank, allow_exposures, onerror = None):
+    def set_screen_saver(
+        self, timeout, interval, prefer_blank, allow_exposures, onerror=None
+    ):
         """See XSetScreenSaver(3X11)."""
-        request.SetScreenSaver(display = self.display,
-                               onerror = onerror,
-                               timeout = timeout,
-                               interval = interval,
-                               prefer_blank = prefer_blank,
-                               allow_exposures = allow_exposures)
+        request.SetScreenSaver(
+            display=self.display,
+            onerror=onerror,
+            timeout=timeout,
+            interval=interval,
+            prefer_blank=prefer_blank,
+            allow_exposures=allow_exposures,
+        )
 
     def get_screen_saver(self):
         """Return an object with the attributes timeout, interval,
         prefer_blanking, allow_exposures. See XGetScreenSaver(3X11) for
         details."""
-        return request.GetScreenSaver(display = self.display)
+        return request.GetScreenSaver(display=self.display)
 
-    def change_hosts(self, mode, host_family, host, onerror = None):
+    def change_hosts(self, mode, host_family, host, onerror=None):
         """mode is either X.HostInsert or X.HostDelete. host_family is
         one of X.FamilyInternet, X.FamilyDECnet, X.FamilyChaos,
         X.FamilyServerInterpreted or X.FamilyInternetV6.
 
         host is a list of bytes. For the Internet family, it should be the
         four bytes of an IPv4 address."""
-        request.ChangeHosts(display = self.display,
-                            onerror = onerror,
-                            mode = mode,
-                            host_family = host_family,
-                            host = host)
+        request.ChangeHosts(
+            display=self.display,
+            onerror=onerror,
+            mode=mode,
+            host_family=host_family,
+            host=host,
+        )
 
     def list_hosts(self):
         """Return an object with the following attributes:
 
-mode
-    X.EnableAccess if the access control list is used, X.DisableAccess otherwise.
-hosts
-    The hosts on the access list. Each entry has the following attributes:
+        mode
+            X.EnableAccess if the access control list is used, X.DisableAccess otherwise.
+        hosts
+            The hosts on the access list. Each entry has the following attributes:
 
-    family
-        X.FamilyInternet, X.FamilyDECnet, X.FamilyChaos, X.FamilyServerInterpreted or X.FamilyInternetV6.
-    name
-        A list of byte values, the coding depends on family. For the Internet family, it is the 4 bytes of an IPv4 address.
+            family
+                X.FamilyInternet, X.FamilyDECnet, X.FamilyChaos, X.FamilyServerInterpreted or X.FamilyInternetV6.
+            name
+                A list of byte values, the coding depends on family. For the Internet family, it is the 4 bytes of an IPv4 address.
+        """
+        return request.ListHosts(display=self.display)
 
-"""
-        return request.ListHosts(display = self.display)
-
-    def set_access_control(self, mode, onerror = None):
+    def set_access_control(self, mode, onerror=None):
         """Enable use of access control lists at connection setup if mode
         is X.EnableAccess, disable if it is X.DisableAccess."""
-        request.SetAccessControl(display = self.display,
-                                 onerror = onerror,
-                                 mode = mode)
+        request.SetAccessControl(display=self.display, onerror=onerror, mode=mode)
 
-    def set_close_down_mode(self, mode, onerror = None):
+    def set_close_down_mode(self, mode, onerror=None):
         """Control what will happen with the client's resources at
         connection close. The default is X.DestroyAll, the other values
         are X.RetainPermanent and X.RetainTemporary."""
-        request.SetCloseDownMode(display = self.display,
-                                 onerror = onerror,
-                                 mode = mode)
+        request.SetCloseDownMode(display=self.display, onerror=onerror, mode=mode)
 
-    def force_screen_saver(self, mode, onerror = None):
+    def force_screen_saver(self, mode, onerror=None):
         """If mode is X.ScreenSaverActive the screen saver is activated.
         If it is X.ScreenSaverReset, the screen saver is deactivated as
         if device input had been received."""
-        request.ForceScreenSaver(display = self.display,
-                                 onerror = onerror,
-                                 mode = mode)
+        request.ForceScreenSaver(display=self.display, onerror=onerror, mode=mode)
 
     def set_pointer_mapping(self, map):
         """Set the mapping of the pointer buttons. map is a list of
@@ -913,14 +922,13 @@ hosts
         logically in the down state, X.MappingBusy is returned and the
         mapping is not changed. Otherwise the mapping is changed and
         X.MappingSuccess is returned."""
-        r = request.SetPointerMapping(display = self.display,
-                                      map = map)
+        r = request.SetPointerMapping(display=self.display, map=map)
         return r.status
 
     def get_pointer_mapping(self):
         """Return a list of the pointer button mappings. Entry N in the
         list sets the logical button number for the physical button N+1."""
-        r = request.GetPointerMapping(display = self.display)
+        r = request.GetPointerMapping(display=self.display)
         return r.map
 
     def set_modifier_mapping(self, keycodes):
@@ -934,18 +942,16 @@ hosts
         the mapping is not changed. If the mapping violates some server
         restriction, X.MappingFailed is returned. Otherwise the mapping
         is changed and X.MappingSuccess is returned."""
-        r = request.SetModifierMapping(display = self.display,
-                                       keycodes = keycodes)
+        r = request.SetModifierMapping(display=self.display, keycodes=keycodes)
         return r.status
 
     def get_modifier_mapping(self):
         """Return a list of eight lists, one for each modifier. The list
         can be indexed using X.ShiftMapIndex, X.Mod1MapIndex, and so on.
         The sublists list the keycodes bound to that modifier."""
-        r = request.GetModifierMapping(display = self.display)
+        r = request.GetModifierMapping(display=self.display)
         return r.keycodes
 
-    def no_operation(self, onerror = None):
+    def no_operation(self, onerror=None):
         """Do nothing but send a request to the server."""
-        request.NoOperation(display = self.display,
-                            onerror = onerror)
+        request.NoOperation(display=self.display, onerror=onerror)

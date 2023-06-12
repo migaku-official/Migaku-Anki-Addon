@@ -33,9 +33,11 @@ class DisplayError(Exception):
     def __str__(self):
         return 'Display error "%s"' % self.display
 
+
 class DisplayNameError(DisplayError):
     def __str__(self):
         return 'Bad display name "%s"' % self.display
+
 
 class DisplayConnectionError(DisplayError):
     def __init__(self, display, msg):
@@ -45,68 +47,134 @@ class DisplayConnectionError(DisplayError):
     def __str__(self):
         return 'Can\'t connect to display "%s": %s' % (self.display, self.msg)
 
+
 class ConnectionClosedError(Exception):
     def __init__(self, whom):
         self.whom = whom
 
     def __str__(self):
-        return 'Display connection closed by %s' % self.whom
+        return "Display connection closed by %s" % self.whom
 
 
-class XauthError(Exception): pass
-class XNoAuthError(Exception): pass
+class XauthError(Exception):
+    pass
 
-class ResourceIDError(Exception): pass
+
+class XNoAuthError(Exception):
+    pass
+
+
+class ResourceIDError(Exception):
+    pass
 
 
 class XError(rq.GetAttrData, Exception):
-    _fields = rq.Struct( rq.Card8('type'),  # Always 0
-                         rq.Card8('code'),
-                         rq.Card16('sequence_number'),
-                         rq.Card32('resource_id'),
-                         rq.Card16('minor_opcode'),
-                         rq.Card8('major_opcode'),
-                         rq.Pad(21)
-                         )
+    _fields = rq.Struct(
+        rq.Card8("type"),  # Always 0
+        rq.Card8("code"),
+        rq.Card16("sequence_number"),
+        rq.Card32("resource_id"),
+        rq.Card16("minor_opcode"),
+        rq.Card8("major_opcode"),
+        rq.Pad(21),
+    )
 
     def __init__(self, display, data):
-        self._data, _ = self._fields.parse_binary(data, display, rawdict = True)
+        self._data, _ = self._fields.parse_binary(data, display, rawdict=True)
 
     def __str__(self):
         s = []
-        for f in ('code', 'resource_id', 'sequence_number',
-                  'major_opcode', 'minor_opcode'):
-            s.append('{0} = {1}'.format(f, self._data[f]))
+        for f in (
+            "code",
+            "resource_id",
+            "sequence_number",
+            "major_opcode",
+            "minor_opcode",
+        ):
+            s.append("{0} = {1}".format(f, self._data[f]))
 
-        return '{0}: {1}'.format(self.__class__, ', '.join(s))
+        return "{0}: {1}".format(self.__class__, ", ".join(s))
+
 
 class XResourceError(XError):
-    _fields = rq.Struct( rq.Card8('type'),  # Always 0
-                         rq.Card8('code'),
-                         rq.Card16('sequence_number'),
-                         rq.Resource('resource_id'),
-                         rq.Card16('minor_opcode'),
-                         rq.Card8('major_opcode'),
-                         rq.Pad(21)
-                         )
+    _fields = rq.Struct(
+        rq.Card8("type"),  # Always 0
+        rq.Card8("code"),
+        rq.Card16("sequence_number"),
+        rq.Resource("resource_id"),
+        rq.Card16("minor_opcode"),
+        rq.Card8("major_opcode"),
+        rq.Pad(21),
+    )
 
-class BadRequest(XError): pass
-class BadValue(XError): pass
-class BadWindow(XResourceError): pass
-class BadPixmap(XResourceError): pass
-class BadAtom(XError): pass
-class BadCursor(XResourceError): pass
-class BadFont(XResourceError): pass
-class BadMatch(XError): pass
-class BadDrawable(XResourceError): pass
-class BadAccess(XError): pass
-class BadAlloc(XError): pass
-class BadColor(XResourceError): pass
-class BadGC(XResourceError): pass
-class BadIDChoice(XResourceError): pass
-class BadName(XError): pass
-class BadLength(XError): pass
-class BadImplementation(XError): pass
+
+class BadRequest(XError):
+    pass
+
+
+class BadValue(XError):
+    pass
+
+
+class BadWindow(XResourceError):
+    pass
+
+
+class BadPixmap(XResourceError):
+    pass
+
+
+class BadAtom(XError):
+    pass
+
+
+class BadCursor(XResourceError):
+    pass
+
+
+class BadFont(XResourceError):
+    pass
+
+
+class BadMatch(XError):
+    pass
+
+
+class BadDrawable(XResourceError):
+    pass
+
+
+class BadAccess(XError):
+    pass
+
+
+class BadAlloc(XError):
+    pass
+
+
+class BadColor(XResourceError):
+    pass
+
+
+class BadGC(XResourceError):
+    pass
+
+
+class BadIDChoice(XResourceError):
+    pass
+
+
+class BadName(XError):
+    pass
+
+
+class BadLength(XError):
+    pass
+
+
+class BadImplementation(XError):
+    pass
+
 
 xerror_class = {
     X.BadRequest: BadRequest,
@@ -126,7 +194,7 @@ xerror_class = {
     X.BadName: BadName,
     X.BadLength: BadLength,
     X.BadImplementation: BadImplementation,
-    }
+}
 
 
 class CatchError(object):

@@ -1638,7 +1638,7 @@ class RequestHandler(object):
         # Find all weak and strong etag values from If-None-Match header
         # because RFC 7232 allows multiple etag values in a single header.
         etags = re.findall(
-            br'\*|(?:W/)?"[^"]*"', utf8(self.request.headers.get("If-None-Match", ""))
+            rb'\*|(?:W/)?"[^"]*"', utf8(self.request.headers.get("If-None-Match", ""))
         )
         if not computed_etag or not etags:
             return False
@@ -2086,7 +2086,9 @@ class Application(ReversibleRouter):
 
             autoreload.start()
 
-    def listen(self, port: int, address: str = "", reuse_port: bool = False, **kwargs: Any) -> HTTPServer:
+    def listen(
+        self, port: int, address: str = "", reuse_port: bool = False, **kwargs: Any
+    ) -> HTTPServer:
         """Starts an HTTP server for this application on the given port.
 
         This is a convenience alias for creating an `.HTTPServer`
@@ -3406,7 +3408,7 @@ def create_signed_value(
 
 # A leading version number in decimal
 # with no leading zeros, followed by a pipe.
-_signed_value_version_re = re.compile(br"^([1-9][0-9]*)\|(.*)$")
+_signed_value_version_re = re.compile(rb"^([1-9][0-9]*)\|(.*)$")
 
 
 def _get_version(value: bytes) -> int:

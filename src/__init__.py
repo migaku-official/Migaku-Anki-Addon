@@ -10,29 +10,26 @@ import anki
 
 # insert librairies into sys.path
 
+
 def add_sys_path(*path_parts):
     sys.path.insert(
-        0,
-        os.path.join(
-            os.path.dirname(os.path.abspath(__file__)),
-            'lib',
-            *path_parts
-        )
+        0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "lib", *path_parts)
     )
 
-add_sys_path('shared')
+
+add_sys_path("shared")
 if anki.utils.isLin:
-    add_sys_path('linux')
+    add_sys_path("linux")
 elif anki.utils.isMac and sys.version_info.major >= 3 and sys.version_info.minor >= 10:
-    add_sys_path('macos_310')
+    add_sys_path("macos_310")
 elif anki.utils.isMac:
-    add_sys_path('macos_39')
+    add_sys_path("macos_39")
 elif anki.utils.isWin:
-    add_sys_path('windows')
+    add_sys_path("windows")
 
 
 # Allow webviews to access necessary resources
-aqt.mw.addonManager.setWebExports(__name__, r'(languages/.*?\.svg|inplace_editor.css)')
+aqt.mw.addonManager.setWebExports(__name__, r"(languages/.*?\.svg|inplace_editor.css)")
 
 # Initialize sub modules
 from . import (
@@ -62,7 +59,7 @@ from . import migaku_connection
 
 
 def setup_menu():
-    menu = QMenu('Migaku', aqt.mw)
+    menu = QMenu("Migaku", aqt.mw)
     menu.addAction(settings_window.action)
     menu.addSeparator()
     menu.addAction(ease_reset.action)
@@ -71,6 +68,7 @@ def setup_menu():
     menu.addAction(balance_scheduler_vacation_window.action)
     menu.addAction(balance_scheduler_dayoff_window.action)
     aqt.mw.form.menubar.insertMenu(aqt.mw.form.menuHelp.menuAction(), menu)
+
 
 setup_menu()
 anki_version.check_anki_version_dialog()

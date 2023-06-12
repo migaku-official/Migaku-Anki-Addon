@@ -26,21 +26,21 @@
 __extensions__ = [
     # We load this first so other extensions can register generic event data
     # structures.
-    ('Generic Event Extension', 'ge'),
-    ('XTEST', 'xtest'),
-    ('SHAPE', 'shape'),
-    ('XINERAMA', 'xinerama'),
-    ('RECORD', 'record'),
-    ('Composite', 'composite'),
-    ('RANDR', 'randr'),
-    ('XFIXES', 'xfixes'),
-    ('SECURITY', 'security'),
-    ('XInputExtension', 'xinput'),
-    ('NV-CONTROL', 'nvcontrol'),
-    ('DAMAGE', 'damage'),
-    ('DPMS', 'dpms'),
-    ('X-Resource', 'res'),
-    ('MIT-SCREEN-SAVER', 'screensaver'),
-    ]
+    ("Generic Event Extension", "ge"),
+    ("XTEST", "xtest"),
+    ("SHAPE", "shape"),
+    ("XINERAMA", "xinerama"),
+    ("RECORD", "record"),
+    ("Composite", "composite"),
+    ("RANDR", "randr"),
+    ("XFIXES", "xfixes"),
+    ("SECURITY", "security"),
+    ("XInputExtension", "xinput"),
+    ("NV-CONTROL", "nvcontrol"),
+    ("DAMAGE", "damage"),
+    ("DPMS", "dpms"),
+    ("X-Resource", "res"),
+    ("MIT-SCREEN-SAVER", "screensaver"),
+]
 
 __all__ = map(lambda x: x[1], __extensions__)

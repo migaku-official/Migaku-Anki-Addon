@@ -31,23 +31,23 @@ FamilyServerInterpreted = X.FamilyServerInterpreted
 FamilyInternetV6 = X.FamilyInternetV6
 FamilyLocal = 256
 
+
 class Xauthority(object):
-    def __init__(self, filename = None):
+    def __init__(self, filename=None):
         if filename is None:
-            filename = os.environ.get('XAUTHORITY')
+            filename = os.environ.get("XAUTHORITY")
 
         if filename is None:
             try:
-                filename = os.path.join(os.environ['HOME'], '.Xauthority')
+                filename = os.path.join(os.environ["HOME"], ".Xauthority")
             except KeyError:
-                raise error.XauthError(
-                    '$HOME not set, cannot find ~/.Xauthority')
+                raise error.XauthError("$HOME not set, cannot find ~/.Xauthority")
 
         try:
-            with open(filename, 'rb') as fp:
+            with open(filename, "rb") as fp:
                 raw = fp.read()
         except IOError as err:
-            raise error.XauthError('could not read from {0}: {1}'.format(filename, err))
+            raise error.XauthError("could not read from {0}: {1}".format(filename, err))
 
         self.entries = []
 
@@ -65,22 +65,22 @@ class Xauthority(object):
         n = 0
         try:
             while n < len(raw):
-                family, = struct.unpack('>H', raw[n:n+2])
+                (family,) = struct.unpack(">H", raw[n : n + 2])
                 n = n + 2
 
-                length, = struct.unpack('>H', raw[n:n+2])
+                (length,) = struct.unpack(">H", raw[n : n + 2])
                 n = n + length + 2
                 addr = raw[n - length : n]
 
-                length, = struct.unpack('>H', raw[n:n+2])
+                (length,) = struct.unpack(">H", raw[n : n + 2])
                 n = n + length + 2
                 num = raw[n - length : n]
 
-                length, = struct.unpack('>H', raw[n:n+2])
+                (length,) = struct.unpack(">H", raw[n : n + 2])
                 n = n + length + 2
                 name = raw[n - length : n]
 
-                length, = struct.unpack('>H', raw[n:n+2])
+                (length,) = struct.unpack(">H", raw[n : n + 2])
                 n = n + length + 2
                 data = raw[n - length : n]
 
@@ -89,7 +89,11 @@ class Xauthority(object):
 
                 self.entries.append((family, addr, num, name, data))
         except struct.error:
-            print("Xlib.xauth: warning, failed to parse part of xauthority file {0}, aborting all further parsing".format(filename))
+            print(
+                "Xlib.xauth: warning, failed to parse part of xauthority file {0}, aborting all further parsing".format(
+                    filename
+                )
+            )
 
         if len(self.entries) == 0:
             print("Xlib.xauth: warning, no xauthority details available")
@@ -101,9 +105,7 @@ class Xauthority(object):
     def __getitem__(self, i):
         return self.entries[i]
 
-    def get_best_auth(self, family, address, dispno,
-                      types = ( b"MIT-MAGIC-COOKIE-1", )):
-
+    def get_best_auth(self, family, address, dispno, types=(b"MIT-MAGIC-COOKIE-1",)):
         """Find an authentication entry matching FAMILY, ADDRESS and
         DISPNO.
 
@@ -120,7 +122,7 @@ class Xauthority(object):
         matches = {}
 
         for efam, eaddr, enum, ename, edata in self.entries:
-            if enum == b'' and ename not in matches:
+            if enum == b"" and ename not in matches:
                 enum = num
             if efam == family and eaddr == address and num == enum:
                 matches[ename] = edata

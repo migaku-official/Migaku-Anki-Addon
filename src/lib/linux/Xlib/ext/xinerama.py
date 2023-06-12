@@ -37,186 +37,203 @@ returns the state information - because that's what libXinerama does."""
 
 from Xlib.protocol import rq, structs
 
-extname = 'XINERAMA'
+extname = "XINERAMA"
 
 
 class QueryVersion(rq.ReplyRequest):
     _request = rq.Struct(
-        rq.Card8('opcode'),
+        rq.Card8("opcode"),
         rq.Opcode(0),
         rq.RequestLength(),
-        rq.Card8('major_version'),
-        rq.Card8('minor_version'),
+        rq.Card8("major_version"),
+        rq.Card8("minor_version"),
         rq.Pad(2),
-        )
+    )
 
     _reply = rq.Struct(
-            rq.ReplyCode(),
-            rq.Pad(1),
-            rq.Card16('sequence_number'),
-            rq.ReplyLength(),
-            rq.Card16('major_version'),
-            rq.Card16('minor_version'),
-            rq.Pad(20),
-            )
+        rq.ReplyCode(),
+        rq.Pad(1),
+        rq.Card16("sequence_number"),
+        rq.ReplyLength(),
+        rq.Card16("major_version"),
+        rq.Card16("minor_version"),
+        rq.Pad(20),
+    )
+
 
 def query_version(self):
-    return QueryVersion(display=self.display,
-                        opcode=self.display.get_extension_major(extname),
-                        major_version=1,
-                        minor_version=1)
+    return QueryVersion(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        major_version=1,
+        minor_version=1,
+    )
 
 
 class GetState(rq.ReplyRequest):
     _request = rq.Struct(
-        rq.Card8('opcode'),
+        rq.Card8("opcode"),
         rq.Opcode(1),
         rq.RequestLength(),
-        rq.Window('window'),
-        )
+        rq.Window("window"),
+    )
     _reply = rq.Struct(
         rq.ReplyCode(),
-        rq.Bool('state'),
-        rq.Card16('sequence_number'),
+        rq.Bool("state"),
+        rq.Card16("sequence_number"),
         rq.ReplyLength(),
-        rq.Window('window'),
+        rq.Window("window"),
         rq.Pad(20),
-        )
+    )
+
 
 def get_state(self):
-    return GetState(display=self.display,
-                    opcode=self.display.get_extension_major(extname),
-                    window=self.id,
-                    )
+    return GetState(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        window=self.id,
+    )
 
 
 class GetScreenCount(rq.ReplyRequest):
     _request = rq.Struct(
-        rq.Card8('opcode'),
+        rq.Card8("opcode"),
         rq.Opcode(2),
         rq.RequestLength(),
-        rq.Window('window'),
-        )
+        rq.Window("window"),
+    )
     _reply = rq.Struct(
         rq.ReplyCode(),
-        rq.Card8('screen_count'),
-        rq.Card16('sequence_number'),
+        rq.Card8("screen_count"),
+        rq.Card16("sequence_number"),
         rq.ReplyLength(),
-        rq.Window('window'),
+        rq.Window("window"),
         rq.Pad(20),
-        )
+    )
+
 
 def get_screen_count(self):
-    return GetScreenCount(display=self.display,
-                          opcode=self.display.get_extension_major(extname),
-                          window=self.id,
-                          )
+    return GetScreenCount(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        window=self.id,
+    )
 
 
 class GetScreenSize(rq.ReplyRequest):
     _request = rq.Struct(
-        rq.Card8('opcode'),
+        rq.Card8("opcode"),
         rq.Opcode(3),
         rq.RequestLength(),
-        rq.Window('window'),
-        rq.Card32('screen'),
-        )
+        rq.Window("window"),
+        rq.Card32("screen"),
+    )
     _reply = rq.Struct(
         rq.ReplyCode(),
         rq.Pad(1),
-        rq.Card16('sequence_number'),
-        rq.Card32('length'),
-        rq.Card32('width'),
-        rq.Card32('height'),
-        rq.Window('window'),
-        rq.Card32('screen'),
+        rq.Card16("sequence_number"),
+        rq.Card32("length"),
+        rq.Card32("width"),
+        rq.Card32("height"),
+        rq.Window("window"),
+        rq.Card32("screen"),
         rq.Pad(8),
-        )
+    )
+
 
 def get_screen_size(self, screen_no):
     """Returns the size of the given screen number"""
-    return GetScreenSize(display=self.display,
-                         opcode=self.display.get_extension_major(extname),
-                         window=self.id,
-                         screen=screen_no,
-                         )
+    return GetScreenSize(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        window=self.id,
+        screen=screen_no,
+    )
 
 
 # IsActive is only available from Xinerama 1.1 and later.
 # It should be used in preference to GetState.
 class IsActive(rq.ReplyRequest):
     _request = rq.Struct(
-        rq.Card8('opcode'),
+        rq.Card8("opcode"),
         rq.Opcode(4),
         rq.RequestLength(),
-        )
+    )
     _reply = rq.Struct(
         rq.ReplyCode(),
         rq.Pad(1),
-        rq.Card16('sequence_number'),
+        rq.Card16("sequence_number"),
         rq.ReplyLength(),
-        rq.Card32('state'),
+        rq.Card32("state"),
         rq.Pad(20),
-        )
+    )
+
 
 def is_active(self):
-    r = IsActive(display=self.display,
-                 opcode=self.display.get_extension_major(extname),
-                 )
+    r = IsActive(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+    )
     return r.state
 
 
 # QueryScreens is only available from Xinerama 1.1 and later
 class QueryScreens(rq.ReplyRequest):
     _request = rq.Struct(
-        rq.Card8('opcode'),
+        rq.Card8("opcode"),
         rq.Opcode(5),
         rq.RequestLength(),
-        )
+    )
     _reply = rq.Struct(
         rq.ReplyCode(),
         rq.Pad(1),
-        rq.Card16('sequence_number'),
+        rq.Card16("sequence_number"),
         rq.ReplyLength(),
-        rq.Card32('number'),
+        rq.Card32("number"),
         rq.Pad(20),
-        rq.List('screens', structs.Rectangle),
-        )
+        rq.List("screens", structs.Rectangle),
+    )
+
 
 def query_screens(self):
     # Hmm. This one needs to read the screen data from the socket. Ooops...
-    return QueryScreens(display=self.display,
-                        opcode=self.display.get_extension_major(extname),
-                        )
+    return QueryScreens(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+    )
 
 
 # GetInfo is only available from some Xinerama 1.0, and *NOT* later! Untested
 class GetInfo(rq.ReplyRequest):
     _request = rq.Struct(
-        rq.Card8('opcode'),
+        rq.Card8("opcode"),
         rq.Opcode(4),
         rq.RequestLength(),
-        rq.Card32('visual'),
-        )
+        rq.Card32("visual"),
+    )
     _reply = rq.Struct(
         rq.ReplyCode(),
         rq.Pad(1),
-        rq.Card16('sequence_number'),
+        rq.Card16("sequence_number"),
         rq.ReplyLength(),
-        rq.Window('window'),
+        rq.Window("window"),
         # An array of subwindow slots goes here. Bah.
-        )
+    )
+
 
 def get_info(self, visual):
-    r = GetInfo(display=self.display,
-             opcode=self.display.get_extension_major(extname),
-             visual=visual)
+    r = GetInfo(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        visual=visual,
+    )
+
 
 def init(disp, info):
-    disp.extension_add_method('display', 'xinerama_query_version', query_version)
-    disp.extension_add_method('window', 'xinerama_get_state', get_state)
-    disp.extension_add_method('window', 'xinerama_get_screen_count', get_screen_count)
-    disp.extension_add_method('window', 'xinerama_get_screen_size', get_screen_size)
-    disp.extension_add_method('display', 'xinerama_is_active', is_active)
-    disp.extension_add_method('display', 'xinerama_query_screens', query_screens)
-    disp.extension_add_method('display', 'xinerama_get_info', get_info)
+    disp.extension_add_method("display", "xinerama_query_version", query_version)
+    disp.extension_add_method("window", "xinerama_get_state", get_state)
+    disp.extension_add_method("window", "xinerama_get_screen_count", get_screen_count)
+    disp.extension_add_method("window", "xinerama_get_screen_size", get_screen_size)
+    disp.extension_add_method("display", "xinerama_is_active", is_active)
+    disp.extension_add_method("display", "xinerama_query_screens", query_screens)
+    disp.extension_add_method("display", "xinerama_get_info", get_info)

@@ -20,9 +20,9 @@
 #    Boston, MA 02111-1307 USA
 
 __all__ = [
-    'display',
-    'event',
-    'request',
-    'rq',
-    'structs',
-    ]
+    "display",
+    "event",
+    "request",
+    "rq",
+    "structs",
+]

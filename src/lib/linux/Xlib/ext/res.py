@@ -47,82 +47,82 @@ ResQueryResourceBytes = 5
 
 class QueryVersion(rq.ReplyRequest):
     _request = rq.Struct(
-            rq.Card8("opcode"),
-            rq.Opcode(ResQueryVersion),
-            rq.RequestLength(),
-            rq.Card8("client_major"),
-            rq.Card8("client_minor"),
-            rq.Pad(2))
+        rq.Card8("opcode"),
+        rq.Opcode(ResQueryVersion),
+        rq.RequestLength(),
+        rq.Card8("client_major"),
+        rq.Card8("client_minor"),
+        rq.Pad(2),
+    )
     _reply = rq.Struct(
-            rq.ReplyCode(),
-            rq.Pad(1),
-            rq.Card16("sequence_number"),
-            rq.ReplyLength(),
-            rq.Card16("server_major"),
-            rq.Card16("server_minor"),
-            rq.Pad(20))
+        rq.ReplyCode(),
+        rq.Pad(1),
+        rq.Card16("sequence_number"),
+        rq.ReplyLength(),
+        rq.Card16("server_major"),
+        rq.Card16("server_minor"),
+        rq.Pad(20),
+    )
 
 
-def query_version(self, client_major=RES_MAJOR_VERSION,
-                  client_minor=RES_MINOR_VERSION):
-    """ Query the protocol version supported by the X server.
+def query_version(self, client_major=RES_MAJOR_VERSION, client_minor=RES_MINOR_VERSION):
+    """Query the protocol version supported by the X server.
 
     The client sends the highest supported version to the server and the
     server sends the highest version it supports, but no higher than the
     requested version."""
     return QueryVersion(
-            display=self.display,
-            opcode=self.display.get_extension_major(extname),
-            client_major=client_major,
-            client_minor=client_minor)
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        client_major=client_major,
+        client_minor=client_minor,
+    )
 
 
-Client = rq.Struct(
-        rq.Card32("resource_base"),
-        rq.Card32("resource_mask"))
+Client = rq.Struct(rq.Card32("resource_base"), rq.Card32("resource_mask"))
 
 
 class QueryClients(rq.ReplyRequest):
     _request = rq.Struct(
-            rq.Card8("opcode"),
-            rq.Opcode(ResQueryClients),
-            rq.RequestLength())
+        rq.Card8("opcode"), rq.Opcode(ResQueryClients), rq.RequestLength()
+    )
     _reply = rq.Struct(
-            rq.ReplyCode(),
-            rq.Pad(1),
-            rq.Card16("sequence_number"),
-            rq.ReplyLength(),
-            rq.LengthOf("clients", 4),
-            rq.Pad(20),
-            rq.List("clients", Client))
+        rq.ReplyCode(),
+        rq.Pad(1),
+        rq.Card16("sequence_number"),
+        rq.ReplyLength(),
+        rq.LengthOf("clients", 4),
+        rq.Pad(20),
+        rq.List("clients", Client),
+    )
 
 
 def query_clients(self):
     """Request the list of all currently connected clients."""
     return QueryClients(
-            display=self.display,
-            opcode=self.display.get_extension_major(extname))
+        display=self.display, opcode=self.display.get_extension_major(extname)
+    )
 
 
-Type = rq.Struct(
-        rq.Card32("resource_type"),
-        rq.Card32("count"))
+Type = rq.Struct(rq.Card32("resource_type"), rq.Card32("count"))
 
 
 class QueryClientResources(rq.ReplyRequest):
     _request = rq.Struct(
-            rq.Card8("opcode"),
-            rq.Opcode(ResQueryClientResources),
-            rq.RequestLength(),
-            rq.Card32("client"))
+        rq.Card8("opcode"),
+        rq.Opcode(ResQueryClientResources),
+        rq.RequestLength(),
+        rq.Card32("client"),
+    )
     _reply = rq.Struct(
-            rq.ReplyCode(),
-            rq.Pad(1),
-            rq.Card16("sequence_number"),
-            rq.ReplyLength(),
-            rq.LengthOf("types", 4),
-            rq.Pad(20),
-            rq.List("types", Type))
+        rq.ReplyCode(),
+        rq.Pad(1),
+        rq.Card16("sequence_number"),
+        rq.ReplyLength(),
+        rq.LengthOf("types", 4),
+        rq.Pad(20),
+        rq.List("types", Type),
+    )
 
 
 def query_client_resources(self, client):
@@ -131,25 +131,28 @@ def query_client_resources(self, client):
     The server will return the counts of each type of resource.
     """
     return QueryClientResources(
-            display=self.display,
-            opcode=self.display.get_extension_major(extname),
-            client=client)
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        client=client,
+    )
 
 
 class QueryClientPixmapBytes(rq.ReplyRequest):
     _request = rq.Struct(
-            rq.Card8("opcode"),
-            rq.Opcode(ResQueryClientPixmapBytes),
-            rq.RequestLength(),
-            rq.Card32("client"))
+        rq.Card8("opcode"),
+        rq.Opcode(ResQueryClientPixmapBytes),
+        rq.RequestLength(),
+        rq.Card32("client"),
+    )
     _reply = rq.Struct(
-            rq.ReplyCode(),
-            rq.Pad(1),
-            rq.Card16("sequence_number"),
-            rq.ReplyLength(),
-            rq.Card32("bytes"),
-            rq.Card32("bytes_overflow"),
-            rq.Pad(16))
+        rq.ReplyCode(),
+        rq.Pad(1),
+        rq.Card16("sequence_number"),
+        rq.ReplyLength(),
+        rq.Card32("bytes"),
+        rq.Card32("bytes_overflow"),
+        rq.Pad(16),
+    )
 
 
 def query_client_pixmap_bytes(self, client):
@@ -159,15 +162,17 @@ def query_client_pixmap_bytes(self, client):
     attributed to the given client.
     """
     return QueryClientPixmapBytes(
-            display=self.display,
-            opcode=self.display.get_extension_major(extname),
-            client=client)
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        client=client,
+    )
 
 
 class SizeOf(rq.LengthOf):
     """A SizeOf stores the size in bytes of some other Field whose size
     may vary, e.g. List
     """
+
     def __init__(self, name, size, item_size):
         rq.LengthOf.__init__(self, name, size)
         self.item_size = item_size
@@ -180,32 +185,33 @@ ClientXIDMask = 1 << 0
 LocalClientPIDMask = 1 << 1
 
 
-ClientIdSpec = rq.Struct(
-        rq.Card32("client"),
-        rq.Card32("mask"))
+ClientIdSpec = rq.Struct(rq.Card32("client"), rq.Card32("mask"))
 
 
 ClientIdValue = rq.Struct(
-        rq.Object("spec", ClientIdSpec),
-        SizeOf("value", 4, 4),
-        rq.List("value", rq.Card32Obj))
+    rq.Object("spec", ClientIdSpec),
+    SizeOf("value", 4, 4),
+    rq.List("value", rq.Card32Obj),
+)
 
 
 class QueryClientIds(rq.ReplyRequest):
     _request = rq.Struct(
-            rq.Card8("opcode"),
-            rq.Opcode(ResQueryClientIds),
-            rq.RequestLength(),
-            rq.LengthOf("specs", 4),
-            rq.List("specs", ClientIdSpec))
+        rq.Card8("opcode"),
+        rq.Opcode(ResQueryClientIds),
+        rq.RequestLength(),
+        rq.LengthOf("specs", 4),
+        rq.List("specs", ClientIdSpec),
+    )
     _reply = rq.Struct(
-            rq.ReplyCode(),
-            rq.Pad(1),
-            rq.Card16("sequence_number"),
-            rq.ReplyLength(),
-            rq.LengthOf("ids", 4),
-            rq.Pad(20),
-            rq.List("ids", ClientIdValue))
+        rq.ReplyCode(),
+        rq.Pad(1),
+        rq.Card16("sequence_number"),
+        rq.ReplyLength(),
+        rq.LengthOf("ids", 4),
+        rq.Pad(20),
+        rq.List("ids", ClientIdValue),
+    )
 
 
 def query_client_ids(self, specs):
@@ -217,48 +223,51 @@ def query_client_ids(self, specs):
     The server returns IDs for those clients that were successfully identified.
     """
     return QueryClientIds(
-            display=self.display,
-            opcode=self.display.get_extension_major(extname),
-            specs=specs)
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        specs=specs,
+    )
 
 
-ResourceIdSpec = rq.Struct(
-        rq.Card32("resource"),
-        rq.Card32("type"))
+ResourceIdSpec = rq.Struct(rq.Card32("resource"), rq.Card32("type"))
 
 
 ResourceSizeSpec = rq.Struct(
-        # inline struct ResourceIdSpec to work around
-        # a parser bug with nested objects
-        rq.Card32("resource"),
-        rq.Card32("type"),
-        rq.Card32("bytes"),
-        rq.Card32("ref_count"),
-        rq.Card32("use_count"))
+    # inline struct ResourceIdSpec to work around
+    # a parser bug with nested objects
+    rq.Card32("resource"),
+    rq.Card32("type"),
+    rq.Card32("bytes"),
+    rq.Card32("ref_count"),
+    rq.Card32("use_count"),
+)
 
 
 ResourceSizeValue = rq.Struct(
-        rq.Object("size", ResourceSizeSpec),
-        rq.LengthOf("cross_references", 4),
-        rq.List("cross_references", ResourceSizeSpec))
+    rq.Object("size", ResourceSizeSpec),
+    rq.LengthOf("cross_references", 4),
+    rq.List("cross_references", ResourceSizeSpec),
+)
 
 
 class QueryResourceBytes(rq.ReplyRequest):
     _request = rq.Struct(
-            rq.Card8("opcode"),
-            rq.Opcode(ResQueryResourceBytes),
-            rq.RequestLength(),
-            rq.Card32("client"),
-            rq.LengthOf("specs", 4),
-            rq.List("specs", ResourceIdSpec))
+        rq.Card8("opcode"),
+        rq.Opcode(ResQueryResourceBytes),
+        rq.RequestLength(),
+        rq.Card32("client"),
+        rq.LengthOf("specs", 4),
+        rq.List("specs", ResourceIdSpec),
+    )
     _reply = rq.Struct(
-            rq.ReplyCode(),
-            rq.Pad(1),
-            rq.Card16("sequence_number"),
-            rq.ReplyLength(),
-            rq.LengthOf("sizes", 4),
-            rq.Pad(20),
-            rq.List("sizes", ResourceSizeValue))
+        rq.ReplyCode(),
+        rq.Pad(1),
+        rq.Card16("sequence_number"),
+        rq.ReplyLength(),
+        rq.LengthOf("sizes", 4),
+        rq.Pad(20),
+        rq.List("sizes", ResourceSizeValue),
+    )
 
 
 def query_resource_bytes(self, client, specs):
@@ -269,20 +278,23 @@ def query_resource_bytes(self, client, specs):
     and returns an estimate for a resource only if the size could be determined
     """
     return QueryResourceBytes(
-            display=self.display,
-            opcode=self.display.get_extension_major(extname),
-            client=client,
-            specs=specs)
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        client=client,
+        specs=specs,
+    )
 
 
 def init(disp, info):
     disp.extension_add_method("display", "res_query_version", query_version)
     disp.extension_add_method("display", "res_query_clients", query_clients)
-    disp.extension_add_method("display", "res_query_client_resources",
-                              query_client_resources)
-    disp.extension_add_method("display", "res_query_client_pixmap_bytes",
-                              query_client_pixmap_bytes)
-    disp.extension_add_method("display", "res_query_client_ids",
-                              query_client_ids)
-    disp.extension_add_method("display", "res_query_resource_bytes",
-                              query_resource_bytes)
+    disp.extension_add_method(
+        "display", "res_query_client_resources", query_client_resources
+    )
+    disp.extension_add_method(
+        "display", "res_query_client_pixmap_bytes", query_client_pixmap_bytes
+    )
+    disp.extension_add_method("display", "res_query_client_ids", query_client_ids)
+    disp.extension_add_method(
+        "display", "res_query_resource_bytes", query_resource_bytes
+    )

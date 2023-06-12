@@ -20,7 +20,7 @@
 #    Boston, MA 02111-1307 USA
 
 __all__ = [
-    'lock',
-    'connect'
+    "lock",
+    "connect"
     # The platform specific modules should not be listed here
-    ]
+]

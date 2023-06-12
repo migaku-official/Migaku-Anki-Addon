@@ -3,22 +3,22 @@ import collections
 from typing import List, Optional
 
 
-Card = collections.namedtuple('Card', ['id', 'day', 'ivl'])
-Vacation = collections.namedtuple('Vacation', ['start', 'end', 'factor'])
+Card = collections.namedtuple("Card", ["id", "day", "ivl"])
+Vacation = collections.namedtuple("Vacation", ["start", "end", "factor"])
 
 # Raw balancing function which assumes 0 to be today
 # schedule and vacation origins must also be today
 
+
 def balance(
     cards: List[Card],
-    today: int=0,
-    revs_done_today: int=0,
-    num_days: int=365,
-    move_factor: float=0.1,
-    schedule_factors: Optional[List[float]]=None,
-    vacations: Optional[List[Vacation]]=None,
+    today: int = 0,
+    revs_done_today: int = 0,
+    num_days: int = 365,
+    move_factor: float = 0.1,
+    schedule_factors: Optional[List[float]] = None,
+    vacations: Optional[List[Vacation]] = None,
 ) -> List:
-
     # "day" variables are always normalized with 0 being today
 
     if schedule_factors is None:
@@ -27,7 +27,6 @@ def balance(
         vacations = []
 
     num_schedule_days = len(schedule_factors)
-
 
     # Sorting
 
@@ -48,7 +47,6 @@ def balance(
 
     day_counts[0] += revs_done_today
     cards_sort.sort(key=lambda x: x[0], reverse=True)
-
 
     # Balancing
 
@@ -123,7 +121,7 @@ def balance(
                 # Slightly prefer placing around the optimal day
                 rating_factor = 2 - math.cos((i - day) / max(1, day - start, end - day))
 
-                rating = day_counts[i] * rating_factor * 1/day_factor
+                rating = day_counts[i] * rating_factor * 1 / day_factor
 
                 if target_rating is None or rating <= target_rating:
                     target_day = i

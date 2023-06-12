@@ -6,8 +6,8 @@ import aqt
 from aqt.qt import *
 
 addon_dir = os.path.dirname(__file__)
-user_files_dir = os.path.join(addon_dir, 'user_files')
-addon_web_base = F'/_addons/{__name__.split(".")[0]}'
+user_files_dir = os.path.join(addon_dir, "user_files")
+addon_web_base = f'/_addons/{__name__.split(".")[0]}'
 
 
 def addon_path(*path_parts):
@@ -16,6 +16,7 @@ def addon_path(*path_parts):
 
 def user_path(*path_parts):
     return os.path.join(user_files_dir, *path_parts)
+
 
 # assure that user_files exists
 os.makedirs(user_path(), exist_ok=True)
@@ -26,7 +27,8 @@ def col_media_path(*path_parts):
 
 
 def tmp_path(*path_parts):
-    return addon_path('tmp', *path_parts)
+    return addon_path("tmp", *path_parts)
+
 
 # assure that tmp folder exists and is empty
 shutil.rmtree(tmp_path(), ignore_errors=True)
@@ -34,42 +36,56 @@ os.makedirs(tmp_path(), exist_ok=True)
 
 
 def addon_web_uri(*path_parts):
-    return addon_web_base + '/' + '/'.join(path_parts)
+    return addon_web_base + "/" + "/".join(path_parts)
 
 
 def make_pixmap(*path_parts):
-    path = addon_path('img', *path_parts)
+    path = addon_path("img", *path_parts)
     return QPixmap(path)
 
 
 def make_icon(*path_parts):
-    path = addon_path('img', *path_parts)
+    path = addon_path("img", *path_parts)
     return QIcon(path)
 
 
 def default_icon():
-    return make_icon('migaku_200.png')
+    return make_icon("migaku_200.png")
 
 
-
-def show_info(text: str, title: str = 'Migaku', parent: Optional[QWidget] = None) -> int:
+def show_info(
+    text: str, title: str = "Migaku", parent: Optional[QWidget] = None
+) -> int:
     return show_msg_box(text, title, parent, QMessageBox.Information)
 
 
-def show_warning(text: str, title: str = 'Migaku', parent: Optional[QWidget] = None) -> int:
+def show_warning(
+    text: str, title: str = "Migaku", parent: Optional[QWidget] = None
+) -> int:
     return show_msg_box(text, title, parent, QMessageBox.Warning)
 
 
-def show_critical(text: str, title: str = 'Migaku', parent: Optional[QWidget] = None) -> int:
+def show_critical(
+    text: str, title: str = "Migaku", parent: Optional[QWidget] = None
+) -> int:
     return show_msg_box(text, title, parent, QMessageBox.Critical)
 
 
-def show_question(text: str, title: str = 'Migaku', parent: Optional[QWidget] = None) -> int:
-    return show_msg_box(text, title, parent, QMessageBox.Question, QMessageBox.Yes | QMessageBox.No)
+def show_question(
+    text: str, title: str = "Migaku", parent: Optional[QWidget] = None
+) -> int:
+    return show_msg_box(
+        text, title, parent, QMessageBox.Question, QMessageBox.Yes | QMessageBox.No
+    )
 
 
-def show_msg_box(text: str, title: str = 'Migaku', parent: Optional[QWidget] = None, icon: QMessageBox.Icon = QMessageBox.NoIcon, buttons: Optional[List[QMessageBox.StandardButton]] = None) -> int:
-
+def show_msg_box(
+    text: str,
+    title: str = "Migaku",
+    parent: Optional[QWidget] = None,
+    icon: QMessageBox.Icon = QMessageBox.NoIcon,
+    buttons: Optional[List[QMessageBox.StandardButton]] = None,
+) -> int:
     if parent is None:
         parent = aqt.mw.app.activeWindow() or aqt.mw
 
@@ -93,9 +109,8 @@ def show_msg_box(text: str, title: str = 'Migaku', parent: Optional[QWidget] = N
     return mb.exec_()
 
 
-
 def open_browser(text: str):
-    browser = aqt.dialogs.open('Browser', aqt.mw)
+    browser = aqt.dialogs.open("Browser", aqt.mw)
 
     browser.form.searchEdit.lineEdit().setText(text)
     browser.onSearchActivated()
@@ -106,6 +121,8 @@ def open_browser(text: str):
 
 
 def raise_window(window: QWidget):
-    window.setWindowState( (window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
+    window.setWindowState(
+        (window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive
+    )
     window.raise_()
     window.activateWindow()

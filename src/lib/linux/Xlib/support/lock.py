@@ -19,9 +19,9 @@
 #    Suite 330,
 #    Boston, MA 02111-1307 USA
 
+
 class _DummyLock(object):
     def __init__(self):
-
         # This might be nerdy, but by assigning methods like this
         # instead of defining them all, we create a single bound
         # method object once instead of one each time one of the
@@ -39,6 +39,7 @@ class _DummyLock(object):
 
 # More optimisations: we use a single lock for all lock instances
 _dummy_lock = _DummyLock()
+
 
 def allocate_lock():
     return _dummy_lock

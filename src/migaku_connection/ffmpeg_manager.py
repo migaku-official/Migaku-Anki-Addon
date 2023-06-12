@@ -13,7 +13,6 @@ from .. import config
 
 
 class ProgramManager(aqt.qt.QObject):
-
     BASE_DOWNLOAD_URI = "https://pub-fe082030d4544007b9fdfebcf0b3690d.r2.dev/"
     lock = Lock()
     total_progress_dict = {}
@@ -108,7 +107,10 @@ class ProgramManager(aqt.qt.QObject):
                             with self.lock:
                                 for program_name in self.total_progress_dict:
                                     if program_name != self.program_name:
-                                        overall_total = total + self.total_progress_dict[program_name]
+                                        overall_total = (
+                                            total
+                                            + self.total_progress_dict[program_name]
+                                        )
                                 self.progress_dict[self.program_name] = pos
                                 for key in self.progress_dict:
                                     if key != self.program_name:
