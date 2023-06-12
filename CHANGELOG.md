@@ -1,4 +1,10 @@
-## Unreleased
+## 0.3.5
+
+- [FIX] Increase Qt6 compatibility
+- [FIX] Use updated Anki methods
+- [FIX] Send to Anki functionality from legacy extension
+
+## 0.3.4
 
 - [FIX] Increase timeout of generating descriptions request to 60s
 - [FIX] Leaked file descriptors
