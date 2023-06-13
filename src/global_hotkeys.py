@@ -335,7 +335,7 @@ class HotkeyConfigWidget(QWidget):
             lyt.addWidget(QLabel(text + ":"), i, 0)
             sequence = self.sequence_for_idx(j)
             btn = QPushButton(sequence.to_user_string())
-            btn.setFocusPolicy(Qt.NoFocus)
+            btn.setFocusPolicy(Qt.FocusPolicy.NoFocus)
             btn.clicked.connect(self.on_button_pressed)
             self.idx_for_button[btn] = j
             self.buttons.append(btn)

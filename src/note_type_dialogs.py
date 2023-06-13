@@ -138,7 +138,8 @@ class ManageNoteDialog(QDialog):
 
                 field_item = QTableWidgetItem(field_name_clean)
                 field_item.setFlags(
-                    field_item.flags() & ~(Qt.ItemIsEditable | Qt.ItemIsSelectable)
+                    field_item.flags()
+                    & ~(Qt.ItemIsEditable | Qt.ItemFlag.ItemIsSelectable)
                 )
 
                 list_widget.setItem(i, 0, field_item)
@@ -249,8 +250,11 @@ class AddNoteDialog(QDialog):
                 item_label += " (Already added)"
             item = QListWidgetItem(item_label)
             if is_installed:
-                item.setFlags(item.flags() & ~(Qt.ItemIsSelectable | Qt.ItemIsEnabled))
-            item.setData(Qt.UserRole, lang.code)
+                item.setFlags(
+                    item.flags()
+                    & ~(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
+                )
+            item.setData(Qt.ItemDataRole.UserRole, lang.code)
             self.list.addItem(item)
 
         button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
@@ -269,7 +273,7 @@ class AddNoteDialog(QDialog):
             )
             return
 
-        code = selected_item.data(Qt.UserRole)
+        code = selected_item.data(Qt.ItemDataRole.UserRole)
         lang = Languages[code]
 
         note_type_mgr.install(lang)
@@ -281,12 +285,12 @@ def on_manage_migaku(notes_editor: aqt.models.Models):
     dlg = ManageNoteDialog(
         notes_editor.mw, notes_editor.current_notetype(), parent=notes_editor
     )
-    dlg.exec_()
+    dlg.exec()
 
 
 def on_add_migaku(notes_editor: aqt.models.Models):
     dlg = AddNoteDialog(notes_editor.mw, parent=notes_editor)
-    r = dlg.exec_()
+    r = dlg.exec()
     if r == QDialog.Accepted:
         notes_editor.refresh_list()
 

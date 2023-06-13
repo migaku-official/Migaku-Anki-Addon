@@ -56,19 +56,19 @@ def default_icon():
 def show_info(
     text: str, title: str = "Migaku", parent: Optional[QWidget] = None
 ) -> int:
-    return show_msg_box(text, title, parent, QMessageBox.Information)
+    return show_msg_box(text, title, parent, QMessageBox.Icon.Information)
 
 
 def show_warning(
     text: str, title: str = "Migaku", parent: Optional[QWidget] = None
 ) -> int:
-    return show_msg_box(text, title, parent, QMessageBox.Warning)
+    return show_msg_box(text, title, parent, QMessageBox.Icon.Warning)
 
 
 def show_critical(
     text: str, title: str = "Migaku", parent: Optional[QWidget] = None
 ) -> int:
-    return show_msg_box(text, title, parent, QMessageBox.Critical)
+    return show_msg_box(text, title, parent, QMessageBox.Icon.Critical)
 
 
 def show_question(
@@ -103,10 +103,10 @@ def show_msg_box(
                 default = mb_btn
         mb.setDefaultButton(default)
     else:
-        mb_btn = mb.addButton(QMessageBox.Ok)
+        mb_btn = mb.addButton(QMessageBox.StandardButton.Ok)
         mb_btn.setDefault(True)
 
-    return mb.exec_()
+    return mb.exec()
 
 
 def open_browser(text: str):
@@ -122,7 +122,8 @@ def open_browser(text: str):
 
 def raise_window(window: QWidget):
     window.setWindowState(
-        (window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive
+        (window.windowState() & ~Qt.WindowState.WindowMinimized)
+        | Qt.WindowState.WindowActive
     )
     window.raise_()
     window.activateWindow()

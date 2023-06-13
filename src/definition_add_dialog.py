@@ -279,4 +279,4 @@ class DefinitionAddDialog(QDialog):
             return
 
         dlg = cls(lang, note_type, note_ids, parent)
-        return dlg.exec_()
+        return dlg.exec()

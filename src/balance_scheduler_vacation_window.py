@@ -42,8 +42,12 @@ class BalanceSchedulerVacationWindow(QDialog):
             ["Start", "End", "Groups", "Review Amount", ""]
         )
         for i in range(4):
-            self.list.horizontalHeader().setSectionResizeMode(i, QHeaderView.Stretch)
-        self.list.horizontalHeader().setSectionResizeMode(4, QHeaderView.Fixed)
+            self.list.horizontalHeader().setSectionResizeMode(
+                i, QHeaderView.ResizeMode.Stretch
+            )
+        self.list.horizontalHeader().setSectionResizeMode(
+            4, QHeaderView.ResizeMode.Fixed
+        )
         self.list.horizontalHeader().resizeSection(4, 25)
         self.list.verticalHeader().setVisible(False)
         lyt.addWidget(self.list)
@@ -113,7 +117,7 @@ class BalanceSchedulerVacationWindow(QDialog):
 
         self.list.setCellWidget(row, 2, group_tool_btn)
 
-        slider = QSlider(Qt.Horizontal)
+        slider = QSlider(Qt.Orientation.Horizontal)
         slider.setRange(0, 1000)
         slider.setValue(round(factor * 1000))
         self.list.setCellWidget(row, 3, slider)
@@ -219,4 +223,4 @@ class BalanceSchedulerVacationWindow(QDialog):
 
 
 action = QAction("Manage Vacations", aqt.mw)
-action.triggered.connect(lambda: BalanceSchedulerVacationWindow().exec_())
+action.triggered.connect(lambda: BalanceSchedulerVacationWindow().exec())
