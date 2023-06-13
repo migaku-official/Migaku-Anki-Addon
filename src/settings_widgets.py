@@ -70,7 +70,7 @@ class SettingsWidget(QWidget):
     def make_label(cls, text: str) -> QLabel:
         lbl = QLabel(text)
         lbl.setWordWrap(True)
-        lbl.setTextInteractionFlags(Qt.TextBrowserInteraction)
+        lbl.setTextInteractionFlags(Qt.TextInteractionFlag.TextBrowserInteraction)
         lbl.linkActivated.connect(aqt.utils.openLink)
         return lbl
 
@@ -136,7 +136,7 @@ class LanguageWidget(SettingsWidget):
         self.lyt.addWidget(lbl1)
 
         self.lang_list = QListWidget()
-        self.lang_list.setFocusPolicy(Qt.NoFocus)
+        self.lang_list.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.lyt.addWidget(self.lang_list)
 
         lbl2 = QLabel(
@@ -157,17 +157,22 @@ class LanguageWidget(SettingsWidget):
             if lang.name_native and lang.name_native != lang.name_en:
                 text += f" ({lang.name_native})"
             item = QListWidgetItem(text)
-            item.setData(Qt.UserRole, lang.code)
-            item.setCheckState(Qt.Checked if is_installed else Qt.Unchecked)
+            item.setData(Qt.ItemDataRole.UserRole, lang.code)
+            item.setCheckState(
+                Qt.CheckState.Checked if is_installed else Qt.CheckState.Unchecked
+            )
             if is_installed:
-                item.setFlags(item.flags() & ~(Qt.ItemIsEnabled | Qt.ItemIsSelectable))
+                item.setFlags(
+                    item.flags()
+                    & ~(Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsSelectable)
+                )
             self.lang_list.addItem(item)
 
     def save(self):
         for i in range(self.lang_list.count()):
             item = self.lang_list.item(i)
-            lang_code = item.data(Qt.UserRole)
-            if item.checkState() == Qt.Checked:
+            lang_code = item.data(Qt.ItemDataRole.UserRole)
+            if item.checkState() == Qt.CheckState.Checked:
                 lang = Languages[lang_code]
                 note_type_mgr.install(lang)
         self.setup_langs()
@@ -187,7 +192,7 @@ class ExtensionWidget(SettingsWidget):
             "If the browser extension is installed and running, the status below will reflect so."
         )
         lbl1.setWordWrap(True)
-        lbl1.setTextInteractionFlags(Qt.TextBrowserInteraction)
+        lbl1.setTextInteractionFlags(Qt.TextInteractionFlag.TextBrowserInteraction)
         lbl1.linkActivated.connect(aqt.utils.openLink)
         self.lyt.addWidget(lbl1)
 
@@ -414,7 +419,9 @@ class SchedulingWidget(SettingsWidget):
         top_lyt.addWidget(QLabel("Options Group:"))
 
         self.selector = QComboBox()
-        self.selector.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.selector.setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
+        )
         self.selector.addItems(config_names)
         top_lyt.addWidget(self.selector)
 
@@ -431,7 +438,7 @@ class SchedulingWidget(SettingsWidget):
 
         self.move_factor_lbl = QLabel("Balance Strength")
         balance_factor_lyt.addWidget(self.move_factor_lbl)
-        self.move_factor = QSlider(Qt.Horizontal)
+        self.move_factor = QSlider(Qt.Orientation.Horizontal)
         self.move_factor.setMinimum(0)
         self.move_factor.setMaximum(1000)
         self.move_factor.valueChanged.connect(self.save)
@@ -456,7 +463,7 @@ class SchedulingWidget(SettingsWidget):
         ):
             lbl = QLabel(weekday)
             week_box_lyt.addWidget(lbl, i, 0)
-            slider = QSlider(Qt.Horizontal)
+            slider = QSlider(Qt.Orientation.Horizontal)
             slider.setMinimum(0)
             slider.setMaximum(1000)
             slider.valueChanged.connect(self.save)
@@ -521,7 +528,7 @@ class SchedulingWidget(SettingsWidget):
         aqt.mw.col.decks.update_config(c)
 
     def manage_vacations(self):
-        BalanceSchedulerVacationWindow(self).exec_()
+        BalanceSchedulerVacationWindow(self).exec()
 
 
 class RetirementWidget(SettingsWidget):
@@ -539,7 +546,9 @@ class RetirementWidget(SettingsWidget):
         top_lyt.addWidget(QLabel("Options Group:"))
 
         self.selector = QComboBox()
-        self.selector.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.selector.setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
+        )
         self.selector.addItems(config_names)
         top_lyt.addWidget(self.selector)
 
@@ -654,7 +663,9 @@ class PromotionWidget(SettingsWidget):
         top_lyt.addWidget(QLabel("Options Group:"))
 
         self.selector = QComboBox()
-        self.selector.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.selector.setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
+        )
         self.selector.addItems(config_names)
         top_lyt.addWidget(self.selector)
 
@@ -870,7 +881,9 @@ class FieldSettingsWidget(SettingsWidget):
         self.regex_table.setHorizontalHeaderLabels(
             ["Field Names", "Regex", "Replacement", ""]
         )
-        self.regex_table.horizontalHeader().setSectionResizeMode(3, QHeaderView.Fixed)
+        self.regex_table.horizontalHeader().setSectionResizeMode(
+            3, QHeaderView.ResizeMode.Fixed
+        )
         self.regex_table.horizontalHeader().resizeSection(3, 25)
         self.regex_table.verticalHeader().setVisible(False)
 

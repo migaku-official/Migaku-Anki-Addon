@@ -82,4 +82,4 @@ class CardTypeChangeDialog(QDialog):
             return
 
         dlg = cls(note_ids, parent)
-        return dlg.exec_()
+        return dlg.exec()

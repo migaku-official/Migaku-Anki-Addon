@@ -31,13 +31,13 @@ class BalanceSchedulerDayOffWindow(QDialog):
         for g in aqt.mw.col.decks.all_config():
             item = QListWidgetItem(g["name"])
             if not g.get("scheduling_enabled"):
-                item.setFlags(item.flags() & ~Qt.ItemIsEnabled)
-                item.setCheckState(Qt.Unchecked)
+                item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEnabled)
+                item.setCheckState(Qt.CheckState.Unchecked)
             else:
-                item.setCheckState(Qt.Checked)
+                item.setCheckState(Qt.CheckState.Checked)
             self.list.addItem(item)
 
-        self.slider = QSlider(Qt.Horizontal)
+        self.slider = QSlider(Qt.Orientation.Horizontal)
         self.slider.setRange(0, 1000)
         self.slider.setValue(0)
         lyt.addWidget(self.slider)
@@ -61,7 +61,7 @@ class BalanceSchedulerDayOffWindow(QDialog):
         }
 
         for i, g in enumerate(aqt.mw.col.decks.all_config()):
-            if self.list.item(i).checkState() != Qt.Checked:
+            if self.list.item(i).checkState() != Qt.CheckState.Checked:
                 continue
 
             vacs = g.get("scheduling_vacations", [])
@@ -79,4 +79,4 @@ class BalanceSchedulerDayOffWindow(QDialog):
 
 
 action = QAction("Day Off", aqt.mw)
-action.triggered.connect(lambda: BalanceSchedulerDayOffWindow().exec_())
+action.triggered.connect(lambda: BalanceSchedulerDayOffWindow().exec())

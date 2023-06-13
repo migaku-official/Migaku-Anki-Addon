@@ -45,7 +45,7 @@ class WelcomeWizard(QWizard):
             or aqt.mw.app.queryKeyboardModifiers() & Qt.KeyboardModifier.ControlModifier
         ):
             wizard = cls()
-            return wizard.exec_()
+            return wizard.exec()
 
 
 aqt.gui_hooks.profile_did_open.append(WelcomeWizard.check_show_modal)

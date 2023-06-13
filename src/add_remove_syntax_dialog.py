@@ -72,9 +72,9 @@ class AddRemoveSyntaxDialog(QDialog):
         for field_name in aqt.mw.col.field_names_for_note_ids(note_ids):
             itm = QListWidgetItem(field_name)
             itm.setCheckState(
-                Qt.Checked
+                Qt.CheckState.Checked
                 if (field_name in last_checked and last_checked[field_name])
-                else Qt.Unchecked
+                else Qt.CheckState.Unchecked
             )
             self.field_list.addItem(itm)
         lyt.addWidget(self.field_list)
@@ -99,7 +99,7 @@ class AddRemoveSyntaxDialog(QDialog):
         for i in range(self.field_list.count()):
             itm = self.field_list.item(i)
             field_name = itm.data(Qt.DisplayRole)
-            field_checked = itm.checkState() == Qt.Checked
+            field_checked = itm.checkState() == Qt.CheckState.Checked
             checked_fields_states[field_name] = field_checked
 
         last_checked = config.get("syntax_fields_last_checked", {})
@@ -111,7 +111,7 @@ class AddRemoveSyntaxDialog(QDialog):
         for i in range(self.field_list.count()):
             itm = self.field_list.item(i)
             field_name = itm.data(Qt.DisplayRole)
-            field_checked = itm.checkState() == Qt.Checked
+            field_checked = itm.checkState() == Qt.CheckState.Checked
             if field_checked:
                 self.checked_fields.add(field_name)
 
@@ -215,4 +215,4 @@ class AddRemoveSyntaxDialog(QDialog):
             return
 
         dlg = cls(lang, is_remove, note_ids, parent)
-        return dlg.exec_()
+        return dlg.exec()

@@ -20,7 +20,7 @@ class SettingsWindow(QDialog):
         self.stack = QStackedWidget()
         self.stack_selector = QListWidget()
         self.stack_selector.setMaximumWidth(225)
-        self.stack_selector.setFocusPolicy(Qt.NoFocus)
+        self.stack_selector.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.stack_selector.currentRowChanged.connect(self.stack.setCurrentIndex)
 
         lyt.addWidget(self.stack_selector)
@@ -52,7 +52,7 @@ class SettingsWindow(QDialog):
     @classmethod
     def show_modal(cls):
         window = cls()
-        window.exec_()
+        window.exec()
 
 
 action = QAction("Settings/Help", aqt.mw)
