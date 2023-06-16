@@ -13,7 +13,7 @@ from .. import config
 
 
 class ProgramManager(aqt.qt.QObject):
-    BASE_DOWNLOAD_URI = "https://pub-fe082030d4544007b9fdfebcf0b3690d.r2.dev/"
+    BASE_DOWNLOAD_URI = "https://migaku-public-data.migaku.com/"
     lock = Lock()
     total_progress_dict = {}
     progress_dict = {}
