@@ -73,9 +73,9 @@ class HotkeyHandlerBase(QObject):
             "add_definition",
             "search_collection",
         ]:
-            self.request_seltected_text(action)
+            self.request_selected_text(action)
 
-    def request_seltected_text(self, action):
+    def request_selected_text(self, action):
         modifier_keys = [
             Key.alt_gr,
             Key.alt,
