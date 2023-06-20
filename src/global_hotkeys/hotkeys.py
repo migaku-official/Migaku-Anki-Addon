@@ -1,4 +1,3 @@
-import ctypes
 from aqt.qt import (
     QObject,
     QTimer,
@@ -121,21 +120,7 @@ class HotkeyHandlerBase(QObject):
 
 
 if is_win:
-
-    class HotkeyHandler(HotkeyHandlerBase):
-        hotkeys = [
-            ("open_dict", KeySequence(), "Open dictionary"),
-            ("search_dict", KeySequence(), "Search selected text in dictionary"),
-            ("set_sentence", KeySequence(), "Send sentence to card creator"),
-            ("add_definition", KeySequence(), "Send definition to card creator"),
-            (
-                "search_collection",
-                KeySequence(),
-                "Search selected text in card collection",
-            ),
-        ]
-
-elif is_mac:
+    import ctypes
 
     class HotkeyHandler(HotkeyHandlerBase):
         def focus_dictionary(self, retry_count=5):
@@ -162,6 +147,21 @@ elif is_mac:
                 QTimer.singleShot(100, lambda: self.focus_dictionary(retry_count - 1))
 
             return did_focus
+
+elif is_mac:
+
+    class HotkeyHandler(HotkeyHandlerBase):
+        hotkeys = [
+            ("open_dict", KeySequence(), "Open dictionary"),
+            ("search_dict", KeySequence(), "Search selected text in dictionary"),
+            ("set_sentence", KeySequence(), "Send sentence to card creator"),
+            ("add_definition", KeySequence(), "Send definition to card creator"),
+            (
+                "search_collection",
+                KeySequence(),
+                "Search selected text in card collection",
+            ),
+        ]
 
 else:
     # Dictionary focus not required
