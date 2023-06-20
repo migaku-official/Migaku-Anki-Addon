@@ -1,14 +1,8 @@
-from aqt.qt import (
-    QObject,
-    QTimer,
-    QGuiApplication,
-    QKeyEvent,
-    QEvent,
-    Qt,
-    QCoreApplication,
-)
+from aqt.qt import QObject, QTimer
 from aqt import mw
-from anki.utils import is_mac, is_win
+import pynput
+from pynput.keyboard import Key
+from anki.utils import is_mac, is_win, is_lin
 
 from .. import config
 from .. import util
@@ -51,6 +45,8 @@ class HotkeyHandlerBase(QObject):
 
         self.selected_text_handler = None
 
+        self.keyboard_controller = pynput.keyboard.Controller()
+
         self.keyboard_handler = KeyboardHandler()
         self.keyboard_handler.action_fired.connect(self.on_action_fired)
 
@@ -78,20 +74,30 @@ class HotkeyHandlerBase(QObject):
         ]:
             self.request_selected_text(action)
 
-    # Emulate pressing Ctrl+C in the focused window
     def request_selected_text(self, action):
-        focusobj = QGuiApplication.focusObject()
-        press_event = QKeyEvent(
-            QEvent.Type.KeyPress, Qt.Key.Key_C, Qt.KeyboardModifier.ControlModifier, "c"
-        )
-        release_event = QKeyEvent(
-            QEvent.Type.KeyRelease,
-            Qt.Key.Key_C,
-            Qt.KeyboardModifier.ControlModifier,
-            "c",
-        )
-        QCoreApplication.sendEvent(focusobj, press_event)
-        QCoreApplication.sendEvent(focusobj, release_event)
+        modifier_keys = [
+            Key.alt_gr,
+            Key.alt,
+            Key.alt_l,
+            Key.alt_r,
+            Key.cmd,
+            Key.cmd_l,
+            Key.cmd_r,
+            Key.ctrl,
+            Key.ctrl_l,
+            Key.ctrl_r,
+            Key.shift,
+            Key.shift_l,
+            Key.shift_r,
+        ]
+
+        if not is_lin:
+            for key in modifier_keys:
+                self.keyboard_controller.release(key)
+
+        with self.keyboard_controller.pressed(Key.cmd if is_mac else Key.ctrl):
+            self.keyboard_controller.press("c")
+            self.keyboard_controller.release("c")
 
         self.selected_text_handler = action
         QTimer.singleShot(100, self.handle_selected_text)
