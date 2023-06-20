@@ -196,9 +196,33 @@ class ExtensionWidget(SettingsWidget):
         lbl1.linkActivated.connect(aqt.utils.openLink)
         self.lyt.addWidget(lbl1)
 
-        self.lyt.addStretch()
+        # Information on changing port
+        self.custom_port_hr = self.add_label("<hr>")
+        self.custom_port_info = self.add_label(
+            "In some cases, the you might want to have the browser extension and Anki communicate on a custom port, because another application is already using the default port. <b>You need to set the same port in the browser extension settings!</b> You need to restart Anki after changing the port. "
+        )
 
+        self.custom_port = QLineEdit(config.get("port", ""))
+        self.custom_port.setPlaceholderText(str(util.DEFAULT_PORT))
+        self.custom_port.textChanged.connect(
+            lambda text: config.set("port", text if len(text) else None)
+        )
+
+        self.lyt.addWidget(self.custom_port)
+
+        self.lyt.addStretch()
         self.lyt.addWidget(ConnectionStatusLabel())
+
+    def toggle_advanced(self, state: bool) -> None:
+        if not state:
+            self.custom_port_hr.hide()
+            self.custom_port_info.hide()
+            self.custom_port.hide()
+
+        else:
+            self.custom_port_hr.show()
+            self.custom_port_info.show()
+            self.custom_port.show()
 
 
 class GlobalHotkeysWidget(SettingsWidget):
