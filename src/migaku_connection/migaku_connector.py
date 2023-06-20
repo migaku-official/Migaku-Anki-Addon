@@ -1,7 +1,5 @@
-import tornado.websocket
 import json
-
-import aqt
+import tornado.websocket
 
 
 class MigakuConnector(tornado.websocket.WebSocketHandler):
