@@ -265,7 +265,7 @@ if is_mac:
 
     class HotkeyHandlerMac(HotkeyHandlerBase):
         hotkeys = [
-            ("open_dict", KeySequence(), "Open dictionary"),
+            ("open_dict", KeySequence("f", KeySequence.Meta | KeySequence.Shift), "Open dictionary"),
             ("search_dict", KeySequence(), "Search selected text in dictionary"),
             ("set_sentence", KeySequence(), "Send sentence to card creator"),
             ("add_definition", KeySequence(), "Send definition to card creator"),
@@ -275,6 +275,9 @@ if is_mac:
                 "Search selected text in card collection",
             ),
         ]
+
+        def focus_dictionary(self):
+            aqt.utils.showInfo("Cannot focus the Migaku Dictionary on Mac")
 
     HotkeyHandler = HotkeyHandlerMac
 
