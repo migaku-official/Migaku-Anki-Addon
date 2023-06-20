@@ -4,6 +4,13 @@ import pynput
 
 from .key_sequence import KeySequence
 
+modifier_map = {
+    Key.shift: 1 << 0,
+    Key.alt: 1 << 1,
+    Key.ctrl: 1 << 2,
+    Key.cmd: 1 << 3,
+}
+
 
 class KeyboardHandler(QObject):
     key_pressed = pyqtSignal(KeySequence)
@@ -17,15 +24,6 @@ class KeyboardHandler(QObject):
         self.block_actions = False
         self.actions = {False: {}, True: {}}
 
-        self.modifier_map = {
-            Key.shift: 1 << 0,
-            Key.alt: 1 << 1,
-            Key.ctrl: 1 << 2,
-            Key.cmd: 1 << 3,
-        }
-
-        self.modifiers = 0
-
         self.listener = pynput.keyboard.Listener(
             on_press=self.on_press, on_release=self.on_release
         )
@@ -38,8 +36,10 @@ class KeyboardHandler(QObject):
 
     def on_press(self, raw_key):
         raw_key = self.listener.canonical(raw_key)
-        if raw_key in self.modifier_map:
-            self.modifiers |= self.modifier_map[raw_key]
+        modifiers = 0
+
+        if raw_key in modifier_map:
+            modifiers |= modifier_map[raw_key]
         else:
             key = self.parse_raw_key(raw_key)
             sequence = KeySequence(key, self.modifiers)
@@ -49,8 +49,10 @@ class KeyboardHandler(QObject):
 
     def on_release(self, raw_key):
         raw_key = self.listener.canonical(raw_key)
+        modifiers = 0
+
         if raw_key in self.modifier_map:
-            self.modifiers &= ~self.modifier_map[raw_key]
+            modifiers &= ~modifier_map[raw_key]
         else:
             key = self.parse_raw_key(raw_key)
             sequence = KeySequence(key, self.modifiers)
