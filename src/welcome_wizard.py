@@ -1,12 +1,7 @@
 import aqt
-from aqt.qt import *
+from aqt.qt import QWizard, Qt
 
 from . import util
-from . import config
-from .languages import Languages
-from . import note_type_mgr
-from .migaku_connection import ConnectionStatusLabel
-from .global_hotkeys import HotkeyConfigWidget, hotkey_handler
 from . import config
 from .settings_widgets import TUTORIAL_WIDGETS
 
@@ -34,8 +29,8 @@ class WelcomeWizard(QWizard):
         self.finished.connect(self.save)
 
     def save(self):
-        for p in self.pages:
-            p.save()
+        for page in self.pages:
+            page.save()
         config.set("first_run", False, do_write=True)
 
     @classmethod
