@@ -47,14 +47,14 @@ def check_anki_version_dialog():
     if state == VersionState.OK:
         return
 
-    result = QMessageBox.No
+    result = QMessageBox.StandardButton.No
 
     if state == VersionState.UNKNOWN:
         result = show_msg_box(
             "Could not determine your Anki version. The Migaku addon may not work correctly.\n\n"
             + f"Version {recommended_version} is recommended.\n\n"
             + "Do you want to hide this message in the future?",
-            buttons=(QMessageBox.No, QMessageBox.Yes),
+            buttons=(QMessageBox.StandardButton.No, QMessageBox.StandardButton.Yes),
         )
 
     elif state == VersionState.LOWER:
@@ -62,7 +62,7 @@ def check_anki_version_dialog():
             f"Your Anki version {version} is older than the currently recommended version for the Migaku addons ({recommended_version}).\n\n"
             + "The Migaku addon may not work correctly.\n\n"
             + "Do you want to hide this message in the future for this Anki version?",
-            buttons=(QMessageBox.No, QMessageBox.Yes),
+            buttons=(QMessageBox.StandardButton.No, QMessageBox.StandardButton.Yes),
         )
 
     elif state == VersionState.HIGHER:
@@ -70,9 +70,9 @@ def check_anki_version_dialog():
             f"Your Anki version {version} is newer than the currently recommended version for the Migaku addons ({recommended_version}).\n\n"
             + "The Migaku addon may not work correctly.\n\n"
             + "Do you want to hide this message in the future for this Anki version?",
-            buttons=(QMessageBox.No, QMessageBox.Yes),
+            buttons=(QMessageBox.StandardButton.No, QMessageBox.StandardButton.Yes),
         )
 
-    if result == QMessageBox.Yes:
+    if result == QMessageBox.StandardButton.Yes:
         ignore_version_check[version] = True
         config.set("ignore_version_check", ignore_version_check, True)

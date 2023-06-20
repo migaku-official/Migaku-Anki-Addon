@@ -75,7 +75,7 @@ def show_question(
     text: str, title: str = "Migaku", parent: Optional[QWidget] = None
 ) -> int:
     return show_msg_box(
-        text, title, parent, QMessageBox.Question, QMessageBox.Yes | QMessageBox.No
+        text, title, parent, QMessageBox.Question, QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
     )
 
 
