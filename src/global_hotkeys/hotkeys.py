@@ -9,7 +9,7 @@ from .. import config
 from .. import util
 
 from .key_sequence import KeySequence
-from .keyboard_handler import KeyboardHandler
+from .keyboard import KeyboardHandler
 
 
 class HotkeyHandlerBase(QObject):

@@ -11,12 +11,12 @@ hotkey_handler = HotkeyHandler(mw)
 
 
 class HotkeyConfigWidget(QWidget):
-    def __init__(self, hotkey_handler, parent=None):
+    def __init__(self, handler, parent=None):
         super().__init__(parent)
 
         self.setAttribute(Qt.WA_DeleteOnClose)
 
-        self.hotkey_handler = hotkey_handler
+        self.hotkey_handler = handler
 
         lyt = QGridLayout()
         self.setLayout(lyt)
