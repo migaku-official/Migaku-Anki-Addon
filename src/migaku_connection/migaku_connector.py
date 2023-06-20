@@ -7,6 +7,9 @@ import aqt
 class MigakuConnector(tornado.websocket.WebSocketHandler):
     DEBUG = True
 
+    def get(self):
+        self.finish("Hello, Migaku!")
+
     def open(self):
         self.connection = self.application.settings["connection"]
         self.connection._set_connector(self)
