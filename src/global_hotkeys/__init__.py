@@ -3,7 +3,7 @@ from aqt import mw
 
 from .. import config
 
-from .hotkey_handler import HotkeyHandler
+from .hotkeys import HotkeyHandler
 from .key_sequence import KeySequence
 
 

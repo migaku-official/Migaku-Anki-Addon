@@ -1,12 +1,12 @@
 import aqt
 from . import util
-from . import global_hotkeys
+from .global_hotkeys import hotkey_handler
 
 
 def webview_search_dict(web_view):
     text = web_view.selectedText()
     aqt.mw.migaku_connection.search_dict(text)
-    global_hotkeys.hotkey_handler.focus_dictionary()
+    hotkey_handler.focus_dictionary()
 
 
 def webview_search_collection(web_view):
