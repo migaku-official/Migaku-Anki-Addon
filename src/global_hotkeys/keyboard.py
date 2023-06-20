@@ -51,11 +51,11 @@ class KeyboardHandler(QObject):
         raw_key = self.listener.canonical(raw_key)
         modifiers = 0
 
-        if raw_key in self.modifier_map:
+        if raw_key in modifier_map:
             modifiers &= ~modifier_map[raw_key]
         else:
             key = self.parse_raw_key(raw_key)
-            sequence = KeySequence(key, self.modifiers)
+            sequence = KeySequence(key, modifiers)
             self.key_released.emit(sequence)
             if not self.block_actions and sequence in self.actions[True]:
                 self.action_fired.emit(self.actions[True][sequence])
