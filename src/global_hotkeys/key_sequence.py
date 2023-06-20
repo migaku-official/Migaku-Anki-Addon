@@ -1,6 +1,7 @@
 from typing import Optional
 from anki.utils import is_win, is_mac
 
+
 class KeySequence:
     Shift = 1 << 0
     Alt = 1 << 1
