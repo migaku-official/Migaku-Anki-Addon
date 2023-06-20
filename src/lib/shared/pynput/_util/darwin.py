@@ -188,10 +188,10 @@ class ListenerMixin(object):
     def _run(self):
         self.IS_TRUSTED = HIServices.AXIsProcessTrusted()
         if not self.IS_TRUSTED:
-            # self._log.warning(
-            #     'This process is not trusted! Input event monitoring will not '
-            #     'be possible until it is added to accessibility clients.')
-            pass
+            self._log.warning(
+                "This process is not trusted! Input event monitoring will not "
+                "be possible until it is added to accessibility clients."
+            )
 
         self._loop = None
         try:
