@@ -75,7 +75,11 @@ def show_question(
     text: str, title: str = "Migaku", parent: Optional[QWidget] = None
 ) -> int:
     return show_msg_box(
-        text, title, parent, QMessageBox.Question, QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        text,
+        title,
+        parent,
+        QMessageBox.Question,
+        QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
     )
 
 
@@ -127,3 +131,6 @@ def raise_window(window: QWidget):
     )
     window.raise_()
     window.activateWindow()
+
+
+DEFAULT_PORT = 44432

@@ -1,13 +1,13 @@
 import asyncio
 import tornado
-import socket
 from pathlib import Path
 
 import aqt
 from aqt.qt import *
 
-from .migaku_connector import MigakuConnector
+from ..util import DEFAULT_PORT
 
+from .migaku_connector import MigakuConnector
 from .card_creator import CardCreator
 from .audio_condenser import AudioCondenser
 from .learning_status_handler import LearningStatusHandler
@@ -23,6 +23,8 @@ from .srs_import import (
     SrsImportHandler,
 )
 
+from .. import config
+
 
 class MigakuServerThread(QThread):
     def __init__(self, server, parent=None):
@@ -35,7 +37,9 @@ class MigakuServerThread(QThread):
         self.loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self.loop)
 
-        self.server.listen(44432, reuse_port=hasattr(socket, "SO_REUSEPORT"))
+        port = config.get("port", DEFAULT_PORT)
+
+        self.server.listen(port if port else DEFAULT_PORT)
         tornado.ioloop.IOLoop.instance().start()
 
 
