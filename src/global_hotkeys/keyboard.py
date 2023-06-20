@@ -23,6 +23,7 @@ class KeyboardHandler(QObject):
 
         self.block_actions = False
         self.actions = {False: {}, True: {}}
+        self.modifiers = 0
 
         self.listener = pynput.keyboard.Listener(
             on_press=self.on_press, on_release=self.on_release
@@ -36,10 +37,9 @@ class KeyboardHandler(QObject):
 
     def on_press(self, raw_key):
         raw_key = self.listener.canonical(raw_key)
-        modifiers = 0
 
         if raw_key in modifier_map:
-            modifiers |= modifier_map[raw_key]
+            self.modifiers |= modifier_map[raw_key]
         else:
             key = self.parse_raw_key(raw_key)
             sequence = KeySequence(key, self.modifiers)
@@ -49,13 +49,12 @@ class KeyboardHandler(QObject):
 
     def on_release(self, raw_key):
         raw_key = self.listener.canonical(raw_key)
-        modifiers = 0
 
         if raw_key in modifier_map:
-            modifiers &= ~modifier_map[raw_key]
+            self.modifiers &= ~modifier_map[raw_key]
         else:
             key = self.parse_raw_key(raw_key)
-            sequence = KeySequence(key, modifiers)
+            sequence = KeySequence(key, self.modifiers)
             self.key_released.emit(sequence)
             if not self.block_actions and sequence in self.actions[True]:
                 self.action_fired.emit(self.actions[True][sequence])
