@@ -13,7 +13,7 @@ import tornado.ioloop
 import shutil
 
 import aqt
-from anki.utils import is_mac
+from anki.utils import isMac
 
 from .. import note_type_mgr
 from ..languages import Languages
@@ -193,7 +193,7 @@ def _upload_media_single_attempt(fname, user_token, is_audio=False):
 
     if use_curl is None:
         use_curl = False
-        if is_mac:
+        if isMac:
             curl_path = shutil.which("curl")
             if curl_path:
                 use_curl = True

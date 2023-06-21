@@ -1,5 +1,5 @@
 from typing import Optional
-from anki.utils import is_win, is_mac
+from anki.utils import isWin, isMac
 
 
 class KeySequence:
@@ -26,7 +26,7 @@ class KeySequence:
             return "Disabled"
 
         key_strings = []
-        if is_mac:
+        if isMac:
             join_char = ""
             if self.modifiers & self.Ctrl:
                 key_strings.append("⌃")
@@ -45,7 +45,7 @@ class KeySequence:
             if self.modifiers & self.Shift:
                 key_strings.append("Shift")
             if self.modifiers & self.Meta:
-                key_strings.append("Win" if is_win else "Meta")
+                key_strings.append("Win" if isWin else "Meta")
 
         key_segs = [seg.capitalize() for seg in self.key.split("_")]
         key_strings.append(" ".join(key_segs))

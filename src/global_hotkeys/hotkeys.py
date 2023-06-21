@@ -2,7 +2,7 @@ from aqt.qt import QObject, QTimer
 from aqt import mw
 import pynput
 from pynput.keyboard import Key
-from anki.utils import is_mac, is_win, is_lin
+from anki.utils import isMac, isWin, isLin
 
 from .. import config
 from .. import util
@@ -91,11 +91,11 @@ class HotkeyHandlerBase(QObject):
             Key.shift_r,
         ]
 
-        if not is_lin:
+        if not isLin:
             for key in modifier_keys:
                 self.keyboard_controller.release(key)
 
-        with self.keyboard_controller.pressed(Key.cmd if is_mac else Key.ctrl):
+        with self.keyboard_controller.pressed(Key.cmd if isMac else Key.ctrl):
             self.keyboard_controller.press("c")
             self.keyboard_controller.release("c")
 
@@ -125,7 +125,7 @@ class HotkeyHandlerBase(QObject):
         pass
 
 
-if is_win:
+if isWin:
     import ctypes
 
     class HotkeyHandler(HotkeyHandlerBase):
@@ -162,7 +162,7 @@ if is_win:
 
             return did_focus
 
-elif is_mac:
+elif isMac:
 
     class HotkeyHandler(HotkeyHandlerBase):
         hotkeys = [
