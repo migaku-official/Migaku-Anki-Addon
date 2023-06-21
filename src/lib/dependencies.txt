@@ -1,7 +1,7 @@
 tornado                                     shared/tornado
 pydub                                       shared/pydub
 appdirs                                     shared/appdirs.py
-pynput                                      shared/pynput
+magicy                                      shared/magicy
     python-xlib                             linux/Xlib
     pyobjc-core                             macos/objc
     pyobjc-framework-Quartz                 macos/Quartz

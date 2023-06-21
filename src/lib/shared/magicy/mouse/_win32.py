@@ -29,8 +29,8 @@ import enum
 
 from ctypes import windll, wintypes
 
-from pynput._util import NotifierMixin
-from pynput._util.win32 import (
+from magicy._util import NotifierMixin
+from magicy._util.win32 import (
     INPUT,
     INPUT_union,
     ListenerMixin,

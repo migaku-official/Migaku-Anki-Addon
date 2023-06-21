@@ -1,6 +1,5 @@
 from aqt.qt import QObject, pyqtSignal
-from pynput.keyboard import Key
-import pynput
+from magicy.keyboard import Key, Listener
 
 from .key_sequence import KeySequence
 
@@ -25,9 +24,7 @@ class KeyboardHandler(QObject):
         self.actions = {False: {}, True: {}}
         self.modifiers = 0
 
-        self.listener = pynput.keyboard.Listener(
-            on_press=self.on_press, on_release=self.on_release
-        )
+        self.listener = Listener(on_press=self.on_press, on_release=self.on_release)
         self.listener.start()
 
     def is_available(self):
