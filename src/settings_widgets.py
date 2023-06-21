@@ -235,7 +235,7 @@ class GlobalHotkeysWidget(SettingsWidget):
             self.add_label(
                 "For Migaku global hotkeys to work, you must allow Anki to monitor keyboard inputs.\n\n"
                 'To do this, go to System Preferences > Security & Privacy > Privacy. Then for both "Accessibility" and "Input Monitoring" check the box for "Anki".\n\n'
-                "These permissions are required to detect when the specified shortcuts are pressend and are required to copy the selected text"
+                "These permissions are required to detect when the specified shortcuts are pressend and are required to copy the selected text. "
                 "Finally restart Anki."
             )
             return
