@@ -18,15 +18,17 @@ def add_sys_path(*path_parts):
 
 
 add_sys_path("shared")
-if anki.utils.is_lin:
+if anki.utils.isLin:
     add_sys_path("linux")
-elif anki.utils.is_mac and sys.version_info.major >= 3 and sys.version_info.minor >= 11:
+elif anki.utils.isMac and sys.version_info.major >= 3 and sys.version_info.minor >= 11:
     add_sys_path("macos_311")
-elif anki.utils.is_mac and sys.version_info.major >= 3 and sys.version_info.minor >= 10:
+elif anki.utils.isMac and sys.version_info.major >= 3 and sys.version_info.minor >= 10:
     add_sys_path("macos_310")
-elif anki.utils.is_mac:
+elif anki.utils.isMac and sys.version_info.major >= 3 and sys.version_info.minor >= 9:
     add_sys_path("macos_39")
-elif anki.utils.is_win:
+elif anki.utils.isMac:
+    add_sys_path("macos_38")
+elif anki.utils.isWin:
     add_sys_path("windows")
 
 
