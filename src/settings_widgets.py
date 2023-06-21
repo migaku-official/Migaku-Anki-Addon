@@ -199,7 +199,7 @@ class ExtensionWidget(SettingsWidget):
         # Information on changing port
         self.custom_port_hr = self.add_label("<hr>")
         self.custom_port_info = self.add_label(
-            "In some cases, the you might want to have the browser extension and Anki communicate on a custom port, because another application is already using the default port. <b>You need to set the same port in the browser extension settings!</b> You need to restart Anki after changing the port. "
+            "In some cases, you might want to have Anki and the browser extension communicate on a custom port, because another application is already using the default port. <b>You need to set the same port in the browser extension settings!</b> You need to restart Anki after changing the port. "
         )
 
         self.custom_port = QLineEdit(config.get("port", ""))
