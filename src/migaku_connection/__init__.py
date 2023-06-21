@@ -7,6 +7,7 @@ from aqt.qt import *
 
 from ..util import DEFAULT_PORT
 
+from .hello import MigakuHello
 from .migaku_connector import MigakuConnector
 from .card_creator import CardCreator
 from .audio_condenser import AudioCondenser
@@ -135,6 +136,7 @@ class MigakuConnection(QObject):
     disconnected = pyqtSignal()
 
     handlers = [
+        ("/anki-hello", MigakuHello),
         ("/anki-connect", MigakuConnector),
         ("/condense", AudioCondenser),
         ("/learning-statuses", LearningStatusHandler),
