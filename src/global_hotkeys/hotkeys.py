@@ -1,7 +1,6 @@
 from aqt.qt import QObject, QTimer
 from aqt import mw
-import pynput
-from pynput.keyboard import Key
+from magicy.keyboard import Key, Controller
 from anki.utils import isMac, isWin, isLin
 
 from .. import config
@@ -45,7 +44,7 @@ class HotkeyHandlerBase(QObject):
 
         self.selected_text_handler = None
 
-        self.keyboard_controller = pynput.keyboard.Controller()
+        self.keyboard_controller = Controller()
 
         self.keyboard_handler = KeyboardHandler()
         self.keyboard_handler.action_fired.connect(self.on_action_fired)
