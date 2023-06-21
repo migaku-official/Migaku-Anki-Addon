@@ -136,15 +136,23 @@ if is_win:
 
             did_focus = False
 
-            def foreach_window(hWnd, lParam):
+            # window_handle: hwnd
+            def foreach_window(window_handle: int, _lparam):
+                if not ctypes.windll.user32.IsWindowVisible(window_handle):
+                    return True
+
                 nonlocal did_focus
-                title_length = ctypes.windll.user32.GetWindowTextLengthW(hWnd)
+                title_length = ctypes.windll.user32.GetWindowTextLengthW(window_handle)
                 title_buff = ctypes.create_unicode_buffer(title_length + 1)
-                ctypes.windll.user32.GetWindowTextW(hWnd, title_buff, title_length + 1)
+                ctypes.windll.user32.GetWindowTextW(
+                    window_handle, title_buff, title_length + 1
+                )
+
                 title = title_buff.value
                 if title == "Migaku Dictionary":
-                    ctypes.windll.user32.SetForegroundWindow(hWnd)
+                    ctypes.windll.user32.SetForegroundWindow(window_handle)
                     did_focus = True
+                    return False
                 return True
 
             ctypes.windll.user32.EnumWindows(enum_windows_proc(foreach_window), 0)
