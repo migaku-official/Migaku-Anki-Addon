@@ -14,7 +14,7 @@ class HotkeyConfigWidget(QWidget):
     def __init__(self, handler, parent=None):
         super().__init__(parent)
 
-        self.setAttribute(Qt.WA_DeleteOnClose)
+        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
 
         self.hotkey_handler = handler
 
