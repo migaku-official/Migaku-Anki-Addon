@@ -48,6 +48,23 @@ if sys.version_info >= (3, 0):
     StringIO = BytesIO
 
 
+# Migaku addition to prevent window flashing
+class subp:
+    if hasattr(subprocess, "STARTUPINFO"):
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+
+        @classmethod
+        def Popen(cls, *args, **kwargs):
+            return subprocess.Popen(*args, **kwargs, startupinfo=cls.startupinfo)
+
+    else:
+
+        @classmethod
+        def Popen(cls, *args, **kwargs):
+            return subprocess.Popen(*args, **kwargs)
+
+
 class ClassPropertyDescriptor(object):
     def __init__(self, fget, fset=None):
         self.fget = fget
@@ -649,7 +666,7 @@ class AudioSegment(object):
         log_conversion(conversion_command)
 
         with open(os.devnull, "rb") as devnull:
-            p = subprocess.Popen(
+            p = subp.Popen(
                 conversion_command,
                 stdin=devnull,
                 stdout=subprocess.PIPE,
@@ -828,7 +845,7 @@ class AudioSegment(object):
 
         log_conversion(conversion_command)
 
-        p = subprocess.Popen(
+        p = subp.Popen(
             conversion_command,
             stdin=stdin_parameter,
             stdout=subprocess.PIPE,
@@ -1062,7 +1079,7 @@ class AudioSegment(object):
 
         # read stdin / write stdout
         with open(os.devnull, "rb") as devnull:
-            p = subprocess.Popen(
+            p = subp.Popen(
                 conversion_command,
                 stdin=devnull,
                 stdout=subprocess.PIPE,
