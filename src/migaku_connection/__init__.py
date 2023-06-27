@@ -13,7 +13,7 @@ from .card_creator import CardCreator
 from .audio_condenser import AudioCondenser
 from .learning_status_handler import LearningStatusHandler
 from .profile_data_provider import ProfileDataProvider
-from .ffmpeg_manager import ProgramManager
+from .program_manager import ProgramManager
 from .info_provider import InfoProvider
 from .card_send import CardSender
 from .search_handler import SearchHandler

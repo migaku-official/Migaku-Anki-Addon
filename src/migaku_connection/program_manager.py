@@ -12,6 +12,23 @@ from .. import util
 from .. import config
 
 
+# Migaku addition to prevent window flashing
+class subp:
+    if hasattr(subprocess, "STARTUPINFO"):
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+
+        @classmethod
+        def call(cls, *args, **kwargs):
+            return subprocess.check_call(*args, **kwargs, startupinfo=cls.startupinfo)
+
+    else:
+
+        @classmethod
+        def call(cls, *args, **kwargs):
+            return subprocess.check_call(*args, **kwargs)
+
+
 class ProgramManager(aqt.qt.QObject):
     BASE_DOWNLOAD_URI = "https://migaku-public-data.migaku.com/"
     lock = Lock()
@@ -41,7 +58,7 @@ class ProgramManager(aqt.qt.QObject):
 
     def call(self, *args, **kwargs):
         assert self.is_available()
-        return subprocess.call([self.program_path, *args], **kwargs)
+        return subp.call([self.program_path, *args], **kwargs)
 
     def make_available(self):
         # Attempt global installation
@@ -156,7 +173,7 @@ class ProgramManager(aqt.qt.QObject):
         if not path:
             return False
         try:
-            subprocess.call([path, "-version"])
+            subp.call([path, "-version"])
             self.program_path = path
             return True
         except OSError:
