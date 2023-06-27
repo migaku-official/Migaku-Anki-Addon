@@ -4,9 +4,27 @@ import json
 import os
 import re
 import sys
+import subprocess
 from subprocess import Popen, PIPE
 from math import log, ceil
 from tempfile import TemporaryFile
+
+
+# Migaku addition to prevent window flashing
+class subp:
+    if hasattr(subprocess, "STARTUPINFO"):
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+
+        @classmethod
+        def Popen(cls, *args, **kwargs):
+            return subprocess.Popen(*args, **kwargs, startupinfo=cls.startupinfo)
+
+    else:
+
+        @classmethod
+        def Popen(cls, *args, **kwargs):
+            return subprocess.Popen(*args, **kwargs)
 
 
 # TEMPORARY FIX TO PREVENT ERROR POPUPS
@@ -290,7 +308,7 @@ def mediainfo_json(filepath, read_ahead_limit=-1):
             file.close()
 
     command = [prober, "-of", "json"] + command_args
-    res = Popen(command, stdin=stdin_parameter, stdout=PIPE, stderr=PIPE)
+    res = subp.Popen(command, stdin=stdin_parameter, stdout=PIPE, stderr=PIPE)
     output, stderr = res.communicate(input=stdin_data)
     output = output.decode("utf-8", "ignore")
     stderr = stderr.decode("utf-8", "ignore")
@@ -344,12 +362,12 @@ def mediainfo(filepath):
     command_args = ["-v", "quiet", "-show_format", "-show_streams", filepath]
 
     command = [prober, "-of", "old"] + command_args
-    res = Popen(command, stdout=PIPE)
+    res = subp.Popen(command, stdout=PIPE)
     output = res.communicate()[0].decode("utf-8")
 
     if res.returncode != 0:
         command = [prober] + command_args
-        output = Popen(command, stdout=PIPE).communicate()[0].decode("utf-8")
+        output = subp.Popen(command, stdout=PIPE).communicate()[0].decode("utf-8")
 
     rgx = re.compile(r"(?:(?P<inner_dict>.*?):)?(?P<key>.*?)\=(?P<value>.*?)$")
     info = {}
@@ -395,7 +413,7 @@ def cache_codecs(function):
 def get_supported_codecs():
     encoder = get_encoder_name()
     command = [encoder, "-codecs"]
-    res = Popen(command, stdout=PIPE, stderr=PIPE)
+    res = subp.Popen(command, stdout=PIPE, stderr=PIPE)
     output = res.communicate()[0].decode("utf-8")
     if res.returncode != 0:
         return []
