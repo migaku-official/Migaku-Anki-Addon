@@ -277,12 +277,67 @@ class SrsImportHandler(MigakuHTTPHandler):
         lang = data["lang"]
         mappings = data["mappings"]
         card_types = data["cardTypes"]
+        print(f"card_types: {card_types}")
         user_token = data["userToken"]
         srs_today = data["srsToday"]
+        is_free_trial = data.get("isFreeTrial", False)
+        print(f"is_free_trial: {is_free_trial}")
         debug = data.get("debug", False)
 
         card_ids = aqt.mw.col.find_cards(f"did:{deck_id}")
-        card_ids = card_ids[offset : offset + limit]
+
+        if is_free_trial:
+            # If total cards are 50 or less, import them all
+            if len(card_ids) <= 50:
+                limit = len(card_ids)
+            else:
+                # Initialize cards_by_type as an empty dictionary
+                cards_by_type = {}
+
+                for cid in card_ids:
+                    card = aqt.mw.col.get_card(cid)
+                    card_type_name = card.template()['name']
+
+                    # Update cards_by_type with the fetched card type name
+                    if card_type_name not in cards_by_type:
+                        cards_by_type[card_type_name] = []
+                    cards_by_type[card_type_name].append(cid)
+
+                total_cards = sum(len(cards) for cards in cards_by_type.values())
+                total_slots = 50
+                cards_to_import = {}
+
+                # First, guarantee at least one slot for each card type
+                for ctype in cards_by_type:
+                    if len(cards_by_type[ctype]) > 0:
+                        cards_to_import[ctype] = 1
+                        total_slots -= 1
+
+                # Distribute remaining slots among card types
+                while total_slots > 0:
+                    for ctype in sorted(cards_to_import, key=lambda k: len(cards_by_type[k]), reverse=True):
+                        if cards_to_import[ctype] < len(cards_by_type[ctype]):
+                            cards_to_import[ctype] += 1
+                            total_slots -= 1
+                            if total_slots == 0:
+                                break
+
+                # Display the number of cards to be imported for each type and the total cards for each type
+                for ctype, cards in cards_by_type.items():
+                    print(f"Total cards of type {ctype}: {len(cards)}")
+                    print(f"Importing {cards_to_import[ctype]} cards of type {ctype}")
+
+                # Fetch cards based on the calculated numbers
+                new_card_ids = []
+                for ctype, count in cards_to_import.items():
+                    new_card_ids += cards_by_type[ctype][:count]
+
+                card_ids = new_card_ids
+
+        else:
+            card_ids = card_ids[offset : offset + limit]
+
+        print(f"card_ids: {card_ids}")
 
         srs_util.upload_data_size = 0
         media_gather = set()
