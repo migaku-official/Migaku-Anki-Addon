@@ -284,7 +284,7 @@ class SrsImportHandler(MigakuHTTPHandler):
         print(f"is_free_trial: {is_free_trial}")
         debug = data.get("debug", False)
 
-        card_ids = aqt.mw.col.find_cards(f"did:{deck_id}")
+        card_ids = aqt.mw.col.findCards(f"did:{deck_id}")
 
         if is_free_trial:
             # If total cards are 50 or less, import them all
@@ -295,7 +295,7 @@ class SrsImportHandler(MigakuHTTPHandler):
                 cards_by_type = {}
 
                 for cid in card_ids:
-                    card = aqt.mw.col.get_card(cid)
+                    card = aqt.mw.col.getCard(cid)
                     card_type_name = card.template()['name']
 
                     # Update cards_by_type with the fetched card type name
