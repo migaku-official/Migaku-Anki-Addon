@@ -281,7 +281,8 @@ class SrsImportHandler(MigakuHTTPHandler):
         user_token = data["userToken"]
         srs_today = data["srsToday"]
         is_free_trial = data.get("isFreeTrial", False)
-        print(f"is_free_trial: {is_free_trial}")
+        free_trial_remaining_cards = data.get("freeTrialRemainingCards", 999999999)
+        print(f"free trial cards: {free_trial_remaining_cards}")
         debug = data.get("debug", False)
 
         card_ids = aqt.mw.col.findCards(f"did:{deck_id}")
@@ -289,7 +290,8 @@ class SrsImportHandler(MigakuHTTPHandler):
         if is_free_trial:
             # If total cards are 50 or less, import them all
             if len(card_ids) <= 50:
-                limit = len(card_ids)
+                limit = min(len(card_ids), free_trial_remaining_cards)
+                card_ids = card_ids[offset: offset + limit]
             else:
                 # Initialize cards_by_type as an empty dictionary
                 cards_by_type = {}
@@ -304,7 +306,7 @@ class SrsImportHandler(MigakuHTTPHandler):
                     cards_by_type[card_type_name].append(cid)
 
                 total_cards = sum(len(cards) for cards in cards_by_type.values())
-                total_slots = 50
+                total_slots = min(50, free_trial_remaining_cards)
                 cards_to_import = {}
 
                 # First, guarantee at least one slot for each card type
