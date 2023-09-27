@@ -2,9 +2,8 @@
     position: relative;
 }
 
-
 .popup {
-    display: none;
+    visibility: hidden;
     position: absolute;
 
     z-index: 100;
@@ -25,7 +24,7 @@
 }
 
 .popup-active .popup {
-    display: block;
+    visibility: visible;
 }
 
 .popup-direction-u .popup {
@@ -114,14 +113,13 @@
 
 
 .popup-hover-box {
-    display: none;
+    visibility: hidden;
+    position: absolute;
+    z-index: 50;
 }
 
 .popup-active .popup-hover-box {
-    display: block;
-    position: absolute;
-
-    z-index: 50;
+    visibility: visible;
 }
 
 .popup-direction-u .popup-hover-box {
