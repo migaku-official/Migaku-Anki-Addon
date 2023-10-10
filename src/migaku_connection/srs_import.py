@@ -277,12 +277,10 @@ class SrsImportHandler(MigakuHTTPHandler):
         lang = data["lang"]
         mappings = data["mappings"]
         card_types = data["cardTypes"]
-        print(f"card_types: {card_types}")
         user_token = data["userToken"]
         srs_today = data["srsToday"]
         is_free_trial = data.get("isFreeTrial", False)
         free_trial_remaining_cards = data.get("freeTrialRemainingCards", 999999999)
-        print(f"free trial cards: {free_trial_remaining_cards}")
         debug = data.get("debug", False)
 
         card_ids = aqt.mw.col.findCards(f"did:{deck_id}")
@@ -338,8 +336,6 @@ class SrsImportHandler(MigakuHTTPHandler):
 
         else:
             card_ids = card_ids[offset : offset + limit]
-
-        print(f"card_ids: {card_ids}")
 
         srs_util.upload_data_size = 0
         media_gather = set()
