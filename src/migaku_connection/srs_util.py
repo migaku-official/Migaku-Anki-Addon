@@ -5,7 +5,7 @@ import ssl
 import urllib3
 import requests
 import time
-from urllib.parse import urlparse
+import urllib.parse
 import subprocess
 from threading import Lock
 from concurrent.futures import ThreadPoolExecutor
@@ -116,7 +116,7 @@ async def get_syntax(lang, text):
     return result
 
 
-upload_host = "https://file-sync-function-mohegkboza-uc.a.run.app"
+upload_host = "https://file-sync-worker-api.migaku.com/data/SRSMEDIA"
 upload_num_threads = 25
 upload_data_size = 0
 
@@ -130,8 +130,6 @@ curl_path = None
 
 def request_retry(method, url, **kwargs):
     global ssl_warnings_disabled
-
-    # print(f'Request: {method} {url}')
 
     if not ssl_verify and not ssl_warnings_disabled:
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -206,7 +204,7 @@ def _upload_media_single_attempt(fname, user_token, is_audio=False):
             # ignore remote media that doesn't download correctly
             return None
         data = r.content
-        url = urlparse(fname)
+        url = urllib.parse.urlparse(fname)
         fname = os.path.basename(url.path)
     else:
         media_dir = aqt.mw.col.media.dir()
@@ -231,38 +229,26 @@ def _upload_media_single_attempt(fname, user_token, is_audio=False):
         with open(out_path, "rb") as file:
             data = file.read()
 
+    quoted = urllib.parse.quote(fname)
     r = request_retry(
-        "GET",
-        f"{upload_host}/upload-link/{fname}",
+        "PUT",
+        f"{upload_host}/{quoted}",
         headers=headers,
+        data=data,
     )
 
     if not r.ok:
-        raise Exception(f"upload link failed, {r.status_code}, {r.text}")
+        raise Exception(f"upload failed, requests, {r.status_code}, {r.text}")
 
     upload_info = r.json()
-
-    # The built in requests library on macOS has issues with SSL, using curl isntead when available
-    if use_curl:
-        r = put_with_curl(upload_info["uploadUrl"], data)
-        if r != 0:
-            raise Exception(f"upload failed, curl, {r}")
-    else:
-        r = request_retry(
-            "PUT",
-            url=upload_info["uploadUrl"],
-            data=data,
-        )
-
-        if not r.ok:
-            raise Exception(f"upload failed, requests, {r.status_code}, {r.text}")
 
     global upload_data_size
     upload_data_size += len(data)
 
-    objectPath = upload_info["objectPath"]
+    file_path = upload_info["filePath"]
+    print(f"uploaded {fname} to r2://{file_path}")
 
-    return "r2://" + objectPath
+    return "r2://" + file_path
 
 
 def _upload_media(fname, user_token, is_audio=False, max_attempts=5):
