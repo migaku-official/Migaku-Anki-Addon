@@ -274,12 +274,6 @@ class PasteHandler:
 
     # returns (html, isInternal)
     def _processMime(self, mime: QMimeData, extended: bool = False) -> Tuple[str, bool]:
-        # print("html=%s image=%s urls=%s txt=%s" % (
-        #     mime.hasHtml(), mime.hasImage(), mime.hasUrls(), mime.hasText()))
-        # print("html", mime.html())
-        # print("urls", mime.urls())
-        # print("text", mime.text())
-
         # try various content types in turn
         html, internal = self._processHtml(mime)
         if html:
