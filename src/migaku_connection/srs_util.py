@@ -241,12 +241,10 @@ def _upload_media_single_attempt(fname, user_token, is_audio=False):
         raise Exception(f"upload failed, requests, {r.status_code}, {r.text}")
 
     upload_info = r.json()
+    file_path = upload_info["filePath"]
 
     global upload_data_size
     upload_data_size += len(data)
-
-    file_path = upload_info["filePath"]
-    print(f"uploaded {fname} to r2://{file_path}")
 
     return "r2://" + file_path
 
