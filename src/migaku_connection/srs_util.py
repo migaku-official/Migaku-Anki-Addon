@@ -215,13 +215,28 @@ def _upload_media_single_attempt(fname, user_token, is_audio=False):
         with open(path, "rb") as file:
             data = file.read()
 
-    if is_audio and not fname.endswith(".mp3"):
-        in_path = tmp_path(fname)
-        with open(in_path, "wb") as file:
-            file.write(data)
+    in_path = tmp_path(fname)
+    with open(in_path, "wb") as file:
+        file.write(data)
+
+    if is_audio:
         fname = os.path.splitext(fname)[0] + ".m4a"
         out_path = tmp_path(fname)
         r = aqt.mw.migaku_connection.ffmpeg.call("-y", "-i", in_path, out_path)
+        if r != 0:
+            # ignore failed conversions, most likely bad audio
+            return None
+
+        with open(out_path, "rb") as file:
+            data = file.read()
+
+    else:
+        # We assume that if something is not audio, it is a picture
+        fname = os.path.splitext(fname)[0] + ".webp"
+        out_path = tmp_path(fname)
+        r = aqt.mw.migaku_connection.ffmpeg.call(
+            "-y", "-i", in_path, "-c:v", "libwebp", out_path
+        )
         if r != 0:
             # ignore failed conversions, most likely bad audio
             return None
@@ -495,7 +510,12 @@ async def handle_card(
                 if gather_syntax is None:
                     syntax = syntax_cache.get((lang, data[i]))
                     if syntax is None:
-                        syntax = await get_syntax(lang, data[i])
+                        # proc = await get_syntax(lang, data[i])
+                        # print('proc', proc)
+
+                        # We do the syntax processing in the core now
+                        syntax = data[i]
+                        # print('unproc', data[i])
                     if syntax:
                         data[i] = syntax
                 else:

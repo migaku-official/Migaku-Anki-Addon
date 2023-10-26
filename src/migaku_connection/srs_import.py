@@ -289,14 +289,14 @@ class SrsImportHandler(MigakuHTTPHandler):
             # If total cards are 50 or less, import them all
             if len(card_ids) <= 50:
                 limit = min(len(card_ids), free_trial_remaining_cards)
-                card_ids = card_ids[offset: offset + limit]
+                card_ids = card_ids[offset : offset + limit]
             else:
                 # Initialize cards_by_type as an empty dictionary
                 cards_by_type = {}
 
                 for cid in card_ids:
                     card = aqt.mw.col.getCard(cid)
-                    card_type_name = card.template()['name']
+                    card_type_name = card.template()["name"]
 
                     # Update cards_by_type with the fetched card type name
                     if card_type_name not in cards_by_type:
@@ -315,7 +315,11 @@ class SrsImportHandler(MigakuHTTPHandler):
 
                 # Distribute remaining slots among card types
                 while total_slots > 0:
-                    for ctype in sorted(cards_to_import, key=lambda k: len(cards_by_type[k]), reverse=True):
+                    for ctype in sorted(
+                        cards_to_import,
+                        key=lambda k: len(cards_by_type[k]),
+                        reverse=True,
+                    ):
                         if cards_to_import[ctype] < len(cards_by_type[ctype]):
                             cards_to_import[ctype] += 1
                             total_slots -= 1
