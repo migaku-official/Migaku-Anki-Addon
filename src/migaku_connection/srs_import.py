@@ -19,7 +19,7 @@ class SrsCheckHandler(MigakuHTTPHandler):
         self.write(
             {
                 "ok": aqt.mw.col is not None and self.connection.is_connected(),
-                "version": "v2.0",
+                "version": "2",
             }
         )
 
