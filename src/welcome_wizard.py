@@ -5,6 +5,7 @@ from . import util
 from . import config
 from .settings_widgets import TUTORIAL_WIDGETS
 
+config.set("first_run", True, do_write=True)
 
 class WelcomeWizard(QWizard):
     INITIAL_SIZE = (625, 440)
@@ -12,7 +13,7 @@ class WelcomeWizard(QWizard):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.setWizardStyle(QWizard.ModernStyle)
+        self.setWizardStyle(QWizard.WizardStyle.ModernStyle)
 
         self.setWindowTitle("Welcome! - Migaku Anki")
         self.setWindowIcon(util.default_icon())

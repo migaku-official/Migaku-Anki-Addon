@@ -257,7 +257,7 @@ class AddNoteDialog(QDialog):
             item.setData(Qt.ItemDataRole.UserRole, lang.code)
             self.list.addItem(item)
 
-        button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
         lyt.addWidget(button_box)
