@@ -5,8 +5,6 @@ from . import util
 from . import config
 from .settings_widgets import TUTORIAL_WIDGETS
 
-config.set("first_run", True, do_write=True)
-
 class WelcomeWizard(QWizard):
     INITIAL_SIZE = (625, 440)
 
