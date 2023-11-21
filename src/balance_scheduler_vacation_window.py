@@ -18,7 +18,7 @@ class BalanceSchedulerVacationWindow(QDialog):
         self.group_names = [c["name"] for c in groups]
 
         self.setWindowTitle("Vacation Manager")
-        self.setWindowModality(Qt.ApplicationModal)
+        self.setWindowModality(Qt.WindowModality.ApplicationModal)
 
         lyt = QVBoxLayout()
         self.setLayout(lyt)
@@ -103,7 +103,7 @@ class BalanceSchedulerVacationWindow(QDialog):
 
         group_tool_btn = QToolButton()
         group_tool_btn.setText("Change")
-        group_tool_btn.setPopupMode(QToolButton.InstantPopup)
+        group_tool_btn.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
 
         group_menu = QMenu()
         group_tool_btn.setMenu(group_menu)
