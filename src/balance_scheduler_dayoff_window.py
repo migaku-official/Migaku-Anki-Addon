@@ -45,6 +45,7 @@ class BalanceSchedulerDayOffWindow(QDialog):
         bbox = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
         )
+
         bbox.accepted.connect(self.accept)
         bbox.rejected.connect(self.reject)
 

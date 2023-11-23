@@ -85,6 +85,7 @@ class AddRemoveSyntaxDialog(QDialog):
         button_box = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
         )
+
         button_box.accepted.connect(self.start)
         button_box.rejected.connect(self.reject)
         lyt.addWidget(button_box)
