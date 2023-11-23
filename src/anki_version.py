@@ -34,8 +34,11 @@ def get_state() -> VersionState:
     except ValueError:
         return VersionState.UNKNOWN
 
+    major, minor, patch = version_tuple
+
     if major <= 2:
         # Old versioning scheme
+        # Major, minor, patch are all breaking
         if version_tuple < recommended_version_lower_tuple:
             return VersionState.LOWER
 
@@ -43,8 +46,7 @@ def get_state() -> VersionState:
             return VersionState.HIGHER
     else:
         # New versioning scheme
-        major, minor, patch = version_tuple
-
+        # Only major and minor are breaking
         new_version_tuple = (major, minor)
 
         if new_version_tuple < new_recommended_version_tuple:
