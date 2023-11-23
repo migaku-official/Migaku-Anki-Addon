@@ -82,7 +82,9 @@ class AddRemoveSyntaxDialog(QDialog):
         if not self.is_remove:
             lyt.addWidget(ConnectionStatusLabel())
 
-        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        button_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
         button_box.accepted.connect(self.start)
         button_box.rejected.connect(self.reject)
         lyt.addWidget(button_box)
@@ -98,7 +100,7 @@ class AddRemoveSyntaxDialog(QDialog):
         checked_fields_states = {}
         for i in range(self.field_list.count()):
             itm = self.field_list.item(i)
-            field_name = itm.data(Qt.DisplayRole)
+            field_name = itm.data(Qt.ItemDataRole.DisplayRole)
             field_checked = itm.checkState() == Qt.CheckState.Checked
             checked_fields_states[field_name] = field_checked
 
@@ -110,7 +112,7 @@ class AddRemoveSyntaxDialog(QDialog):
         self.checked_fields = set()
         for i in range(self.field_list.count()):
             itm = self.field_list.item(i)
-            field_name = itm.data(Qt.DisplayRole)
+            field_name = itm.data(Qt.ItemDataRole.DisplayRole)
             field_checked = itm.checkState() == Qt.CheckState.Checked
             if field_checked:
                 self.checked_fields.add(field_name)

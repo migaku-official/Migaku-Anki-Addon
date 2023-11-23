@@ -42,7 +42,9 @@ class BalanceSchedulerDayOffWindow(QDialog):
         self.slider.setValue(0)
         lyt.addWidget(self.slider)
 
-        bbox = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        bbox = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
         bbox.accepted.connect(self.accept)
         bbox.rejected.connect(self.reject)
 
