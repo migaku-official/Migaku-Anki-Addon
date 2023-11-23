@@ -139,7 +139,7 @@ class ManageNoteDialog(QDialog):
                 field_item = QTableWidgetItem(field_name_clean)
                 field_item.setFlags(
                     field_item.flags()
-                    & ~(Qt.ItemIsEditable | Qt.ItemFlag.ItemIsSelectable)
+                    & ~(Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsSelectable)
                 )
 
                 list_widget.setItem(i, 0, field_item)
