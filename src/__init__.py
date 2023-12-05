@@ -6,10 +6,31 @@ import aqt
 from aqt.qt import *
 import anki
 
+# Initialize sub modules
+from . import (
+    anki_version,
+    balance_scheduler,
+    browser,
+    balance_scheduler_vacation_window,
+    balance_scheduler_dayoff_window,
+    card_layout,
+    card_type_selector,
+    click_play_audio,
+    ease_reset,
+    editor,
+    inplace_editor,
+    migaku_connection,
+    note_type_dialogs,
+    note_type_mgr,
+    retirement,
+    reviewer,
+    settings_window,
+    webview_contextmenu,
+    welcome_wizard,
+)
+
 
 # insert librairies into sys.path
-
-
 def add_sys_path(*path_parts):
     sys.path.insert(
         0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "lib", *path_parts)
@@ -32,31 +53,6 @@ elif anki.utils.is_win:
 # Allow webviews to access necessary resources
 aqt.mw.addonManager.setWebExports(__name__, r"(languages/.*?\.svg|inplace_editor.css)")
 
-# Initialize sub modules
-from . import (
-    note_type_dialogs,
-    card_type_selector,
-    note_type_mgr,
-    reviewer,
-    editor,
-    inplace_editor,
-    click_play_audio,
-    browser,
-    card_layout,
-    welcome_wizard,
-    webview_contextmenu,
-    settings_window,
-    ease_reset,
-    retirement,
-    balance_scheduler,
-    balance_scheduler_vacation_window,
-    balance_scheduler_dayoff_window,
-    anki_version,
-)
-
-
-from . import migaku_connection
-
 
 def setup_menu():
     menu = QMenu("Migaku", aqt.mw)
@@ -76,5 +72,7 @@ def setup_hooks():
     aqt.gui_hooks.editor_did_init_buttons.append(editor.setup_editor_buttons)
     aqt.gui_hooks.profile_did_open.append(note_type_mgr.update_all_installed)
 
+
 setup_menu()
+setup_hooks()
 anki_version.check_anki_version_dialog()
