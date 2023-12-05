@@ -1,5 +1,4 @@
 from typing import Optional
-import re
 
 import anki
 import aqt
@@ -301,6 +300,3 @@ def setup_note_editor(buttons, notes_editor: aqt.models.Models):
     buttons.append(("Migaku Options", lambda: on_manage_migaku(notes_editor)))
     buttons.append(("Add Migaku\nNote Type", lambda: on_add_migaku(notes_editor)))
     return buttons
-
-
-aqt.gui_hooks.models_did_init_buttons.append(setup_note_editor)

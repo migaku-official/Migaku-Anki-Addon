@@ -1,20 +1,18 @@
 import os
 from typing import List
-import json
 
 import aqt
 from aqt.editor import Editor
 
-from . import note_type_mgr
-from . import util
-from .util import addon_path
+from .note_type_mgr import nt_get_lang
+from .util import show_critical
 
 
 def editor_get_lang(editor: Editor):
     if editor.note:
         nt = editor.note.note_type()
         if nt:
-            return note_type_mgr.nt_get_lang(nt)
+            return nt_get_lang(nt)
     return None
 
 
@@ -27,7 +25,7 @@ def editor_generate_syntax(editor: Editor):
         return
 
     if not aqt.mw.migaku_connection.is_connected():
-        util.show_critical("Anki is not connected to the Browser Extension.")
+        show_critical("Anki is not connected to the Browser Extension.")
         return
 
     note_id = editor.note.id
@@ -54,7 +52,7 @@ def editor_generate_syntax(editor: Editor):
             [{note_id_key: text}],
             lang.code,
             on_done=handle_syntax,
-            on_error=lambda msg: util.show_critical(msg, parent=editor.parentWindow),
+            on_error=lambda msg: show_critical(msg, parent=editor.parentWindow),
             callback_on_main_thread=True,
             timeout=10,
         )
@@ -110,9 +108,6 @@ def setup_editor_buttons(buttons: List[str], editor: Editor):
     return buttons
 
 
-aqt.gui_hooks.editor_did_init_buttons.append(setup_editor_buttons)
-
-
 def editor_note_changed(editor: Editor):
     lang = editor_get_lang(editor)
     if lang is None:
@@ -135,6 +130,3 @@ def editor_note_changed(editor: Editor):
             document.getElementById('migaku_btn_syntax_remove').style.display = '';
         """
     editor.web.eval(js)
-
-
-aqt.gui_hooks.editor_did_load_note.append(editor_note_changed)

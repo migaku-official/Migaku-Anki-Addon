@@ -1,7 +1,6 @@
 from platform import platform
 import sys
 import os
-import platform
 
 import aqt
 from aqt.qt import *
@@ -70,6 +69,12 @@ def setup_menu():
     menu.addAction(balance_scheduler_dayoff_window.action)
     aqt.mw.form.menubar.insertMenu(aqt.mw.form.menuHelp.menuAction(), menu)
 
+
+def setup_hooks():
+    aqt.gui_hooks.models_did_init_buttons.append(note_type_dialogs.setup_note_editor)
+    aqt.gui_hooks.editor_did_load_note.append(editor.editor_note_changed)
+    aqt.gui_hooks.editor_did_init_buttons.append(editor.setup_editor_buttons)
+    aqt.gui_hooks.profile_did_open.append(note_type_mgr.update_all_installed)
 
 setup_menu()
 anki_version.check_anki_version_dialog()
