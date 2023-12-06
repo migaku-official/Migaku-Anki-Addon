@@ -6,6 +6,10 @@ import aqt
 from aqt.qt import *
 import anki
 
+from .sys_libraries import init_sys_libs
+
+init_sys_libs()
+
 # Initialize sub modules
 from . import (
     anki_version,
@@ -30,30 +34,6 @@ from . import (
 )
 
 
-# insert librairies into sys.path
-def add_sys_path(*path_parts):
-    sys.path.insert(
-        0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "lib", *path_parts)
-    )
-
-
-add_sys_path("shared")
-if anki.utils.is_lin:
-    add_sys_path("linux")
-elif anki.utils.is_mac and sys.version_info.major >= 3 and sys.version_info.minor >= 11:
-    add_sys_path("macos_311")
-elif anki.utils.is_mac and sys.version_info.major >= 3 and sys.version_info.minor >= 10:
-    add_sys_path("macos_310")
-elif anki.utils.is_mac:
-    add_sys_path("macos_39")
-elif anki.utils.is_win:
-    add_sys_path("windows")
-
-
-# Allow webviews to access necessary resources
-aqt.mw.addonManager.setWebExports(__name__, r"(languages/.*?\.svg|inplace_editor.css)")
-
-
 def setup_menu():
     menu = QMenu("Migaku", aqt.mw)
     menu.addAction(settings_window.action)
@@ -67,7 +47,13 @@ def setup_menu():
 
 
 def setup_hooks():
+    # Allow webviews to access necessary resources
+    aqt.mw.addonManager.setWebExports(
+        __name__, r"(languages/.*?\.svg|inplace_editor.css)"
+    )
+
     aqt.gui_hooks.models_did_init_buttons.append(note_type_dialogs.setup_note_editor)
+    aqt.gui_hooks.editor_web_view_did_init.append(editor.editor_webview_did_init)
     aqt.gui_hooks.editor_did_load_note.append(editor.editor_note_changed)
     aqt.gui_hooks.editor_did_init_buttons.append(editor.setup_editor_buttons)
     aqt.gui_hooks.profile_did_open.append(note_type_mgr.update_all_installed)

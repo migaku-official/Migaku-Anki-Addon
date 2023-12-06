@@ -288,6 +288,3 @@ def update_all_installed() -> None:
         if is_installed(lang):
             nt = nt_mgr.by_name(NOTE_TYPE_PREFIX + lang.name_en)
             nt_update(nt, lang)
-
-
-aqt.gui_hooks.profile_did_open.append(update_all_installed)

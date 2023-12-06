@@ -4,8 +4,9 @@ from typing import List
 import aqt
 from aqt.editor import Editor
 
-from .note_type_mgr import nt_get_lang
-from .util import show_critical
+from ..languages import Language
+from ..note_type_mgr import nt_get_lang
+from ..util import addon_path, show_critical
 
 
 def editor_get_lang(editor: Editor):
@@ -108,25 +109,22 @@ def setup_editor_buttons(buttons: List[str], editor: Editor):
     return buttons
 
 
+def editor_get_js_by_lang(lang: Language):
+    add_icon_path = lang.web_uri("icons", "generate.svg")
+    remove_icon_path = lang.web_uri("icons", "remove.svg")
+    no_icon_invert = os.path.exists(lang.file_path("icons", "no_invert"))
+    img_filter = "invert(0)" if no_icon_invert else ""
+
+    return f"MigakuEditor.initButtons('{add_icon_path}', '{remove_icon_path}', '{img_filter}');"
+
+
 def editor_note_changed(editor: Editor):
     lang = editor_get_lang(editor)
-    if lang is None:
-        js = """
-            document.getElementById('migaku_btn_syntax_generate').style.display = 'none';
-            document.getElementById('migaku_btn_syntax_remove').style.display = 'none';
-        """
-    else:
-        add_icon_path = lang.web_uri("icons", "generate.svg")
-        remove_icon_path = lang.web_uri("icons", "remove.svg")
-        no_icon_invert = os.path.exists(lang.file_path("icons", "no_invert"))
-        img_filter = "invert(0)" if no_icon_invert else ""
+    js = "MigakuEditor.hideButtons();" if lang is None else editor_get_js_by_lang(lang)
 
-        js = f"""
-            document.querySelector('#migaku_btn_syntax_generate img').src = '{add_icon_path}';
-            document.querySelector('#migaku_btn_syntax_generate img').style.filter = '{img_filter}';
-            document.querySelector('#migaku_btn_syntax_remove img').src = '{remove_icon_path}';
-            document.querySelector('#migaku_btn_syntax_remove img').style.filter = '{img_filter}';
-            document.getElementById('migaku_btn_syntax_generate').style.display = '';
-            document.getElementById('migaku_btn_syntax_remove').style.display = '';
-        """
     editor.web.eval(js)
+
+
+def editor_webview_did_init(web: aqt.editor.EditorWebView):
+    with open(addon_path("editor/editor.js"), "r", encoding="utf-8") as editor_file:
+        web.eval(editor_file.read())
