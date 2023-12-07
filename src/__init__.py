@@ -53,8 +53,11 @@ def setup_hooks():
     )
 
     aqt.gui_hooks.models_did_init_buttons.append(note_type_dialogs.setup_note_editor)
-    aqt.gui_hooks.editor_web_view_did_init.append(editor.editor_webview_did_init)
-    aqt.gui_hooks.editor_did_load_note.append(editor.editor_note_changed)
+    aqt.editor.Editor.onBridgeCmd = anki.hooks.wrap(
+        aqt.editor.Editor.onBridgeCmd, editor.on_migaku_bridge_cmds, "around"
+    )
+    aqt.gui_hooks.editor_did_init.append(editor.editor_did_init)
+    aqt.gui_hooks.editor_did_load_note.append(editor.editor_did_load_note)
     aqt.gui_hooks.editor_did_init_buttons.append(editor.setup_editor_buttons)
     aqt.gui_hooks.profile_did_open.append(note_type_mgr.update_all_installed)
 

@@ -1,4 +1,4 @@
-var MigakuEditor = {}
+function MigakuEditor() { }
 
 /**
  * @param {string} add_icon_path 
@@ -14,8 +14,94 @@ MigakuEditor.initButtons = function (add_icon_path, remove_icon_path, img_filter
   document.getElementById('migaku_btn_syntax_remove').style.display = '';
 }
 
-
 MigakuEditor.hideButtons = function () {
-  document.getElementById('migaku_btn_syntax_generate').style.display = 'none';
-  document.getElementById('migaku_btn_syntax_remove').style.display = 'none';
+  if (!document.getElementById('migaku_btn_syntax_generate')) setTimeout(() => {
+    document.getElementById('migaku_btn_syntax_generate').style.display = 'none';
+    document.getElementById('migaku_btn_syntax_remove').style.display = 'none';
+  }, 100)
+  else {
+    document.getElementById('migaku_btn_syntax_generate').style.display = 'none';
+    document.getElementById('migaku_btn_syntax_remove').style.display = 'none';
+  }
+}
+
+const selectorOptions = [
+  { value: 'none', text: '(None)' },
+  { value: 'sentence', text: 'Sentence' },
+  { value: 'word', text: 'Word' },
+  { value: 'sentence_translation', text: 'Sentence Translation' },
+  { value: 'sentence_audio', text: 'Sentence Audio' },
+  { value: 'word_audio', text: 'Word Audio' },
+  { value: 'image', text: 'Image' },
+  { value: 'definition', text: 'Definitions' },
+  { value: 'example_sentence', text: 'Example sentences' },
+  { value: 'notes', text: 'Notes' },
+]
+
+function getSelectorField(editorField, settings) {
+  const field = document.createElement('div');
+  field.classList.add('migaku-field-selector');
+
+  const select = document.createElement('select');
+  select.style.margin = '2px';
+  field.append(select);
+
+  for (const option of selectorOptions) {
+    const optionElement = document.createElement('option');
+    optionElement.value = option.value;
+    optionElement.text = option.text;
+    select.append(optionElement);
+  }
+
+  const fieldContainer = editorField.parentElement.parentElement
+  const labelName = fieldContainer.querySelector('.label-name').innerText
+  select.value = settings[labelName] ?? 'none'
+
+  select.addEventListener('change', (selectTarget) => {
+
+    const cmd = `migakuSelectChange:${selectTarget.currentTarget.value}:${labelName}`
+    bridgeCommand(cmd)
+  })
+
+  return field
+}
+
+const hiddenButtonCategories = [
+  'settings',
+  'inlineFormatting',
+  'blockFormatting',
+  'template',
+  'cloze',
+  'image-occlusion-button',
+]
+
+MigakuEditor.toggleMode = function (settings) {
+  if (document.querySelector('.migaku-field-selector')) {
+    resetMigakuEditor();
+  } else {
+    setupMigakuEditor(settings);
+  }
+}
+
+// New Migaku Editor
+function setupMigakuEditor(settings) {
+  console.log('data', settings)
+
+  document.querySelectorAll('.editing-area').forEach((field) => field.style.display = 'none');
+  document.querySelectorAll('.plain-text-badge').forEach((field) => field.style.display = 'none');
+  document.querySelectorAll('svg#mdi-pin-outline').forEach((field) => field.parentElement.parentElement.parentElement.style.display = 'none');
+  hiddenButtonCategories.forEach((category) => document.querySelector(`.item#${category}`).style.display = 'none');
+
+  for (const field of document.querySelectorAll('.editor-field')) {
+    field.append(getSelectorField(field, settings))
+  }
+}
+
+function resetMigakuEditor() {
+  document.querySelectorAll('.editing-area').forEach((field) => field.style.display = '');
+  document.querySelectorAll('.plain-text-badge').forEach((field) => field.style.display = '');
+  document.querySelectorAll('svg#mdi-pin-outline').forEach((field) => field.parentElement.parentElement.parentElement.style.display = '');
+  hiddenButtonCategories.forEach((category) => document.querySelector(`.item#${category}`).style.display = '');
+
+  document.querySelectorAll('.migaku-field-selector').forEach((selector) => selector.remove());
 }
