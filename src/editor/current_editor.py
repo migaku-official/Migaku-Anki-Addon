@@ -26,9 +26,16 @@ def get_current_editor() -> Editor:
 def get_current_note_info() -> Note:
     for editor in reversed(current_editors):
         if editor.note:
-            return {"note": editor.note, "editor": editor}
+            return {
+                "note": editor.note,
+                "editor": editor,
+            }
+
     if aqt.mw.reviewer and aqt.mw.reviewer.card:
         note = aqt.mw.reviewer.card.note()
         if note:
-            return {"note": note, "reviewer": aqt.mw.reviewer}
+            return {
+                "note": note,
+                "reviewer": aqt.mw.reviewer,
+            }
     return None

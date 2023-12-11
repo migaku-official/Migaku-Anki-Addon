@@ -8,6 +8,7 @@ import re
 
 import aqt
 from anki.notes import Note
+from ..editor.current_editor import get_current_note_info
 from tornado.web import RequestHandler
 
 from .migaku_http_handler import MigakuHTTPHandler
@@ -28,21 +29,35 @@ class CardReceiver(MigakuHTTPHandler):
             self.finish("Card could not be created: Version mismatch")
             return
 
-        # card = self.get_body_argument("card", default=None)
-        # if card:
-        # self.create_card('')
+        card = self.get_body_argument("card", default=None)
 
-        #     return
+        if not card:
+            self.finish("Invalid request.")
 
-        self.finish("Invalid request.")
+        self.create_card("")
+        return
 
     def create_card(self, card_data_json):
         # card_data = json.loads(card_data_json)
-        print('create_card')
+        print("create_card")
 
-        # note_type_id = card_data["noteTypeId"]
-        # note_type = aqt.mw.col.models.get(note_type_id)
-        # deck_id = card_data["deckId"]
+        info = get_current_note_info()
+
+        if not info:
+            return "No current note."
+
+        note = info["note"]
+
+        note_type = note.note_type()
+        if not note_type:
+            return "Current note has no valid note_type."
+
+        notetype_name = str(note_type.get("name", ""))
+        notetype_id = str(note_type.get("id", "")) + notetype_name
+
+        note_tags = note.tags
+
+        print("note_tags", note_tags, notetype_name, notetype_id)
 
         # note = Note(aqt.mw.col, note_type)
 
