@@ -59,6 +59,12 @@ def setup_hooks():
     aqt.gui_hooks.editor_did_init.append(editor.editor_did_init)
     aqt.gui_hooks.editor_did_load_note.append(editor.editor_did_load_note)
     aqt.gui_hooks.editor_did_init_buttons.append(editor.setup_editor_buttons)
+
+    aqt.gui_hooks.editor_did_init.append(editor.current_editor.set_current_editor)
+    aqt.editor.Editor.cleanup = anki.hooks.wrap(
+        aqt.editor.Editor.cleanup, editor.current_editor.remove_editor, "before"
+    )
+
     aqt.gui_hooks.profile_did_open.append(note_type_mgr.update_all_installed)
 
 

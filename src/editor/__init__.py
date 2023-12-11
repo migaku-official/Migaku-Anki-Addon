@@ -90,19 +90,49 @@ def editor_remove_syntax(editor: Editor):
 
 
 def infer_migaku_type(name: str) -> str:
-    if re.match(r'(word|単語|单词|단어|palabra|palavra|mot|wort|palavra)', name, re.IGNORECASE): return 'word'
-    if re.match(r'(image|画像|图片|이미지|imagen|imagem|image|bild|imagem)', name, re.IGNORECASE): return 'image'
-    if re.match(r'(sentence|文|句|문장|frase|phrase|satz|frase)', name, re.IGNORECASE): return 'sentence'
-    if re.match(r'(translation|訳|译|번역|traducción|traduction|übersetzung|tradução)', name, re.IGNORECASE): return 'sentence_translation'
-    if re.match(r'(example|例|例句|例子|예|ejemplo|exemplo|exemple|beispiel|exemplo)', name, re.IGNORECASE): return 'example_sentence'
+    if re.match(
+        r"(word|単語|单词|단어|palabra|palavra|mot|wort|palavra)", name, re.IGNORECASE
+    ):
+        return "word"
+    if re.match(
+        r"(image|画像|图片|이미지|imagen|imagem|image|bild|imagem)", name, re.IGNORECASE
+    ):
+        return "image"
+    if re.match(r"(sentence|文|句|문장|frase|phrase|satz|frase)", name, re.IGNORECASE):
+        return "sentence"
+    if re.match(
+        r"(translation|訳|译|번역|traducción|traduction|übersetzung|tradução)",
+        name,
+        re.IGNORECASE,
+    ):
+        return "sentence_translation"
+    if re.match(
+        r"(example|例|例句|例子|예|ejemplo|exemplo|exemple|beispiel|exemplo)",
+        name,
+        re.IGNORECASE,
+    ):
+        return "example_sentence"
 
-    if re.match(r'(audio|音声|音频|오디오|audio|áudio|audio|audio|áudio)', name, re.IGNORECASE):
-        if re.match(r'(sentence|文|句|문장|frase|phrase|satz|frase)', name, re.IGNORECASE): return 'sentence_audio'
-        else: return 'word_audio'
+    if re.match(
+        r"(audio|音声|音频|오디오|audio|áudio|audio|audio|áudio)", name, re.IGNORECASE
+    ):
+        if re.match(r"(sentence|文|句|문장|frase|phrase|satz|frase)", name, re.IGNORECASE):
+            return "sentence_audio"
+        else:
+            return "word_audio"
 
-    if re.match(r'(definition|定義|定义|정의|definición|definição|définition|definition|definição)', name, re.IGNORECASE): return 'definition'
-    if re.match(r'(notes|ノート|笔记|노트|notas|notas|notes|notizen|notas)', name, re.IGNORECASE): return 'notes'
-    return 'none'
+    if re.match(
+        r"(definition|定義|定义|정의|definición|definição|définition|definition|definição)",
+        name,
+        re.IGNORECASE,
+    ):
+        return "definition"
+    if re.match(
+        r"(notes|ノート|笔记|노트|notas|notas|notes|notizen|notas)", name, re.IGNORECASE
+    ):
+        return "notes"
+    return "none"
+
 
 def toggle_migaku_mode(editor: Editor):
     migaku_fields = get("migakuFields", {})
@@ -115,7 +145,7 @@ def toggle_migaku_mode(editor: Editor):
     for field_name in field_names:
         if field_name not in data:
             data[field_name] = infer_migaku_type(field_name)
-    
+
     for field_name in data.keys():
         if field_name not in field_names:
             del data[field_name]

@@ -13,6 +13,7 @@ from .migaku_http_handler import MigakuHTTPHandler
 from .. import config
 from .. import util
 from ..inplace_editor import reviewer_reshow
+from ..editor.current_editor import get_current_note_info
 
 
 class CardCreator(MigakuHTTPHandler):
@@ -300,37 +301,3 @@ def template_find_field_name_and_syntax_for_data_type(template, data_type):
                 syntax = field_data.get("syntax", False)
                 return field_name, syntax
     return None, None
-
-
-# this is dirty...
-
-from anki.hooks import wrap
-from aqt.editor import Editor
-
-current_editors = []
-
-
-def set_current_editor(editor: aqt.editor.Editor):
-    global current_editors
-    remove_editor(editor)
-    current_editors.append(editor)
-
-
-def remove_editor(editor: aqt.editor.Editor):
-    global current_editors
-    current_editors = [e for e in current_editors if e != editor]
-
-
-aqt.gui_hooks.editor_did_init.append(set_current_editor)
-Editor.cleanup = wrap(Editor.cleanup, remove_editor, "before")
-
-
-def get_current_note_info() -> Note:
-    for editor in reversed(current_editors):
-        if editor.note:
-            return {"note": editor.note, "editor": editor}
-    if aqt.mw.reviewer and aqt.mw.reviewer.card:
-        note = aqt.mw.reviewer.card.note()
-        if note:
-            return {"note": note, "reviewer": aqt.mw.reviewer}
-    return None
