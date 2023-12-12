@@ -29,6 +29,7 @@ from . import (
     retirement,
     reviewer,
     settings_window,
+    toolbar,
     webview_contextmenu,
     welcome_wizard,
 )
@@ -59,8 +60,12 @@ def setup_hooks():
     aqt.gui_hooks.editor_did_init.append(editor.editor_did_init)
     aqt.gui_hooks.editor_did_load_note.append(editor.editor_did_load_note)
     aqt.gui_hooks.editor_did_init_buttons.append(editor.setup_editor_buttons)
-    aqt.gui_hooks.add_cards_did_change_deck.append(editor.current_editor.on_addcards_did_change_deck)
-    aqt.gui_hooks.addcards_did_change_note_type.append(editor.current_editor.on_addcards_did_change_note_type)
+    aqt.gui_hooks.add_cards_did_change_deck.append(
+        editor.current_editor.on_addcards_did_change_deck
+    )
+    aqt.gui_hooks.addcards_did_change_note_type.append(
+        editor.current_editor.on_addcards_did_change_note_type
+    )
 
     aqt.gui_hooks.editor_did_init.append(editor.current_editor.set_current_editor)
     aqt.editor.Editor.cleanup = anki.hooks.wrap(
@@ -68,6 +73,16 @@ def setup_hooks():
     )
 
     aqt.gui_hooks.profile_did_open.append(note_type_mgr.update_all_installed)
+
+    aqt.gui_hooks.top_toolbar_will_set_right_tray_content.append(
+        toolbar.inject_migaku_toolbar
+    )
+    aqt.gui_hooks.add_cards_did_change_deck.append(
+        lambda _: toolbar.refresh_migaku_toolbar()
+    )
+    aqt.gui_hooks.addcards_did_change_note_type.append(
+        lambda _, _1, _2: toolbar.refresh_migaku_toolbar()
+    )
 
 
 setup_menu()

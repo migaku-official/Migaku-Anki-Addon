@@ -33,13 +33,19 @@ class CardFields:
     exampleSentences: str = ""
     notes: str = ""
 
+
 def card_fields_from_dict(d: dict[str, any]):
+    sentenceAudios = [AudioAsset(**a) for a in d.get("sentenceAudio", [])]
+
+    for audio in sentenceAudios:
+        print("audio", audio)
+
     return CardFields(
         targetWord=d.get("targetWord", ""),
         sentence=d.get("sentence", ""),
         translation=d.get("translation", ""),
         definitions=d.get("definitions", ""),
-        sentenceAudio=[AudioAsset(**a) for a in d.get("sentenceAudio", [])],
+        sentenceAudio=[sentenceAudios],
         wordAudio=[AudioAsset(**a) for a in d.get("wordAudio", [])],
         images=[ImageAsset(**a) for a in d.get("images", [])],
         exampleSentences=d.get("exampleSentences", ""),

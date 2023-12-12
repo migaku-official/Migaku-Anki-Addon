@@ -52,8 +52,10 @@ def get_add_cards() -> Note:
 
     return None
 
+
 current_note_type_id = 0
 current_deck_id = 0
+
 
 def get_add_cards_info():
     base = get_add_cards()

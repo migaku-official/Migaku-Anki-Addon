@@ -18,7 +18,6 @@ from ..migaku_fields import get_migaku_fields
 from ..config import get
 
 
-
 class CardReceiver(MigakuHTTPHandler):
     image_formats = ["webp"]
     audio_formats = ["m4a"]
@@ -29,9 +28,9 @@ class CardReceiver(MigakuHTTPHandler):
     def post(self: RequestHandler):
         try:
             body = json.loads(self.request.body)
-            print('body', body)
+            print("body", body)
             card = card_fields_from_dict(body)
-            print('card', card)
+            print("card", card)
             self.create_card(card)
         except Exception as e:
             self.finish(f"Invalid request: {str(e)}")
@@ -43,11 +42,24 @@ class CardReceiver(MigakuHTTPHandler):
         note = Note(aqt.mw.col, info["notetype"])
         fields = info["fields"]
 
-        for (fieldname, type) in fields.items():
+        for fieldname, type in fields.items():
             if type == "none":
                 continue
 
-            note[fieldname] = str(getattr(card, type))
+            if type == "sentence_audio":
+                # { value: 'none', text: '(None)' },
+                # { value: 'sentence', text: 'Sentence' },
+                # { value: 'targetWord', text: 'Word' },
+                # { value: 'translation', text: 'Sentence Translation' },
+                # { value: 'sentenceAudio', text: 'Sentence Audio' },
+                # { value: 'wordAudio', text: 'Word Audio' },
+                # { value: 'images', text: 'Image' },
+                # { value: 'definitions', text: 'Definitions' },
+                # { value: 'exampleSentences', text: 'Example sentences' },
+                # { value: 'notes', text: 'Notes' },
+                pass
+            else:
+                note[fieldname] = str(getattr(card, type))
 
         note.tags = info["tags"]
         note.model()["did"] = int(info["deck_id"])
@@ -57,6 +69,6 @@ class CardReceiver(MigakuHTTPHandler):
         aqt.mw.taskman.run_on_main(aqt.mw.reset)
 
         # handle_files(self.request.files, only_move=True)
-        print('noteId', note.id)
+        print("noteId", note.id)
 
         self.finish(json.dumps({"id": note.id}))
