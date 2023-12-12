@@ -171,3 +171,6 @@ def on_migaku_bridge_cmds(self: Editor, cmd: str, _old):
 def editor_did_init(editor: Editor):
     with open(addon_path("editor/editor.js"), "r", encoding="utf-8") as editor_file:
         editor.web.eval(editor_file.read())
+
+def reset_migaku_mode(editor: Editor):
+    editor.web.eval(f"MigakuEditor.resetMigakuEditor();")

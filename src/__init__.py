@@ -91,6 +91,12 @@ def setup_hooks():
         "after",
     )
 
+    aqt.addcards.AddCards.on_notetype_change = anki.hooks.wrap(
+        aqt.addcards.AddCards.on_notetype_change,
+        lambda addcards, _1: editor.reset_migaku_mode(addcards.editor),
+        "before",
+    )
+
 
 setup_menu()
 setup_hooks()

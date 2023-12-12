@@ -76,14 +76,6 @@ const hiddenButtonCategories = [
   'image-occlusion-button',
 ]
 
-MigakuEditor.toggleMode = function (settings) {
-  if (document.querySelector('.migaku-field-selector')) {
-    resetMigakuEditor();
-  } else {
-    setupMigakuEditor(settings);
-  }
-}
-
 // New Migaku Editor
 function setupMigakuEditor(settings) {
   document.querySelectorAll('.editing-area').forEach((field) => field.style.display = 'none');
@@ -96,11 +88,19 @@ function setupMigakuEditor(settings) {
   }
 }
 
-function resetMigakuEditor() {
+MigakuEditor.resetMigakuEditor = function () {
   document.querySelectorAll('.editing-area').forEach((field) => field.style.display = '');
   document.querySelectorAll('.plain-text-badge').forEach((field) => field.style.display = '');
   document.querySelectorAll('svg#mdi-pin-outline').forEach((field) => field.parentElement.parentElement.parentElement.style.display = '');
   hiddenButtonCategories.forEach((category) => document.querySelector(`.item#${category}`).style.display = '');
 
   document.querySelectorAll('.migaku-field-selector').forEach((selector) => selector.remove());
+}
+
+MigakuEditor.toggleMode = function (settings) {
+  if (document.querySelector('.migaku-field-selector')) {
+    MigakuEditor.resetMigakuEditor();
+  } else {
+    setupMigakuEditor(settings);
+  }
 }
