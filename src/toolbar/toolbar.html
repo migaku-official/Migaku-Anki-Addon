@@ -1,8 +1,3 @@
-<div id="migakuToolbar" style="display: none; font-size: 75%; margin: 5px">
-  <div>Type: <strong id="migakuNotetype"></strong></div>
-  <div>Deck: <strong id="migakuDeck"></strong></div>
-</div>
-
 <script>
   const MigakuToolbar = function () { }
 
@@ -24,10 +19,23 @@
 
   MigakuToolbar.activate = (info) => {
     MigakuToolbar.refresh(info)
-    document.getElementById('migakuToolbar').style.display = 'block'
+    const toolbar = document.getElementById('migakuToolbar')
+    toolbar.style.display = 'block'
+    toolbar.addEventListener('click', openAddCards)
   }
 
   MigakuToolbar.deactivate = () => {
-    document.getElementById('migakuToolbar').style.display = 'none'
+    const toolbar = document.getElementById('migakuToolbar')
+    toolbar.style.display = 'none'
+    toolbar.removeEventListener('click', openAddCards)
+  }
+
+  function openAddCards() {
+    bridgeCommand('openAddCards')
   }
 </script>
+
+<div id="migakuToolbar" style="display: none; font-size: 75%; margin: 5px; cursor: pointer;">
+  <div>Type: <strong id="migakuNotetype"></strong></div>
+  <div>Deck: <strong id="migakuDeck"></strong></div>
+</div>

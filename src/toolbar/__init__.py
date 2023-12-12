@@ -1,4 +1,5 @@
 import json
+import aqt
 
 from ..editor.current_editor import get_add_cards_info
 from ..migaku_connection import ConnectionListener
@@ -8,14 +9,18 @@ from ..util import addon_path
 global_toolbar = None
 
 
+def open_add_cards():
+    aqt.mw.onAddCard()
+
+
 def activate_migaku_toolbar(toolbar):
     info = get_add_cards_info()
     toolbar.web.eval(f"MigakuToolbar.activate({json.dumps(info)})")
+    toolbar.link_handlers["openAddCards"] = open_add_cards
 
 
 def refresh_migaku_toolbar():
     info = get_add_cards_info()
-    print("hey", global_toolbar)
     global_toolbar.web.eval(f"MigakuToolbar.refresh({json.dumps(info)})")
 
 
