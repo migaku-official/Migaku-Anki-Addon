@@ -5,7 +5,20 @@ from .config import get
 import anki
 
 
-def infer_migaku_type(name: str) -> Literal['none', 'sentence', 'targetWord', 'translation', 'sentenceAudio', 'wordAudio', 'images', 'definitions', 'exampleSentences', 'notes']:
+def infer_migaku_type(
+    name: str,
+) -> Literal[
+    "none",
+    "sentence",
+    "targetWord",
+    "translation",
+    "sentenceAudio",
+    "wordAudio",
+    "images",
+    "definitions",
+    "exampleSentences",
+    "notes",
+]:
     if re.search(
         r"(audio|音声|音频|오디오|audio|áudio|audio|audio|áudio)", name, re.IGNORECASE
     ):
@@ -32,7 +45,7 @@ def infer_migaku_type(name: str) -> Literal['none', 'sentence', 'targetWord', 't
             re.IGNORECASE,
         )
         or re.search(
-            r"(screenshots|スクリーンショット|截图|스크린샷|capturas de pantalla|capturas de tela|captures d'écran|bildschirmfotos|capturas de tela)",
+            r"(screenshot|スクリーンショット|截图|스크린샷|capturas de pantalla|capturas de tela|captures d'écran|bildschirmfotos|capturas de tela)",
             name,
             re.IGNORECASE,
         )
@@ -62,9 +75,7 @@ def infer_migaku_type(name: str) -> Literal['none', 'sentence', 'targetWord', 't
         re.IGNORECASE,
     ):
         return "definitions"
-    if re.search(
-        r"(notes|ノート|笔记|노트|notas|notas|notes|notizen|notas)", name, re.IGNORECASE
-    ):
+    if re.search(r"(note|ノート|笔记|노트|nota|nota|note|notiz|nota)", name, re.IGNORECASE):
         return "notes"
     return "none"
 

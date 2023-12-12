@@ -84,6 +84,13 @@ def setup_hooks():
         lambda _, _1, _2: toolbar.refresh_migaku_toolbar()
     )
 
+    aqt.gui_hooks.add_cards_did_init.append(lambda _: toolbar.refresh_migaku_toolbar())
+    aqt.addcards.AddCards._close = anki.hooks.wrap(
+        aqt.addcards.AddCards._close,
+        lambda _: toolbar.refresh_migaku_toolbar(),
+        "after",
+    )
+
 
 setup_menu()
 setup_hooks()
