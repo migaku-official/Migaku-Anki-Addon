@@ -25,16 +25,17 @@ MigakuEditor.hideButtons = function () {
   }
 }
 
+/** These are the values on CardFields */
 const selectorOptions = [
   { value: 'none', text: '(None)' },
   { value: 'sentence', text: 'Sentence' },
-  { value: 'word', text: 'Word' },
-  { value: 'sentence_translation', text: 'Sentence Translation' },
-  { value: 'sentence_audio', text: 'Sentence Audio' },
-  { value: 'word_audio', text: 'Word Audio' },
-  { value: 'image', text: 'Image' },
-  { value: 'definition', text: 'Definitions' },
-  { value: 'example_sentence', text: 'Example sentences' },
+  { value: 'targetWord', text: 'Word' },
+  { value: 'translation', text: 'Sentence Translation' },
+  { value: 'sentenceAudio', text: 'Sentence Audio' },
+  { value: 'wordAudio', text: 'Word Audio' },
+  { value: 'images', text: 'Image' },
+  { value: 'definitions', text: 'Definitions' },
+  { value: 'exampleSentences', text: 'Example sentences' },
   { value: 'notes', text: 'Notes' },
 ]
 
@@ -85,8 +86,6 @@ MigakuEditor.toggleMode = function (settings) {
 
 // New Migaku Editor
 function setupMigakuEditor(settings) {
-  console.log('data', settings)
-
   document.querySelectorAll('.editing-area').forEach((field) => field.style.display = 'none');
   document.querySelectorAll('.plain-text-badge').forEach((field) => field.style.display = 'none');
   document.querySelectorAll('svg#mdi-pin-outline').forEach((field) => field.parentElement.parentElement.parentElement.style.display = 'none');

@@ -11,6 +11,7 @@ from ..config import get, set
 from ..languages import Language
 from ..note_type_mgr import nt_get_lang
 from ..util import addon_path, show_critical
+from ..migaku_fields import get_migaku_fields
 
 
 def editor_get_lang(editor: Editor):
@@ -89,67 +90,8 @@ def editor_remove_syntax(editor: Editor):
     editor.call_after_note_saved(callback=do_edit, keepFocus=True)
 
 
-def infer_migaku_type(name: str) -> str:
-    if re.match(
-        r"(word|単語|单词|단어|palabra|palavra|mot|wort|palavra)", name, re.IGNORECASE
-    ):
-        return "word"
-    if re.match(
-        r"(image|画像|图片|이미지|imagen|imagem|image|bild|imagem)", name, re.IGNORECASE
-    ):
-        return "image"
-    if re.match(r"(sentence|文|句|문장|frase|phrase|satz|frase)", name, re.IGNORECASE):
-        return "sentence"
-    if re.match(
-        r"(translation|訳|译|번역|traducción|traduction|übersetzung|tradução)",
-        name,
-        re.IGNORECASE,
-    ):
-        return "sentence_translation"
-    if re.match(
-        r"(example|例|例句|例子|예|ejemplo|exemplo|exemple|beispiel|exemplo)",
-        name,
-        re.IGNORECASE,
-    ):
-        return "example_sentence"
-
-    if re.match(
-        r"(audio|音声|音频|오디오|audio|áudio|audio|audio|áudio)", name, re.IGNORECASE
-    ):
-        if re.match(r"(sentence|文|句|문장|frase|phrase|satz|frase)", name, re.IGNORECASE):
-            return "sentence_audio"
-        else:
-            return "word_audio"
-
-    if re.match(
-        r"(definition|定義|定义|정의|definición|definição|définition|definition|definição)",
-        name,
-        re.IGNORECASE,
-    ):
-        return "definition"
-    if re.match(
-        r"(notes|ノート|笔记|노트|notas|notas|notes|notizen|notas)", name, re.IGNORECASE
-    ):
-        return "notes"
-    return "none"
-
-
 def toggle_migaku_mode(editor: Editor):
-    migaku_fields = get("migakuFields", {})
-    data = migaku_fields.get(editor.note.mid, {})
-
-    nt = editor.note.note_type()
-
-    field_names = [field["name"] for field in nt["flds"]]
-
-    for field_name in field_names:
-        if field_name not in data:
-            data[field_name] = infer_migaku_type(field_name)
-
-    for field_name in data.keys():
-        if field_name not in field_names:
-            del data[field_name]
-
+    data = get_migaku_fields(editor.note.note_type())
     editor.web.eval(f"MigakuEditor.toggleMode({json.dumps(data)});")
 
 
@@ -206,7 +148,7 @@ def on_migaku_bridge_cmds(self: Editor, cmd: str, _old):
     if cmd.startswith("migakuSelectChange"):
         (_, migaku_type, field_name) = cmd.split(":", 2)
         migakuFields = get("migakuFields", {})
-        print("migakuFields", migakuFields)
+
         set(
             "migakuFields",
             {
@@ -220,7 +162,7 @@ def on_migaku_bridge_cmds(self: Editor, cmd: str, _old):
                     field_name: migaku_type,
                 },
             },
-            True,
+            do_write=True,
         )
     else:
         _old(self, cmd)

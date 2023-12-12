@@ -327,3 +327,8 @@ class ConnectionStatusLabel(QLabel):
     def set_disconnected(self):
         self.setText("● Browser Extension Not Connected")
         self.setStyleSheet("color: red")
+
+class ConnectionCallback:
+    def __init__(self, connect_callback, disconnect_callback):
+        aqt.mw.migaku_connection.connected.connect(self)
+        aqt.mw.migaku_connection.disconnected.connect(self)

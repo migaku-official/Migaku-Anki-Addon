@@ -1,25 +1,20 @@
-from pydub import AudioSegment
-from pydub import effects
-import time
-import subprocess
 import json
-import os
 import re
 
 import aqt
 from anki.notes import Note
 
-from .migaku_http_handler import MigakuHTTPHandler
+
 from .. import config
 from .. import util
 from ..inplace_editor import reviewer_reshow
 from ..editor.current_editor import get_current_note_info
 
+from .migaku_http_handler import MigakuHTTPHandler
+from .handle_files import handle_files
+
 
 class CardCreator(MigakuHTTPHandler):
-    image_formats = ["jpg", "gif", "png"]
-    audio_formats = ["mp3", "ogg", "wav"]
-
     TO_MP3_RE = re.compile(r"\[sound:(.*?)\.(wav|ogg)\]")
     BR_RE = re.compile(r"<br\s*/?>")
 
@@ -94,85 +89,17 @@ class CardCreator(MigakuHTTPHandler):
         aqt.mw.col.save()
         aqt.mw.taskman.run_on_main(aqt.mw.reset)
 
-        self.handle_files(self.request.files)
+        handle_files(self.request.files)
 
         self.finish(json.dumps({"id": note.id}))
 
     def handle_definitions(self, msg_id, definition_data):
         definitions = json.loads(definition_data)
-        self.handle_files(self.request.files)
+        handle_files(self.request.files)
         self.connection._recv_data(
             {"id": msg_id, "msg": "Migaku-Deliver-Definitions", "data": definitions}
         )
         self.finish("Received defintions from card creator.")
-
-    def move_file_to_media_dir(self, file_body, filename):
-        file_path = util.col_media_path(filename)
-        with open(file_path, "wb") as file_handle:
-            file_handle.write(file_body)
-
-    def move_file_to_tmp_dir(self, file_body, filename):
-        file_path = util.tmp_path(filename)
-        with open(file_path, "wb") as file_handle:
-            file_handle.write(file_body)
-
-    def handle_files(self, file_dict):
-        if file_dict:
-            for name_internal, sub_file_dicts in file_dict.items():
-                sub_file_dict = sub_file_dicts[0]
-                file_name = sub_file_dict["filename"]
-                file_body = sub_file_dict["body"]
-
-                suffix = file_name[-3:]
-
-                if suffix in self.image_formats:
-                    self.move_file_to_media_dir(file_body, file_name)
-
-                elif suffix in self.audio_formats:
-                    self.handleAudioFile(file_body, file_name, suffix)
-
-    def handleAudioFile(self, file, filename, suffix):
-        if config.get("normalize_audio", True) or (
-            config.get("convert_audio_mp3", True) and suffix != "mp3"
-        ):
-            self.move_file_to_tmp_dir(file, filename)
-            audio_temp_path = util.tmp_path(filename)
-            if not self.checkFileExists(audio_temp_path):
-                alert(filename + " could not be converted to an mp3.")
-                return
-            filename = filename[0:-3] + "mp3"
-            if config.get("normalize_audio", True):
-                self.moveExtensionMp3NormalizeToMediaFolder(audio_temp_path, filename)
-                # self.moveExtensionMp3ToMediaFolder(audio_temp_path, filename)
-            else:
-                self.moveExtensionMp3ToMediaFolder(audio_temp_path, filename)
-        else:
-            print("moving audio file")
-            self.move_file_to_media_dir(file, filename)
-
-    def checkFileExists(self, source):
-        now = time.time()
-        while True:
-            if os.path.exists(source):
-                return True
-            if time.time() - now > 15:
-                return False
-
-    def moveExtensionMp3NormalizeToMediaFolder(self, source, filename):
-        path = util.col_media_path(filename)
-
-        def match_target_amplitude(sound, target_dBFS):
-            change_in_dBFS = target_dBFS - sound.dBFS
-            return sound.apply_gain(change_in_dBFS)
-
-        sound = AudioSegment.from_file(source)
-        normalized_sound = match_target_amplitude(sound, -25.0)
-        with open(path, "wb") as file:
-            normalized_sound.export(file, format="mp3")
-
-    def moveExtensionMp3ToMediaFolder(self, source, filename):
-        path = util.col_media_path(filename)
-        self.connection.ffmpeg.call("-i", source, path)
 
     def handle_data_from_card_creator(self, jsonData):
         r = self._handle_data_from_card_creator(jsonData)
@@ -189,12 +116,12 @@ class CardCreator(MigakuHTTPHandler):
         templates = data["templates"]
         default_templates = data["defaultTemplates"]
 
-        current_note_info = get_current_note_info()
+        info = get_current_note_info()
 
-        if not current_note_info:
+        if not info:
             return "No current note."
 
-        note = current_note_info["note"]
+        note = info["note"]
 
         note_type = note.note_type()
 
@@ -226,7 +153,7 @@ class CardCreator(MigakuHTTPHandler):
         if not field_name:
             return "No field for data_type found for current note"
 
-        self.handle_files(self.request.files)
+        handle_files(self.request.files)
 
         field_contents = note[field_name].rstrip()
         if field_contents:
@@ -237,23 +164,23 @@ class CardCreator(MigakuHTTPHandler):
 
         def update():
             # runs GUI code, so it needs to run on main thread
-            if "editor" in current_note_info:
-                editor = current_note_info["editor"]
+            if "editor" in info:
+                editor = info["editor"]
                 editor.loadNote()
                 if not editor.addMode:
                     editor._save_current_note()
 
-            if "reviewer" in current_note_info:
+            if "reviewer" in info:
                 # NOTE: cannot use aqt.operations.update_note as it invalidates mw
                 note.flush()
                 aqt.mw.col.save()
-                reviewer_reshow(current_note_info["reviewer"], mute=True)
+                reviewer_reshow(info["reviewer"], mute=True)
 
         aqt.mw.taskman.run_on_main(update)
         return "Added data to note."
 
     def handle_audio_delivery(self, text):
-        self.handle_files(self.request.files)
+        handle_files(self.request.files)
         print("Audio was received by anki.")
         print(text)
         self.finish("Audio was received by anki.")
@@ -287,10 +214,6 @@ class CardCreator(MigakuHTTPHandler):
                 text = re.sub(regex, repl, text)
 
         return text
-
-
-def alert(msg: str):
-    aqt.mw.taskman.run_on_main(util.show_info(msg, "Condensed Audio Export"))
 
 
 def template_find_field_name_and_syntax_for_data_type(template, data_type):

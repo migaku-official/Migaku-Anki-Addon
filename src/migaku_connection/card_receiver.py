@@ -8,13 +8,15 @@ import re
 
 import aqt
 from anki.notes import Note
-from ..editor.current_editor import get_current_note_info
+from ..card_types import CardFields, card_fields_from_dict
+from .handle_files import handle_files
+from ..editor.current_editor import get_add_cards_info
 from tornado.web import RequestHandler
 
 from .migaku_http_handler import MigakuHTTPHandler
-from .. import config
-from .. import util
-from ..inplace_editor import reviewer_reshow
+from ..migaku_fields import get_migaku_fields
+from ..config import get
+
 
 
 class CardReceiver(MigakuHTTPHandler):
@@ -25,63 +27,36 @@ class CardReceiver(MigakuHTTPHandler):
     BR_RE = re.compile(r"<br\s*/?>")
 
     def post(self: RequestHandler):
-        if not self.check_version():
-            self.finish("Card could not be created: Version mismatch")
-            return
+        try:
+            body = json.loads(self.request.body)
+            print('body', body)
+            card = card_fields_from_dict(body)
+            print('card', card)
+            self.create_card(card)
+        except Exception as e:
+            self.finish(f"Invalid request: {str(e)}")
 
-        card = self.get_body_argument("card", default=None)
-
-        if not card:
-            self.finish("Invalid request.")
-
-        self.create_card("")
         return
 
-    def create_card(self, card_data_json):
-        # card_data = json.loads(card_data_json)
-        print("create_card")
+    def create_card(self, card: CardFields):
+        info = get_add_cards_info()
+        note = Note(aqt.mw.col, info["notetype"])
+        fields = info["fields"]
 
-        info = get_current_note_info()
+        for (fieldname, type) in fields.items():
+            if type == "none":
+                continue
 
-        if not info:
-            return "No current note."
+            note[fieldname] = str(getattr(card, type))
 
-        note = info["note"]
+        note.tags = info["tags"]
+        note.model()["did"] = int(info["deck_id"])
 
-        note_type = note.note_type()
-        if not note_type:
-            return "Current note has no valid note_type."
+        aqt.mw.col.addNote(note)
+        aqt.mw.col.save()
+        aqt.mw.taskman.run_on_main(aqt.mw.reset)
 
-        notetype_name = str(note_type.get("name", ""))
-        notetype_id = str(note_type.get("id", "")) + notetype_name
+        # handle_files(self.request.files, only_move=True)
+        print('noteId', note.id)
 
-        note_tags = note.tags
-
-        print("note_tags", note_tags, notetype_name, notetype_id)
-
-        # note = Note(aqt.mw.col, note_type)
-
-        # for field in card_data["fields"]:
-        #     if "content" in field and field["content"]:
-        #         content = field["content"]
-        #         field_name = field["name"]
-        #         content = self.post_process_text(content, field_name)
-        #         note[field_name] = content
-
-        # tags = card_data.get("tags")
-        # if tags:
-        #     note.set_tags_from_str(tags)
-
-        # note.model()["did"] = int(deck_id)
-        # aqt.mw.col.addNote(note)
-        # aqt.mw.col.save()
-        # aqt.mw.taskman.run_on_main(aqt.mw.reset)
-
-        self.handle_files(self.request.files)
-
-        self.finish(json.dumps({"id": 0}))
-
-    # def move_file_to_media_dir(self, file_body, filename):
-    #     file_path = util.col_media_path(filename)
-    #     with open(file_path, "wb") as file_handle:
-    #         file_handle.write(file_body)
+        self.finish(json.dumps({"id": note.id}))
