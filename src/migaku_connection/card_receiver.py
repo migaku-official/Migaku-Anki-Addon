@@ -1,21 +1,13 @@
-from pydub import AudioSegment
-from pydub import effects
-import time
-import subprocess
 import json
-import os
 import re
 
 import aqt
 from anki.notes import Note
 from ..card_types import CardFields, card_fields_from_dict
-from .handle_files import handle_files
 from ..editor.current_editor import get_add_cards_info
 from tornado.web import RequestHandler
 
 from .migaku_http_handler import MigakuHTTPHandler
-from ..migaku_fields import get_migaku_fields
-from ..config import get
 
 
 class CardReceiver(MigakuHTTPHandler):
