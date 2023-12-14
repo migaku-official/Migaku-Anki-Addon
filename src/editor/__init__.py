@@ -96,7 +96,24 @@ def toggle_migaku_mode(editor: Editor):
 
 
 def setup_editor_buttons(buttons: List[str], editor: Editor):
-    added_buttons = []
+    added_buttons = [
+        editor.addButton(
+            icon="tmp",
+            id="migaku_btn_syntax_generate",
+            cmd="migaku_syntax_generate",
+            func=editor_generate_syntax,
+            tip="Generate syntax (F2)",
+            keys="F2",
+        ),
+        editor.addButton(
+            icon="tmp",
+            id="migaku_btn_syntax_remove",
+            cmd="migaku_syntax_remove",
+            func=editor_remove_syntax,
+            tip="Remove syntax (F4)",
+            keys="F4",
+        ),
+    ]
 
     if editor.addMode:
         added_buttons.append(
@@ -110,27 +127,6 @@ def setup_editor_buttons(buttons: List[str], editor: Editor):
                 func=toggle_migaku_mode,
             )
         )
-
-    added_buttons.extend(
-        [
-            editor.addButton(
-                icon="tmp",
-                id="migaku_btn_syntax_generate",
-                cmd="migaku_syntax_generate",
-                func=editor_generate_syntax,
-                tip="Generate syntax (F2)",
-                keys="F2",
-            ),
-            editor.addButton(
-                icon="tmp",
-                id="migaku_btn_syntax_remove",
-                cmd="migaku_syntax_remove",
-                func=editor_remove_syntax,
-                tip="Remove syntax (F4)",
-                keys="F4",
-            ),
-        ]
-    )
 
     buttons[0:0] = added_buttons
     return buttons
