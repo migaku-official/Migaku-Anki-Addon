@@ -64,7 +64,7 @@ def setup_hooks():
         editor.current_editor.on_addcards_did_change_deck
     )
     aqt.gui_hooks.addcards_did_change_note_type.append(
-        editor.current_editor.on_addcards_did_change_note_type
+        lambda _, _1, id: editor.current_editor.on_addcards_did_change_note_type(id)
     )
 
     aqt.gui_hooks.editor_did_init.append(editor.current_editor.set_current_editor)

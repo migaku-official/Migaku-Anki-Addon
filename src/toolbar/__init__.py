@@ -1,7 +1,11 @@
 import json
 import aqt
 
-from ..editor.current_editor import get_add_cards_info
+from ..editor.current_editor import (
+    get_add_cards_info,
+    on_addcards_did_change_deck,
+    on_addcards_did_change_note_type,
+)
 from ..migaku_connection import ConnectionListener
 from ..util import addon_path
 
@@ -27,6 +31,9 @@ def refresh_migaku_toolbar():
 def refresh_migaku_toolbar_opened_addcards():
     defaults = aqt.mw.col.defaults_for_adding(current_review_card=aqt.mw.reviewer.card)
     info = get_add_cards_info(defaults)
+
+    on_addcards_did_change_deck(defaults.deck_id)
+    on_addcards_did_change_note_type(defaults.notetype_id)
 
     global_toolbar.web.eval(f"MigakuToolbar.refresh({json.dumps(info)})")
 

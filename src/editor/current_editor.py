@@ -46,6 +46,7 @@ def get_add_cards() -> Note:
     for editor in reversed(current_editors):
         if editor.addMode:
             return {
+                "addcards": editor.parentWindow,
                 "note": editor.note,
                 "editor": editor,
             }
@@ -55,6 +56,15 @@ def get_add_cards() -> Note:
 
 current_note_type_id = 0
 current_deck_id = 0
+
+
+def add_cards_add_to_history(note):
+    addcards = get_add_cards()
+
+    if not addcards:
+        return
+
+    addcards["addcards"].addHistory(note)
 
 
 def get_add_cards_info(defaults=None):
@@ -110,7 +120,7 @@ def get_add_cards_info(defaults=None):
     }
 
 
-def on_addcards_did_change_note_type(editor, old_id, new_id):
+def on_addcards_did_change_note_type(new_id):
     global current_note_type_id
     current_note_type_id = new_id
 

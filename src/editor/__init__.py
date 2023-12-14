@@ -96,33 +96,41 @@ def toggle_migaku_mode(editor: Editor):
 
 
 def setup_editor_buttons(buttons: List[str], editor: Editor):
-    added_buttons = [
-        editor.addButton(
-            label="Field Maps",
-            icon=None,
-            id="migaku_btn_toggle_mode",
-            cmd="migaku_toggle_mode",
-            toggleable=True,
-            disables=False,
-            func=toggle_migaku_mode,
-        ),
-        editor.addButton(
-            icon="tmp",
-            id="migaku_btn_syntax_generate",
-            cmd="migaku_syntax_generate",
-            func=editor_generate_syntax,
-            tip="Generate syntax (F2)",
-            keys="F2",
-        ),
-        editor.addButton(
-            icon="tmp",
-            id="migaku_btn_syntax_remove",
-            cmd="migaku_syntax_remove",
-            func=editor_remove_syntax,
-            tip="Remove syntax (F4)",
-            keys="F4",
-        ),
-    ]
+    added_buttons = []
+
+    if editor.addMode:
+        added_buttons.append(
+            editor.addButton(
+                label="Field Maps",
+                icon=None,
+                id="migaku_btn_toggle_mode",
+                cmd="migaku_toggle_mode",
+                toggleable=True,
+                disables=False,
+                func=toggle_migaku_mode,
+            )
+        )
+
+    added_buttons.extend(
+        [
+            editor.addButton(
+                icon="tmp",
+                id="migaku_btn_syntax_generate",
+                cmd="migaku_syntax_generate",
+                func=editor_generate_syntax,
+                tip="Generate syntax (F2)",
+                keys="F2",
+            ),
+            editor.addButton(
+                icon="tmp",
+                id="migaku_btn_syntax_remove",
+                cmd="migaku_syntax_remove",
+                func=editor_remove_syntax,
+                tip="Remove syntax (F4)",
+                keys="F4",
+            ),
+        ]
+    )
 
     buttons[0:0] = added_buttons
     return buttons
