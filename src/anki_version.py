@@ -34,7 +34,7 @@ def get_state() -> VersionState:
     except ValueError:
         return VersionState.UNKNOWN
 
-    major, minor, patch = version_tuple
+    major, minor = version_tuple
 
     if major <= 2:
         # Old versioning scheme
