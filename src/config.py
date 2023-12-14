@@ -2,7 +2,6 @@ import aqt
 
 
 _config = aqt.mw.addonManager.getConfig(__name__)
-_config["migakuFields"] = {}
 
 
 def write():
