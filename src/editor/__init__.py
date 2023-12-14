@@ -98,7 +98,7 @@ def toggle_migaku_mode(editor: Editor):
 def setup_editor_buttons(buttons: List[str], editor: Editor):
     added_buttons = [
         editor.addButton(
-            label="Migaku Mode",
+            label="Field Maps",
             icon=None,
             id="migaku_btn_toggle_mode",
             cmd="migaku_toggle_mode",

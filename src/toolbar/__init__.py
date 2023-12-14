@@ -24,6 +24,13 @@ def refresh_migaku_toolbar():
     global_toolbar.web.eval(f"MigakuToolbar.refresh({json.dumps(info)})")
 
 
+def refresh_migaku_toolbar_opened_addcards():
+    defaults = aqt.mw.col.defaults_for_adding(current_review_card=aqt.mw.reviewer.card)
+    info = get_add_cards_info(defaults)
+
+    global_toolbar.web.eval(f"MigakuToolbar.refresh({json.dumps(info)})")
+
+
 def deactivate_migaku_toolbar(toolbar):
     toolbar.web.eval("MigakuToolbar.deactivate()")
 
