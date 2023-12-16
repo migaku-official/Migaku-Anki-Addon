@@ -2,7 +2,7 @@ import aqt
 from aqt.qt import *
 
 from .balance_scheduler import BalanceScheduler
-from . import util
+from .. import util
 
 
 class BalanceSchedulerDayOffWindow(QDialog):

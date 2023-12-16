@@ -3,7 +3,8 @@ from aqt.qt import QWizard, Qt
 
 from . import util
 from . import config
-from .settings_widgets import TUTORIAL_WIDGETS
+
+from .tutorial_widgets import TUTORIAL_WIDGETS
 
 
 class WelcomeWizard(QWizard):

@@ -6,7 +6,7 @@ import aqt
 from aqt.qt import QAction
 from anki.decks import DeckConfigId
 
-from .balance_scheduler_func import balance, Card, Vacation
+from .scheduler_func import balance, Card, Vacation
 
 
 SECOND_MS = 1000
