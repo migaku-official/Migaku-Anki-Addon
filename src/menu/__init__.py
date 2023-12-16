@@ -10,9 +10,16 @@ from . import (
     vacation_window,
 )
 
+menu = QMenu("Migaku", aqt.mw)
+
+deckItem = QAction("", aqt.mw)
+deckItem.triggered.connect(lambda: aqt.mw.onAddCard())
+
+typeItem = QAction("", aqt.mw)
+typeItem.triggered.connect(lambda: aqt.mw.onAddCard())
+
 
 def setup_menu():
-    menu = QMenu("Migaku", aqt.mw)
     menu.addAction(settings_window.action)
 
     menu.addSeparator()
@@ -23,5 +30,22 @@ def setup_menu():
     menu.addAction(dayoff_window.action)
 
     menu.addSeparator()
-
     aqt.mw.form.menubar.insertMenu(aqt.mw.form.menuHelp.menuAction(), menu)
+
+
+def deactivate_deck_type():
+    menu.removeAction(deckItem)
+    menu.removeAction(typeItem)
+
+
+def activate_deck_type():
+    menu.addAction(deckItem)
+    menu.addAction(typeItem)
+
+
+def set_deck_name(name):
+    deckItem.setText(f"Deck: {name}")
+
+
+def set_type_name(name):
+    typeItem.setText(f"Type: {name}")
