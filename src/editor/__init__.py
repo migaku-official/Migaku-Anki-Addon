@@ -149,7 +149,11 @@ def editor_did_load_note(editor: Editor):
 
 
 def on_migaku_bridge_cmds(self: Editor, cmd: str, _old):
-    if cmd.startswith("migakuSelectChange"):
+    if cmd.startswith("migakuIntercept"):
+        (_, value) = cmd.split(":", 1)
+        set("migakuIntercept", True if value == "true" else False, do_write=True)
+
+    elif cmd.startswith("migakuSelectChange"):
         (_, migaku_type, field_name) = cmd.split(":", 2)
         migakuFields = get("migakuFields", {})
 

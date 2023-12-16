@@ -3,8 +3,13 @@ import re
 
 import aqt
 from anki.notes import Note
+from ..config import get
 from ..card_types import CardFields, card_fields_from_dict
-from ..editor.current_editor import add_cards_add_to_history, get_add_cards_info
+from ..editor.current_editor import (
+    add_cards_add_to_history,
+    get_add_cards_info,
+    map_to_add_cards,
+)
 from tornado.web import RequestHandler
 
 from .migaku_http_handler import MigakuHTTPHandler
@@ -20,9 +25,7 @@ class CardReceiver(MigakuHTTPHandler):
     def post(self: RequestHandler):
         try:
             body = json.loads(self.request.body)
-            print("body", body)
             card = card_fields_from_dict(body)
-            print("card", card)
             self.create_card(card)
         except Exception as e:
             self.finish(f"Invalid request: {str(e)}")
@@ -30,7 +33,14 @@ class CardReceiver(MigakuHTTPHandler):
         return
 
     def create_card(self, card: CardFields):
+        if get("migakuIntercept"):
+            success = map_to_add_cards(card)
+            if success:
+                self.finish(json.dumps({"id": 0, "created": False}))
+                return
+
         info = get_add_cards_info()
+
         note = Note(aqt.mw.col, info["notetype"])
         fields = info["fields"]
 
@@ -49,4 +59,4 @@ class CardReceiver(MigakuHTTPHandler):
         aqt.mw.taskman.run_on_main(lambda: aqt.utils.tooltip("Migaku Card created"))
         aqt.mw.taskman.run_on_main(lambda: add_cards_add_to_history(note))
 
-        self.finish(json.dumps({"id": note.id}))
+        self.finish(json.dumps({"id": note.id, "created": True}))

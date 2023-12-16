@@ -99,6 +99,12 @@ def setup_hooks():
         "before",
     )
 
+    aqt.deckbrowser.DeckBrowser.set_current_deck = anki.hooks.wrap(
+        aqt.deckbrowser.DeckBrowser.set_current_deck,
+        lambda self, deck_id: toolbar.refresh_migaku_toolbar(),
+        "after",
+    )
+
 
 setup_menu()
 setup_hooks()

@@ -2,6 +2,7 @@ from anki.hooks import wrap
 from anki.notes import Note
 from aqt.editor import Editor
 import aqt
+from ..card_types import CardFields
 from ..migaku_fields import get_migaku_fields
 
 current_editors = []
@@ -118,6 +119,25 @@ def get_add_cards_info(defaults=None):
         "deck_id": deck_id,
         "tags": tags,
     }
+
+
+def map_to_add_cards(card: CardFields):
+    addcards = get_add_cards()
+
+    if not addcards:
+        return False
+
+    info = get_add_cards_info()
+    note = addcards["note"]
+    fields = info["fields"]
+
+    for fieldname, type in fields.items():
+        if type == "none":
+            continue
+
+        note[fieldname] = str(getattr(card, type))
+
+    return True
 
 
 def on_addcards_did_change_note_type(new_id):

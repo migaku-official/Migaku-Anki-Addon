@@ -104,3 +104,31 @@ MigakuEditor.toggleMode = function (settings) {
     setupMigakuEditor(settings);
   }
 }
+
+
+require('anki/ui')
+  .loaded
+  .then(() => new Promise((resolve) => setTimeout(resolve, 400)))
+  .then(() => {
+    const migakuMode = document.getElementById('migaku_btn_toggle_mode')
+    if (!migakuMode) return
+
+    const input = document.createElement('input')
+    input.type = 'checkbox'
+    input.id = 'migaku_btn_intercept_fields'
+    input.style.margin = '0 3px'
+
+    const label = document.createElement('label')
+    label.htmlFor = 'migaku_btn_intercept_fields'
+    label.textContent = 'Intercept Fields'
+    label.style.userSelect = 'none'
+    label.style.padding = '0 3px'
+
+    input.addEventListener('change', (e) => {
+      const cmd = `migakuIntercept:${e.currentTarget.checked}`
+      bridgeCommand(cmd)
+    })
+
+    migakuMode.parentElement.append(input)
+    migakuMode.parentElement.append(label)
+  })
