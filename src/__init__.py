@@ -70,11 +70,13 @@ def setup_hooks():
     aqt.gui_hooks.add_cards_did_init.append(
         lambda _: toolbar.refresh_migaku_toolbar_opened_addcards()
     )
-    aqt.addcards.AddCards._close = anki.hooks.wrap(
-        aqt.addcards.AddCards._close,
-        lambda _: toolbar.refresh_migaku_toolbar(),
-        "after",
-    )
+
+    # We don't want to reset the current deck when the user closes the add cards window
+    # aqt.addcards.AddCards._close = anki.hooks.wrap(
+    #     aqt.addcards.AddCards._close,
+    #     lambda _: toolbar.refresh_migaku_toolbar(),
+    #     "after",
+    # )
 
     aqt.addcards.AddCards.on_notetype_change = anki.hooks.wrap(
         aqt.addcards.AddCards.on_notetype_change,
