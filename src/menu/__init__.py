@@ -12,6 +12,9 @@ from . import (
 
 menu = QMenu("Migaku", aqt.mw)
 
+titleItem = QAction("Send cards to:", aqt.mw)
+titleItem.triggered.connect(lambda: aqt.mw.onAddCard())
+
 deckItem = QAction("", aqt.mw)
 deckItem.triggered.connect(lambda: aqt.mw.onAddCard())
 
@@ -34,11 +37,13 @@ def setup_menu():
 
 
 def deactivate_deck_type():
+    menu.removeAction(titleItem)
     menu.removeAction(deckItem)
     menu.removeAction(typeItem)
 
 
 def activate_deck_type():
+    menu.addAction(titleItem)
     menu.addAction(deckItem)
     menu.addAction(typeItem)
 
