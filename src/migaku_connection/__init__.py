@@ -321,11 +321,11 @@ class ConnectionStatusLabel(QLabel):
             self.set_disconnected()
 
     def set_connected(self):
-        self.setText("● Legacy Browser Extension Connected")
+        self.setText("● Browser Extension Connected")
         self.setStyleSheet("color: green")
 
     def set_disconnected(self):
-        self.setText("● Legacy Browser Extension Not Connected")
+        self.setText("● Browser Extension Not Connected")
         self.setStyleSheet("color: red")
 
 

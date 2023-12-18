@@ -25,6 +25,13 @@ def activate_migaku_toolbar(toolbar):
     menu.set_deck_name(info["deck_name"])
     menu.set_type_name(info["notetype_name"])
     menu.activate_deck_type()
+    menu.activate_deck_title()
+
+
+def deactivate_migaku_toolbar(toolbar):
+    # toolbar.web.eval("MigakuToolbar.deactivate()")
+    menu.deactivate_deck_type()
+    menu.deactivate_deck_title()
 
 
 def refresh_migaku_toolbar():
@@ -44,11 +51,6 @@ def refresh_migaku_toolbar_opened_addcards():
     # global_toolbar.web.eval(f"MigakuToolbar.refresh({json.dumps(info)})")
     menu.set_deck_name(info["deck_name"])
     menu.set_type_name(info["notetype_name"])
-
-
-def deactivate_migaku_toolbar(toolbar):
-    # toolbar.web.eval("MigakuToolbar.deactivate()")
-    menu.deactivate_deck_type()
 
 
 def inject_migaku_toolbar(html: str, toolbar):

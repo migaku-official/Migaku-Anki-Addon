@@ -12,7 +12,7 @@ from . import (
 
 menu = QMenu("Migaku", aqt.mw)
 
-titleItem = QAction("Send cards to:", aqt.mw)
+titleItem = QAction("No Migaku browser extension found...", aqt.mw)
 titleItem.triggered.connect(lambda: aqt.mw.onAddCard())
 
 deckItem = QAction("", aqt.mw)
@@ -33,19 +33,27 @@ def setup_menu():
     menu.addAction(dayoff_window.action)
 
     menu.addSeparator()
+    menu.addAction(titleItem)
+
     aqt.mw.form.menubar.insertMenu(aqt.mw.form.menuHelp.menuAction(), menu)
 
 
 def deactivate_deck_type():
-    menu.removeAction(titleItem)
     menu.removeAction(deckItem)
     menu.removeAction(typeItem)
 
 
 def activate_deck_type():
-    menu.addAction(titleItem)
     menu.addAction(deckItem)
     menu.addAction(typeItem)
+
+
+def activate_deck_title():
+    titleItem.setText(f"Add Migaku cards to:")
+
+
+def deactivate_deck_title():
+    titleItem.setText(f"No Migaku browser extension found...")
 
 
 def set_deck_name(name):
