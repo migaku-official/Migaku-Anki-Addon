@@ -1,5 +1,6 @@
 import aqt
 from aqt.qt import *
+from . import util
 
 
 class SettingsWidget(QWidget):
