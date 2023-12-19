@@ -15,14 +15,17 @@ from ..util import addon_path
 global_toolbar = None
 
 
-def open_add_cards():
-    aqt.mw.onAddCard()
-
-
 def activate_migaku_toolbar(toolbar):
     info = get_add_cards_info()
     # toolbar.web.eval(f"MigakuToolbar.activate({json.dumps(info)})")
     # toolbar.link_handlers["openAddCards"] = open_add_cards
+    print(
+        "act",
+        info["deck_name"],
+        info["deck_id"],
+        info["notetype_name"],
+        info["notetype_id"],
+    )
     menu.set_deck_name(info["deck_name"], info["deck_id"])
     menu.set_type_name(info["notetype_name"], info["notetype_id"])
     menu.activate_deck_type()

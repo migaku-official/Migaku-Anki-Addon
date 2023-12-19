@@ -68,13 +68,13 @@ def setup_hooks():
     #     "after",
     # )
 
-    def foo(addcards, mw, _old):
+    def set_current_deck_model_to_migaku(addcards, mw, _old):
         toolbar.set_deck_type_to_migaku(addcards),
         _old(addcards, mw)
 
     aqt.addcards.AddCards.__init__ = anki.hooks.wrap(
         aqt.addcards.AddCards.__init__,
-        foo,
+        set_current_deck_model_to_migaku,
         "around",
     )
 

@@ -17,17 +17,6 @@ menu = QMenu("Migaku", aqt.mw)
 titleItem = QAction("No Migaku browser extension found...", aqt.mw)
 titleItem.setEnabled(False)
 
-deckItem = QAction("", aqt.mw)
-
-
-def deckTrigger():
-    aqt.mw.onAddCard()
-    addcards = get_add_cards()["addcards"]
-    addcards.deck_chooser.choose_deck()
-
-
-deckItem.triggered.connect(deckTrigger)
-
 typeItem = QAction("", aqt.mw)
 
 
@@ -38,6 +27,18 @@ def notetypeTrigger():
 
 
 typeItem.triggered.connect(notetypeTrigger)
+
+
+deckItem = QAction("", aqt.mw)
+
+
+def deckTrigger():
+    aqt.mw.onAddCard()
+    addcards = get_add_cards()["addcards"]
+    addcards.deck_chooser.choose_deck()
+
+
+deckItem.triggered.connect(deckTrigger)
 
 
 def setup_menu():
@@ -52,25 +53,25 @@ def setup_menu():
 
     menu.addSeparator()
     menu.addAction(titleItem)
-    menu.addAction(deckItem)
     menu.addAction(typeItem)
+    menu.addAction(deckItem)
 
     aqt.mw.form.menubar.insertMenu(aqt.mw.form.menuHelp.menuAction(), menu)
 
 
 def deactivate_deck_type():
-    titleItem.setText(f"Add Migaku cards to:")
-
-
-def activate_deck_type():
     titleItem.setText(f"No Migaku browser extension found...")
 
 
-def set_deck_name(name, id):
-    set("migakuDeckId", id)
-    deckItem.setText(f"Deck: {name}")
+def activate_deck_type():
+    titleItem.setText(f"Add Migaku cards to:")
 
 
 def set_type_name(name, id):
-    set("migakuNotetypeId", id)
+    set("migakuNotetypeId", id, do_write=True)
     typeItem.setText(f"Type: {name}")
+
+
+def set_deck_name(name, id):
+    set("migakuDeckId", id, do_write=True)
+    deckItem.setText(f"Deck: {name}")
