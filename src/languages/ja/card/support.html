@@ -248,8 +248,8 @@
       let ret = [];
 
       // without workarounds for missing spaces: /{([^]*?)}|((\S*)\[(.*?)\](\S*))|([^ {]+)/gm
-      const syntax_re = new RegExp(
-        /{([^]*?)}|(([\S　]*)\[(.*?)\](\S*))|([^ \u00A0{]+)/gm
+      const syntax_re = RegExp(
+        /{([^]*?)}|(([^\[\]\s\{\}　]*)\[(.*?)\]([^\[\]\s\{\}　]*))|([^ \u00A0{]+)/gm
       );
 
       const ja_text_re = new RegExp(
