@@ -14,10 +14,11 @@ from . import (
 
 menu = QMenu("Migaku", aqt.mw)
 
-titleItem = QAction("No Migaku browser extension found...", aqt.mw)
-titleItem.setEnabled(False)
+titleItem = QAction("Map Fields…", aqt.mw)
+titleItem.triggered.connect(lambda: aqt.mw.onAddCard())
 
 typeItem = QAction("", aqt.mw)
+typeItem.setEnabled(False)
 
 
 def notetypeTrigger():
@@ -30,6 +31,7 @@ typeItem.triggered.connect(notetypeTrigger)
 
 
 deckItem = QAction("", aqt.mw)
+deckItem.setEnabled(False)
 
 
 def deckTrigger():
@@ -59,12 +61,12 @@ def setup_menu():
     aqt.mw.form.menubar.insertMenu(aqt.mw.form.menuHelp.menuAction(), menu)
 
 
-def deactivate_deck_type():
-    titleItem.setText(f"No Migaku browser extension found...")
-
-
 def activate_deck_type():
-    titleItem.setText(f"Add Migaku cards to:")
+    pass
+
+
+def deactivate_deck_type():
+    pass
 
 
 def set_type_name(name, id):

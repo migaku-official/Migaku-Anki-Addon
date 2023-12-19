@@ -81,5 +81,5 @@ class BalanceSchedulerDayOffWindow(QDialog):
         super().accept()
 
 
-action = QAction("Day Off", aqt.mw)
+action = QAction("Day Off…", aqt.mw)
 action.triggered.connect(lambda: BalanceSchedulerDayOffWindow().exec())

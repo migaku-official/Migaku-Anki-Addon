@@ -16,33 +16,31 @@ from .migaku_http_handler import MigakuHTTPHandler
 
 
 class CardReceiver(MigakuHTTPHandler):
-    image_formats = ["webp"]
-    audio_formats = ["m4a"]
-
-    TO_MP3_RE = re.compile(r"\[sound:(.*?)\.(wav|ogg)\]")
-    BR_RE = re.compile(r"<br\s*/?>")
-
     def post(self: RequestHandler):
         try:
             body = json.loads(self.request.body)
             card = card_fields_from_dict(body)
             self.create_card(card)
         except Exception as e:
-            self.finish(f"Invalid request: {str(e)}")
+            self.finish({"error": f"Invalid request: {str(e)}."})
 
         return
 
     def create_card(self, card: CardFields):
-        if get("migakuIntercept"):
-            success = map_to_add_cards(card)
-            if success:
-                self.finish(json.dumps({"id": 0, "created": False}))
-                return
+        if get("migakuIntercept", False) and map_to_add_cards(card):
+            print('Tryied to map to add cards.')
+            self.finish(json.dumps({"id": 0, "created": False}))
+            return
 
         info = get_add_cards_info()
 
         note = Note(aqt.mw.col, info["notetype"])
         fields = info["fields"]
+
+        if not any([type != "none" for (fieldname, type) in fields.items()]):
+            print('No fields to map to.')
+            self.finish({"error": "No fields to map to."})
+            return
 
         for fieldname, type in fields.items():
             if type == "none":
