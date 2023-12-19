@@ -1,5 +1,6 @@
 import aqt
 from aqt.qt import *
+from ..editor.current_editor import get_add_cards
 from ..config import set
 
 from . import (
@@ -14,14 +15,29 @@ from . import (
 menu = QMenu("Migaku", aqt.mw)
 
 titleItem = QAction("No Migaku browser extension found...", aqt.mw)
-titleItem.triggered.connect(lambda: aqt.mw.onAddCard())
 titleItem.setEnabled(False)
 
 deckItem = QAction("", aqt.mw)
-deckItem.triggered.connect(lambda: aqt.mw.onAddCard())
+
+
+def deckTrigger():
+    aqt.mw.onAddCard()
+    addcards = get_add_cards()["addcards"]
+    addcards.deck_chooser.choose_deck()
+
+
+deckItem.triggered.connect(deckTrigger)
 
 typeItem = QAction("", aqt.mw)
-typeItem.triggered.connect(lambda: aqt.mw.onAddCard())
+
+
+def notetypeTrigger():
+    aqt.mw.onAddCard()
+    addcards = get_add_cards()["addcards"]
+    addcards.show_notetype_selector()
+
+
+typeItem.triggered.connect(notetypeTrigger)
 
 
 def setup_menu():
