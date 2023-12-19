@@ -1,5 +1,6 @@
 import aqt
 from aqt.qt import *
+from ..config import set
 
 from . import (
     settings_window,
@@ -14,6 +15,7 @@ menu = QMenu("Migaku", aqt.mw)
 
 titleItem = QAction("No Migaku browser extension found...", aqt.mw)
 titleItem.triggered.connect(lambda: aqt.mw.onAddCard())
+titleItem.setEnabled(False)
 
 deckItem = QAction("", aqt.mw)
 deckItem.triggered.connect(lambda: aqt.mw.onAddCard())
@@ -34,31 +36,25 @@ def setup_menu():
 
     menu.addSeparator()
     menu.addAction(titleItem)
+    menu.addAction(deckItem)
+    menu.addAction(typeItem)
 
     aqt.mw.form.menubar.insertMenu(aqt.mw.form.menuHelp.menuAction(), menu)
 
 
 def deactivate_deck_type():
-    menu.removeAction(deckItem)
-    menu.removeAction(typeItem)
-
-
-def activate_deck_type():
-    menu.addAction(deckItem)
-    menu.addAction(typeItem)
-
-
-def activate_deck_title():
     titleItem.setText(f"Add Migaku cards to:")
 
 
-def deactivate_deck_title():
+def activate_deck_type():
     titleItem.setText(f"No Migaku browser extension found...")
 
 
-def set_deck_name(name):
+def set_deck_name(name, id):
+    set("migakuDeckId", id)
     deckItem.setText(f"Deck: {name}")
 
 
-def set_type_name(name):
+def set_type_name(name, id):
+    set("migakuNotetypeId", id)
     typeItem.setText(f"Type: {name}")

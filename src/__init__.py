@@ -60,6 +60,30 @@ def setup_hooks():
     aqt.gui_hooks.top_toolbar_will_set_left_tray_content.append(
         toolbar.inject_migaku_toolbar
     )
+
+    # We don't want to reset the current deck when the user closes the add cards window
+    # aqt.addcards.AddCards._close = anki.hooks.wrap(
+    #     aqt.addcards.AddCards._close,
+    #     lambda _: toolbar.refresh_migaku_toolbar(),
+    #     "after",
+    # )
+
+    def foo(addcards, mw, _old):
+        toolbar.set_deck_type_to_migaku(addcards),
+        _old(addcards, mw)
+
+    aqt.addcards.AddCards.__init__ = anki.hooks.wrap(
+        aqt.addcards.AddCards.__init__,
+        foo,
+        "around",
+    )
+
+    aqt.addcards.AddCards.on_notetype_change = anki.hooks.wrap(
+        aqt.addcards.AddCards.on_notetype_change,
+        lambda addcards, _1: editor.reset_migaku_mode(addcards.editor),
+        "before",
+    )
+
     aqt.gui_hooks.add_cards_did_change_deck.append(
         lambda _: toolbar.refresh_migaku_toolbar()
     )
@@ -71,24 +95,11 @@ def setup_hooks():
         lambda _: toolbar.refresh_migaku_toolbar_opened_addcards()
     )
 
-    # We don't want to reset the current deck when the user closes the add cards window
-    # aqt.addcards.AddCards._close = anki.hooks.wrap(
-    #     aqt.addcards.AddCards._close,
-    #     lambda _: toolbar.refresh_migaku_toolbar(),
+    # aqt.deckbrowser.DeckBrowser.set_current_deck = anki.hooks.wrap(
+    #     aqt.deckbrowser.DeckBrowser.set_current_deck,
+    #     lambda self, deck_id: toolbar.refresh_migaku_toolbar(),
     #     "after",
     # )
-
-    aqt.addcards.AddCards.on_notetype_change = anki.hooks.wrap(
-        aqt.addcards.AddCards.on_notetype_change,
-        lambda addcards, _1: editor.reset_migaku_mode(addcards.editor),
-        "before",
-    )
-
-    aqt.deckbrowser.DeckBrowser.set_current_deck = anki.hooks.wrap(
-        aqt.deckbrowser.DeckBrowser.set_current_deck,
-        lambda self, deck_id: toolbar.refresh_migaku_toolbar(),
-        "after",
-    )
 
 
 menu.setup_menu()

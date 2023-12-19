@@ -2,6 +2,7 @@ from anki.hooks import wrap
 from anki.notes import Note
 from aqt.editor import Editor
 import aqt
+from ..config import get
 from ..card_types import CardFields
 from ..migaku_fields import get_migaku_fields
 
@@ -99,12 +100,12 @@ def get_add_cards_info(defaults=None):
         deck_name = deck["name"]
 
     else:
-        notetype_id = aqt.mw.col.get_config("curModel")
+        notetype_id = get("migakuNotetypeId", aqt.mw.col.get_config("curModel"))
         notetype = aqt.mw.col.models.get(notetype_id)
         fields = get_migaku_fields(notetype)
         notetype_name = notetype["name"]
 
-        deck_id = aqt.mw.col.get_config("curDeck")
+        deck_id = get("migakuDeckId", aqt.mw.col.get_config("curDeck"))
         deck = aqt.mw.col.decks.get(deck_id)
         deck_name = deck["name"]
         tags = []

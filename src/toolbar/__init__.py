@@ -1,5 +1,6 @@
 import json
 import aqt
+from ..config import get
 from .. import menu
 
 from ..editor.current_editor import (
@@ -22,23 +23,21 @@ def activate_migaku_toolbar(toolbar):
     info = get_add_cards_info()
     # toolbar.web.eval(f"MigakuToolbar.activate({json.dumps(info)})")
     # toolbar.link_handlers["openAddCards"] = open_add_cards
-    menu.set_deck_name(info["deck_name"])
-    menu.set_type_name(info["notetype_name"])
+    menu.set_deck_name(info["deck_name"], info["deck_id"])
+    menu.set_type_name(info["notetype_name"], info["notetype_id"])
     menu.activate_deck_type()
-    menu.activate_deck_title()
 
 
 def deactivate_migaku_toolbar(toolbar):
     # toolbar.web.eval("MigakuToolbar.deactivate()")
     menu.deactivate_deck_type()
-    menu.deactivate_deck_title()
 
 
 def refresh_migaku_toolbar():
     info = get_add_cards_info()
     # global_toolbar.web.eval(f"MigakuToolbar.refresh({json.dumps(info)})")
-    menu.set_deck_name(info["deck_name"])
-    menu.set_type_name(info["notetype_name"])
+    menu.set_deck_name(info["deck_name"], info["deck_id"])
+    menu.set_type_name(info["notetype_name"], info["notetype_id"])
 
 
 def refresh_migaku_toolbar_opened_addcards():
@@ -49,8 +48,8 @@ def refresh_migaku_toolbar_opened_addcards():
     on_addcards_did_change_note_type(defaults.notetype_id)
 
     # global_toolbar.web.eval(f"MigakuToolbar.refresh({json.dumps(info)})")
-    menu.set_deck_name(info["deck_name"])
-    menu.set_type_name(info["notetype_name"])
+    menu.set_deck_name(info["deck_name"], info["deck_id"])
+    menu.set_type_name(info["notetype_name"], info["notetype_id"])
 
 
 def inject_migaku_toolbar(html: str, toolbar):
@@ -64,3 +63,14 @@ def inject_migaku_toolbar(html: str, toolbar):
 
     with open(addon_path("toolbar/toolbar.html"), "r", encoding="utf-8") as file:
         html.append(file.read())
+
+
+def set_deck_type_to_migaku(parent):
+    # aqt.operations.deck.set_current_deck(parent=parent, deck_id=get('migakuDeckId', 0))
+    # aqt.mw.col.conf['curModel'] = get('migakuNotetypeId')
+    aqt.mw.col.set_config(
+        "curDeck", get("migakuDeckId", aqt.mw.col.get_config("curDeck"))
+    )
+    aqt.mw.col.set_config(
+        "curModel", get("migakuNotetypeId", aqt.mw.col.get_config("curModel"))
+    )
