@@ -56,5 +56,6 @@ class CardReceiver(MigakuHTTPHandler):
         aqt.mw.taskman.run_on_main(aqt.mw.reset)
         aqt.mw.taskman.run_on_main(lambda: aqt.utils.tooltip("Migaku Card created"))
         aqt.mw.taskman.run_on_main(lambda: add_cards_add_to_history(note))
+        print(f'Card created. ID: {note.id}.')
 
         self.finish(json.dumps({"id": note.id, "created": True}))
