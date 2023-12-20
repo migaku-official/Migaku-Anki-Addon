@@ -22,9 +22,15 @@ def infer_migaku_type(
     if re.search(
         r"(audio|音声|音频|오디오|audio|áudio|audio|audio|áudio)", name, re.IGNORECASE
     ):
-        if re.search(r"(Is Audio Card|音声カード|音频卡|오디오 카드|tarjeta de audio|cartão de áudio|carte audio|audio karte|cartão de áudio)", name, re.IGNORECASE):
+        if re.search(
+            r"(Is Audio Card|音声カード|音频卡|오디오 카드|tarjeta de audio|cartão de áudio|carte audio|audio karte|cartão de áudio)",
+            name,
+            re.IGNORECASE,
+        ):
             return "none"
-        elif re.search(r"(sentence|文|句|문장|frase|phrase|satz|frase)", name, re.IGNORECASE):
+        elif re.search(
+            r"(sentence|文|句|문장|frase|phrase|satz|frase)", name, re.IGNORECASE
+        ):
             return "sentenceAudio"
         else:
             return "wordAudio"

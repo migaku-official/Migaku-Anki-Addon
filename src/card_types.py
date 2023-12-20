@@ -37,14 +37,14 @@ class CardFields:
 
 def process_image_asset(image: ImageAsset):
     data = image.src.split(",", 1)[1]
-    name = f"{image.title}-{image.id}.webp"
+    name = f"{image.id}.webp"
     move_file_to_media_dir(b64decode(data), name)
-    return f"<img src='{name}' alt='{image.alt}' />"
+    return f"<img src='{name}' />"
 
 
 def process_audio_asset(audio: AudioAsset):
     data = audio.input.split(",", 1)[1]
-    name = f"{audio.title}-{audio.id}.m4a"
+    name = f"{audio.id}.m4a"
     move_file_to_media_dir(b64decode(data), name)
     return f"[sound:{name}]"
 

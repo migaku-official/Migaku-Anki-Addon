@@ -137,7 +137,7 @@ def map_to_add_cards(card: CardFields):
             continue
 
         note[fieldname] = str(getattr(card, type))
-    
+
     aqt.mw.taskman.run_on_main(addcards["editor"].loadNoteKeepingFocus)
 
     return True
