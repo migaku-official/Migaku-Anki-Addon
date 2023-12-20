@@ -72,6 +72,7 @@ def deactivate_deck_type():
 def set_type_name(name, id):
     set("migakuNotetypeId", id, do_write=True)
     typeItem.setText(f"Type: {name}")
+    print("foo type", name, id)
 
 
 def set_deck_name(name, id):

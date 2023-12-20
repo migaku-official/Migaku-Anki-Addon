@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from platform import platform
 import sys
 import os
@@ -5,6 +6,7 @@ import os
 import aqt
 from aqt.qt import *
 import anki
+from .config import get
 
 from .sys_libraries import init_sys_libs
 
@@ -61,22 +63,22 @@ def setup_hooks():
         toolbar.inject_migaku_toolbar
     )
 
-    # We don't want to reset the current deck when the user closes the add cards window
-    # aqt.addcards.AddCards._close = anki.hooks.wrap(
-    #     aqt.addcards.AddCards._close,
-    #     lambda _: toolbar.refresh_migaku_toolbar(),
-    #     "after",
-    # )
+    @dataclass
+    class Defaults:
+        notetype_id: int
+        deck_id: int
 
-    def set_current_deck_model_to_migaku(addcards, mw, _old):
-        toolbar.set_deck_type_to_migaku(addcards),
-        _old(addcards, mw)
+    def set_current_deck_model_to_migaku(current_review_card):
+        toolbar.set_deck_type_to_migaku()
+        return Defaults(
+            get("migakuNotetypeId"),
+            get("migakuDeckId"),
+        )
 
-    aqt.addcards.AddCards.__init__ = anki.hooks.wrap(
-        aqt.addcards.AddCards.__init__,
-        set_current_deck_model_to_migaku,
-        "around",
-    )
+    def overwrite_defaults_for_adding(col):
+        col.defaults_for_adding = set_current_deck_model_to_migaku
+
+    aqt.gui_hooks.collection_did_load.append(overwrite_defaults_for_adding)
 
     aqt.addcards.AddCards.on_notetype_change = anki.hooks.wrap(
         aqt.addcards.AddCards.on_notetype_change,

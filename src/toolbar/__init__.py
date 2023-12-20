@@ -61,9 +61,7 @@ def inject_migaku_toolbar(html: str, toolbar):
         html.append(file.read())
 
 
-def set_deck_type_to_migaku(parent):
-    # aqt.operations.deck.set_current_deck(parent=parent, deck_id=get('migakuDeckId', 0))
-    # aqt.mw.col.conf['curModel'] = get('migakuNotetypeId')
+def set_deck_type_to_migaku():
     aqt.mw.col.set_config(
         "curDeck", get("migakuDeckId", aqt.mw.col.get_config("curDeck"))
     )
