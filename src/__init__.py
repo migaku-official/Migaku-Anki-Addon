@@ -45,12 +45,40 @@ def setup_hooks():
     aqt.gui_hooks.editor_did_init.append(editor.editor_did_init)
     aqt.gui_hooks.editor_did_load_note.append(editor.editor_did_load_note)
     aqt.gui_hooks.editor_did_init_buttons.append(editor.setup_editor_buttons)
-    aqt.gui_hooks.add_cards_did_change_deck.append(
-        editor.current_editor.on_addcards_did_change_deck
-    )
-    aqt.gui_hooks.addcards_did_change_note_type.append(
-        lambda _, _1, id: editor.current_editor.on_addcards_did_change_note_type(id)
-    )
+
+    # DECK CHANGE
+    def deck_change(id):
+        editor.current_editor.on_addcards_did_change_deck(id)
+        toolbar.refresh_migaku_toolbar()
+
+    if getattr(aqt.gui_hooks, "add_cards_did_change_deck", None):
+        aqt.gui_hooks.add_cards_did_change_deck.append(deck_change)
+    else:
+        aqt.addcards.AddCards.on_deck_changed = anki.hooks.wrap(
+            aqt.addcards.AddCards.on_deck_changed,
+            lambda _, id: deck_change(id),
+            "before",
+        )
+
+    ### MODEL CHANGE
+    def notetype_change(id):
+        editor.current_editor.on_addcards_did_change_note_type(id)
+        toolbar.refresh_migaku_toolbar()
+
+    if getattr(aqt.gui_hooks, "add_cards_did_change_note_type", None):
+        aqt.gui_hooks.add_cards_did_change_note_type.append(
+            lambda _, id: notetype_change(id)
+        )
+    elif getattr(aqt.addcards.AddCards, "on_notetype_change", None):
+        aqt.addcards.AddCards.on_notetype_change = anki.hooks.wrap(
+            aqt.addcards.AddCards.on_notetype_change,
+            lambda _, id: notetype_change(id),
+        )
+    else:
+        aqt.addcards.AddCards.onModelChange = anki.hooks.wrap(
+            aqt.addcards.AddCards.onModelChange,
+            notetype_change,
+        )
 
     aqt.gui_hooks.editor_did_init.append(editor.current_editor.set_current_editor)
     aqt.editor.Editor.cleanup = anki.hooks.wrap(
@@ -82,13 +110,6 @@ def setup_hooks():
         aqt.addcards.AddCards.on_notetype_change,
         lambda addcards, _1: editor.reset_migaku_mode(addcards.editor),
         "before",
-    )
-
-    aqt.gui_hooks.add_cards_did_change_deck.append(
-        lambda _: toolbar.refresh_migaku_toolbar()
-    )
-    aqt.gui_hooks.addcards_did_change_note_type.append(
-        lambda _, _1, _2: toolbar.refresh_migaku_toolbar()
     )
 
     aqt.gui_hooks.add_cards_did_init.append(
