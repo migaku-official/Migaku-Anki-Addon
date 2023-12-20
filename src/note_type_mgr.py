@@ -283,8 +283,12 @@ def nt_was_installed(nt: NotetypeDict) -> bool:
 
 
 def update_all_installed() -> None:
-    nt_mgr = aqt.mw.col.models
-    for lang in Languages:
-        if is_installed(lang):
-            nt = nt_mgr.by_name(NOTE_TYPE_PREFIX + lang.name_en)
-            nt_update(nt, lang)
+    notetypes = aqt.mw.col.models.all()
+
+    for nt in notetypes:
+        lang = nt_get_lang(nt)
+
+        if not lang or not is_installed(lang):
+            continue
+
+        nt_update(nt, lang)
