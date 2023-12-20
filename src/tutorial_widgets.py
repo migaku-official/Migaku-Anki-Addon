@@ -151,6 +151,10 @@ class GlobalHotkeysWidget(SettingsWidget):
             "To set new key combinations click the buttons on the right and press a new key combination. "
             "To disable a hotkey click the button again without pressing a new key combination."
         )
+        self.add_label("<hr>")
+        self.add_label(
+            "If you are using the new extension, hotkeys require the Migaku App window to be open."
+        )
 
         self.lyt.addStretch()
         self.lyt.addWidget(ConnectionStatusLabel())
