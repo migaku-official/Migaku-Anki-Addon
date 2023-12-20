@@ -59,9 +59,7 @@ def setup_hooks():
 
     aqt.gui_hooks.profile_did_open.append(note_type_mgr.update_all_installed)
 
-    aqt.gui_hooks.top_toolbar_will_set_left_tray_content.append(
-        toolbar.inject_migaku_toolbar
-    )
+    aqt.gui_hooks.collection_did_load.append(toolbar.inject_migaku_toolbar)
 
     @dataclass
     class Defaults:
