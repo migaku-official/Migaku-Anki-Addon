@@ -74,40 +74,38 @@ def nt_update(nt: NotetypeDict, lang: Language, commit=True) -> None:
         return any([fld["name"] == name for fld in nt["flds"]])
 
     for field_name in lang.fields:
-        if not field_exists(field_name):
-            field = nt_mgr.new_field(field_name)
-            nt_mgr.add_field(nt, field)
+        if field_exists(field_name):
+            continue
 
+        field = nt_mgr.new_field(field_name)
+        nt_mgr.add_field(nt, field)
+
+    # Set CSS
     css_path = lang.file_path("card", "styles.css")
     with open(css_path, "r", encoding="utf-8") as file:
         css_data = file.read()
 
-    # Set CSS
     nt["css"] = NOTE_TYPE_MARK_CSS + "\n\n" + css_data
 
-    # Get or create template
+    # Assure standard template
     template_name = "Standard"
     template = None
     template_idx = -1
 
-    for i, t in enumerate(nt["tmpls"]):
-        if t["name"] == template_name:
-            template = t
-            template_idx = i
+    for idx, tmpl in enumerate(nt["tmpls"]):
+        if tmpl["name"] == template_name:
+            template = tmpl
+            template_idx = idx
             break
-    if template is None:
+
+    if not template:
         template = nt_mgr.new_template(template_name)
         nt["tmpls"].append(template)
         template_idx = len(nt["tmpls"]) - 1
 
     # Set template html
-    for fmt, html_name in [("qfmt", "front.html"), ("afmt", "back.html")]:
-        html_path = lang.file_path("card", html_name)
-        with open(html_path, "r", encoding="utf-8") as file:
-            html = file.read()
-
+    for fmt in ["qfmt", "afmt"]:
         fields_settings = nt_get_tmpl_fields_settings(nt, template_idx, fmt)
-        nt["tmpls"][template_idx][fmt] = html
         nt_set_tmpl_lang(
             nt,
             lang,
