@@ -8,8 +8,6 @@ from ..editor.current_editor import (
     on_addcards_did_change_deck,
     on_addcards_did_change_note_type,
 )
-from ..migaku_connection import ConnectionListener
-from ..util import addon_path
 
 
 def activate_migaku_toolbar():
@@ -41,13 +39,7 @@ def refresh_migaku_toolbar_opened_addcards():
 
 
 def inject_migaku_toolbar(col):
-    ConnectionListener(
-        lambda: activate_migaku_toolbar(),
-        lambda: deactivate_migaku_toolbar(),
-    )
-
-    # with open(addon_path("toolbar/toolbar.html"), "r", encoding="utf-8") as file:
-    #     html.append(file.read())
+    activate_migaku_toolbar()
 
 
 def set_deck_type_to_migaku():
