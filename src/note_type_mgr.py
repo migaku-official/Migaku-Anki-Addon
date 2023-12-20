@@ -69,8 +69,6 @@ def install(lang: Language) -> None:
 def nt_update(nt: NotetypeDict, lang: Language, commit=True) -> None:
     nt_mgr = aqt.mw.col.models
 
-    nt["name"] = NOTE_TYPE_PREFIX + lang.name_en
-
     # Assure required fields exist
     def field_exists(name):
         return any([fld["name"] == name for fld in nt["flds"]])
@@ -148,7 +146,7 @@ def nt_get_lang(nt: NotetypeDict) -> Optional[Language]:
 
 
 def nt_set_css_lang(nt: NotetypeDict, lang: Optional[Language], commit=True) -> None:
-    # Remove CSS
+    # User CSS
     css_data = STYLE_RE.sub("", nt["css"]).rstrip()
 
     if lang:
