@@ -67,25 +67,30 @@ def install(lang: Language) -> None:
 
 
 def nt_update(nt: NotetypeDict, lang: Language, commit=True) -> None:
+    # It is the reserved, read-only note type, e.g. "Migaku Japanese".
+    # Custom notetypes are cloned from this one.
+    is_base_tmpl = nt["name"] == NOTE_TYPE_PREFIX + lang.name_en
     nt_mgr = aqt.mw.col.models
 
     # Assure required fields exist
     def field_exists(name):
         return any([fld["name"] == name for fld in nt["flds"]])
 
-    for field_name in lang.fields:
-        if field_exists(field_name):
-            continue
+    if is_base_tmpl:
+        # Assure fields
+        for field_name in lang.fields:
+            if field_exists(field_name):
+                continue
 
-        field = nt_mgr.new_field(field_name)
-        nt_mgr.add_field(nt, field)
+            field = nt_mgr.new_field(field_name)
+            nt_mgr.add_field(nt, field)
 
-    # Set CSS
-    css_path = lang.file_path("card", "styles.css")
-    with open(css_path, "r", encoding="utf-8") as file:
-        css_data = file.read()
+        # Set CSS
+        css_path = lang.file_path("card", "styles.css")
+        with open(css_path, "r", encoding="utf-8") as file:
+            css_data = file.read()
 
-    nt["css"] = NOTE_TYPE_MARK_CSS + "\n\n" + css_data
+        nt["css"] = NOTE_TYPE_MARK_CSS + "\n\n" + css_data
 
     # Assure standard template
     template_name = "Standard"
@@ -98,23 +103,31 @@ def nt_update(nt: NotetypeDict, lang: Language, commit=True) -> None:
             template_idx = idx
             break
 
-    if not template:
+    if is_base_tmpl and not template:
         template = nt_mgr.new_template(template_name)
         nt["tmpls"].append(template)
         template_idx = len(nt["tmpls"]) - 1
 
     # Set template html
-    for fmt in ["qfmt", "afmt"]:
-        fields_settings = nt_get_tmpl_fields_settings(nt, template_idx, fmt)
-        nt_set_tmpl_lang(
-            nt,
-            lang,
-            template_idx,
-            fmt,
-            fields_settings,
-            settings_mismatch_ignore=True,
-            commit=False,
-        )
+    if template:
+        for fmt, html_name in [("qfmt", "front.html"), ("afmt", "back.html")]:
+            if nt["name"] == NOTE_TYPE_PREFIX + lang.name_en:
+                html_path = lang.file_path("card", html_name)
+                with open(html_path, "r", encoding="utf-8") as file:
+                    html = file.read()
+                nt["tmpls"][template_idx][fmt] = html
+
+            fields_settings = nt_get_tmpl_fields_settings(nt, template_idx, fmt)
+
+            nt_set_tmpl_lang(
+                nt,
+                lang,
+                template_idx,
+                fmt,
+                fields_settings,
+                settings_mismatch_ignore=True,
+                commit=False,
+            )
 
     # Set template css
     nt_set_css_lang(nt, lang, commit=False)
