@@ -49,7 +49,7 @@ def process_audio_asset(audio: AudioAsset):
     return f"[sound:{name}]"
 
 
-def card_fields_from_dict(d: dict[str, any]):
+def card_fields_from_dict(d):
     br = "\n<br>\n"
     sentenceAudios = br.join(
         [process_audio_asset(AudioAsset(**a)) for a in d.get("sentenceAudio", [])]

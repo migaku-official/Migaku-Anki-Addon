@@ -65,6 +65,7 @@ def add_cards_add_to_history(note):
 
     if not addcards:
         return
+    print("Adding to history", note.id)
 
     addcards["addcards"].addHistory(note)
 

@@ -40,6 +40,7 @@ const selectorOptions = [
 ]
 
 function getSelectorField(editorField, settings) {
+  console.log('settings', settings)
   const field = document.createElement('div');
   field.classList.add('migaku-field-selector');
 
@@ -55,7 +56,7 @@ function getSelectorField(editorField, settings) {
   }
 
   const fieldContainer = editorField.parentElement.parentElement
-  const labelName = fieldContainer.querySelector('.label-name').innerText
+  const labelName = editorField.querySelector('.label-name')?.innerText ?? fieldContainer.querySelector('.label-name').innerText
   select.value = settings[labelName] ?? 'none'
 
   select.addEventListener('change', (selectTarget) => {
@@ -81,7 +82,10 @@ function setupMigakuEditor(settings) {
   document.querySelectorAll('.editing-area').forEach((field) => field.style.display = 'none');
   document.querySelectorAll('.plain-text-badge').forEach((field) => field.style.display = 'none');
   document.querySelectorAll('svg#mdi-pin-outline').forEach((field) => field.parentElement.parentElement.parentElement.style.display = 'none');
-  hiddenButtonCategories.forEach((category) => document.querySelector(`.item#${category}`).style.display = 'none');
+  hiddenButtonCategories.forEach((category) => {
+    const item = document.querySelector(`.item#${category}`)
+    if (item) item.style.display = 'none'
+  });
 
   for (const field of document.querySelectorAll('.editor-field')) {
     field.append(getSelectorField(field, settings))
@@ -92,8 +96,11 @@ MigakuEditor.resetMigakuEditor = function () {
   document.querySelectorAll('.editing-area').forEach((field) => field.style.display = '');
   document.querySelectorAll('.plain-text-badge').forEach((field) => field.style.display = '');
   document.querySelectorAll('svg#mdi-pin-outline').forEach((field) => field.parentElement.parentElement.parentElement.style.display = '');
-  hiddenButtonCategories.forEach((category) => document.querySelector(`.item#${category}`).style.display = '');
 
+  hiddenButtonCategories.forEach((category) => {
+    const item = document.querySelector(`.item#${category}`)
+    if (item) item.style.display = ''
+  });
   document.querySelectorAll('.migaku-field-selector').forEach((selector) => selector.remove());
 }
 
@@ -111,6 +118,7 @@ require('anki/ui')
   .then(() => new Promise((resolve) => setTimeout(resolve, 400)))
   .then(() => {
     const migakuMode = document.getElementById('migaku_btn_toggle_mode')
+    migakuMode.style.width = 'auto'
     if (!migakuMode) return
 
     const input = document.createElement('input')
