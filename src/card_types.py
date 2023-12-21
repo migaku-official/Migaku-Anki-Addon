@@ -37,9 +37,15 @@ class CardFields:
 
 
 def process_image_asset(image: ImageAsset):
-    data = image.src.split(",", 1)[1]
     name = f"{image.id}.webp"
-    move_file_to_media_dir(b64decode(data), name)
+
+    if image.src.startswith("data:image/webp;base64,"):
+        data = image.src.split(",", 1)[1]
+        move_file_to_media_dir(b64decode(data), name)
+    elif image.input.startswith("http"):
+        data = requests.get(image.src, allow_redirects=True)
+        move_file_to_media_dir(data.content, name)
+
     return f"<img src='{name}' />"
 
 
@@ -56,15 +62,20 @@ def process_audio_asset(audio: AudioAsset):
     return f"[sound:{name}]"
 
 
-
 def card_fields_from_dict(data):
     br = "\n<br>\n"
 
     sentenceAudios = br.join(
-        [process_audio_asset(AudioAsset(**audio)) for audio in data.get("sentenceAudio", [])]
+        [
+            process_audio_asset(AudioAsset(**audio))
+            for audio in data.get("sentenceAudio", [])
+        ]
     )
     wordAudios = br.join(
-        [process_audio_asset(AudioAsset(**audio)) for audio in data.get("wordAudio", [])]
+        [
+            process_audio_asset(AudioAsset(**audio))
+            for audio in data.get("wordAudio", [])
+        ]
     )
     imagess = br.join(
         [process_image_asset(ImageAsset(**img)) for img in data.get("images", [])]
