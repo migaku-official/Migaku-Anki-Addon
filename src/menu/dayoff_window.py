@@ -2,7 +2,7 @@ import aqt
 from aqt.qt import *
 
 from .balance_scheduler import BalanceScheduler
-from . import util
+from .. import util
 
 
 class BalanceSchedulerDayOffWindow(QDialog):
@@ -42,7 +42,10 @@ class BalanceSchedulerDayOffWindow(QDialog):
         self.slider.setValue(0)
         lyt.addWidget(self.slider)
 
-        bbox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        bbox = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
+
         bbox.accepted.connect(self.accept)
         bbox.rejected.connect(self.reject)
 
@@ -78,5 +81,5 @@ class BalanceSchedulerDayOffWindow(QDialog):
         super().accept()
 
 
-action = QAction("Day Off", aqt.mw)
+action = QAction("Day Off…", aqt.mw)
 action.triggered.connect(lambda: BalanceSchedulerDayOffWindow().exec())

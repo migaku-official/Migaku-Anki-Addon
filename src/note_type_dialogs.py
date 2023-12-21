@@ -1,5 +1,4 @@
 from typing import Optional
-import re
 
 import anki
 import aqt
@@ -139,7 +138,7 @@ class ManageNoteDialog(QDialog):
                 field_item = QTableWidgetItem(field_name_clean)
                 field_item.setFlags(
                     field_item.flags()
-                    & ~(Qt.ItemIsEditable | Qt.ItemFlag.ItemIsSelectable)
+                    & ~(Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsSelectable)
                 )
 
                 list_widget.setItem(i, 0, field_item)
@@ -257,7 +256,9 @@ class AddNoteDialog(QDialog):
             item.setData(Qt.ItemDataRole.UserRole, lang.code)
             self.list.addItem(item)
 
-        button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        button_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
         lyt.addWidget(button_box)
@@ -291,7 +292,7 @@ def on_manage_migaku(notes_editor: aqt.models.Models):
 def on_add_migaku(notes_editor: aqt.models.Models):
     dlg = AddNoteDialog(notes_editor.mw, parent=notes_editor)
     r = dlg.exec()
-    if r == QDialog.Accepted:
+    if r == QDialog.DialogCode.Accepted:
         notes_editor.refresh_list()
 
 
@@ -299,6 +300,3 @@ def setup_note_editor(buttons, notes_editor: aqt.models.Models):
     buttons.append(("Migaku Options", lambda: on_manage_migaku(notes_editor)))
     buttons.append(("Add Migaku\nNote Type", lambda: on_add_migaku(notes_editor)))
     return buttons
-
-
-aqt.gui_hooks.models_did_init_buttons.append(setup_note_editor)

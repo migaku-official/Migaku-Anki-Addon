@@ -1,20 +1,24 @@
 import os
-from typing import List
+import re
 import json
+from typing import List
 
 import aqt
+import anki
 from aqt.editor import Editor
 
-from . import note_type_mgr
-from . import util
-from .util import addon_path
+from ..config import get, set
+from ..languages import Language
+from ..note_type_mgr import nt_get_lang
+from ..util import addon_path, show_critical
+from ..migaku_fields import get_migaku_fields
 
 
 def editor_get_lang(editor: Editor):
     if editor.note:
         nt = editor.note.note_type()
         if nt:
-            return note_type_mgr.nt_get_lang(nt)
+            return nt_get_lang(nt)
     return None
 
 
@@ -27,7 +31,7 @@ def editor_generate_syntax(editor: Editor):
         return
 
     if not aqt.mw.migaku_connection.is_connected():
-        util.show_critical("Anki is not connected to the Browser Extension.")
+        show_critical("Anki is not connected to the Browser Extension.")
         return
 
     note_id = editor.note.id
@@ -54,7 +58,7 @@ def editor_generate_syntax(editor: Editor):
             [{note_id_key: text}],
             lang.code,
             on_done=handle_syntax,
-            on_error=lambda msg: util.show_critical(msg, parent=editor.parentWindow),
+            on_error=lambda msg: show_critical(msg, parent=editor.parentWindow),
             callback_on_main_thread=True,
             timeout=10,
         )
@@ -86,6 +90,11 @@ def editor_remove_syntax(editor: Editor):
     editor.call_after_note_saved(callback=do_edit, keepFocus=True)
 
 
+def toggle_migaku_mode(editor: Editor):
+    data = get_migaku_fields(editor.note.note_type())
+    editor.web.eval(f"MigakuEditor.toggleMode({json.dumps(data)});")
+
+
 def setup_editor_buttons(buttons: List[str], editor: Editor):
     added_buttons = [
         editor.addButton(
@@ -106,35 +115,71 @@ def setup_editor_buttons(buttons: List[str], editor: Editor):
         ),
     ]
 
+    if editor.addMode:
+        added_buttons.append(
+            editor.addButton(
+                label="Field Maps",
+                icon=None,
+                id="migaku_btn_toggle_mode",
+                cmd="migaku_toggle_mode",
+                toggleable=True,
+                disables=False,
+                func=toggle_migaku_mode,
+            )
+        )
+
     buttons[0:0] = added_buttons
     return buttons
 
 
-aqt.gui_hooks.editor_did_init_buttons.append(setup_editor_buttons)
+def editor_get_js_by_lang(lang: Language):
+    add_icon_path = lang.web_uri("icons", "generate.svg")
+    remove_icon_path = lang.web_uri("icons", "remove.svg")
+    no_icon_invert = os.path.exists(lang.file_path("icons", "no_invert"))
+    img_filter = "invert(0)" if no_icon_invert else ""
+
+    return f"MigakuEditor.initButtons('{add_icon_path}', '{remove_icon_path}', '{img_filter}');"
 
 
-def editor_note_changed(editor: Editor):
+def editor_did_load_note(editor: Editor):
     lang = editor_get_lang(editor)
-    if lang is None:
-        js = """
-            document.getElementById('migaku_btn_syntax_generate').style.display = 'none';
-            document.getElementById('migaku_btn_syntax_remove').style.display = 'none';
-        """
-    else:
-        add_icon_path = lang.web_uri("icons", "generate.svg")
-        remove_icon_path = lang.web_uri("icons", "remove.svg")
-        no_icon_invert = os.path.exists(lang.file_path("icons", "no_invert"))
-        img_filter = "invert(0)" if no_icon_invert else ""
+    js = "MigakuEditor.hideButtons();" if lang is None else editor_get_js_by_lang(lang)
 
-        js = f"""
-            document.querySelector('#migaku_btn_syntax_generate img').src = '{add_icon_path}';
-            document.querySelector('#migaku_btn_syntax_generate img').style.filter = '{img_filter}';
-            document.querySelector('#migaku_btn_syntax_remove img').src = '{remove_icon_path}';
-            document.querySelector('#migaku_btn_syntax_remove img').style.filter = '{img_filter}';
-            document.getElementById('migaku_btn_syntax_generate').style.display = '';
-            document.getElementById('migaku_btn_syntax_remove').style.display = '';
-        """
     editor.web.eval(js)
 
 
-aqt.gui_hooks.editor_did_load_note.append(editor_note_changed)
+def on_migaku_bridge_cmds(self: Editor, cmd: str, _old):
+    if cmd.startswith("migakuIntercept"):
+        (_, value) = cmd.split(":", 1)
+        set("migakuIntercept", True if value == "true" else False, do_write=True)
+
+    elif cmd.startswith("migakuSelectChange"):
+        (_, migaku_type, field_name) = cmd.split(":", 2)
+        migakuFields = get("migakuFields", {})
+
+        set(
+            "migakuFields",
+            {
+                **migakuFields,
+                self.note.mid: {
+                    **(
+                        migakuFields[self.note.mid]
+                        if self.note.mid in migakuFields
+                        else {}
+                    ),
+                    field_name: migaku_type,
+                },
+            },
+            do_write=True,
+        )
+    else:
+        _old(self, cmd)
+
+
+def editor_did_init(editor: Editor):
+    with open(addon_path("editor/editor.js"), "r", encoding="utf-8") as editor_file:
+        editor.web.eval(editor_file.read())
+
+
+def reset_migaku_mode(editor: Editor):
+    editor.web.eval(f"MigakuEditor.resetMigakuEditor();")
