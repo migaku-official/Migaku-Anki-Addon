@@ -59,7 +59,6 @@ function getSelectorField(editorField, settings) {
   select.value = settings[labelName] ?? 'none'
 
   select.addEventListener('change', (selectTarget) => {
-
     const cmd = `migakuSelectChange:${selectTarget.currentTarget.value}:${labelName}`
     bridgeCommand(cmd)
   })

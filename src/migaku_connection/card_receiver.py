@@ -29,6 +29,9 @@ class CardReceiver(MigakuHTTPHandler):
     def create_card(self, card: CardFields):
         if get("migakuIntercept", False) and map_to_add_cards(card):
             print("Tryied to map to add cards.")
+            aqt.mw.taskman.run_on_main(
+                lambda: aqt.utils.tooltip("Mapped Migaku fields to Add cards window.")
+            )
             self.finish(json.dumps({"id": 0, "created": False}))
             return
 
@@ -39,6 +42,11 @@ class CardReceiver(MigakuHTTPHandler):
 
         if not any([type != "none" for (fieldname, type) in fields.items()]):
             print("No fields to map to.")
+            aqt.mw.taskman.run_on_main(
+                lambda: aqt.utils.tooltip(
+                    "Could not create Migaku Card: No fields to map to."
+                )
+            )
             self.finish({"error": "No fields to map to."})
             return
 
