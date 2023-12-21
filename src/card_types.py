@@ -1,6 +1,7 @@
 from base64 import b64decode
 from dataclasses import dataclass, field
 from typing import Optional
+import requests
 
 from .migaku_connection.handle_files import move_file_to_media_dir
 
@@ -10,7 +11,7 @@ class AudioAsset:
     id: str
     title: str
     input: str
-    r2Url: Optional[str]
+    r2Url: Optional[str] = None
 
 
 @dataclass
@@ -19,7 +20,7 @@ class ImageAsset:
     title: str
     src: str
     alt: str
-    r2Url: Optional[str]
+    r2Url: Optional[str] = None
 
 
 @dataclass
@@ -43,32 +44,39 @@ def process_image_asset(image: ImageAsset):
 
 
 def process_audio_asset(audio: AudioAsset):
-    data = audio.input.split(",", 1)[1]
     name = f"{audio.id}.m4a"
-    move_file_to_media_dir(b64decode(data), name)
+
+    if audio.input.startswith("data:audio/mp4;base64,"):
+        data = audio.input.split(",", 1)[1]
+        move_file_to_media_dir(b64decode(data), name)
+    elif audio.input.startswith("http"):
+        data = requests.get(audio.input, allow_redirects=True)
+        move_file_to_media_dir(data.content, name)
+
     return f"[sound:{name}]"
 
 
 def card_fields_from_dict(d: dict[str, any]):
     br = "\n<br>\n"
+
     sentenceAudios = br.join(
-        [process_audio_asset(AudioAsset(**a)) for a in d.get("sentenceAudio", [])]
+        [process_audio_asset(AudioAsset(**audio)) for audio in data.get("sentenceAudio", [])]
     )
     wordAudios = br.join(
-        [process_audio_asset(AudioAsset(**a)) for a in d.get("wordAudio", [])]
+        [process_audio_asset(AudioAsset(**audio)) for audio in data.get("wordAudio", [])]
     )
     imagess = br.join(
-        [process_image_asset(ImageAsset(**a)) for a in d.get("images", [])]
+        [process_image_asset(ImageAsset(**img)) for img in data.get("images", [])]
     )
 
     return CardFields(
-        targetWord=d.get("targetWord", ""),
-        sentence=d.get("sentence", ""),
-        translation=d.get("translation", ""),
-        definitions=d.get("definitions", ""),
+        targetWord=data.get("targetWord", ""),
+        sentence=data.get("sentence", ""),
+        translation=data.get("translation", ""),
+        definitions=data.get("definitions", ""),
         sentenceAudio=sentenceAudios,
         wordAudio=wordAudios,
         images=imagess,
-        exampleSentences=d.get("exampleSentences", ""),
-        notes=d.get("notes", ""),
+        exampleSentences=data.get("exampleSentences", ""),
+        notes=data.get("notes", ""),
     )
