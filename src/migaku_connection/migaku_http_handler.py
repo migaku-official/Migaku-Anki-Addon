@@ -14,7 +14,8 @@ class MigakuHTTPHandler(tornado.web.RequestHandler):
         self.connection = self.application.settings["connection"]
 
     def check_version(self):
-        version = int(self.get_body_argument("version", default=False))
+        version_string = self.get_body_argument("version", default=False)
+        version = int(version_string)
         version_match = self.connection.PROTOCOL_VERSION == version
         return version_match
 

@@ -1,7 +1,7 @@
 import aqt
 from aqt.qt import *
 
-from . import config
+from .. import config
 
 
 def reset_ease(sync=True, force_sync=True):

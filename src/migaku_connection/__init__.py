@@ -10,6 +10,7 @@ from ..util import DEFAULT_PORT
 from .hello import MigakuHello
 from .migaku_connector import MigakuConnector
 from .card_creator import CardCreator
+from .card_receiver import CardReceiver
 from .audio_condenser import AudioCondenser
 from .learning_status_handler import LearningStatusHandler
 from .profile_data_provider import ProfileDataProvider
@@ -141,8 +142,8 @@ class MigakuConnection(QObject):
         ("/condense", AudioCondenser),
         ("/learning-statuses", LearningStatusHandler),
         ("/create", CardCreator),
+        ("/receive", CardReceiver),
         ("/profile-data", ProfileDataProvider),
-        ("/create", CardCreator),
         ("/info", InfoProvider),
         ("/sendcard", CardSender),
         ("/search", SearchHandler),

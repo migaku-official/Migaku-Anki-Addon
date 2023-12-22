@@ -1,0 +1,47 @@
+<script>
+  const MigakuToolbar = function () { }
+
+  MigakuToolbar.refresh = (info) => {
+    const {
+      // deck,
+      // deck_id,
+      deck_name,
+      // fields,
+      // notetype,
+      // notetype_id,
+      notetype_name,
+      // tags,
+    } = info
+
+    document.getElementById('migakuNotetype').innerText = notetype_name
+    document.getElementById('migakuDeck').innerText = deck_name
+  }
+
+  MigakuToolbar.activate = (info) => {
+    MigakuToolbar.refresh(info)
+    const toolbar = document.getElementById('migakuToolbar')
+    toolbar.style.display = 'flex'
+    toolbar.addEventListener('click', openAddCards)
+  }
+
+  MigakuToolbar.deactivate = () => {
+    const toolbar = document.getElementById('migakuToolbar')
+    toolbar.style.display = 'none'
+    toolbar.removeEventListener('click', openAddCards)
+  }
+
+  function openAddCards() {
+    bridgeCommand('openAddCards')
+  }
+</script>
+
+<div id="migakuToolbar" style="display: none; font-size: 75%; margin: 5px; cursor: pointer;">
+  <!-- We put it into the Migaku toolbar instead-->
+  <!-- <div>
+    <small>Target for Migaku Cards:&nbsp;&nbsp;</small>
+  </div>
+  <div>
+    <div>Type: <strong id="migakuNotetype"></strong></div>
+    <div>Deck: <strong id="migakuDeck"></strong></div>
+  </div> -->
+</div>

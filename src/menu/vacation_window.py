@@ -222,5 +222,5 @@ class BalanceSchedulerVacationWindow(QDialog):
         return max(0, date.toJulianDay() - self.col_date.toJulianDay())
 
 
-action = QAction("Manage Vacations", aqt.mw)
+action = QAction("Manage Vacations…", aqt.mw)
 action.triggered.connect(lambda: BalanceSchedulerVacationWindow().exec())
