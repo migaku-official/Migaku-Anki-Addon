@@ -22,7 +22,7 @@ class CardReceiver(MigakuHTTPHandler):
             card = card_fields_from_dict(body)
             self.create_card(card)
         except Exception as e:
-            self.finish({"error": f"Invalid request: {str(e)}."})
+            self.finish({"success": False, "error": f"Invalid request: {str(e)}."})
 
         return
 
@@ -32,7 +32,14 @@ class CardReceiver(MigakuHTTPHandler):
             aqt.mw.taskman.run_on_main(
                 lambda: aqt.utils.tooltip("Mapped Migaku fields to Add cards window.")
             )
-            self.finish(json.dumps({"id": 0, "created": False}))
+            self.finish(
+                json.dumps(
+                    {
+                        "success": True,
+                        "created": False,
+                    }
+                )
+            )
             return
 
         info = get_add_cards_info()
@@ -47,7 +54,12 @@ class CardReceiver(MigakuHTTPHandler):
                     "Could not create Migaku Card: No fields to map to."
                 )
             )
-            self.finish({"error": "No fields to map to."})
+            self.finish(
+                {
+                    "success": False,
+                    "error": "No fields to map to.",
+                }
+            )
             return
 
         for fieldname, type in fields.items():
@@ -66,4 +78,12 @@ class CardReceiver(MigakuHTTPHandler):
         aqt.mw.taskman.run_on_main(lambda: add_cards_add_to_history(note))
         print(f"Card created. ID: {note.id}.")
 
-        self.finish(json.dumps({"id": note.id, "created": True}))
+        self.finish(
+            json.dumps(
+                {
+                    "success": True,
+                    "created": True,
+                    "id": note.id,
+                }
+            )
+        )
