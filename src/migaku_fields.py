@@ -41,9 +41,6 @@ def infer_migaku_type(
         return "targetWord"
     if (
         re.search(
-            r"(image|画像|图片|이미지|imagen|imagem|image|bild|imagem)", name, re.IGNORECASE
-        )
-        or re.search(
             r"(picture|画像|图片|이미지|imagen|imagem|image|bild|imagem)", name, re.IGNORECASE
         )
         or re.search(r"(photo|写真|照片|사진|foto|foto|photo|foto|foto)", name, re.IGNORECASE)
