@@ -155,23 +155,19 @@ def on_migaku_bridge_cmds(self: Editor, cmd: str, _old):
 
     elif cmd.startswith("migakuSelectChange"):
         (_, migaku_type, field_name) = cmd.split(":", 2)
-        migakuFields = get("migakuFields", {})
+        migaku_fields = get("migakuFields", {})
+        mid_str = str(self.note.mid)
+        exisiting_mapping = migaku_fields[mid_str] if mid_str in migaku_fields else {}
 
-        set(
-            "migakuFields",
-            {
-                **migakuFields,
-                self.note.mid: {
-                    **(
-                        migakuFields[self.note.mid]
-                        if self.note.mid in migakuFields
-                        else {}
-                    ),
-                    field_name: migaku_type,
-                },
+        new_migaku_fields = {
+            **migaku_fields,
+            mid_str: {
+                **exisiting_mapping,
+                field_name: migaku_type,
             },
-            do_write=True,
-        )
+        }
+
+        set("migakuFields", new_migaku_fields, do_write=True)
     else:
         _old(self, cmd)
 
