@@ -5,7 +5,8 @@ function MigakuEditor() { }
  * @param {string} remove_icon_path 
  * @param {string} img_filter 
  */
-MigakuEditor.initButtons = function (add_icon_path, remove_icon_path, img_filter) {
+MigakuEditor.initButtons = async function (add_icon_path, remove_icon_path, img_filter) {
+  await new Promise((resolve) => setTimeout(resolve, 400))
   document.querySelector('#migaku_btn_syntax_generate img').src = add_icon_path;
   document.querySelector('#migaku_btn_syntax_generate img').style.filter = img_filter;
   document.querySelector('#migaku_btn_syntax_remove img').src = remove_icon_path;
