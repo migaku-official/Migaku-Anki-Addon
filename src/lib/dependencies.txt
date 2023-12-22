@@ -1,4 +1,3 @@
-six                                         shared/six
 tornado                                     shared/tornado
 pydub                                       shared/pydub
 appdirs                                     shared/appdirs.py

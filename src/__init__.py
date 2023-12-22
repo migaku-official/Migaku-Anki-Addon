@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from platform import platform
+import platform
 import sys
 import os
 
