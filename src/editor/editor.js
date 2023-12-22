@@ -80,7 +80,11 @@ function setupMigakuEditor(settings) {
   document.querySelectorAll('.editing-area').forEach((field) => field.style.display = 'none');
   document.querySelectorAll('.plain-text-badge').forEach((field) => field.style.display = 'none');
   document.querySelectorAll('svg#mdi-pin-outline').forEach((field) => field.parentElement.parentElement.parentElement.style.display = 'none');
-  hiddenButtonCategories.forEach((category) => document.querySelector(`.item#${category}`).style.display = 'none');
+
+  hiddenButtonCategories.forEach((category) => {
+    const button = document.querySelector(`.item#${category}`)
+    if (button) button.style.display = 'none'
+  });
 
   for (const field of document.querySelectorAll('.editor-field')) {
     field.append(getSelectorField(field, settings))
@@ -91,7 +95,11 @@ MigakuEditor.resetMigakuEditor = function () {
   document.querySelectorAll('.editing-area').forEach((field) => field.style.display = '');
   document.querySelectorAll('.plain-text-badge').forEach((field) => field.style.display = '');
   document.querySelectorAll('svg#mdi-pin-outline').forEach((field) => field.parentElement.parentElement.parentElement.style.display = '');
-  hiddenButtonCategories.forEach((category) => document.querySelector(`.item#${category}`).style.display = '');
+
+  hiddenButtonCategories.forEach((category) => {
+    const button = document.querySelector(`.item#${category}`)
+    if (button) button.style.display = ''
+  });
 
   document.querySelectorAll('.migaku-field-selector').forEach((selector) => selector.remove());
 }
