@@ -8,8 +8,8 @@ from aqt.qt import QWidget, QAction
 from aqt.reviewer import Reviewer
 from aqt.operations import CollectionOp
 
-from . import config
-from . import util
+from .. import config
+from .. import util
 
 
 class RetirementHandler:
@@ -285,10 +285,10 @@ def answer_hook(rev: Reviewer, card: Card, ease: Literal[1, 2, 3, 4]) -> None:
 aqt.gui_hooks.reviewer_did_answer_card.append(answer_hook)
 
 
-with open(util.addon_path("retirement.html")) as f:
+with open(util.addon_path("menu/retirement.html")) as f:
     retirement_html = f.read()
 
-with open(util.addon_path("retirement.js")) as f:
+with open(util.addon_path("menu/retirement.js")) as f:
     retirement_js = f.read()
 
 

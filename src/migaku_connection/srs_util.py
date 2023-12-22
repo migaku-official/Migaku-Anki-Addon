@@ -229,7 +229,9 @@ def _upload_media_single_attempt(fname, user_token, is_audio=False):
             out_path = tmp_path(fname)
             # The arguments to ffmpeg are the same as in MM
             r = aqt.mw.migaku_connection.ffmpeg.call(
+
                 "-y", "-i", in_path, "-vn", "-b:a", "128k", out_path,
+
             )
             if r != 0:
                 # ignore failed conversions, most likely bad audio

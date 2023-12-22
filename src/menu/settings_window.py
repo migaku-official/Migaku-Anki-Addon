@@ -2,9 +2,9 @@ import anki
 import aqt
 from aqt.qt import *
 
-from . import util
-from . import config
-from .settings_widgets import SETTINGS_WIDGETS
+from .. import util
+from .. import config
+from ..settings_widgets import SETTINGS_WIDGETS
 
 
 class SettingsWindow(QDialog):

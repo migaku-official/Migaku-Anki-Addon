@@ -216,8 +216,6 @@ def reviewer_reshow(reviewer: Reviewer, mute=False, reload_card=True) -> None:
 
 
 # Copied from aqt.editor.Editor and aqt.editor.EditorWebView with minimal changes
-
-
 class PasteHandler:
     pics = ("jpg", "jpeg", "png", "tif", "tiff", "gif", "svg", "webp", "ico")
 
