@@ -40,7 +40,6 @@ const selectorOptions = [
 ]
 
 function getSelectorField(editorField, settings) {
-  console.log('settings', settings)
   const field = document.createElement('div');
   field.classList.add('migaku-field-selector');
 
@@ -56,8 +55,14 @@ function getSelectorField(editorField, settings) {
   }
 
   const fieldContainer = editorField.parentElement.parentElement
-  const labelName = editorField.querySelector('.label-name')?.innerText ?? fieldContainer.querySelector('.label-name').innerText
-  select.value = settings[labelName] ?? 'none'
+
+  const labelName = editorField.querySelector('.label-name')
+    ? editorField.querySelector('.label-name').innerText
+    : editorField.querySelector('.fieldname')
+      ? editorField.querySelector('.fieldname').innerText
+      : fieldContainer.querySelector('.label-name').innerText
+
+  select.value = settings[labelName] || 'none'
 
   select.addEventListener('change', (selectTarget) => {
     const cmd = `migakuSelectChange:${selectTarget.currentTarget.value}:${labelName}`
@@ -81,13 +86,21 @@ function setupMigakuEditor(settings) {
   document.querySelectorAll('.editing-area').forEach((field) => field.style.display = 'none');
   document.querySelectorAll('.plain-text-badge').forEach((field) => field.style.display = 'none');
   document.querySelectorAll('svg#mdi-pin-outline').forEach((field) => field.parentElement.parentElement.parentElement.style.display = 'none');
+  document.querySelectorAll('.field').forEach((field) => field.style.display = 'none');
+
   hiddenButtonCategories.forEach((category) => {
     const item = document.querySelector(`.item#${category}`)
     if (item) item.style.display = 'none'
   });
 
-  for (const field of document.querySelectorAll('.editor-field')) {
-    field.append(getSelectorField(field, settings))
+  if (document.querySelector('.editor-field')) {
+    for (const field of document.querySelectorAll('.editor-field')) {
+      field.append(getSelectorField(field, settings))
+    }
+  } else {
+    for (const field of document.querySelectorAll('.field')) {
+      field.parentElement.append(getSelectorField(field.parentElement, settings))
+    }
   }
 }
 
@@ -95,6 +108,7 @@ MigakuEditor.resetMigakuEditor = function () {
   document.querySelectorAll('.editing-area').forEach((field) => field.style.display = '');
   document.querySelectorAll('.plain-text-badge').forEach((field) => field.style.display = '');
   document.querySelectorAll('svg#mdi-pin-outline').forEach((field) => field.parentElement.parentElement.parentElement.style.display = '');
+  document.querySelectorAll('.field').forEach((field) => field.style.display = '');
 
   hiddenButtonCategories.forEach((category) => {
     const item = document.querySelector(`.item#${category}`)
@@ -111,31 +125,38 @@ MigakuEditor.toggleMode = function (settings) {
   }
 }
 
+function setupToggleMode() {
+  const migakuMode = document.getElementById('migaku_btn_toggle_mode')
+  migakuMode.style.width = 'auto'
+  if (!migakuMode) return
 
-require('anki/ui')
-  .loaded
-  .then(() => new Promise((resolve) => setTimeout(resolve, 400)))
-  .then(() => {
-    const migakuMode = document.getElementById('migaku_btn_toggle_mode')
-    migakuMode.style.width = 'auto'
-    if (!migakuMode) return
+  const input = document.createElement('input')
+  input.type = 'checkbox'
+  input.id = 'migaku_btn_intercept_fields'
+  input.style.margin = '0 3px'
 
-    const input = document.createElement('input')
-    input.type = 'checkbox'
-    input.id = 'migaku_btn_intercept_fields'
-    input.style.margin = '0 3px'
+  const label = document.createElement('label')
+  label.htmlFor = 'migaku_btn_intercept_fields'
+  label.textContent = 'Intercept Fields'
+  label.style.userSelect = 'none'
+  label.style.padding = '0 3px'
 
-    const label = document.createElement('label')
-    label.htmlFor = 'migaku_btn_intercept_fields'
-    label.textContent = 'Intercept Fields'
-    label.style.userSelect = 'none'
-    label.style.padding = '0 3px'
-
-    input.addEventListener('change', (e) => {
-      const cmd = `migakuIntercept:${e.currentTarget.checked}`
-      bridgeCommand(cmd)
-    })
-
-    migakuMode.parentElement.append(input)
-    migakuMode.parentElement.append(label)
+  input.addEventListener('change', (e) => {
+    const cmd = `migakuIntercept:${e.currentTarget.checked}`
+    bridgeCommand(cmd)
   })
+
+  migakuMode.parentElement.append(input)
+  migakuMode.parentElement.append(label)
+}
+
+try {
+  // Newer Anki
+  require('anki/ui')
+    .loaded
+    .then(() => new Promise((resolve) => setTimeout(resolve, 400)))
+    .then(setupToggleMode)
+} catch (e) {
+  new Promise((resolve) => setTimeout(resolve, 400))
+    .then(setupToggleMode)
+}

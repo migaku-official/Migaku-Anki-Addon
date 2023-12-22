@@ -53,11 +53,17 @@ def setup_hooks():
 
     if getattr(aqt.gui_hooks, "add_cards_did_change_deck", None):
         aqt.gui_hooks.add_cards_did_change_deck.append(deck_change)
-    else:
+    elif getattr(aqt.addcards.AddCards, "on_deck_changed", None):
         aqt.addcards.AddCards.on_deck_changed = anki.hooks.wrap(
             aqt.addcards.AddCards.on_deck_changed,
             lambda _, id: deck_change(id),
             "before",
+        )
+    else:
+        aqt.deckchooser.DeckChooser.choose_deck = anki.hooks.wrap(
+            aqt.deckchooser.DeckChooser.choose_deck,
+            lambda deckchooser: deck_change(deckchooser.selected_deck_id),
+            "after",
         )
 
     ### MODEL CHANGE
