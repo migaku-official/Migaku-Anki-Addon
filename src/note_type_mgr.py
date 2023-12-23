@@ -18,10 +18,10 @@ FIELD_RE = re.compile(
 )
 SETTINGS_RE = re.compile(r"data-(.*?)=\"(.*?)\"")
 FORMAT_RE = re.compile(
-    r"<!--###MIGAKU (.*?) SUPPORT JS STARTS###.*?SUPPORT JS ENDS###-->", re.DOTALL
+    r"<!--###MIGAKU (.*?) SUPPORT JS STARTS###.*?SUPPORT JS ENDS###.*-->", re.DOTALL
 )
 STYLE_RE = re.compile(
-    r"/\*###MIGAKU (.*?) SUPPORT CSS STARTS###.*?SUPPORT CSS ENDS###\*/", re.DOTALL
+    r"/\*###MIGAKU (.*?) SUPPORT CSS STARTS###.*?SUPPORT CSS ENDS###.*\*/", re.DOTALL
 )
 
 
