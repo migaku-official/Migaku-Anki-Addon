@@ -248,9 +248,7 @@
       let ret = [];
 
       // without workarounds for missing spaces: /{([^]*?)}|((\S*)\[(.*?)\](\S*))|([^ {]+)/gm
-      const syntax_re = RegExp(
-        /{([^]*?)}|(([^\[\]\s\{\}　]*)\[(.*?)\]([^\[\]\s\{\}　]*))|([^ \u00A0{]+)/gm
-      );
+      const syntax_re = /{([^]*?)}|(([^\[\]\s\{\}　]*)\[(.*?)\]([^\[\]\s\{\}　]*))|([^ \u00A0{　]+)/gm
 
       const ja_text_re = new RegExp(
         /[\u3041-\u3096\u30A0-\u30FF\u3400-\u4DB5\u4E00-\u9FCB\uF900-\uFA6A\u2E80-\u2FD5\uFF65-\uFF9F\々]/m
@@ -453,6 +451,11 @@
           text_content.appendChild(ruby_elem);
 
           for (const segment of segments) {
+            if (field_settings.furigana === "replace") {
+              ruby_elem.appendChild(document.createTextNode(segment.reading))
+              continue
+            }
+
             ruby_elem.appendChild(document.createTextNode(segment.text));
 
             const rt_elem = document.createElement('rt');
@@ -501,7 +504,7 @@
           const popup_text =
             syntax_element.dict_form ||
             (syntax_element.reading || syntax_element.word_pre) +
-              syntax_element.word_post;
+            syntax_element.word_post;
 
           if (popup_text) {
             const popup_hover_box = document.createElement('div');
@@ -633,6 +636,67 @@
       }
     }
 
+    function migakuJapaneseDisplayTypeToFieldSettings(displayType) {
+      switch (displayType) {
+        case "hover":
+          return {
+            popup: 'yes',
+            pitch_coloring: 'no',
+            pitch_shapes: 'no',
+            furigana: 'hover',
+          }
+        case "reading":
+          return {
+            popup: 'yes',
+            pitch_coloring: 'no',
+            pitch_shapes: 'no',
+            furigana: 'replace',
+          }
+        case "kanji":
+          return {
+            popup: 'yes',
+            pitch_coloring: 'no',
+            pitch_shapes: 'no',
+            furigana: 'no',
+          }
+        case "coloredkanji":
+          return {
+            popup: 'yes',
+            pitch_coloring: 'yes',
+            pitch_shapes: 'no',
+            furigana: 'no',
+          }
+        case "kanjireading":
+          return {
+            popup: 'yes',
+            pitch_coloring: 'no',
+            pitch_shapes: 'no',
+            furigana: 'yes',
+          }
+        case "coloredkanjireading":
+          return {
+            popup: 'yes',
+            pitch_coloring: 'yes',
+            pitch_shapes: 'no',
+            furigana: 'yes',
+          }
+        case "coloredhover":
+          return {
+            popup: 'yes',
+            pitch_coloring: 'hover',
+            pitch_shapes: 'no',
+            furigana: 'hover',
+          }
+        case "coloredreading":
+          return {
+            popup: 'yes',
+            pitch_coloring: 'yes',
+            pitch_shapes: 'no',
+            furigana: 'replace',
+          }
+      }
+    }
+
     function handleField(field) {
       // Ignore field if it doesn't contain syntax
       const syntax_test_re = /[\{\}\[\]]/;
@@ -640,24 +704,25 @@
         return;
       }
 
-      const field_settings = {
-        popup: field.getAttribute('data-popup') || 'no',
-        pitch_coloring: field.getAttribute('data-pitch-coloring') || 'no',
-        pitch_shapes: field.getAttribute('data-pitch-shapes') || 'no',
-        furigana: field.getAttribute('data-furigana') || 'no',
-      };
+      const field_settings =
+        field.hasAttribute('display-type')
+          ? migakuJapaneseDisplayTypeToFieldSettings(field.getAttribute('display-type'))
+          : {
+            popup: "no",
+            pitch_coloring: "no",
+            pitch_shapes: "no",
+            furigana: "no",
+          }
 
-      if (
-        field_settings.popup === 'yes' &&
-        field_settings.furigana === 'hover'
-      ) {
-        field_settings.furigana = 'hidden';
-      }
+      if (field.hasAttribute('data-popup')) field_settings.popup = field.getAttribute('data-popup');
+      if (field.hasAttribute('data-pitch-coloring')) field_settings.pitch_coloring = field.getAttribute('data-pitch-coloring');
+      if (field.hasAttribute('data-pitch-shapes')) field_settings.pitch_shapes = field.getAttribute('data-pitch-shapes');
+      if (field.hasAttribute('data-furigana')) field_settings.furigana = field.getAttribute('data-furigana');
 
       handleFieldTextNodes(field, field_settings);
     }
 
-    const fields = document.querySelectorAll('.field');
+    const fields = document.querySelectorAll('.field, .wrapped-japanese');
 
     for (field of fields) {
       handleField(field);
