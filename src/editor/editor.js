@@ -5,26 +5,27 @@ function MigakuEditor() { }
  * @param {string} remove_icon_path 
  * @param {string} img_filter 
  */
-MigakuEditor.initButtons = async function (add_icon_path, remove_icon_path, img_filter) {
-  await new Promise((resolve) => setTimeout(resolve, 400))
+MigakuEditor.initButtons = async function (add_icon_path, remove_icon_path, img_filter, intercept) {
+  await new Promise((resolve) => setTimeout(resolve, 300));
   document.querySelector('#migaku_btn_syntax_generate img').src = add_icon_path;
   document.querySelector('#migaku_btn_syntax_generate img').style.filter = img_filter;
   document.querySelector('#migaku_btn_syntax_remove img').src = remove_icon_path;
   document.querySelector('#migaku_btn_syntax_remove img').style.filter = img_filter;
   document.getElementById('migaku_btn_syntax_generate').style.display = '';
   document.getElementById('migaku_btn_syntax_remove').style.display = '';
-}
+  document.getElementById('migaku_btn_intercept_fields').checked = intercept;
+};
 
 MigakuEditor.hideButtons = function () {
   if (!document.getElementById('migaku_btn_syntax_generate')) setTimeout(() => {
     document.getElementById('migaku_btn_syntax_generate').style.display = 'none';
     document.getElementById('migaku_btn_syntax_remove').style.display = 'none';
-  }, 100)
+  }, 100);
   else {
     document.getElementById('migaku_btn_syntax_generate').style.display = 'none';
     document.getElementById('migaku_btn_syntax_remove').style.display = 'none';
   }
-}
+};
 
 /** These are the values on CardFields */
 const selectorOptions = [
@@ -34,11 +35,13 @@ const selectorOptions = [
   { value: 'translation', text: 'Sentence Translation' },
   { value: 'sentenceAudio', text: 'Sentence Audio' },
   { value: 'wordAudio', text: 'Word Audio' },
-  { value: 'images', text: 'Image' },
+  { value: 'images', text: 'All Images' },
+  { value: 'firstImage', text: 'First Image' },
+  { value: 'restImages', text: 'Additional Images' },
   { value: 'definitions', text: 'Definitions' },
-  { value: 'exampleSentences', text: 'Example sentences' },
+  { value: 'exampleSentences', text: 'Example Sentences' },
   { value: 'notes', text: 'Notes' },
-]
+];
 
 function getSelectorField(editorField, settings) {
   const field = document.createElement('div');
@@ -55,22 +58,22 @@ function getSelectorField(editorField, settings) {
     select.append(optionElement);
   }
 
-  const fieldContainer = editorField.parentElement.parentElement
+  const fieldContainer = editorField.parentElement.parentElement;
 
   const labelName = editorField.querySelector('.label-name')
     ? editorField.querySelector('.label-name').innerText
     : editorField.querySelector('.fieldname')
       ? editorField.querySelector('.fieldname').innerText
-      : fieldContainer.querySelector('.label-name').innerText
+      : fieldContainer.querySelector('.label-name').innerText;
 
-  select.value = settings[labelName] || 'none'
+  select.value = settings[labelName] || 'none';
 
   select.addEventListener('change', (selectTarget) => {
-    const cmd = `migakuSelectChange:${selectTarget.currentTarget.value}:${labelName}`
-    bridgeCommand(cmd)
-  })
+    const cmd = `migakuSelectChange:${selectTarget.currentTarget.value}:${labelName}`;
+    bridgeCommand(cmd);
+  });
 
-  return field
+  return field;
 }
 
 const hiddenButtonCategories = [
@@ -80,27 +83,28 @@ const hiddenButtonCategories = [
   'template',
   'cloze',
   'image-occlusion-button',
-]
+];
 
 // New Migaku Editor
-function setupMigakuEditor(settings) {
+function setupMigakuEditor(settings, intercept) {
   document.querySelectorAll('.editing-area').forEach((field) => field.style.display = 'none');
   document.querySelectorAll('.plain-text-badge').forEach((field) => field.style.display = 'none');
   document.querySelectorAll('svg#mdi-pin-outline').forEach((field) => field.parentElement.parentElement.parentElement.style.display = 'none');
   document.querySelectorAll('.field').forEach((field) => field.style.display = 'none');
 
+
   hiddenButtonCategories.forEach((category) => {
-    const item = document.querySelector(`.item#${category}`)
-    if (item) item.style.display = 'none'
+    const item = document.querySelector(`.item#${category}`);
+    if (item) item.style.display = 'none';
   });
 
   if (document.querySelector('.editor-field')) {
     for (const field of document.querySelectorAll('.editor-field')) {
-      field.append(getSelectorField(field, settings))
+      field.append(getSelectorField(field, settings));
     }
   } else {
     for (const field of document.querySelectorAll('.field')) {
-      field.parentElement.append(getSelectorField(field.parentElement, settings))
+      field.parentElement.append(getSelectorField(field.parentElement, settings));
     }
   }
 }
@@ -112,52 +116,52 @@ MigakuEditor.resetMigakuEditor = function () {
   document.querySelectorAll('.field').forEach((field) => field.style.display = '');
 
   hiddenButtonCategories.forEach((category) => {
-    const item = document.querySelector(`.item#${category}`)
-    if (item) item.style.display = ''
+    const item = document.querySelector(`.item#${category}`);
+    if (item) item.style.display = '';
   });
   document.querySelectorAll('.migaku-field-selector').forEach((selector) => selector.remove());
-}
+};
 
-MigakuEditor.toggleMode = function (settings) {
+MigakuEditor.toggleMode = function (settings, intercept) {
   if (document.querySelector('.migaku-field-selector')) {
     MigakuEditor.resetMigakuEditor();
   } else {
     setupMigakuEditor(settings);
   }
-}
+};
 
 function setupToggleMode() {
-  const migakuMode = document.getElementById('migaku_btn_toggle_mode')
-  migakuMode.style.width = 'auto'
-  if (!migakuMode) return
+  const migakuMode = document.getElementById('migaku_btn_toggle_mode');
+  migakuMode.style.width = 'auto';
+  if (!migakuMode) return;
 
-  const input = document.createElement('input')
-  input.type = 'checkbox'
-  input.id = 'migaku_btn_intercept_fields'
-  input.style.margin = '0 3px'
+  const input = document.createElement('input');
+  input.type = 'checkbox';
+  input.id = 'migaku_btn_intercept_fields';
+  input.style.margin = '0 3px';
 
-  const label = document.createElement('label')
-  label.htmlFor = 'migaku_btn_intercept_fields'
-  label.textContent = 'Intercept Fields'
-  label.style.userSelect = 'none'
-  label.style.padding = '0 3px'
+  const label = document.createElement('label');
+  label.htmlFor = 'migaku_btn_intercept_fields';
+  label.textContent = 'Intercept Fields';
+  label.style.userSelect = 'none';
+  label.style.padding = '0 3px';
 
   input.addEventListener('change', (e) => {
-    const cmd = `migakuIntercept:${e.currentTarget.checked}`
-    bridgeCommand(cmd)
-  })
+    const cmd = `migakuIntercept:${e.currentTarget.checked}`;
+    bridgeCommand(cmd);
+  });
 
-  migakuMode.parentElement.append(input)
-  migakuMode.parentElement.append(label)
+  migakuMode.parentElement.append(input);
+  migakuMode.parentElement.append(label);
 }
 
 try {
   // Newer Anki
   require('anki/ui')
     .loaded
-    .then(() => new Promise((resolve) => setTimeout(resolve, 400)))
-    .then(setupToggleMode)
+    .then(() => new Promise((resolve) => setTimeout(resolve, 200)))
+    .then(setupToggleMode);
 } catch (e) {
-  new Promise((resolve) => setTimeout(resolve, 400))
-    .then(setupToggleMode)
+  new Promise((resolve) => setTimeout(resolve, 200))
+    .then(setupToggleMode);
 }

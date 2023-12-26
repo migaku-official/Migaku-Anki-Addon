@@ -39,23 +39,17 @@ def infer_migaku_type(
         r"(word|単語|单词|단어|palabra|palavra|mot|wort|palavra)", name, re.IGNORECASE
     ):
         return "targetWord"
-    if (
-        re.search(
-            r"(picture|画像|图片|이미지|imagen|imagem|image|bild|imagem)", name, re.IGNORECASE
-        )
-        or re.search(r"(photo|写真|照片|사진|foto|foto|photo|foto|foto)", name, re.IGNORECASE)
-        or re.search(
-            r"(drawing|絵|图画|그림|dibujo|desenho|dessin|zeichnung|desenho)",
-            name,
-            re.IGNORECASE,
-        )
-        or re.search(
-            r"(screenshot|スクリーンショット|截图|스크린샷|capturas de pantalla|capturas de tela|captures d'écran|bildschirmfotos|capturas de tela)",
-            name,
-            re.IGNORECASE,
-        )
+
+    if re.search(
+        r"(image|画像|图片|이미지|imagen|imagem|image|bild|imagem)", name, re.IGNORECASE
     ):
-        return "images"
+        return "restImages"
+    if re.search(
+        r"(screenshot|スクリーンショット|截图|스크린샷|capturas de pantalla|capturas de tela|captures d'écran|bildschirmfotos|capturas de tela)",
+        name,
+        re.IGNORECASE,
+    ):
+        return "firstImage"
 
     if re.search(
         r"(example|例|例句|例子|예|ejemplo|exemplo|exemple|beispiel|exemplo)",
