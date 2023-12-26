@@ -5,14 +5,15 @@ function MigakuEditor() { }
  * @param {string} remove_icon_path 
  * @param {string} img_filter 
  */
-MigakuEditor.initButtons = async function (add_icon_path, remove_icon_path, img_filter) {
-  await new Promise((resolve) => setTimeout(resolve, 400));
+MigakuEditor.initButtons = async function (add_icon_path, remove_icon_path, img_filter, intercept) {
+  await new Promise((resolve) => setTimeout(resolve, 300));
   document.querySelector('#migaku_btn_syntax_generate img').src = add_icon_path;
   document.querySelector('#migaku_btn_syntax_generate img').style.filter = img_filter;
   document.querySelector('#migaku_btn_syntax_remove img').src = remove_icon_path;
   document.querySelector('#migaku_btn_syntax_remove img').style.filter = img_filter;
   document.getElementById('migaku_btn_syntax_generate').style.display = '';
   document.getElementById('migaku_btn_syntax_remove').style.display = '';
+  document.getElementById('migaku_btn_intercept_fields').checked = intercept;
 };
 
 MigakuEditor.hideButtons = function () {
@@ -85,11 +86,12 @@ const hiddenButtonCategories = [
 ];
 
 // New Migaku Editor
-function setupMigakuEditor(settings) {
+function setupMigakuEditor(settings, intercept) {
   document.querySelectorAll('.editing-area').forEach((field) => field.style.display = 'none');
   document.querySelectorAll('.plain-text-badge').forEach((field) => field.style.display = 'none');
   document.querySelectorAll('svg#mdi-pin-outline').forEach((field) => field.parentElement.parentElement.parentElement.style.display = 'none');
   document.querySelectorAll('.field').forEach((field) => field.style.display = 'none');
+
 
   hiddenButtonCategories.forEach((category) => {
     const item = document.querySelector(`.item#${category}`);
@@ -120,7 +122,7 @@ MigakuEditor.resetMigakuEditor = function () {
   document.querySelectorAll('.migaku-field-selector').forEach((selector) => selector.remove());
 };
 
-MigakuEditor.toggleMode = function (settings) {
+MigakuEditor.toggleMode = function (settings, intercept) {
   if (document.querySelector('.migaku-field-selector')) {
     MigakuEditor.resetMigakuEditor();
   } else {
@@ -157,9 +159,9 @@ try {
   // Newer Anki
   require('anki/ui')
     .loaded
-    .then(() => new Promise((resolve) => setTimeout(resolve, 400)))
+    .then(() => new Promise((resolve) => setTimeout(resolve, 200)))
     .then(setupToggleMode);
 } catch (e) {
-  new Promise((resolve) => setTimeout(resolve, 400))
+  new Promise((resolve) => setTimeout(resolve, 200))
     .then(setupToggleMode);
 }

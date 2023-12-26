@@ -81,7 +81,11 @@ def get_add_cards_info(defaults=None):
         tags = note.tags
 
         if defaults:
-            notetype = aqt.mw.col.models.get(defaults.notetype_id)
+            notetype = (
+                aqt.mw.col.models.get(defaults.notetype_id)
+                or aqt.mw.col.models.get(cur_model)
+                or aqt.mw.col.models.all()[0]
+            )
             notetype_id = defaults.notetype_id
             deck_id = defaults.deck_id
         else:
@@ -90,6 +94,7 @@ def get_add_cards_info(defaults=None):
             deck_id = get_current_deck_id()
 
     else:
+        note = None
         notetype_id = int(get("migakuNotetypeId", cur_model))
         notetype = (
             aqt.mw.col.models.get(notetype_id)
@@ -99,8 +104,16 @@ def get_add_cards_info(defaults=None):
         deck_id = int(get("migakuDeckId", cur_deck))
         tags = []
 
-    deck = aqt.mw.col.decks.get(deck_id) or aqt.mw.col.decks.get(cur_deck)
+    deck = (
+        aqt.mw.col.decks.get(deck_id)
+        or aqt.mw.col.decks.get(cur_deck)
+        or aqt.mw.col.decks.all()[0]
+    )
+
+    deck_id = deck["id"]
     deck_name = deck["name"]
+
+    notetype_id = notetype["id"]
     notetype_name = notetype["name"]
     fields = get_migaku_fields(notetype)
 
@@ -112,6 +125,7 @@ def get_add_cards_info(defaults=None):
         "deck": deck,
         "deck_name": deck_name,
         "deck_id": deck_id,
+        "note": note,
         "tags": tags,
     }
 

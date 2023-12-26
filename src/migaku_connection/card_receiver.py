@@ -7,6 +7,7 @@ from ..config import get
 from ..card_types import CardFields, card_fields_from_dict
 from ..editor.current_editor import (
     add_cards_add_to_history,
+    get_add_cards,
     get_add_cards_info,
     map_to_add_cards,
 )
@@ -62,11 +63,16 @@ class CardReceiver(MigakuHTTPHandler):
             )
             return
 
-        for fieldname, type in fields.items():
-            if type == "none":
-                continue
+        addcards_note = info["note"] if "note" in info else None
 
-            note[fieldname] = str(getattr(card, type))
+        for fieldname, type in fields.items():
+            note[fieldname] = (
+                str(getattr(card, type))
+                if type != "none"
+                else addcards_note[fieldname]
+                if addcards_note
+                else ""
+            )
 
         note.tags = info["tags"]
         note.model()["did"] = int(info["deck_id"])
