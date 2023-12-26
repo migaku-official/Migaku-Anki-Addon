@@ -137,8 +137,9 @@ def editor_get_js_by_lang(lang: Language):
     remove_icon_path = lang.web_uri("icons", "remove.svg")
     no_icon_invert = os.path.exists(lang.file_path("icons", "no_invert"))
     img_filter = "invert(0)" if no_icon_invert else ""
+    intercept = get("migakuIntercept", False)
 
-    return f"MigakuEditor.initButtons('{add_icon_path}', '{remove_icon_path}', '{img_filter}');"
+    return f"MigakuEditor.initButtons('{add_icon_path}', '{remove_icon_path}', '{img_filter}', {json.dumps(intercept)});"
 
 
 def editor_did_load_note(editor: Editor):
