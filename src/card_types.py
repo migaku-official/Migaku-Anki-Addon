@@ -32,6 +32,8 @@ class CardFields:
     sentenceAudio: str = ""
     wordAudio: str = ""
     images: str = ""
+    firstImage: str = ""
+    restImages: str = ""
     exampleSentences: str = ""
     notes: str = ""
 
@@ -77,9 +79,12 @@ def card_fields_from_dict(data: dict[str, any]):
             for audio in data.get("wordAudio", [])
         ]
     )
-    imagess = br.join(
-        [process_image_asset(ImageAsset(**img)) for img in data.get("images", [])]
-    )
+
+    images = [process_image_asset(ImageAsset(**img)) for img in data.get("images", [])]
+
+    firstImage = images[0] if images else ""
+    restImages = br.join(images[1:])
+    imagess = br.join(images)
 
     return CardFields(
         targetWord=data.get("targetWord", ""),
@@ -89,6 +94,8 @@ def card_fields_from_dict(data: dict[str, any]):
         sentenceAudio=sentenceAudios,
         wordAudio=wordAudios,
         images=imagess,
+        firstImage=firstImage,
+        restImages=restImages,
         exampleSentences=data.get("exampleSentences", ""),
         notes=data.get("notes", ""),
     )
