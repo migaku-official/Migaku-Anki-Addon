@@ -60,11 +60,13 @@ def setup_hooks():
             "before",
         )
     else:
-        aqt.deckchooser.DeckChooser.choose_deck = anki.hooks.wrap(
-            aqt.deckchooser.DeckChooser.choose_deck,
-            lambda deckchooser: deck_change(deckchooser.selected_deck_id),
-            "after",
-        )
+        save_func = aqt.deckchooser.DeckChooser.choose_deck
+
+        def on_deck_change(deckchooser):
+            save_func(deckchooser)
+            deck_change(deckchooser.selected_deck_id),
+
+        aqt.deckchooser.DeckChooser.choose_deck = on_deck_change
 
     ### MODEL CHANGE
     def notetype_change(id):
