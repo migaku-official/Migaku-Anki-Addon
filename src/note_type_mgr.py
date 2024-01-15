@@ -111,13 +111,15 @@ def nt_update(nt: NotetypeDict, lang: Language, commit=True) -> None:
     # Set template html
     if template:
         for fmt, html_name in [("qfmt", "front.html"), ("afmt", "back.html")]:
-            if nt["name"] == NOTE_TYPE_PREFIX + lang.name_en:
+            fields_settings = nt_get_tmpl_fields_settings(nt, template_idx, fmt)
+
+            # The base template is always reset to the default:
+            # User may not change it, except for setting Migaku Options which are applied by the nt_set_tmpl_lang call below
+            if is_base_tmpl:
                 html_path = lang.file_path("card", html_name)
                 with open(html_path, "r", encoding="utf-8") as file:
                     html = file.read()
                 nt["tmpls"][template_idx][fmt] = html
-
-            fields_settings = nt_get_tmpl_fields_settings(nt, template_idx, fmt)
 
             nt_set_tmpl_lang(
                 nt,
