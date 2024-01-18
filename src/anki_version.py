@@ -16,7 +16,7 @@ recommended_version_lower = ".".join(str(x) for x in recommended_version_lower_t
 # We only want to include major and minor here, not patch version
 # We do not really care about the patch version
 # We trust that Anki will not break anything in a patch version *fingers crossed*
-new_recommended_version_tuple = (23, 10)
+new_recommended_version_tuple = (23, 12)
 
 new_recommended_version = ".".join(str(x) for x in new_recommended_version_tuple)
 
