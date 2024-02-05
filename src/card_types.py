@@ -1,5 +1,6 @@
 from base64 import b64decode
 from dataclasses import dataclass, field
+import re
 from typing import Optional
 import requests
 
@@ -26,7 +27,9 @@ class ImageAsset:
 @dataclass
 class CardFields:
     targetWord: str = ""
+    targetWordNoSyntax: str = ""
     sentence: str = ""
+    sentenceNoSyntax: str = ""
     translation: str = ""
     definitions: str = ""
     sentenceAudio: str = ""
@@ -63,6 +66,7 @@ def process_audio_asset(audio: AudioAsset):
 
     return f"[sound:{name}]"
 
+REMOVE_RE = re.compile(r"( +|\[(?!sound:).*?\])(?![^{]*})")
 
 def card_fields_from_dict(data):
     br = "\n<br>\n"
@@ -86,9 +90,17 @@ def card_fields_from_dict(data):
     restImages = br.join(images[1:])
     imagess = br.join(images)
 
+    targetWord = data.get("targetWord", "")
+    targetWordNoSyntax = REMOVE_RE.sub("", targetWord)
+
+    sentence = data.get("sentence", "")
+    sentenceNoSyntax = REMOVE_RE.sub("", sentence)
+
     return CardFields(
-        targetWord=data.get("targetWord", ""),
-        sentence=data.get("sentence", ""),
+        targetWord=targetWord,
+        targetWordNoSyntax=targetWordNoSyntax,
+        sentence=sentence,
+        sentenceNoSyntax=sentenceNoSyntax,
         translation=data.get("translation", ""),
         definitions=data.get("definitions", ""),
         sentenceAudio=sentenceAudios,

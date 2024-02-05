@@ -7,7 +7,6 @@ from ..config import get
 from ..card_types import CardFields, card_fields_from_dict
 from ..editor.current_editor import (
     add_cards_add_to_history,
-    get_add_cards,
     get_add_cards_info,
     map_to_add_cards,
 )
