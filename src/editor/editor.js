@@ -31,7 +31,9 @@ MigakuEditor.hideButtons = function () {
 const selectorOptions = [
   { value: 'none', text: '(None)' },
   { value: 'sentence', text: 'Sentence' },
-  { value: 'targetWord', text: 'Word' },
+  { value: 'sentenceNoSyntax', text: 'Sentence (no syntax)' },
+  { value: 'targetWord', text: 'Target Word' },
+  { value: 'targetWordNoSyntax', text: 'Target Word (no syntax)' },
   { value: 'translation', text: 'Sentence Translation' },
   { value: 'sentenceAudio', text: 'Sentence Audio' },
   { value: 'wordAudio', text: 'Word Audio' },
