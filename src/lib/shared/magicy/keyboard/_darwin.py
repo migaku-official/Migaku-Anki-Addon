@@ -215,7 +215,9 @@ class Listener(ListenerMixin, _base.Listener):
         Quartz.CGEventMaskBit(Quartz.kCGEventKeyDown)
         | Quartz.CGEventMaskBit(Quartz.kCGEventKeyUp)
         | Quartz.CGEventMaskBit(Quartz.kCGEventFlagsChanged)
-        | Quartz.CGEventMaskBit(Quartz.NSSystemDefined)
+        # NOTE Migaku Fix: Also means users cannot used media keys as global hotkeys
+        # But that should be ok.
+        # | Quartz.CGEventMaskBit(Quartz.NSSystemDefined)
     )
 
     # pylint: disable=W0212
