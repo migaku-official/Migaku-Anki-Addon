@@ -96,7 +96,6 @@ def card_fields_from_dict(data):
 
     targetWord = data.get("targetWord", "")
     cjk_found = len(re.findall(r'[\u2e80-\u9fff\uac00-\ud7ff]', targetWord)) > 0
-    print('foo', cjk_found, targetWord)
 
     targetWordNoSyntax = remove_syntax(targetWord, cjk_found)
 
