@@ -66,7 +66,11 @@ def process_audio_asset(audio: AudioAsset):
 
     return f"[sound:{name}]"
 
-REMOVE_RE = re.compile(r"( +|\[(?!sound:).*?\])(?![^{]*})")
+REMOVE_RE_EURO = re.compile(r"(\[(?!sound:).*?\])(?![^{]*})")
+REMOVE_RE_CJK = re.compile(r"( +|\[(?!sound:).*?\])(?![^{]*})")
+
+def remove_syntax(text: str, has_cjk: bool):
+    return REMOVE_RE_CJK.sub("", text) if has_cjk else REMOVE_RE_EURO.sub("", text)
 
 def card_fields_from_dict(data: dict[str, any]):
     br = "\n<br>\n"
@@ -91,10 +95,13 @@ def card_fields_from_dict(data: dict[str, any]):
     imagess = br.join(images)
 
     targetWord = data.get("targetWord", "")
-    targetWordNoSyntax = REMOVE_RE.sub("", targetWord)
+    cjk_found = len(re.findall(r'[\u2e80-\u9fff\uac00-\ud7ff]', targetWord)) > 0
+    print('foo', cjk_found, targetWord)
+
+    targetWordNoSyntax = remove_syntax(targetWord, cjk_found)
 
     sentence = data.get("sentence", "")
-    sentenceNoSyntax = REMOVE_RE.sub("", sentence)
+    sentenceNoSyntax = remove_syntax(sentence, cjk_found)
 
     return CardFields(
         targetWord=targetWord,
