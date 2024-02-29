@@ -1,5 +1,6 @@
 import aqt
 from aqt.qt import *
+from .menu.vacation_window import BalanceSchedulerVacationWindow
 
 from .settings_widget import SettingsWidget
 from .tutorial_widgets import (
