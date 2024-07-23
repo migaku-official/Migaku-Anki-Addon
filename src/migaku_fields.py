@@ -89,7 +89,7 @@ def get_migaku_fields(nt: anki.models.NoteType):
         if field_name not in data:
             data[field_name] = infer_migaku_type(field_name)
 
-    for field_name in data.keys():
+    for field_name in list(data.keys()):
         if field_name not in field_names:
             del data[field_name]
 
