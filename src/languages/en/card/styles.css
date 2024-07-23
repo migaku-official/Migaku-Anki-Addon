@@ -237,6 +237,11 @@ main.container .card audio {
   margin-right: 4px;
 }
 
+t {
+  font-weight: 900;
+  font-style: italic;
+}
+
 @media (min-width: 762px) {
   .migaku-header {
     justify-content: start;

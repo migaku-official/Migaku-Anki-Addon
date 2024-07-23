@@ -252,6 +252,7 @@ main.container .card audio {
 
 t {
   font-weight: 900;
+  font-style: italic;
 }
 
 @media (min-width: 762px) {
