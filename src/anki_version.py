@@ -6,7 +6,6 @@ from enum import Enum
 
 # This can be used when older versions continue to be supported
 recommended_version_lower_tuple = (2, 1, 49)
-
 # Current recommended version
 recommended_version_tuple = (2, 1, 65)
 
@@ -16,9 +15,8 @@ recommended_version_lower = ".".join(str(x) for x in recommended_version_lower_t
 # We only want to include major and minor here, not patch version
 # We do not really care about the patch version
 # We trust that Anki will not break anything in a patch version *fingers crossed*
-new_recommended_version_tuple = (23, 10)
-
-new_recommended_version = ".".join(str(x) for x in new_recommended_version_tuple)
+new_recommended_version_tuple = (24, 6)
+new_recommended_version = ".".join(str(x).zfill(2) for x in new_recommended_version_tuple)
 
 
 class VersionState(Enum):
