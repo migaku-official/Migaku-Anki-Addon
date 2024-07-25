@@ -1,6 +1,6 @@
 @font-face {
   font-family: cardFont;
-  src: url('/_NotoSerif-Regular.otf');
+  src: url('/_NotoSerif.ttf');
 }
 
 body {
@@ -238,8 +238,7 @@ main.container .card audio {
 }
 
 t {
-  font-weight: 900;
-  font-style: italic;
+  font-style: bold;
 }
 
 @media (min-width: 762px) {
