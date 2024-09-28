@@ -99,7 +99,7 @@ class CardCreator(MigakuHTTPHandler):
         self.connection._recv_data(
             {"id": msg_id, "msg": "Migaku-Deliver-Definitions", "data": definitions}
         )
-        self.finish("Received defintions from card creator.")
+        self.finish("Received definitions from card creator.")
 
     def handle_data_from_card_creator(self, jsonData):
         r = self._handle_data_from_card_creator(jsonData)

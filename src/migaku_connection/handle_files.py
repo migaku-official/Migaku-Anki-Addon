@@ -1,6 +1,7 @@
 from pydub import AudioSegment
 import time
 import os
+import re
 
 import aqt
 
@@ -39,7 +40,6 @@ def move_extension_mp3_to_media_folder(source, filename):
 
 def move_extension_mp3_normalize_to_media_folder(source, filename):
     path = util.col_media_path(filename)
-
     def match_target_amplitude(sound, target_dBFS):
         change_in_dBFS = target_dBFS - sound.dBFS
         return sound.apply_gain(change_in_dBFS)
@@ -69,22 +69,26 @@ def handle_audio_file(file, filename, suffix):
         else:
             move_extension_mp3_to_media_folder(audio_temp_path, filename)
     else:
-        print("moving audio file")
         move_file_to_media_dir(file, filename)
 
+def handle_file(file_data, only_move=False):
+    file_name = file_data["filename"]
+    file_body = file_data["body"]
+
+    if re.search(r'\?source=.*$', file_name):
+        file_name = file_name.split("?source=")[0]
+
+    suffix = file_name[-3:]
+
+    if suffix in image_formats or only_move:
+        move_file_to_media_dir(file_body, file_name)
+    elif suffix in audio_formats:
+        handle_audio_file(file_body, file_name, suffix)
 
 def handle_files(file_dict, only_move=False):
     if not file_dict:
         return
 
-    for _, sub_file_dicts in file_dict.items():
-        sub_file_dict = sub_file_dicts[0]
-        file_name = sub_file_dict["filename"]
-        file_body = sub_file_dict["body"]
-
-        suffix = file_name[-3:]
-
-        if suffix in image_formats or only_move:
-            move_file_to_media_dir(file_body, file_name)
-        elif suffix in audio_formats:
-            handle_audio_file(file_body, file_name, suffix)
+    for subs in file_dict.values():
+        for sub in subs:
+            handle_file(sub, only_move)
