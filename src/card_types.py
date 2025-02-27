@@ -66,11 +66,16 @@ def process_audio_asset(audio: AudioAsset):
 
     return f"[sound:{name}]"
 
-REMOVE_RE_EURO = re.compile(r"(\[(?!sound:).*?\])(?![^{]*})")
+REMOVE_RE_EURO_BRACES = re.compile(r"\{([^}]*)\}")
+REMOVE_RE_BRACKETS = re.compile(r"(\[(?!sound:).*?\])(?![^{]*})")
 REMOVE_RE_CJK = re.compile(r"( +|\[(?!sound:).*?\])(?![^{]*})")
 
 def remove_syntax(text: str, has_cjk: bool):
-    return REMOVE_RE_CJK.sub("", text) if has_cjk else REMOVE_RE_EURO.sub("", text)
+    if (has_cjk):
+        text = REMOVE_RE_EURO_BRACES.sub(r"\1", text)
+        return REMOVE_RE_CJK.sub("", text)
+    else:
+        return REMOVE_RE_BRACKETS.sub("", text)
 
 def card_fields_from_dict(data: dict[str, any]):
     br = "\n<br>\n"
