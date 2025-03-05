@@ -9,6 +9,7 @@ import anki
 from .config import get
 
 from .sys_libraries import init_sys_libs
+from inspect import signature
 
 init_sys_libs()
 
@@ -106,11 +107,20 @@ def setup_hooks():
 
     aqt.gui_hooks.collection_did_load.append(overwrite_defaults_for_adding)
 
-    aqt.addcards.AddCards.on_notetype_change = anki.hooks.wrap(
-        aqt.addcards.AddCards.on_notetype_change,
-        lambda addcards, _1: editor.reset_migaku_mode(addcards.editor),
-        "before",
-    )
+    sig = signature(aqt.addcards.AddCards.on_notetype_change)
+
+    if len(sig.parameters) == 2:
+        aqt.addcards.AddCards.on_notetype_change = anki.hooks.wrap(
+            aqt.addcards.AddCards.on_notetype_change,
+            lambda addcards, _1: editor.reset_migaku_mode(addcards.editor),
+            "before",
+        )
+    else:
+        aqt.addcards.AddCards.on_notetype_change = anki.hooks.wrap(
+            aqt.addcards.AddCards.on_notetype_change,
+            lambda addcards, _1, _2: editor.reset_migaku_mode(addcards.editor),
+            "before",
+        )
 
     aqt.gui_hooks.add_cards_did_init.append(
         lambda _: toolbar.refresh_migaku_toolbar_opened_addcards()
