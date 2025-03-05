@@ -68,14 +68,18 @@ def process_audio_asset(audio: AudioAsset):
 
 REMOVE_RE_EURO_BRACES = re.compile(r"\{([^}]*)\}")
 REMOVE_RE_BRACKETS = re.compile(r"(\[(?!sound:).*?\])(?![^{]*})")
-REMOVE_RE_CJK = re.compile(r"( +|\[(?!sound:).*?\])(?![^{]*})")
+REMOVE_RE_CJ = re.compile(r"( +|\[(?!sound:).*?\])(?![^{]*})")
+REMOVE_RE_K = re.compile(r"(\[(?!sound:).*?\])(?![^{]*})")
 
-def remove_syntax(text: str, has_cjk: bool):
-    if (has_cjk):
-        text = REMOVE_RE_EURO_BRACES.sub(r"\1", text)
-        return REMOVE_RE_CJK.sub("", text)
-    else:
-        return REMOVE_RE_BRACKETS.sub("", text)
+def remove_syntax_cj(text: str):
+    text = REMOVE_RE_EURO_BRACES.sub(r"\1", text)
+    return REMOVE_RE_CJ.sub("", text)
+
+def remove_syntax_k(text: str):
+    return REMOVE_RE_K.sub("", text)
+
+def remove_syntax_euro(text: str):
+    return REMOVE_RE_BRACKETS.sub("", text)
 
 def card_fields_from_dict(data: dict[str, any]):
     br = "\n<br>\n"
@@ -100,12 +104,13 @@ def card_fields_from_dict(data: dict[str, any]):
     imagess = br.join(images)
 
     targetWord = data.get("targetWord", "")
-    cjk_found = len(re.findall(r'[\u2e80-\u9fff\uac00-\ud7ff]', targetWord)) > 0
-
-    targetWordNoSyntax = remove_syntax(targetWord, cjk_found)
-
     sentence = data.get("sentence", "")
-    sentenceNoSyntax = remove_syntax(sentence, cjk_found)
+
+    cjk_found = len(re.findall(r'[\u2e80-\u9fff\uac00-\ud7ff]', targetWord)) > 0
+    k_found = len(re.findall(r'[\u3131-\uD79D]', targetWord)) > 0
+
+    targetWordNoSyntax = remove_syntax_k(targetWord) if k_found else remove_syntax_cj(targetWord) if cjk_found else remove_syntax_euro(targetWord)
+    sentenceNoSyntax = remove_syntax_k(sentence) if k_found else remove_syntax_cj(sentence) if cjk_found else remove_syntax_euro(sentence)
 
     return CardFields(
         targetWord=targetWord,
