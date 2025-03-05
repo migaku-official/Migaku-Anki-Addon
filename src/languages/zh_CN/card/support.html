@@ -1,340 +1,626 @@
 <script>
-(function() {
-
-
-function tone_coloring(coloring_setting, input, syllable) {
-    if (syllable === undefined) {
-        syllable = input;
-    }
-
-    if (syllable.length < 1) {
-        return input;
-    }
-
-    const tone_idx = parseInt(syllable[syllable.length - 1]);
-
-    if (isNaN(tone_idx) || tone_idx < 1 || tone_idx > 5) {
-        return syllable;
-    }
-
-    if (coloring_setting === 'yes') {
-        return `<span class="tone-${tone_idx}">${input}</span>`;
-    }
-    else if (coloring_setting === 'hover') {
-        return `<span class="tone-hover-${tone_idx}">${input}</span>`;
-    }
-
-    return input;
-}
-
-function tone_coloring_text(text, readings, coloring_setting) {
-    if (text.length != readings.length) {
-        return text;
-    }
-
-    const ret = [];
-
-    for (let i = 0; i < text.length; i++) {
-        ret.push(
-            tone_coloring(coloring_setting, text[i], readings[i])
-        );
-    }
-
-    return ret.join('');
-}
-
-function decode_pinyin_syllable(syllable) {
-    const replacements = {
-        'a': ['ā', 'á', 'ǎ', 'à'],
-        'e': ['ē', 'é', 'ě', 'è'],
-        'u': ['ū', 'ú', 'ǔ', 'ù'],
-        'i': ['ī', 'í', 'ǐ', 'ì'],
-        'o': ['ō', 'ó', 'ǒ', 'ò'],
-        'ü': ['ǖ', 'ǘ', 'ǚ', 'ǜ'],
-    }
-
-    const medials = ['i', 'u', 'ü']
-
-    if (syllable.length < 1) {
-        return syllable;
-    }
-    
-    const tone_idx = parseInt(syllable[syllable.length - 1]);
-
-    if (isNaN(tone_idx) || tone_idx < 1 || tone_idx > 5) {
-        return syllable;
-    }
-
-    const ret = syllable.replace(/v/g, 'ü')
-
-    if (tone_idx == 5) {
-        return ret.slice(0, -1);
-    }
-
-    for (let i = 0; i < ret.length; i++) {
-        const c1 = ret[i];
-        const c2 = ret[i + 1];
-
-        if (medials.includes(c1) && replacements[c2]) {
-            return ret.slice(0, i+1) + replacements[c2][tone_idx-1] + ret.slice(i+2, -1);
+    (function () {
+        const initials = {
+            b: 'ㄅ',
+            p: 'ㄆ',
+            m: 'ㄇ',
+            f: 'ㄈ',
+            d: 'ㄉ',
+            t: 'ㄊ',
+            n: 'ㄋ',
+            l: 'ㄌ',
+            g: 'ㄍ',
+            k: 'ㄎ',
+            h: 'ㄏ',
+            j: 'ㄐ',
+            q: 'ㄑ',
+            x: 'ㄒ',
+            zh: 'ㄓ',
+            ch: 'ㄔ',
+            sh: 'ㄕ',
+            r: 'ㄖ',
+            z: 'ㄗ',
+            c: 'ㄘ',
+            s: 'ㄙ',
         }
-        if (replacements[c1]) {
-            return ret.slice(0, i) + replacements[c1][tone_idx-1] + ret.slice(i+1, -1);
+        const finals = {
+            a: 'ㄚ',
+            o: 'ㄛ',
+            e: 'ㄜ',
+            ai: 'ㄞ',
+            ei: 'ㄟ',
+            ao: 'ㄠ',
+            ou: 'ㄡ',
+            an: 'ㄢ',
+            ang: 'ㄤ',
+            en: 'ㄣ',
+            eng: 'ㄥ',
+            er: 'ㄦ',
+            u: 'ㄨ',
+            ua: 'ㄨㄚ',
+            uo: 'ㄨㄛ',
+            uai: 'ㄨㄞ',
+            ui: 'ㄨㄟ',
+            uan: 'ㄨㄢ',
+            uang: 'ㄨㄤ',
+            un: 'ㄨㄣ',
+            //This one might not occur.
+            ueng: 'ㄨㄥ',
+            ong: 'ㄨㄥ',
+            i: 'ㄧ',
+            ia: 'ㄧㄚ',
+            ie: 'ㄧㄝ',
+            iao: 'ㄧㄠ',
+            iu: 'ㄧㄡ',
+            ian: 'ㄧㄢ',
+            iang: 'ㄧㄤ',
+            in: 'ㄧㄣ',
+            ing: 'ㄧㄥ',
+            ü: 'ㄩ',
+            üe: 'ㄩㄝ',
+            ue: 'ㄩㄝ',
+            üan: 'ㄩㄢ',
+            ün: 'ㄩㄣ',
+            iong: 'ㄩㄥ',
         }
-    }
-    
-    return syllable;
-}
+        const individuals = {
+            //individual initials
+            zhi: 'ㄓ',
+            chi: 'ㄔ',
+            shi: 'ㄕ',
+            ri: 'ㄖ',
+            zi: 'ㄗ',
+            ci: 'ㄘ',
+            si: 'ㄙ',
+            //individual finals
+            a: 'ㄚ',
+            o: 'ㄛ',
+            e: 'ㄜ',
+            ai: 'ㄞ',
+            ei: 'ㄟ',
+            ao: 'ㄠ',
+            ou: 'ㄡ',
+            an: 'ㄢ',
+            ang: 'ㄤ',
+            en: 'ㄣ',
+            eng: 'ㄥ',
+            er: 'ㄦ',
+            r: 'ㄦ',
+            wu: 'ㄨ',
+            wa: 'ㄨㄚ',
+            wo: 'ㄨㄛ',
+            wai: 'ㄨㄞ',
+            wei: 'ㄨㄟ',
+            wan: 'ㄨㄢ',
+            wang: 'ㄨㄤ',
+            wen: 'ㄨㄣ',
+            weng: 'ㄨㄥ',
+            yi: 'ㄧ',
+            ya: 'ㄧㄚ',
+            ye: 'ㄧㄝ',
+            yao: 'ㄧㄠ',
+            you: 'ㄧㄡ',
+            yan: 'ㄧㄢ',
+            yang: 'ㄧㄤ',
+            yin: 'ㄧㄣ',
+            ying: 'ㄧㄥ',
+            yu: 'ㄩ',
+            yue: 'ㄩㄝ',
+            yuan: 'ㄩㄢ',
+            yun: 'ㄩㄣ',
+            yong: 'ㄩㄥ',
+        }
+        const toneMap = {
+            ā: 'a1',
+            á: 'a2',
+            ǎ: 'a3',
+            à: 'a4',
+            ē: 'e1',
+            é: 'e2',
+            ě: 'e3',
+            è: 'e4',
+            ī: 'i1',
+            í: 'i2',
+            ǐ: 'i3',
+            ì: 'i4',
+            ō: 'o1',
+            ó: 'o2',
+            ǒ: 'o3',
+            ò: 'o4',
+            ū: 'u1',
+            ú: 'u2',
+            ǔ: 'u3',
+            ù: 'u4',
+            ǖ: 'ü1',
+            ǘ: 'ü2',
+            ǚ: 'ü3',
+            ǜ: 'ü4',
+        }
+        function findAccentedChars(text) {
+            const accentsFound = {}
+            for (let i = 0; i < text.length; i++) {
+                for (const accentedChar in toneMap) {
+                    if (text[i].toLowerCase() === accentedChar) {
+                        if (text[i].toLowerCase() === text[i]) {
+                            accentsFound[i] = toneMap[accentedChar]
+                        } else {
+                            accentsFound[i] = toneMap[accentedChar].toUpperCase()
+                        }
+                    }
+                }
+            }
+            return accentsFound
+        }
+        const removeAccents = function (accentedChars, text) {
+            let output = ''
+            for (let i = 0; i < text.length; i++) {
+                if (i in accentedChars) {
+                    output += accentedChars[i][0]
+                } else {
+                    output += text[i]
+                }
+            }
+            return output
+        }
+        const getKeys = function (obj) {
+            const output = []
+            for (const key in obj) {
+                output.push(key)
+            }
+            return output
+        }
+        const findBetween = function (list, min, max) {
+            let i = 0
+            while (i < list.length) {
+                if (list[i] > max) break
+                if (list[i] >= min) {
+                    return list[i]
+                }
+                i++
+            }
+            return -1
+        }
+        const toLower = function (x) {
+            if (x) return x.toLowerCase()
+        }
+
+        //sort the regex options by length so the longer ones have precedence
+        const lenComp = function (a, b) {
+            if (a.length === b.length) return 0
+            return a.length < b.length ? 1 : -1
+        }
+        const individualRexp = new RegExp('^(' + getKeys(individuals).sort(lenComp).join('|') + ')(\\d)?', 'i')
+        const initialFinalRexp = new RegExp(
+            '^(' + getKeys(initials).sort(lenComp).join('|') + ')(' + getKeys(finals).sort(lenComp).join('|') + ')(\\d)?',
+            'i',
+        )
+
+        const toneNumberToSymbol = {
+            0: '˙',
+            1: '',
+            2: 'ˊ',
+            3: 'ˇ',
+            4: 'ˋ',
+            5: '˙',
+        }
+
+        function pinyinToZhuyin(pinyinText) {
+            if (!pinyinText) return pinyinText
+            const accentedChars = findAccentedChars(pinyinText)
+            const sortedAccentedIndicies = getKeys(accentedChars).map(function (x) {
+                return parseInt(x, 10)
+            })
+            const text = removeAccents(accentedChars, pinyinText)
+
+            const parseToken = function (i) {
+                let parse, detectedToneIdx
+                const token = {
+                    start: i,
+                }
+                parse = text.slice(i).match(initialFinalRexp)
+                if (parse) {
+                    parse = parse.map(toLower)
+                    token.zhuyin = initials[parse[1]] + finals[parse[2]]
+                    token.type = 'pinyin'
+                    if (typeof parse[3] !== 'undefined') {
+                        token.tone = parseInt(parse[3], 10)
+                    } else {
+                        detectedToneIdx = findBetween(sortedAccentedIndicies, i, i + (parse[0]).length)
+                        if (detectedToneIdx >= 0) {
+                            token.tone = +accentedChars[detectedToneIdx][1]
+                        } else {
+                            token.tone = 5
+                        }
+                    }
+                } else {
+                    parse = text.slice(i).match(individualRexp)
+                    if (parse) {
+                        parse = parse.map(toLower)
+                        token.zhuyin = individuals[parse[1]]
+                        token.type = 'pinyin'
+                        if (typeof parse[2] !== 'undefined') {
+                            token.tone = parseInt(parse[2], 10)
+                        } else {
+                            detectedToneIdx = findBetween(sortedAccentedIndicies, i, i + (parse[0]).length)
+                            if (detectedToneIdx >= 0) {
+                                token.tone = +accentedChars[detectedToneIdx][1]
+                            } else {
+                                token.tone = 5
+                            }
+                        }
+                    } else {
+                        token.type = 'other'
+                        parse = [text[i]]
+                    }
+                }
+                token.parse = parse
+                return token
+            }
+            const tokens = []
+            let curToken
+            let i = 0
+            while (i < text.length) {
+                curToken = parseToken(i)
+                tokens.push(curToken)
+                i += (curToken.parse)[0].length
+            }
+            return tokens
+                .map(function (token) {
+                    if (token.type === 'other') return (token.parse).join('')
+                    return token.zhuyin + toneNumberToSymbol[token.tone]
+                })
+                .join('')
+                .replace(/ㄐㄨ/g, 'ㄐㄩ')
+                .replace(/ㄑㄨ/g, 'ㄑㄩ')
+                .replace(/ㄒㄨ/g, 'ㄒㄩ') //ju qu xu are actually pronounced as ü
+                .replace(/ㄓㄧ/g, 'ㄓ')
+                .replace(/ㄔㄧ/g, 'ㄔ')
+                .replace(/ㄕㄧ/g, 'ㄕ')
+                .replace(/ㄖㄧ/g, 'ㄖ') // zhi chi shi ri
+                .replace(/ㄗㄧ/g, 'ㄗ')
+                .replace(/ㄘㄧ/g, 'ㄘ')
+                .replace(/ㄙㄧ/g, 'ㄙ') // zi ci si
+                .replace(/\u200b'/g, '') // pinyin syllable separator not necessary
+        }
+
+        function tone_coloring(coloring_setting, input, syllable) {
+            if (syllable === undefined) {
+                syllable = input
+            }
+
+            if (syllable.length < 1) {
+                return input
+            }
+
+            const tone_idx = parseInt(syllable[syllable.length - 1])
+
+            if (isNaN(tone_idx) || tone_idx < 1 || tone_idx > 5) {
+                return syllable
+            }
+
+            if (coloring_setting === 'yes') {
+                return `<span class="tone-${tone_idx}">${input}</span>`
+            }
+            else if (coloring_setting === 'hover') {
+                return `<span class="tone-hover-${tone_idx}">${input}</span>`
+            }
+
+            return input
+        }
+
+        function tone_coloring_text(text, readings, coloring_setting) {
+            if (text.length != readings.length) {
+                return text
+            }
+
+            const ret = []
+
+            for (let i = 0; i < text.length; i++) {
+                ret.push(
+                    tone_coloring(coloring_setting, text[i], readings[i])
+                )
+            }
+
+            return ret.join('')
+        }
+
+        function decode_pinyin_syllable(syllable) {
+            const replacements = {
+                'a': ['ā', 'á', 'ǎ', 'à'],
+                'e': ['ē', 'é', 'ě', 'è'],
+                'u': ['ū', 'ú', 'ǔ', 'ù'],
+                'i': ['ī', 'í', 'ǐ', 'ì'],
+                'o': ['ō', 'ó', 'ǒ', 'ò'],
+                'ü': ['ǖ', 'ǘ', 'ǚ', 'ǜ'],
+            }
+
+            const medials = ['i', 'u', 'ü']
+
+            if (syllable.length < 1) {
+                return syllable
+            }
+
+            const tone_idx = parseInt(syllable[syllable.length - 1])
+
+            if (isNaN(tone_idx) || tone_idx < 1 || tone_idx > 5) {
+                return syllable
+            }
+
+            const ret = syllable.replace(/v/g, 'ü')
+
+            if (tone_idx == 5) {
+                return ret.slice(0, -1)
+            }
+
+            for (let i = 0; i < ret.length; i++) {
+                const c1 = ret[i]
+                const c2 = ret[i + 1]
+
+                if (medials.includes(c1) && replacements[c2]) {
+                    return ret.slice(0, i + 1) + replacements[c2][tone_idx - 1] + ret.slice(i + 2, -1)
+                }
+                if (replacements[c1]) {
+                    return ret.slice(0, i) + replacements[c1][tone_idx - 1] + ret.slice(i + 1, -1)
+                }
+            }
+
+            return syllable
+        }
 
 
-function parseSyntax(text) {
-    let ret = [];
+        function parseSyntax(text) {
+            let ret = []
 
-    const readings_re = new RegExp(/(\S+?\d)/gm);
+            const readings_re = new RegExp(/(\S+?\d)/gm)
 
-    const syntax_re = new RegExp(/(([\u4e00-\u9fff]+?)\[(.*?)\])/gm);
-    let last_idx = 0;
-    let match;
+            const syntax_re = new RegExp(/(([\u4e00-\u9fff]+?)\[(.*?)\])/gm)
+            let last_idx = 0
+            let match
 
-    do {
-        match = syntax_re.exec(text);
+            do {
+                match = syntax_re.exec(text)
 
-        if (match) {
-            if (match.index > last_idx) {
+                if (match) {
+                    if (match.index > last_idx) {
+                        ret.push({
+                            type: 'plain',
+                            text: text.substring(last_idx, match.index)
+                        })
+                    }
+
+                    bracket_parts = match[3].split(';')
+
+                    ret.push({
+                        type: 'syntax',
+                        text: match[2],
+                        readings: (bracket_parts[0] || '').match(readings_re),
+                        word_type: bracket_parts[1] || ''
+                    })
+
+                    last_idx = match.index + match[0].length
+                }
+            } while (match)
+
+            if (last_idx < text.length) {
                 ret.push({
                     type: 'plain',
-                    text: text.substring(last_idx, match.index)
-                });
+                    text: text.substr(last_idx)
+                })
             }
 
-            bracket_parts = match[3].split(';');
-
-            ret.push({
-                type: 'syntax',
-                text: match[2],
-                readings: (bracket_parts[0] || '').match(readings_re),
-                word_type: bracket_parts[1] || ''
-            });
-
-            last_idx = match.index + match[0].length;
+            return ret
         }
-    } while (match);
 
-    if (last_idx < text.length) {
-        ret.push({
-            type: 'plain',
-            text: text.substr(last_idx)
-        });
-    }
-
-    return ret;
-}
-
-function addFormattedTextElements(elem, syntax_element, field_settings, reading) {
-    if (syntax_element.tone_highighting === 'no') {
-        if (!reading) {
-            elem.appendChild(document.createTextNode(syntax_element.text));
-        }
-        else {
-            elem.appendChild(document.createTextNode('TODO'));
-        }
-    }
-}
-
-function syntaxElementToNode(syntax_element, field_settings) {
-    if (syntax_element.type !== 'syntax') {
-        return document.createTextNode(syntax_element.text);
-    }
-    else {
-        const word_container = document.createElement('span');
-        word_container.classList.add('word');
-
-        const audio_play_word = syntax_element.text;
-        word_container.addEventListener('click', function() {
-            pycmd('play_audio-' + audio_play_word);
-        });
-
-        let main_text_html;
-        if (field_settings.tone_coloring !== 'no') {
-                main_text_html = tone_coloring_text(
-                    syntax_element.text,
-                    syntax_element.readings,
-                    field_settings.tone_coloring
-                );
-        }
-        else {
-            main_text_html = syntax_element.text;
-        }
-    
-
-        if (field_settings.reading !== 'no') {
-            if (field_settings.reading === 'hidden') {
-                word_container.classList.add('reading-invisible');
-            }
-            else if (field_settings.reading === 'hover') {
-                word_container.classList.add('reading-hover');
-            }
-
-            const ruby_elem = document.createElement('ruby');
-            word_container.appendChild(ruby_elem);
-
-            const syllables = [];
-            for (const reading of syntax_element.readings) {
-                let syllable = decode_pinyin_syllable(reading);
-                if (field_settings.tone_coloring !== 'no') {
-                    syllable = tone_coloring(field_settings.tone_coloring, syllable, reading);
+        function addFormattedTextElements(elem, syntax_element, field_settings, reading) {
+            if (syntax_element.tone_highighting === 'no') {
+                if (!reading) {
+                    elem.appendChild(document.createTextNode(syntax_element.text))
                 }
-                syllables.push(syllable);
+                else {
+                    elem.appendChild(document.createTextNode('TODO'))
+                }
+            }
+        }
+
+        function syntaxElementToNode(syntax_element, field_settings) {
+            if (syntax_element.type !== 'syntax') {
+                return document.createTextNode(syntax_element.text)
+            }
+            else {
+                const word_container = document.createElement('span')
+                word_container.classList.add('word')
+
+                const audio_play_word = syntax_element.text
+                word_container.addEventListener('click', function () {
+                    pycmd('play_audio-' + audio_play_word)
+                })
+
+                let main_text_html
+                if (field_settings.tone_coloring !== 'no') {
+                    main_text_html = tone_coloring_text(
+                        syntax_element.text,
+                        syntax_element.readings,
+                        field_settings.tone_coloring
+                    )
+                }
+                else {
+                    main_text_html = syntax_element.text
+                }
+
+
+                if (field_settings.reading !== 'no') {
+                    if (field_settings.reading === 'hidden') {
+                        word_container.classList.add('reading-invisible')
+                    }
+                    else if (field_settings.reading === 'hover') {
+                        word_container.classList.add('reading-hover')
+                    }
+
+                    const ruby_elem = document.createElement('ruby')
+                    word_container.appendChild(ruby_elem)
+
+                    const syllables = []
+                    for (const reading of syntax_element.readings) {
+                        let syllable = decode_pinyin_syllable(reading)
+
+                        if (field_settings.reading_type === 'bopomofo') {
+                            syllable = pinyinToZhuyin(syllable)
+                        }
+
+                        if (field_settings.tone_coloring !== 'no') {
+                            syllable = tone_coloring(field_settings.tone_coloring, syllable, reading)
+                        }
+                        syllables.push(syllable)
+                    }
+
+                    ruby_elem.innerHTML = main_text_html + '<rt>' + syllables.join('') + '</rt>'
+                }
+                else {
+                    const text_elem = document.createElement('span')
+                    text_elem.innerHTML = main_text_html
+                    word_container.appendChild(text_elem)
+                }
+
+                return word_container
+            }
+        }
+
+        function syntaxToNodes(syntax, field_settings) {
+            return syntax.map(function (syntax_element) {
+                return syntaxElementToNode(syntax_element, field_settings)
+            })
+        }
+
+        function handleFieldTextNodes(node, field_settings) {
+            if (node.nodeType == Node.TEXT_NODE) {
+                const text = node.textContent
+                const syntax = parseSyntax(text)
+                const nodes = syntaxToNodes(syntax, field_settings)
+                for (const child of nodes) {
+                    node.parentNode.insertBefore(child, node)
+                }
+                node.parentNode.removeChild(node)
+            }
+            else {
+                for (let i = node.childNodes.length - 1; i >= 0; i--) {
+                    handleFieldTextNodes(node.childNodes[i], field_settings)
+                }
+            }
+        }
+
+        function handleField(field) {
+            const field_settings = {
+                tone_coloring: field.getAttribute('data-tone-coloring') || 'no',
+                reading: field.getAttribute('data-reading') || 'no',
+                reading_type: field.getAttribute('data-reading-type') || 'pinyin',
             }
 
-            ruby_elem.innerHTML = main_text_html + '<rt>' + syllables.join('') + '</rt>';
-        }
-        else {       
-            const text_elem = document.createElement('span');
-            text_elem.innerHTML = main_text_html;
-            word_container.appendChild(text_elem);
+            handleFieldTextNodes(field, field_settings)
         }
 
-        return word_container;
-    }
-}
 
-function syntaxToNodes(syntax, field_settings) {
-    return syntax.map(function (syntax_element) {
-        return syntaxElementToNode(syntax_element, field_settings);
-    });
-}
+        const fields = document.querySelectorAll('.field')
 
-function handleFieldTextNodes(node, field_settings) {
-    if (node.nodeType == Node.TEXT_NODE) {
-        const text = node.textContent;
-        const syntax = parseSyntax(text);
-        const nodes = syntaxToNodes(syntax, field_settings);
-        for (const child of nodes) {
-            node.parentNode.insertBefore(child, node);
+        for (field of fields) {
+            handleField(field)
         }
-        node.parentNode.removeChild(node);
-    }
-    else {
-        for (let i = node.childNodes.length - 1; i >= 0; i--) {
-            handleFieldTextNodes(node.childNodes[i], field_settings);
+
+
+        function closeAllActive() {
+            const current_popups = document.querySelectorAll('.active')
+            for (const popup of current_popups) {
+                popup.classList.remove('active', 'popup-active')
+            }
         }
-    }
-}
 
-function handleField(field) {
-    const field_settings = {
-        tone_coloring: field.getAttribute('data-tone-coloring') || 'no',
-        reading: field.getAttribute('data-reading') || 'no',
-        reading_type: field.getAttribute('data-reading-type') || 'pinyin',
-    };
+        function on_closeAllActiveBody(event) {
+            if (!event.target.closest('.word')) {
+                closeAllActive()
+            }
+        }
 
-    handleFieldTextNodes(field, field_settings);
-}
+        function activeEnablePopup(elem) {
+            const popup_elem = elem.querySelector('.popup')
+            if (!popup_elem) {
+                return
+            }
 
+            elem.classList.add('popup-active')
 
-const fields = document.querySelectorAll('.field');
+            function isTooHigh() {
+                return popup_elem.getBoundingClientRect().top < 0
+            }
 
-for (field of fields) {
-    handleField(field);
-}
+            function isTooLow() {
+                return popup_elem.getBoundingClientRect().bottom >= (window.innerHeight || document.documentElement.clientHeight)
+            }
 
+            function isTooRight() {
+                return popup_elem.getBoundingClientRect().right >= (window.innerWidth || document.documentElement.clientWidth)
+            }
 
-function closeAllActive() {
-    const current_popups = document.querySelectorAll('.active');
-    for (const popup of current_popups) {
-        popup.classList.remove('active', 'popup-active');
-    }
-}
+            function isTooLeft() {
+                return popup_elem.getBoundingClientRect().left < 0
+            }
 
-function on_closeAllActiveBody(event) {
-    if (!event.target.closest('.word')) {
-        closeAllActive();
-    }
-}
+            elem.classList.remove('popup-direction-u', 'popup-direction-d', 'popup-direction-l', 'popup-direction-r')
 
-function activeEnablePopup(elem) {
-    const popup_elem = elem.querySelector('.popup');
-    if (!popup_elem) {
-        return
-    }
+            elem.classList.add('popup-direction-u')
+            if (!isTooHigh()) {
+                return
+            }
+            elem.classList.remove('popup-direction-u')
 
-    elem.classList.add('popup-active');
+            elem.classList.add('popup-direction-d')
+            if (!isTooLow()) {
+                return
+            }
+            elem.classList.remove('popup-direction-d')
 
-    function isTooHigh() {
-        return popup_elem.getBoundingClientRect().top < 0
-    }
-    
-    function isTooLow() {
-        return popup_elem.getBoundingClientRect().bottom >= (window.innerHeight || document.documentElement.clientHeight)
-    }
-    
-    function isTooRight() {
-        return popup_elem.getBoundingClientRect().right >= (window.innerWidth || document.documentElement.clientWidth)
-    }
-    
-    function isTooLeft() {
-        return popup_elem.getBoundingClientRect().left < 0
-    }
+            elem.classList.add('popup-direction-l')
+            if (!isTooLeft()) {
+                return
+            }
+            elem.classList.remove('popup-direction-l')
 
-    elem.classList.remove('popup-direction-u', 'popup-direction-d', 'popup-direction-l', 'popup-direction-r');
+            elem.classList.add('popup-direction-r')
+            if (!isTooRight()) {
+                return
+            }
+            elem.classList.remove('popup-direction-r')
 
-    elem.classList.add('popup-direction-u');
-    if (!isTooHigh()) {
-        return;
-    }
-    elem.classList.remove('popup-direction-u');
+            elem.classList.add('popup-direction-u')
+        }
 
-    elem.classList.add('popup-direction-d');
-    if (!isTooLow()) {
-        return;
-    }
-    elem.classList.remove('popup-direction-d');
+        function on_activeEnter() {
+            closeAllActive()
+            this.classList.add('active')
+            activeEnablePopup(this)
+        }
 
-    elem.classList.add('popup-direction-l');
-    if (!isTooLeft()) {
-        return;
-    }
-    elem.classList.remove('popup-direction-l');
+        function on_activeLeave() {
+            this.classList.remove('active', 'popup-active')
+        }
 
-    elem.classList.add('popup-direction-r');
-    if (!isTooRight()) {
-        return;
-    }
-    elem.classList.remove('popup-direction-r');
+        const word_elements = document.querySelectorAll('.word')
+        const is_mobile = typeof (pycmd) === typeof (undefined)
 
-    elem.classList.add('popup-direction-u');
-}
+        for (elem of word_elements) {
+            elem.addEventListener('mouseenter', on_activeEnter)
+            elem.addEventListener('ontouchend', on_activeEnter)
+            if (!is_mobile) {
+                elem.addEventListener('mouseleave', on_activeLeave)
+            }
+            if (is_mobile) {
+                elem.addEventListener('click', on_activeEnter)
+                elem.classList.add('tappable')
+            }
+        }
 
-function on_activeEnter() {
-    closeAllActive();
-    this.classList.add('active');
-    activeEnablePopup(this);
-}
+        if (is_mobile) {
+            document.body.addEventListener('click', on_closeAllActiveBody)
+            document.body.classList.add('tappable')
+        }
 
-function on_activeLeave() {
-    this.classList.remove('active', 'popup-active');
-}
-
-const word_elements = document.querySelectorAll('.word');
-const is_mobile = typeof(pycmd) === typeof(undefined);
-
-for (elem of word_elements) {
-    elem.addEventListener('mouseenter', on_activeEnter);
-    elem.addEventListener('ontouchend', on_activeEnter);
-    if (!is_mobile) {
-        elem.addEventListener('mouseleave', on_activeLeave);
-    }
-    if (is_mobile) {
-        elem.addEventListener('click', on_activeEnter);
-        elem.classList.add('tappable');
-    }
-}
-
-if (is_mobile) {
-    document.body.addEventListener('click', on_closeAllActiveBody);       
-    document.body.classList.add('tappable'); 
-}
-
-}());
+    }());
 </script>
