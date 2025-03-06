@@ -536,12 +536,6 @@
             }
         }
 
-        function on_closeAllActiveBody(event) {
-            if (!event.target.closest('.word')) {
-                closeAllActive()
-            }
-        }
-
         function activeEnablePopup(elem) {
             const popup_elem = elem.querySelector('.popup')
             if (!popup_elem) {
@@ -605,25 +599,26 @@
             this.classList.remove('active', 'popup-active')
         }
 
+        function on_activeToggle() {
+            if (this.classList.contains('active')) {
+                this.classList.remove('active', 'popup-active')
+            } else {
+                closeAllActive()
+                this.classList.add('active')
+                activeEnablePopup(this)
+            }
+        }
+
         const word_elements = document.querySelectorAll('.word')
         const is_mobile = typeof (pycmd) === typeof (undefined)
-
         for (elem of word_elements) {
-            elem.addEventListener('mouseenter', on_activeEnter)
-            elem.addEventListener('ontouchend', on_activeEnter)
-            if (!is_mobile) {
+            if (is_mobile) {
+                elem.addEventListener('click', on_activeToggle)
+                elem.classList.add('tappable')
+            } else {
+                elem.addEventListener('mouseenter', on_activeEnter)
                 elem.addEventListener('mouseleave', on_activeLeave)
             }
-            if (is_mobile) {
-                elem.addEventListener('click', on_activeEnter)
-                elem.classList.add('tappable')
-            }
         }
-
-        if (is_mobile) {
-            document.body.addEventListener('click', on_closeAllActiveBody)
-            document.body.classList.add('tappable')
-        }
-
     }());
 </script>

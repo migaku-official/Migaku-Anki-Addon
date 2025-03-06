@@ -2,17 +2,17 @@
   (function () {
     //// YOMICHAN START ////
 
-    const KATAKANA_SMALL_KA_CODE_POINT = 0x30f5;
-    const KATAKANA_SMALL_KE_CODE_POINT = 0x30f6;
-    const KANA_PROLONGED_SOUND_MARK_CODE_POINT = 0x30fc;
+    const KATAKANA_SMALL_KA_CODE_POINT = 0x30f5
+    const KATAKANA_SMALL_KE_CODE_POINT = 0x30f6
+    const KANA_PROLONGED_SOUND_MARK_CODE_POINT = 0x30fc
 
-    const HIRAGANA_RANGE = [0x3040, 0x309f];
-    const KATAKANA_RANGE = [0x30a0, 0x30ff];
+    const HIRAGANA_RANGE = [0x3040, 0x309f]
+    const KATAKANA_RANGE = [0x30a0, 0x30ff]
 
-    const HIRAGANA_CONVERSION_RANGE = [0x3041, 0x3096];
-    const KATAKANA_CONVERSION_RANGE = [0x30a1, 0x30f6];
+    const HIRAGANA_CONVERSION_RANGE = [0x3041, 0x3096]
+    const KATAKANA_CONVERSION_RANGE = [0x30a1, 0x30f6]
 
-    const KANA_RANGES = [HIRAGANA_RANGE, KATAKANA_RANGE];
+    const KANA_RANGES = [HIRAGANA_RANGE, KATAKANA_RANGE]
 
     const VOWEL_TO_KANA_MAPPING = new Map([
       [
@@ -33,112 +33,112 @@
         'ぉおこごそぞとどのほぼぽもょよろをォオコゴソゾトドノホボポモョヨロヲヺ',
       ],
       ['', 'のノ'],
-    ]);
+    ])
 
     const KANA_TO_VOWEL_MAPPING = (() => {
-      const map = new Map();
+      const map = new Map()
       for (const [vowel, characters] of VOWEL_TO_KANA_MAPPING) {
         for (const character of characters) {
-          map.set(character, vowel);
+          map.set(character, vowel)
         }
       }
-      return map;
-    })();
+      return map
+    })()
 
     function getProlongedHiragana(previousCharacter) {
       switch (KANA_TO_VOWEL_MAPPING.get(previousCharacter)) {
         case 'a':
-          return 'あ';
+          return 'あ'
         case 'i':
-          return 'い';
+          return 'い'
         case 'u':
-          return 'う';
+          return 'う'
         case 'e':
-          return 'え';
+          return 'え'
         case 'o':
-          return 'う';
+          return 'う'
         default:
-          return null;
+          return null
       }
     }
 
     function isCodePointInRange(codePoint, [min, max]) {
-      return codePoint >= min && codePoint <= max;
+      return codePoint >= min && codePoint <= max
     }
 
     function isCodePointInRanges(codePoint, ranges) {
       for (const [min, max] of ranges) {
         if (codePoint >= min && codePoint <= max) {
-          return true;
+          return true
         }
       }
-      return false;
+      return false
     }
 
     function isCodePointKana(codePoint) {
-      return isCodePointInRanges(codePoint, KANA_RANGES);
+      return isCodePointInRanges(codePoint, KANA_RANGES)
     }
 
     function convertKatakanaToHiragana(text, keepProlongedSoundMarks = false) {
-      let result = '';
+      let result = ''
       const offset =
-        HIRAGANA_CONVERSION_RANGE[0] - KATAKANA_CONVERSION_RANGE[0];
+        HIRAGANA_CONVERSION_RANGE[0] - KATAKANA_CONVERSION_RANGE[0]
       for (let char of text) {
-        const codePoint = char.codePointAt(0);
+        const codePoint = char.codePointAt(0)
         switch (codePoint) {
           case KATAKANA_SMALL_KA_CODE_POINT:
           case KATAKANA_SMALL_KE_CODE_POINT:
             // No change
-            break;
+            break
           case KANA_PROLONGED_SOUND_MARK_CODE_POINT:
             if (!keepProlongedSoundMarks && result.length > 0) {
-              const char2 = getProlongedHiragana(result[result.length - 1]);
+              const char2 = getProlongedHiragana(result[result.length - 1])
               if (char2 !== null) {
-                char = char2;
+                char = char2
               }
             }
-            break;
+            break
           default:
             if (isCodePointInRange(codePoint, KATAKANA_CONVERSION_RANGE)) {
-              char = String.fromCodePoint(codePoint + offset);
+              char = String.fromCodePoint(codePoint + offset)
             }
-            break;
+            break
         }
-        result += char;
+        result += char
       }
-      return result;
+      return result
     }
 
     function createFuriganaSegment(text, reading) {
-      return { text, reading };
+      return { text, reading }
     }
 
     function getFuriganaKanaSegments(text, reading) {
-      const textLength = text.length;
-      const newSegments = [];
-      let start = 0;
-      let state = reading[0] === text[0];
+      const textLength = text.length
+      const newSegments = []
+      let start = 0
+      let state = reading[0] === text[0]
       for (let i = 1; i < textLength; ++i) {
-        const newState = reading[i] === text[i];
+        const newState = reading[i] === text[i]
         if (state === newState) {
-          continue;
+          continue
         }
         newSegments.push(
           createFuriganaSegment(
             text.substring(start, i),
             state ? '' : reading.substring(start, i)
           )
-        );
-        state = newState;
-        start = i;
+        )
+        state = newState
+        start = i
       }
       newSegments.push(
         createFuriganaSegment(
           text.substring(start, textLength),
           state ? '' : reading.substring(start, textLength)
         )
-      );
-      return newSegments;
+      )
+      return newSegments
     }
 
     function segmentizeFurigana(
@@ -147,154 +147,154 @@
       groups,
       groupsStart
     ) {
-      const groupCount = groups.length - groupsStart;
+      const groupCount = groups.length - groupsStart
       if (groupCount <= 0) {
-        return reading.length === 0 ? [] : null;
+        return reading.length === 0 ? [] : null
       }
 
-      const group = groups[groupsStart];
-      const { isKana, text } = group;
-      const textLength = text.length;
+      const group = groups[groupsStart]
+      const { isKana, text } = group
+      const textLength = text.length
       if (isKana) {
-        const { textNormalized } = group;
+        const { textNormalized } = group
         if (readingNormalized.startsWith(textNormalized)) {
           const segments = segmentizeFurigana(
             reading.substring(textLength),
             readingNormalized.substring(textLength),
             groups,
             groupsStart + 1
-          );
+          )
           if (segments !== null) {
             if (reading.startsWith(text)) {
-              segments.unshift(createFuriganaSegment(text, ''));
+              segments.unshift(createFuriganaSegment(text, ''))
             } else {
-              segments.unshift(...getFuriganaKanaSegments(text, reading));
+              segments.unshift(...getFuriganaKanaSegments(text, reading))
             }
-            return segments;
+            return segments
           }
         }
-        return null;
+        return null
       } else {
-        let result = null;
+        let result = null
         for (let i = reading.length; i >= textLength; --i) {
           const segments = segmentizeFurigana(
             reading.substring(i),
             readingNormalized.substring(i),
             groups,
             groupsStart + 1
-          );
+          )
           if (segments !== null) {
             if (result !== null) {
               // More than one way to segmentize the tail; mark as ambiguous
-              return null;
+              return null
             }
-            const segmentReading = reading.substring(0, i);
-            segments.unshift(createFuriganaSegment(text, segmentReading));
-            result = segments;
+            const segmentReading = reading.substring(0, i)
+            segments.unshift(createFuriganaSegment(text, segmentReading))
+            result = segments
           }
           // There is only one way to segmentize the last non-kana group
           if (groupCount === 1) {
-            break;
+            break
           }
         }
-        return result;
+        return result
       }
     }
 
     function distributeFurigana(term, reading) {
       if (reading === term) {
         // Same
-        return [createFuriganaSegment(term, '')];
+        return [createFuriganaSegment(term, '')]
       }
 
-      const groups = [];
-      let groupPre = null;
-      let isKanaPre = null;
+      const groups = []
+      let groupPre = null
+      let isKanaPre = null
       for (const c of term) {
-        const codePoint = c.codePointAt(0);
-        const isKana = isCodePointKana(codePoint);
+        const codePoint = c.codePointAt(0)
+        const isKana = isCodePointKana(codePoint)
         if (isKana === isKanaPre) {
-          groupPre.text += c;
+          groupPre.text += c
         } else {
-          groupPre = { isKana, text: c, textNormalized: null };
-          groups.push(groupPre);
-          isKanaPre = isKana;
+          groupPre = { isKana, text: c, textNormalized: null }
+          groups.push(groupPre)
+          isKanaPre = isKana
         }
       }
       for (const group of groups) {
         if (group.isKana) {
-          group.textNormalized = convertKatakanaToHiragana(group.text);
+          group.textNormalized = convertKatakanaToHiragana(group.text)
         }
       }
 
-      const readingNormalized = convertKatakanaToHiragana(reading);
+      const readingNormalized = convertKatakanaToHiragana(reading)
       const segments = segmentizeFurigana(
         reading,
         readingNormalized,
         groups,
         0
-      );
+      )
       if (segments !== null) {
-        return segments;
+        return segments
       }
 
       // Fallback
-      return [createFuriganaSegment(term, reading)];
+      return [createFuriganaSegment(term, reading)]
     }
 
     //// YOMICHAN END ////
 
     function parseSyntax(text) {
-      let ret = [];
+      let ret = []
 
       // without workarounds for missing spaces: /{([^]*?)}|((\S*)\[(.*?)\](\S*))|([^ {]+)/gm
       const syntax_re = /{([^]*?)}|(([^\[\]\s\{\}　]*)\[(.*?)\]([^\[\]\s\{\}　]*))|([^ \u00A0{　]+)/gm
 
       const ja_text_re = new RegExp(
         /[\u3041-\u3096\u30A0-\u30FF\u3400-\u4DB5\u4E00-\u9FCB\uF900-\uFA6A\u2E80-\u2FD5\uFF65-\uFF9F\々]/m
-      );
+      )
 
-      var match;
+      var match
       do {
-        match = syntax_re.exec(text);
+        match = syntax_re.exec(text)
         if (match) {
           // raw segment in curly braces
           if (match[1]) {
             ret.push({
               type: 'raw',
               text: match[1],
-            });
+            })
           }
           // syntax segment
           if (match[2]) {
-            const braket_parts = match[4].split(';');
+            const braket_parts = match[4].split(';')
 
-            const first_parts = braket_parts[0].split(',');
+            const first_parts = braket_parts[0].split(',')
 
-            const reading = first_parts[0] || '';
-            const dict_form = first_parts[1] || '';
+            const reading = first_parts[0] || ''
+            const dict_form = first_parts[1] || ''
 
-            const pitch_accent_parts = braket_parts[1] || '';
-            const pitch_accents = pitch_accent_parts.split(',');
+            const pitch_accent_parts = braket_parts[1] || ''
+            const pitch_accents = pitch_accent_parts.split(',')
 
-            const pre_text_match = match[3];
+            const pre_text_match = match[3]
 
-            let i = pre_text_match.length;
+            let i = pre_text_match.length
             while (i > 0) {
               if (!ja_text_re.test(pre_text_match[i - 1])) {
-                break;
+                break
               }
-              i--;
+              i--
             }
 
             if (i > 0) {
               ret.push({
                 type: 'plain',
                 text: pre_text_match.substring(0, i),
-              });
+              })
             }
 
-            const pre_text = pre_text_match.substring(i);
+            const pre_text = pre_text_match.substring(i)
 
             ret.push({
               type: 'syntax',
@@ -303,127 +303,127 @@
               reading: reading,
               dict_form: dict_form,
               pitch_accents: pitch_accents,
-            });
+            })
           }
           // plain segment
           else if (match[6]) {
             ret.push({
               type: 'plain',
               text: match[6],
-            });
+            })
           }
         }
-      } while (match);
+      } while (match)
 
-      return ret;
+      return ret
     }
 
     function pitchGraphElement(text, start, end, drop) {
-      const ret = document.createElement('span');
-      ret.classList.add('pitch-container');
+      const ret = document.createElement('span')
+      ret.classList.add('pitch-container')
 
-      ret.appendChild(document.createTextNode(text.substring(0, start)));
+      ret.appendChild(document.createTextNode(text.substring(0, start)))
 
-      const pitch_box = document.createElement('span');
-      pitch_box.classList.add('pitch-box');
-      ret.appendChild(pitch_box);
+      const pitch_box = document.createElement('span')
+      pitch_box.classList.add('pitch-box')
+      ret.appendChild(pitch_box)
 
-      const overbar = document.createElement('span');
-      overbar.classList.add('pitch-overbar');
-      pitch_box.appendChild(overbar);
+      const overbar = document.createElement('span')
+      overbar.classList.add('pitch-overbar')
+      pitch_box.appendChild(overbar)
 
       pitch_box.appendChild(
         document.createTextNode(text.substring(start, end))
-      );
+      )
 
       if (drop) {
-        const overbar = document.createElement('span');
-        overbar.classList.add('pitch-drop');
-        pitch_box.appendChild(overbar);
+        const overbar = document.createElement('span')
+        overbar.classList.add('pitch-drop')
+        pitch_box.appendChild(overbar)
       }
 
-      ret.appendChild(document.createTextNode(text.substring(end)));
+      ret.appendChild(document.createTextNode(text.substring(end)))
 
-      return ret;
+      return ret
     }
 
     function syllablePos(text, idx) {
       if (idx == 0) {
-        return 0;
+        return 0
       }
 
       if (idx < 0) {
         return (
           text.length -
           syllablePos(text.split('').reverse().join(''), -idx, false)
-        );
+        )
       }
 
-      let count = 0;
+      let count = 0
 
       for (let i = 0; i < text.length; i++) {
         if ('ゃょゅぁぃぇぉぅャョュァィェォゥ'.indexOf(text[i]) < 0) {
-          count++;
+          count++
           if (idx == count) {
-            return i + 1;
+            return i + 1
           }
         }
       }
 
-      return null;
+      return null
     }
 
     function parsePitches(pitch_text) {
-      const pitches = [];
+      const pitches = []
 
       for (c of pitch_text) {
         if (/[a-zA-Z]/.test(c)) {
-          pitches.push(c);
+          pitches.push(c)
         } else if (pitches.length) {
-          pitches[pitches.length - 1] += c;
+          pitches[pitches.length - 1] += c
         }
       }
 
-      return pitches;
+      return pitches
     }
 
     function pitchClasses(pitch_text, hover) {
-      const pitches = parsePitches(pitch_text);
-      const pitch_classes = [];
+      const pitches = parsePitches(pitch_text)
+      const pitch_classes = []
 
       if (pitches.length >= 1) {
-        const pre_class = hover ? 'pitch-hover-' : 'pitch-';
-        pitch_classes.push(pre_class + pitches[0][0]);
+        const pre_class = hover ? 'pitch-hover-' : 'pitch-'
+        pitch_classes.push(pre_class + pitches[0][0])
       }
       if (pitches.length >= 2) {
-        const pre_class = hover ? 'pitch-bg-hover-' : 'pitch-bg-';
-        pitch_classes.push(pre_class + pitches[1][0]);
+        const pre_class = hover ? 'pitch-bg-hover-' : 'pitch-bg-'
+        pitch_classes.push(pre_class + pitches[1][0])
       }
 
-      return pitch_classes;
+      return pitch_classes
     }
 
     function syntaxElementToNode(syntax_element, field_settings) {
       if (syntax_element.type !== 'syntax') {
-        return document.createTextNode(syntax_element.text);
+        return document.createTextNode(syntax_element.text)
       } else {
-        const node = document.createElement('span');
-        node.classList.add('word');
+        const node = document.createElement('span')
+        node.classList.add('word')
 
         const audio_play_word =
-          syntax_element.word_pre + syntax_element.word_post;
+          syntax_element.word_pre + syntax_element.word_post
         node.addEventListener('click', function () {
-          pycmd('play_audio-' + audio_play_word);
-        });
+          pycmd('play_audio-' + audio_play_word)
+        })
 
         if (field_settings.furigana === 'hidden') {
-          node.classList.add('furigana-invisible');
+          node.classList.add('furigana-invisible')
         } else if (field_settings.furigana === 'hover' && !field.popup) {
-          node.classList.add('furigana-hover');
+          node.classList.add('furigana-hover')
         }
 
-        const text_content = document.createElement('span');
-        node.appendChild(text_content);
+        const text_content = document.createElement('span')
+        node.appendChild(text_content)
 
         if (
           field_settings.pitch_coloring !== 'no' &&
@@ -432,23 +432,23 @@
           const pitch_classes = pitchClasses(
             syntax_element.pitch_accents[0],
             field_settings.pitch_coloring === 'hover'
-          );
+          )
           for (let c of pitch_classes) {
-            text_content.classList.add(c);
+            text_content.classList.add(c)
           }
         }
 
         const segments = distributeFurigana(
           syntax_element.word_pre,
           syntax_element.reading
-        );
+        )
 
         if (
           field_settings.furigana !== 'no' &&
           (segments.length > 1 || segments[0].reading)
         ) {
-          const ruby_elem = document.createElement('ruby');
-          text_content.appendChild(ruby_elem);
+          const ruby_elem = document.createElement('ruby')
+          text_content.appendChild(ruby_elem)
 
           for (const segment of segments) {
             if (field_settings.furigana === "replace") {
@@ -456,46 +456,46 @@
               continue
             }
 
-            ruby_elem.appendChild(document.createTextNode(segment.text));
+            ruby_elem.appendChild(document.createTextNode(segment.text))
 
-            const rt_elem = document.createElement('rt');
-            rt_elem.textContent = segment.reading;
-            ruby_elem.appendChild(rt_elem);
+            const rt_elem = document.createElement('rt')
+            rt_elem.textContent = segment.reading
+            ruby_elem.appendChild(rt_elem)
           }
 
           if (syntax_element.word_post) {
             ruby_elem.appendChild(
               document.createTextNode(syntax_element.word_post)
-            );
+            )
           }
         } else {
           text_content.textContent =
-            syntax_element.word_pre + syntax_element.word_post;
+            syntax_element.word_pre + syntax_element.word_post
         }
 
         if (field_settings.pitch_shapes !== 'no') {
           if (field_settings.pitch_shapes === 'hover') {
-            node.classList.add('pitch-shape-hover');
+            node.classList.add('pitch-shape-hover')
           }
 
           for (let i = 1; i < syntax_element.pitch_accents.length; i++) {
-            const pitch_accents = parsePitches(syntax_element.pitch_accents[i]);
+            const pitch_accents = parsePitches(syntax_element.pitch_accents[i])
 
             if (pitch_accents.length == 1) {
-              const diamond = document.createElement('span');
-              diamond.classList.add('pitch-diamond');
-              diamond.classList.add('pitch-bg-' + pitch_accents[0][0]);
-              node.appendChild(diamond);
+              const diamond = document.createElement('span')
+              diamond.classList.add('pitch-diamond')
+              diamond.classList.add('pitch-bg-' + pitch_accents[0][0])
+              node.appendChild(diamond)
             } else if (pitch_accents.length == 2) {
-              const circle_l = document.createElement('span');
-              circle_l.classList.add('pitch-circle-left');
-              circle_l.classList.add('pitch-bg-' + pitch_accents[0][0]);
-              node.appendChild(circle_l);
+              const circle_l = document.createElement('span')
+              circle_l.classList.add('pitch-circle-left')
+              circle_l.classList.add('pitch-bg-' + pitch_accents[0][0])
+              node.appendChild(circle_l)
 
-              const circle_r = document.createElement('span');
-              circle_r.classList.add('pitch-circle-right');
-              circle_r.classList.add('pitch-bg-' + pitch_accents[1][0]);
-              node.appendChild(circle_r);
+              const circle_r = document.createElement('span')
+              circle_r.classList.add('pitch-circle-right')
+              circle_r.classList.add('pitch-bg-' + pitch_accents[1][0])
+              node.appendChild(circle_r)
             }
           }
         }
@@ -504,56 +504,56 @@
           const popup_text =
             syntax_element.dict_form ||
             (syntax_element.reading || syntax_element.word_pre) +
-            syntax_element.word_post;
+            syntax_element.word_post
 
           if (popup_text) {
-            const popup_hover_box = document.createElement('div');
-            popup_hover_box.classList.add('popup-hover-box');
-            node.appendChild(popup_hover_box);
+            const popup_hover_box = document.createElement('div')
+            popup_hover_box.classList.add('popup-hover-box')
+            node.appendChild(popup_hover_box)
 
-            const popup_container = document.createElement('div');
-            popup_container.classList.add('popup');
-            node.appendChild(popup_container);
+            const popup_container = document.createElement('div')
+            popup_container.classList.add('popup')
+            node.appendChild(popup_container)
 
-            const popup_text_hiragana = convertKatakanaToHiragana(popup_text);
+            const popup_text_hiragana = convertKatakanaToHiragana(popup_text)
 
             for (const pitch_accent of syntax_element.pitch_accents) {
-              const pitch_classes = pitchClasses(pitch_accent);
+              const pitch_classes = pitchClasses(pitch_accent)
 
-              const popup_content_part = document.createElement('div');
-              popup_content_part.classList.add('pitch-graph');
-              popup_container.appendChild(popup_content_part);
+              const popup_content_part = document.createElement('div')
+              popup_content_part.classList.add('pitch-graph')
+              popup_container.appendChild(popup_content_part)
 
               if (pitch_classes.length == 1) {
-                let start, end, drop;
+                let start, end, drop
 
                 if (pitch_accent[0] === 'h') {
-                  start = 1;
-                  end = null;
-                  drop = false;
+                  start = 1
+                  end = null
+                  drop = false
                 } else if (pitch_accent[0] === 'a') {
-                  start = 0;
-                  end = 1;
-                  drop = true;
+                  start = 0
+                  end = 1
+                  drop = true
                 } else if (pitch_accent[0] === 'n') {
-                  start = 1;
-                  end = parseInt(pitch_accent.substring(1));
-                  drop = true;
+                  start = 1
+                  end = parseInt(pitch_accent.substring(1))
+                  drop = true
                 } else if (pitch_accent[0] === 'o') {
-                  start = -1;
-                  end = null;
-                  drop = true;
+                  start = -1
+                  end = null
+                  drop = true
                 } else if (pitch_accent[0] === 'k') {
-                  start = 1;
-                  end = parseInt(pitch_accent.substring(1));
-                  drop = true;
+                  start = 1
+                  end = parseInt(pitch_accent.substring(1))
+                  drop = true
                 }
 
-                let start_pos = syllablePos(popup_text_hiragana, start);
+                let start_pos = syllablePos(popup_text_hiragana, start)
                 let end_pos =
                   end === null
                     ? popup_text_hiragana.length
-                    : syllablePos(popup_text_hiragana, end);
+                    : syllablePos(popup_text_hiragana, end)
 
                 if (
                   start_pos !== null &&
@@ -565,34 +565,34 @@
                     start_pos,
                     end_pos,
                     drop
-                  );
-                  popup_content_part.appendChild(pitch_graph);
+                  )
+                  popup_content_part.appendChild(pitch_graph)
                 } else {
-                  popup_content_part.textContent = popup_text_hiragana;
+                  popup_content_part.textContent = popup_text_hiragana
                 }
               } else {
-                popup_content_part.textContent = popup_text_hiragana;
+                popup_content_part.textContent = popup_text_hiragana
               }
 
               for (c of pitch_classes) {
-                popup_content_part.classList.add(c);
+                popup_content_part.classList.add(c)
               }
             }
 
             if (popup_container.childNodes.length == 0) {
-              popup_container.textContent = popup_text_hiragana;
+              popup_container.textContent = popup_text_hiragana
             }
           }
         }
 
-        return node;
+        return node
       }
     }
 
     function syntaxToNodes(syntax, field_settings) {
       return syntax.map(function (syntax_element) {
-        return syntaxElementToNode(syntax_element, field_settings);
-      });
+        return syntaxElementToNode(syntax_element, field_settings)
+      })
     }
 
     function handleFieldTextNodes(
@@ -601,37 +601,37 @@
       in_curly = { value: false }
     ) {
       if (node.nodeType == Node.TEXT_NODE) {
-        let text = node.textContent;
+        let text = node.textContent
 
         // Handle curly braces spanning across tags (ugly, ugly, ugly)
         if (in_curly.value) {
-          text = '{' + text;
+          text = '{' + text
         }
         for (let i = text.length - 1; i >= 0; i--) {
           if (text[i] == '}') {
-            in_curly.value = false;
-            break;
+            in_curly.value = false
+            break
           } else if (text[i] == '{') {
-            in_curly.value = true;
-            break;
+            in_curly.value = true
+            break
           }
         }
         if (in_curly.value) {
-          text = text + '}';
+          text = text + '}'
         }
 
-        const syntax = parseSyntax(text);
-        const nodes = syntaxToNodes(syntax, field_settings);
+        const syntax = parseSyntax(text)
+        const nodes = syntaxToNodes(syntax, field_settings)
 
-        const replacement_node = document.createElement('span');
-        node.parentNode.insertBefore(replacement_node, node);
+        const replacement_node = document.createElement('span')
+        node.parentNode.insertBefore(replacement_node, node)
         for (const child of nodes) {
-          replacement_node.appendChild(child);
+          replacement_node.appendChild(child)
         }
-        node.parentNode.removeChild(node);
+        node.parentNode.removeChild(node)
       } else {
         for (let i = 0; i < node.childNodes.length; i++) {
-          handleFieldTextNodes(node.childNodes[i], field_settings, in_curly);
+          handleFieldTextNodes(node.childNodes[i], field_settings, in_curly)
         }
       }
     }
@@ -699,9 +699,9 @@
 
     function handleField(field) {
       // Ignore field if it doesn't contain syntax
-      const syntax_test_re = /[\{\}\[\]]/;
+      const syntax_test_re = /[\{\}\[\]]/
       if (!syntax_test_re.test(field.textContent)) {
-        return;
+        return
       }
 
       const field_settings =
@@ -714,64 +714,56 @@
             furigana: "no",
           }
 
-      if (field.hasAttribute('data-popup')) field_settings.popup = field.getAttribute('data-popup');
-      if (field.hasAttribute('data-pitch-coloring')) field_settings.pitch_coloring = field.getAttribute('data-pitch-coloring');
-      if (field.hasAttribute('data-pitch-shapes')) field_settings.pitch_shapes = field.getAttribute('data-pitch-shapes');
-      if (field.hasAttribute('data-furigana')) field_settings.furigana = field.getAttribute('data-furigana');
+      if (field.hasAttribute('data-popup')) field_settings.popup = field.getAttribute('data-popup')
+      if (field.hasAttribute('data-pitch-coloring')) field_settings.pitch_coloring = field.getAttribute('data-pitch-coloring')
+      if (field.hasAttribute('data-pitch-shapes')) field_settings.pitch_shapes = field.getAttribute('data-pitch-shapes')
+      if (field.hasAttribute('data-furigana')) field_settings.furigana = field.getAttribute('data-furigana')
 
-      handleFieldTextNodes(field, field_settings);
+      handleFieldTextNodes(field, field_settings)
     }
 
-    const fields = document.querySelectorAll('.field, .wrapped-japanese');
+    const fields = document.querySelectorAll('.field, .wrapped-japanese')
 
     for (field of fields) {
-      handleField(field);
+      handleField(field)
     }
 
     function closeAllActive() {
-      const current_popups = document.querySelectorAll('.active');
+      const current_popups = document.querySelectorAll('.active')
       for (const popup of current_popups) {
-        popup.classList.remove('active', 'popup-active');
+        popup.classList.remove('active', 'popup-active')
       }
-      return current_popups.length > 0;
-    }
-
-    function on_closeAllActiveBody(event) {
-      if (!event.target.closest('.word')) {
-        if (closeAllActive()) {
-          event.preventDefault();
-        }
-      }
+      return current_popups.length > 0
     }
 
     function activeEnablePopup(elem) {
-      const popup_elem = elem.querySelector('.popup');
+      const popup_elem = elem.querySelector('.popup')
       if (!popup_elem) {
-        return;
+        return
       }
 
-      elem.classList.add('popup-active');
+      elem.classList.add('popup-active')
 
       function isTooHigh() {
-        return popup_elem.getBoundingClientRect().top < 0;
+        return popup_elem.getBoundingClientRect().top < 0
       }
 
       function isTooLow() {
         return (
           popup_elem.getBoundingClientRect().bottom >=
           (window.innerHeight || document.documentElement.clientHeight)
-        );
+        )
       }
 
       function isTooRight() {
         return (
           popup_elem.getBoundingClientRect().right >=
           (window.innerWidth || document.documentElement.clientWidth)
-        );
+        )
       }
 
       function isTooLeft() {
-        return popup_elem.getBoundingClientRect().left < 0;
+        return popup_elem.getBoundingClientRect().left < 0
       }
 
       elem.classList.remove(
@@ -779,67 +771,65 @@
         'popup-direction-d',
         'popup-direction-l',
         'popup-direction-r'
-      );
+      )
 
-      elem.classList.add('popup-direction-u');
+      elem.classList.add('popup-direction-u')
       if (!isTooHigh()) {
-        return;
+        return
       }
-      elem.classList.remove('popup-direction-u');
+      elem.classList.remove('popup-direction-u')
 
-      elem.classList.add('popup-direction-d');
+      elem.classList.add('popup-direction-d')
       if (!isTooLow()) {
-        return;
+        return
       }
-      elem.classList.remove('popup-direction-d');
+      elem.classList.remove('popup-direction-d')
 
-      elem.classList.add('popup-direction-l');
+      elem.classList.add('popup-direction-l')
       if (!isTooLeft()) {
-        return;
+        return
       }
-      elem.classList.remove('popup-direction-l');
+      elem.classList.remove('popup-direction-l')
 
-      elem.classList.add('popup-direction-r');
+      elem.classList.add('popup-direction-r')
       if (!isTooRight()) {
-        return;
+        return
       }
-      elem.classList.remove('popup-direction-r');
+      elem.classList.remove('popup-direction-r')
 
-      elem.classList.add('popup-direction-u');
+      elem.classList.add('popup-direction-u')
     }
 
     function on_activeEnter(event) {
-      if (event) {
-        event.preventDefault();
-      }
-
-      closeAllActive();
-      this.classList.add('active');
-      activeEnablePopup(this);
+      closeAllActive()
+      this.classList.add('active')
+      activeEnablePopup(this)
     }
 
     function on_activeLeave() {
-      this.classList.remove('active', 'popup-active');
+      this.classList.remove('active', 'popup-active')
     }
 
-    const word_elements = document.querySelectorAll('.word');
-    const is_mobile = typeof pycmd === typeof undefined;
+    function on_activeToggle() {
+      if (this.classList.contains('active')) {
+        this.classList.remove('active', 'popup-active')
+      } else {
+        closeAllActive()
+        this.classList.add('active')
+        activeEnablePopup(this)
+      }
+    }
 
+    const word_elements = document.querySelectorAll('.word')
+    const is_mobile = typeof (pycmd) === typeof (undefined)
     for (elem of word_elements) {
-      elem.addEventListener('mouseenter', on_activeEnter);
-      elem.addEventListener('ontouchend', on_activeEnter);
-      if (!is_mobile) {
-        elem.addEventListener('mouseleave', on_activeLeave);
-      }
       if (is_mobile) {
-        elem.addEventListener('click', on_activeEnter);
-        elem.classList.add('tappable');
+        elem.addEventListener('click', on_activeToggle)
+        elem.classList.add('tappable')
+      } else {
+        elem.addEventListener('mouseenter', on_activeEnter)
+        elem.addEventListener('mouseleave', on_activeLeave)
       }
-    }
-
-    if (is_mobile) {
-      document.body.addEventListener('click', on_closeAllActiveBody);
-      document.body.classList.add('tappable');
     }
   })();
 </script>
