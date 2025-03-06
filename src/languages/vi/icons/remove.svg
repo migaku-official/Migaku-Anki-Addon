@@ -1,0 +1,18 @@
+<svg id="svg" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="400" height="400" viewBox="0, 0, 400,400">
+  <g id="svgg">
+    <!-- Red background -->
+    <rect width="400" height="400" fill="#DA251D" />
+
+    <!-- Yellow star -->
+    <path d="M200,100 L240,200 L160,200 Z M200,300 L160,200 L240,200 Z" fill="#FFFF00" />
+    <path d="M100,200 L200,240 L200,160 Z M300,200 L200,160 L200,240 Z" fill="#FFFF00" />
+    <path d="M200,100 L240,200 L160,200 Z M200,300 L160,200 L240,200 Z" fill="#FFFF00" transform="rotate(72, 200, 200)" />
+    <path d="M200,100 L240,200 L160,200 Z M200,300 L160,200 L240,200 Z" fill="#FFFF00" transform="rotate(144, 200, 200)" />
+    <path d="M200,100 L240,200 L160,200 Z M200,300 L160,200 L240,200 Z" fill="#FFFF00" transform="rotate(216, 200, 200)" />
+    <path d="M200,100 L240,200 L160,200 Z M200,300 L160,200 L240,200 Z" fill="#FFFF00" transform="rotate(288, 200, 200)" />
+
+    <!-- White X -->
+    <line x1="50" y1="50" x2="350" y2="350" stroke="#FFFFFF" stroke-width="20" />
+    <line x1="350" y1="50" x2="50" y2="350" stroke="#FFFFFF" stroke-width="20" />
+  </g>
+</svg>

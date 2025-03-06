@@ -263,6 +263,35 @@ class Languages(metaclass=LanguagesMeta):
         ],
     )
 
+    Vietnamese = Language(
+        name_en="Vietnamese",
+        name_native="Vietnamese",
+        code="vi",
+        fields=[
+            "Sentence",
+            "Translation",
+            "Target Word",
+            "Definitions",
+            "Screenshot",
+            "Sentence Audio",
+            "Word Audio",
+            "Images",
+            "Example Sentences",
+            "Is Vocabulary Card",
+            "Is Audio Card",
+        ],
+        field_settings=[
+            FieldSetting(
+                "popup",
+                "Popup",
+                [
+                    FieldOption("no", "Disabled"),
+                    FieldOption("yes", "Enabled"),
+                ],
+            )
+        ],
+    )
+
     French = Language(
         name_en="French",
         name_native="Français",

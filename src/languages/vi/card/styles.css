@@ -1,0 +1,257 @@
+@font-face {
+  font-family: cardFont;
+  src: url('/_NotoSerif.ttf');
+}
+
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
+main.container {
+  margin: 0px;
+  padding: 0px;
+  width: 100vw;
+}
+
+main.container #qa {
+  margin-top: 0px;
+}
+
+main.container .card {
+  min-height: calc(100vh - 240px);
+}
+
+main.container .card audio {
+  width: 150px;
+}
+
+#content {
+  margin: 0px;
+}
+
+.card,
+.card * {
+  box-sizing: border-box;
+  padding: 0px;
+  margin: 0px;
+  font-family: cardFont, sans-serif;
+}
+
+.card {
+  background: #e5f9ff;
+  font-size: 18px;
+  font-smooth: always;
+  color: rgb(40, 40, 50);
+  height: 100%;
+  width: 100%;
+}
+
+.migaku-header {
+  background: #2880ff;
+  text-align: center;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.migaku-header h1 {
+  color: white;
+}
+
+.migaku-logo {
+  height: 35px;
+  margin: 5px;
+}
+
+.migaku-card,
+.migaku-typeselect {
+  position: relative;
+  background: white;
+  width: 90%;
+  max-width: 650px;
+  margin: 20px auto 50px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+  text-align: left;
+}
+
+.migaku-card-front .migaku-card-content {
+  padding: 20px;
+  text-align: center;
+  font-size: 22px;
+}
+
+.migaku-card-back .migaku-card-content {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  position: relative;
+}
+
+.migaku-indented {
+  margin-left: 5%;
+}
+
+.sentence-separator {
+  width: 100%;
+  margin: 15px 0px;
+  border-color: rgb(220, 220, 220);
+}
+
+.migaku-card-sentence {
+  font-size: 24px;
+  text-align: center;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.migaku-card-unknown {
+  margin-top: 10px;
+  font-size: 24px;
+}
+
+.migaku-card-translation,
+.migaku-card-examples {
+  color: rgba(30, 30, 55, 0.7);
+}
+
+.migaku-card-translation,
+.migaku-card-sentence-audio {
+  text-align: center;
+  width: 100%;
+}
+
+.migaku-card-sentence-audio,
+.migaku-card-unknown-audio {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.migaku-card-sentence-audio {
+  justify-content: center;
+}
+
+.migaku-card-screenshot,
+.migaku-card-images {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  align-items: end;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  overflow: hidden;
+  justify-items: center;
+}
+
+.migaku-card-screenshot br,
+.migaku-card-images br {
+  display: none;
+}
+
+.migaku-card-images {
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  grid-gap: 5px;
+  grid-template-columns: auto auto auto auto;
+}
+
+.migaku-card-screenshot img {
+  max-width: 100%;
+  max-height: 365px;
+}
+
+.migaku-card-images img {
+  max-width: 100%;
+  max-height: 125px;
+}
+
+.migaku-card-examples {
+  margin-bottom: 15px;
+}
+
+.migaku-card-sentence,
+.migaku-card-unknown,
+.migaku-card-translation,
+.migaku-card-examples,
+.migaku-card-definitions {
+  word-break: break-word;
+}
+
+.migaku-typeselect {
+  padding: 10px 5px;
+  text-align: center;
+}
+
+.migaku-typeselect label {
+  padding: 0 7px;
+  white-space: nowrap;
+  font-family: sans-serif;
+}
+
+.ankidroid_dark_mode .migaku-header,
+.nightMode .migaku-header {
+  background: #f9a746;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.ankidroid_dark_mode.card,
+.nightMode.card {
+  color: rgb(245, 245, 255);
+  background: #2b303b;
+}
+
+.ankidroid_dark_mode .migaku-card-translation,
+.nightMode.card .migaku-card-translation,
+.ankidroid_dark_mode .migaku-card-examples,
+.nightMode.card .migaku-card-examples {
+  color: rgba(230, 230, 255, 0.65);
+}
+
+.ankidroid_dark_mode .migaku-card,
+.nightMode .migaku-card,
+.ankidroid_dark_mode .migaku-typeselect,
+.nightMode .migaku-typeselect {
+  background: #363c4a;
+  box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.15);
+}
+
+.ankidroid_dark_mode .sentence-separator,
+.nightMode .sentence-separator {
+  border-color: rgb(175, 175, 175);
+}
+
+.replay-button {
+  height: 25px;
+}
+
+.playImage {
+  height: 30px !important;
+  width: 30px !important;
+  margin-right: 4px;
+}
+
+t {
+  font-style: bold;
+}
+
+@media (min-width: 762px) {
+  .migaku-header {
+    justify-content: start;
+    padding-left: 20px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  .migaku-card,
+  .migaku-typeselect {
+    width: 96%;
+  }
+}
