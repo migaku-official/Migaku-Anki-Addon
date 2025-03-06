@@ -51,7 +51,7 @@ def process_image_asset(image: ImageAsset):
         data = requests.get(image.src, allow_redirects=True)
         move_file_to_media_dir(data.content, name)
 
-    return f"<img src='{name}' />"
+    return f'<img src="{name}">'
 
 
 def process_audio_asset(audio: AudioAsset):
