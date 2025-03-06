@@ -19,7 +19,8 @@ from .. import note_type_mgr
 from ..languages import Languages
 from ..util import tmp_path
 
-IMG_RE = re.compile(r"<img (.*?)src=\"(.*?)\"(.*?)>", re.IGNORECASE)
+# supports both src="" and src=''
+IMG_RE = re.compile(r"<img (.*?)src=(?:\"|')(.*?)(?:\"|')(.*?)>", re.IGNORECASE)
 SOUND_RE = re.compile(r"\[sound:(.*?)\]")
 
 
@@ -458,7 +459,6 @@ async def handle_card(
     # no usable mapping found
     if not dst_id:
         print(f"skipped {card.id}: no mapping for {src_id}")
-        print(mappings)
         return None
 
     # get the correct card type
@@ -513,6 +513,7 @@ async def handle_card(
                         gather_media.add((src, False))
             if hashes:
                 data[i] = "|".join(hashes)
+
         elif field["type"].startswith("AUDIO"):
             hashes = []
             srcs = SOUND_RE.findall(data[i]) + recovered_audio_src
@@ -531,6 +532,7 @@ async def handle_card(
                         gather_media.add((src, True))
             if hashes:
                 data[i] = "|".join(hashes)
+
         elif field["type"] == "SYNTAX":
             if data[i].strip() and not "[" in data[i]:
                 if gather_syntax is None:
@@ -551,6 +553,7 @@ async def handle_card(
 
     if (not gather_syntax is None) or (not gather_media is None):
         return None
+
 
     card_data = {
         "deckId": 0,  # set by core
