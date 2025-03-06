@@ -107,7 +107,7 @@ def card_fields_from_dict(data: dict[str, any]):
     sentence = data.get("sentence", "")
 
     cjk_found = len(re.findall(r'[\u2e80-\u9fff\uac00-\ud7ff]', targetWord)) > 0
-    k_found = len(re.findall(r'[\u3131-\uD79D]', targetWord)) > 0
+    k_found = len(re.findall(r'[\u1100-\u11FF\u3130-\u318F\uA960-\uA97F\uAC00-\uD7AF\uD7B0-\uD7FF]', targetWord)) > 0
 
     targetWordNoSyntax = remove_syntax_k(targetWord) if k_found else remove_syntax_cj(targetWord) if cjk_found else remove_syntax_euro(targetWord)
     sentenceNoSyntax = remove_syntax_k(sentence) if k_found else remove_syntax_cj(sentence) if cjk_found else remove_syntax_euro(sentence)
