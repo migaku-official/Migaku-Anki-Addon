@@ -243,11 +243,6 @@ def nt_set_tmpl_lang(
             text_i = match.start() + len(field_replace)
             field_i += 1
 
-    if lang.code == "zh_CN":
-        print(f"matchse", fmt_data)
-    else:
-        print(f"matchse", lang.code)
-
     # Insert Formatting
     if lang:
         card_js_path = lang.file_path("card", "support.html")
