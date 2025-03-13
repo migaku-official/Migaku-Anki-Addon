@@ -63,13 +63,19 @@ def handle_audio_file(file, filename, suffix):
         if not check_file_exists(audio_temp_path):
             alert(filename + " could not be converted to an mp3.")
             return
-        filename = filename[0:-3] + "mp3"
+
+        parts = filename.split(".")
+        parts.pop()
+        filename = ".".join(parts) + ".mp3"
+
         if config.get("normalize_audio", True):
             move_extension_mp3_normalize_to_media_folder(audio_temp_path, filename)
         else:
             move_extension_mp3_to_media_folder(audio_temp_path, filename)
     else:
         move_file_to_media_dir(file, filename)
+    
+    return filename
 
 def handle_file(file_data, only_move=False):
     file_name = file_data["filename"]

@@ -4,8 +4,7 @@ import re
 from typing import Optional
 import requests
 
-from .migaku_connection.handle_files import move_file_to_media_dir
-
+from .migaku_connection.handle_files import handle_audio_file, move_file_to_media_dir
 
 @dataclass
 class AudioAsset:
@@ -59,10 +58,10 @@ def process_audio_asset(audio: AudioAsset):
 
     if audio.input.startswith("data:audio/mp4;base64,"):
         data = audio.input.split(",", 1)[1]
-        move_file_to_media_dir(b64decode(data), name)
+        name = handle_audio_file(b64decode(data), name, "m4a")
     elif audio.input.startswith("http"):
         data = requests.get(audio.input, allow_redirects=True)
-        move_file_to_media_dir(data.content, name)
+        name = handle_audio_file(data.content, name, "m4a")
 
     return f"[sound:{name}]"
 

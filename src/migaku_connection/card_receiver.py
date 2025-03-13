@@ -23,7 +23,6 @@ class CardReceiver(MigakuHTTPHandler):
             self.create_card(card)
         except Exception as e:
             self.finish({"success": False, "error": f"Invalid request: {str(e)}."})
-
         return
 
     def create_card(self, card: CardFields):
