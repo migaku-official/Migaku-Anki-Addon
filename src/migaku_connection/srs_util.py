@@ -385,6 +385,7 @@ async def handle_card(
     note_type = note.note_type()
 
     dst_id = None
+    src_id = None
     field_map = None
 
     # try to use automatic mapping
@@ -585,5 +586,6 @@ async def handle_card(
         "second": {
             "due": due,
             "interval": interval,
+            "ankiTypeId": src_id,
         },
     }
