@@ -385,6 +385,7 @@ async def handle_card(
     note_type = note.note_type()
 
     dst_id = None
+    src_id = None
     field_map = None
 
     # try to use automatic mapping
@@ -404,6 +405,7 @@ async def handle_card(
                 and ctype["id"] & 0xF == sub_id
             ):
                 dst_id = ctype["id"]
+                src_id = f"{note.mid}\u001f{card.ord}"
                 field_map = []
                 for src, dst in auto_field_map:
                     for i, field in enumerate(note_type["flds"]):
@@ -585,5 +587,6 @@ async def handle_card(
         "second": {
             "due": due,
             "interval": interval,
+            "ankiTypeId": src_id,
         },
     }
