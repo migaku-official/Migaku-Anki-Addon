@@ -38,7 +38,7 @@ from functools import wraps
 try:
     import audioop
 except ImportError:
-    import pyaudioop as audioop
+    import pydub.pyaudioop as audioop
 
 if sys.version_info >= (3, 0):
     basestring = str
