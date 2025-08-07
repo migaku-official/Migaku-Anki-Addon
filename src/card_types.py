@@ -12,6 +12,7 @@ class AudioAsset:
     title: str
     input: str
     r2Url: Optional[str] = None
+    uploadId: Optional[str] = None
 
 
 @dataclass
@@ -21,6 +22,7 @@ class ImageAsset:
     src: str
     alt: str
     r2Url: Optional[str] = None
+    uploadId: Optional[str] = None
 
 
 @dataclass
