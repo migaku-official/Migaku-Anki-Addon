@@ -6,7 +6,8 @@ import os
 import aqt
 from aqt.qt import *
 import anki
-from .config import get
+from anki.utils import is_win
+from .config import get, set
 
 from .sys_libraries import init_sys_libs
 from inspect import signature
@@ -35,6 +36,10 @@ from . import (
 
 def setup_hooks():
     # Allow webviews to access necessary resources
+    if is_win and not get("turned_off_normalize_audio"):
+        set("normalize_audio", False)
+        set("turned_off_normalize_audio", True)
+
     aqt.mw.addonManager.setWebExports(
         __name__, r"(languages/.*?\.svg|inplace_editor.css)"
     )

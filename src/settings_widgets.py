@@ -492,12 +492,18 @@ class MediaFileWidget(SettingsWidget):
             "The option below will normalize the volume of all imported audio files to approximately the same level."
         )
 
-        normalize_audio = QCheckBox("Normalize audio volume (Recommended)")
+        normalize_audio = QCheckBox("Normalize audio volume")
         normalize_audio.setChecked(config.get("normalize_audio", True))
         normalize_audio.toggled.connect(
             lambda checked: config.set("normalize_audio", checked)
         )
         self.lyt.addWidget(normalize_audio)
+
+        self.add_label(
+            "Recently Windows users have reported issues with audio normalization.<br>"
+            "It may stop Anki from creating cards sent by the extension that include audio.<br>"
+            "If you experience any problems in this regard, <span style=\"color: red\">try turning off this option</span>."
+        )
 
 
 class FieldSettingsWidget(SettingsWidget):
