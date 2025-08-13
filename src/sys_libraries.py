@@ -20,7 +20,6 @@ def init_sys_libs():
         and sys.version_info.minor >= 13
     ):
         add_sys_path("macos_313")
-        print(sys.path)
     elif (
         anki.utils.is_mac
         and sys.version_info.major >= 3
