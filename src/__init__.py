@@ -1,4 +1,6 @@
+
 from .sys_libraries import init_sys_libs
+# We need to import init_sys_libs before anything else as the imports might have side effects
 init_sys_libs()
 
 from dataclasses import dataclass
