@@ -19,7 +19,6 @@ def init_sys_libs():
         and sys.version_info.major >= 3
         and sys.version_info.minor >= 13
     ):
-        print("---- Using macOS 13.0+ libraries")
         add_sys_path("macos_313")
         print(sys.path)
     elif (
