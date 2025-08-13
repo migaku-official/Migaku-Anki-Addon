@@ -1,3 +1,6 @@
+from .sys_libraries import init_sys_libs
+init_sys_libs()
+
 from dataclasses import dataclass
 from platform import platform
 import sys
@@ -9,10 +12,7 @@ import anki
 from anki.utils import is_win
 from .config import get, set
 
-from .sys_libraries import init_sys_libs
 from inspect import signature
-
-init_sys_libs()
 
 # Initialize sub modules
 from . import (
