@@ -38,7 +38,7 @@ from . import (
 
 def setup_hooks():
     # Allow webviews to access necessary resources
-    if is_win and not get("turned_off_normalize_audio"):
+    if not get("turned_off_normalize_audio"):
         set("normalize_audio", False)
         set("turned_off_normalize_audio", True)
 
