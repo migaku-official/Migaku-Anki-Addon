@@ -81,7 +81,7 @@ class LanguageWidget(SettingsWidget):
 class ExtensionWidget(SettingsWidget):
     TITLE = "Browser Extension"
 
-    EXTENSION_URL = "https://www.migaku.io/todo"
+    EXTENSION_URL = "https://chromewebstore.google.com/detail/migaku-really-learn-langu/lkhiljgmbeecmljiogckofcalncmfnfo"
 
     BOTTOM_STRETCH = False
 
