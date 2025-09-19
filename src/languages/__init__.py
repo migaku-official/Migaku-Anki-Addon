@@ -265,8 +265,37 @@ class Languages(metaclass=LanguagesMeta):
 
     Vietnamese = Language(
         name_en="Vietnamese",
-        name_native="Vietnamese",
+        name_native="Tiếng Việt",
         code="vi",
+        fields=[
+            "Sentence",
+            "Translation",
+            "Target Word",
+            "Definitions",
+            "Screenshot",
+            "Sentence Audio",
+            "Word Audio",
+            "Images",
+            "Example Sentences",
+            "Is Vocabulary Card",
+            "Is Audio Card",
+        ],
+        field_settings=[
+            FieldSetting(
+                "popup",
+                "Popup",
+                [
+                    FieldOption("no", "Disabled"),
+                    FieldOption("yes", "Enabled"),
+                ],
+            )
+        ],
+    )
+
+    Italian = Language(
+        name_en="Italian",
+        name_native="Italiano",
+        code="it",
         fields=[
             "Sentence",
             "Translation",
