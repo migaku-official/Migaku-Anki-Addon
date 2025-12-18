@@ -23,3 +23,7 @@ and add the new dependencies.
 You'll also need to add the appropriate code in `sys_libraries.py` then, to load the new libraries on the right platform and Anki version.
 
 - Support for new languages require adding a new folder in `src/languages` and modifying `src/languages/__init__.py` to include it.
+
+## Ankiweb User Guide
+
+Check out [here](./ankiweb.html).
