@@ -35,16 +35,16 @@ _early_log_buffer = None
 def setup_file_logging():
     """Set up file logging for debugging. Logs are written to profile folder."""
     global _early_log_buffer
-    
+
     try:
         # Check if profile manager and folder are available
         if not hasattr(aqt.mw, 'pm') or not aqt.mw.pm:
             return False
-        
+
         profile_folder = aqt.mw.pm.profileFolder()
         if not profile_folder:
             return False
-            
+
         log_file = os.path.join(profile_folder, "migaku_addon.log")
 
         # Check if we already added this handler (avoid duplicates)
