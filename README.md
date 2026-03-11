@@ -116,6 +116,94 @@ This will output debug messages to the console when running Anki from the termin
 
 **Note:** Python changes are loaded directly by Anki - no compilation or build step is needed.
 
+## Release Process
+
+### Creating a New Release
+
+1. **Update version and changelog:**
+   - Update `CHANGELOG.md` with the new version number and changes
+   - Commit the changes to your feature branch
+
+2. **Merge to master:**
+   ```bash
+   git checkout master
+   git pull origin master
+   git merge your-feature-branch
+   git push origin master
+   ```
+
+3. **Create and push a tag:**
+   ```bash
+   git tag 0.4.0  # Use the new version number
+   git push origin 0.4.0
+   ```
+
+4. **GitHub Actions will automatically:**
+   - Build the `.ankiaddon` file
+   - Set the version in `src/version.py`
+   - Create a GitHub release
+   - Attach the built file to the release
+
+### QA Testing a Release Candidate
+
+**Step 1: Download the Test Build**
+1. Go to https://github.com/migaku-official/Migaku-Anki-Addon/releases
+2. Find the release version (e.g., 0.4.0)
+3. Download `Migaku.ankiaddon`
+
+**Step 2: Backup Current Production Version**
+
+⚠️ **Important: Close Anki first before proceeding!**
+
+**Mac:**
+```bash
+cd ~/Library/Application\ Support/Anki2/addons21/
+mv 1846879528 ~/Desktop/1846879528.backup
+```
+
+**Windows:**
+```cmd
+cd %APPDATA%\Anki2\addons21\
+move 1846879528 %USERPROFILE%\Desktop\1846879528.backup
+```
+
+**Linux:**
+```bash
+cd ~/.local/share/Anki2/addons21/
+mv 1846879528 ~/Desktop/1846879528.backup
+```
+
+**Step 3: Install Test Version**
+1. Open Anki
+2. Go to **Tools → Add-ons**
+3. Click **Install from file...**
+4. Select the downloaded `Migaku.ankiaddon` file
+5. Restart Anki
+
+**Step 4: Test the Add-on**
+- Verify all functionality works as expected
+- Test new features mentioned in the changelog
+- Check compatibility with current Anki version
+- Test connection to Migaku Browser Extension
+
+**Step 5: Restore Production Version (After Testing)**
+```bash
+# Close Anki first
+cd [addons folder path from Step 2]
+rm -rf 1846879528
+mv ~/Desktop/1846879528.backup 1846879528
+```
+Then restart Anki.
+
+### Publishing to AnkiWeb
+
+After QA approval:
+1. Go to https://ankiweb.net/shared/upload
+2. Sign in with your AnkiWeb account
+3. Update addon **1846879528**
+4. Upload the `Migaku.ankiaddon` file from the GitHub release
+5. Update the description if needed (using `ankiweb.html`)
+
 ## Things that often break
 
 - The `src/lib` folder contains dependencies, that are not included in Anki by default.
