@@ -1,3 +1,9 @@
+## 0.3.6
+
+- [FEATURE] Add Migaku > Export Debug Logs menu item
+- [FIX] Add error popup on port connection issues
+- [FIX] Fail gracefully when certain initialization errors occur
+
 ## 0.3.5
 
 - [FIX] Increase Qt6 compatibility
