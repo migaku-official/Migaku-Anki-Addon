@@ -39,6 +39,7 @@ class MigakuServerThread(QThread):
 
         self.server = server
         self.loop = None
+        self.actual_port = None  # Store the port that was successfully bound
 
     def run(self):
         self.loop = asyncio.new_event_loop()
@@ -49,20 +50,31 @@ class MigakuServerThread(QThread):
 
         try:
             self.server.listen(actual_port)
+            self.actual_port = actual_port
             logger.info(f"Migaku server started successfully on port {actual_port}")
             print(f"Migaku server listening on port {actual_port}")
         except OSError as e:
+            # Try to get more diagnostic info about what's using the port
+            port_info = self._get_port_info(actual_port)
+
             error_msg = (
                 f"Failed to start Migaku server on port {actual_port}.\n\n"
                 f"Error: {str(e)}\n\n"
+                f"{port_info}\n"
                 f"Possible causes:\n"
                 f"• Another Anki instance is already running\n"
                 f"• A previous Anki session didn't close properly\n"
                 f"• Another application is using port {actual_port}\n\n"
                 f"Solutions:\n"
                 f"• Close all Anki instances and restart\n"
+                f"• Check what's using the port (see instructions below)\n"
                 f"• Change the port in Tools → Add-ons → Migaku → Config\n"
-                f"• Restart your computer if the problem persists"
+                f"• Restart your computer if the problem persists\n\n"
+                f"To check what's using the port:\n"
+                f"Mac/Linux: Open Terminal and run:\n"
+                f"  lsof -i :{actual_port}\n"
+                f"Windows: Open Command Prompt and run:\n"
+                f"  netstat -ano | findstr :{actual_port}"
             )
             # Schedule the error dialog on the main thread
             aqt.mw.taskman.run_on_main(
@@ -77,6 +89,46 @@ class MigakuServerThread(QThread):
             return
 
         tornado.ioloop.IOLoop.instance().start()
+
+    def _get_port_info(self, port):
+        """Try to get information about what's using the port."""
+        try:
+            import subprocess
+            import platform
+
+            system = platform.system()
+
+            if system == "Darwin" or system == "Linux":
+                # Use lsof on Mac/Linux
+                result = subprocess.run(
+                    ["lsof", "-i", f":{port}"],
+                    capture_output=True,
+                    text=True,
+                    timeout=2
+                )
+                if result.stdout:
+                    lines = result.stdout.strip().split('\n')
+                    if len(lines) > 1:
+                        # Parse process info from lsof output
+                        return f"Port {port} is currently used by:\n{lines[1][:80]}"
+
+            elif system == "Windows":
+                # Use netstat on Windows
+                result = subprocess.run(
+                    ["netstat", "-ano"],
+                    capture_output=True,
+                    text=True,
+                    timeout=2
+                )
+                if result.stdout:
+                    for line in result.stdout.split('\n'):
+                        if f":{port}" in line and "LISTENING" in line:
+                            return f"Port {port} is currently in use.\nDetails: {line.strip()[:80]}"
+
+        except Exception as diag_error:
+            logger.info(f"Could not get port diagnostic info: {diag_error}")
+
+        return ""
 
 
 def with_connector_silent(func):
@@ -193,7 +245,7 @@ class MigakuConnection(QObject):
         super().__init__(parent)
 
         logger.info("Initializing Migaku connection")
-        
+
         self.ffmpeg = ProgramManager("ffmpeg", self)
         self.ffprobe = ProgramManager("ffprobe", self)
         os.environ["PATH"] += os.pathsep + str(Path(self.ffmpeg.program_path).parent)
