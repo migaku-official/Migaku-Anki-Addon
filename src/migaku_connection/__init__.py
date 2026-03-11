@@ -1,4 +1,5 @@
 import asyncio
+import os
 import tornado
 from pathlib import Path
 
@@ -40,8 +41,35 @@ class MigakuServerThread(QThread):
         asyncio.set_event_loop(self.loop)
 
         port = config.get("port", DEFAULT_PORT)
+        actual_port = port if port else DEFAULT_PORT
 
-        self.server.listen(port if port else DEFAULT_PORT)
+        try:
+            self.server.listen(actual_port)
+            print(f"Migaku server listening on port {actual_port}")
+        except OSError as e:
+            error_msg = (
+                f"Failed to start Migaku server on port {actual_port}.\n\n"
+                f"Error: {str(e)}\n\n"
+                f"Possible causes:\n"
+                f"• Another Anki instance is already running\n"
+                f"• A previous Anki session didn't close properly\n"
+                f"• Another application is using port {actual_port}\n\n"
+                f"Solutions:\n"
+                f"• Close all Anki instances and restart\n"
+                f"• Change the port in Tools → Add-ons → Migaku → Config\n"
+                f"• Restart your computer if the problem persists"
+            )
+            # Schedule the error dialog on the main thread
+            aqt.mw.taskman.run_on_main(
+                lambda: aqt.utils.showWarning(
+                    error_msg,
+                    title="Migaku Connection Error",
+                    parent=aqt.mw
+                )
+            )
+            print(f"Migaku server failed to start: {e}")
+            return
+        
         tornado.ioloop.IOLoop.instance().start()
 
 
