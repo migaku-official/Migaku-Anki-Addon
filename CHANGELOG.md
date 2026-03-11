@@ -1,9 +1,10 @@
-## 0.3.6
+## 0.4.0
 
 - [FEATURE] Add Migaku > Export Debug Logs menu item
 - [FIX] Add error popup on port connection issues
 - [FIX] Fail gracefully when certain initialization errors occur
 - [FIX] European language syntax parsing fixes
+- [UPDATE] Support for Anki 25.09
 
 ## 0.3.5
 
