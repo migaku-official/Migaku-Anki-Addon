@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import os
 import tornado
 from pathlib import Path
@@ -28,6 +29,9 @@ from .srs_import import (
 
 from .. import config
 
+# Set up logging for connection debugging
+logger = logging.getLogger("migaku.connection")
+
 
 class MigakuServerThread(QThread):
     def __init__(self, server, parent=None):
@@ -45,6 +49,7 @@ class MigakuServerThread(QThread):
 
         try:
             self.server.listen(actual_port)
+            logger.info(f"Migaku server started successfully on port {actual_port}")
             print(f"Migaku server listening on port {actual_port}")
         except OSError as e:
             error_msg = (
@@ -67,9 +72,10 @@ class MigakuServerThread(QThread):
                     parent=aqt.mw
                 )
             )
+            logger.error(f"Failed to start Migaku server on port {actual_port}: {e}")
             print(f"Migaku server failed to start: {e}")
             return
-        
+
         tornado.ioloop.IOLoop.instance().start()
 
 
@@ -186,6 +192,8 @@ class MigakuConnection(QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
 
+        logger.info("Initializing Migaku connection")
+        
         self.ffmpeg = ProgramManager("ffmpeg", self)
         self.ffprobe = ProgramManager("ffprobe", self)
         os.environ["PATH"] += os.pathsep + str(Path(self.ffmpeg.program_path).parent)
@@ -208,6 +216,7 @@ class MigakuConnection(QObject):
     def _set_connector(self, connector):
         self.connector_lock.lock()
         self.connector = connector
+        logger.info("Browser extension WebSocket connected")
         self.connected.emit()
         self.connector_lock.unlock()
 
@@ -215,6 +224,7 @@ class MigakuConnection(QObject):
         self.connector_lock.lock()
         if self.connector == connector:
             self.connector = None
+            logger.info("Browser extension WebSocket disconnected")
             for msg_handler in self.msg_handlers.values():
                 msg_handler.error("Browser Extension disconnected.")
             self.disconnected.emit()

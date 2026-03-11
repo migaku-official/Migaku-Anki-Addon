@@ -1,4 +1,5 @@
 import json
+import logging
 import re
 
 import aqt
@@ -14,19 +15,24 @@ from tornado.web import RequestHandler
 
 from .migaku_http_handler import MigakuHTTPHandler
 
+logger = logging.getLogger("migaku.connection.card_receiver")
+
 
 class CardReceiver(MigakuHTTPHandler):
     def post(self: RequestHandler):
         try:
             body = json.loads(self.request.body)
             card = card_fields_from_dict(body)
+            logger.debug(f"Received card creation request from {self.request.remote_ip}")
             self.create_card(card)
         except Exception as e:
+            logger.error(f"Failed to process card receiver request: {e}", exc_info=True)
             self.finish({"success": False, "error": f"Invalid request: {str(e)}."})
         return
 
     def create_card(self, card: CardFields):
         if get("migakuIntercept", False) and map_to_add_cards(card):
+            logger.info("Card mapped to Add Cards window (intercept mode)")
             print("Tryied to map to add cards.")
             aqt.mw.taskman.run_on_main(
                 lambda: aqt.utils.tooltip("Mapped Migaku fields to Add cards window.")
@@ -47,6 +53,7 @@ class CardReceiver(MigakuHTTPHandler):
         fields = info["fields"]
 
         if not any([type != "none" for (fieldname, type) in fields.items()]):
+            logger.warning("Card creation failed: No fields configured to map to")
             print("No fields to map to.")
             aqt.mw.taskman.run_on_main(
                 lambda: aqt.utils.tooltip(
@@ -80,6 +87,7 @@ class CardReceiver(MigakuHTTPHandler):
         aqt.mw.taskman.run_on_main(aqt.mw.reset)
         aqt.mw.taskman.run_on_main(lambda: aqt.utils.tooltip("Migaku Card created"))
         aqt.mw.taskman.run_on_main(lambda: add_cards_add_to_history(note))
+        logger.info(f"Card created successfully. Note ID: {note.id}")
         print(f"Card created. ID: {note.id}.")
 
         self.finish(

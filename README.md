@@ -23,16 +23,19 @@ To develop and test changes to the add-on locally, you can create a symlink to a
 #### Find Your Anki Add-ons Folder
 
 **Mac:**
+
 ```bash
 ~/Library/Application Support/Anki2/addons21/
 ```
 
 **Windows:**
+
 ```bash
 %APPDATA%\Anki2\addons21\
 ```
 
 **Linux:**
+
 ```bash
 ~/.local/share/Anki2/addons21/
 ```
@@ -42,6 +45,7 @@ To develop and test changes to the add-on locally, you can create a symlink to a
 **Important:** Remove the production add-on folder entirely (don't just rename it). Anki will process any folder in the addons directory, including backups.
 
 **Mac/Linux:**
+
 ```bash
 # Navigate to the addons folder
 cd ~/Library/Application\ Support/Anki2/addons21/  # Mac
@@ -57,6 +61,7 @@ ln -s /path/to/your/repo/Migaku-Anki-Addon/src 1846879528
 ```
 
 **Windows (Command Prompt as Administrator):**
+
 ```cmd
 # Navigate to the addons folder
 cd %APPDATA%\Anki2\addons21\
@@ -74,21 +79,25 @@ mklink /D 1846879528 C:\path\to\your\repo\Migaku-Anki-Addon\src
 For better error visibility during development, you can run Anki from the terminal:
 
 **Mac:**
+
 ```bash
 /Applications/Anki.app/Contents/MacOS/launcher
 ```
 
 **Windows:**
+
 ```cmd
 # If Anki is in Program Files
 "C:\Program Files\Anki\anki.exe"
 ```
 
 **Linux:**
+
 ```bash
 anki
 ```
 
+**Logging**
 You can also enable more verbose logging by adding this to the top of `src/__init__.py`:
 
 ```python
@@ -110,8 +119,8 @@ This will output debug messages to the console when running Anki from the termin
 ## Things that often break
 
 - The `src/lib` folder contains dependencies, that are not included in Anki by default.
-If the extension suddenly starts failing on newer Anki versions (especially on macOS), you might have to create a new folder like `macos_314`,
-and add the new dependencies.
+  If the extension suddenly starts failing on newer Anki versions (especially on macOS), you might have to create a new folder like `macos_314`,
+  and add the new dependencies.
 
 You'll also need to add the appropriate code in `sys_libraries.py` then, to load the new libraries on the right platform and Anki version.
 
