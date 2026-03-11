@@ -9,6 +9,17 @@ import sys
 import os
 import logging
 
+# Set up logger for addon initialization
+logger = logging.getLogger("migaku.addon")
+logger.setLevel(logging.INFO)
+
+# Log startup message
+logger.info("=" * 60)
+logger.info("Migaku Anki Addon loading...")
+logger.info(f"Python version: {sys.version}")
+logger.info(f"Platform: {platform()}")
+logger.info("=" * 60)
+
 import aqt
 from aqt.qt import *
 import anki
@@ -17,34 +28,36 @@ from .config import get, set
 
 from inspect import signature
 
-# Initialize sub modules
-from . import (
-    anki_version,
-    browser,
-    card_layout,
-    card_type_selector,
-    click_play_audio,
-    editor,
-    inplace_editor,
-    migaku_connection,
-    note_type_dialogs,
-    note_type_mgr,
-    reviewer,
-    toolbar,
-    webview_contextmenu,
-    welcome_wizard,
-    menu,
-)
-
+# Set up early logging with memory buffer to capture logs before profile loads
+from logging.handlers import MemoryHandler
+_early_log_buffer = None
 
 def setup_file_logging():
     """Set up file logging for debugging. Logs are written to profile folder."""
+    global _early_log_buffer
+    
     try:
-        log_file = os.path.join(aqt.mw.pm.profileFolder(), "migaku_addon.log")
+        # Check if profile manager and folder are available
+        if not hasattr(aqt.mw, 'pm') or not aqt.mw.pm:
+            return False
+        
+        profile_folder = aqt.mw.pm.profileFolder()
+        if not profile_folder:
+            return False
+            
+        log_file = os.path.join(profile_folder, "migaku_addon.log")
+
+        # Check if we already added this handler (avoid duplicates)
+        migaku_logger = logging.getLogger('migaku')
+        for handler in migaku_logger.handlers:
+            if isinstance(handler, logging.handlers.RotatingFileHandler):
+                if hasattr(handler, 'baseFilename') and handler.baseFilename == log_file:
+                    # Already set up
+                    return True
 
         # Create file handler with rotation (max 5MB, keep 2 backups)
         from logging.handlers import RotatingFileHandler
-        handler = RotatingFileHandler(
+        file_handler = RotatingFileHandler(
             log_file,
             maxBytes=5*1024*1024,  # 5MB
             backupCount=2,
@@ -55,18 +68,63 @@ def setup_file_logging():
         formatter = logging.Formatter(
             '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
         )
-        handler.setFormatter(formatter)
-        handler.setLevel(logging.DEBUG)
+        file_handler.setFormatter(formatter)
+        file_handler.setLevel(logging.DEBUG)
 
-        # Add handler to all Migaku loggers
-        migaku_logger = logging.getLogger('migaku')
-        migaku_logger.addHandler(handler)
+        # Add file handler to all Migaku loggers
+        migaku_logger.addHandler(file_handler)
         migaku_logger.setLevel(logging.INFO)  # Set to DEBUG for verbose logging
 
-        migaku_logger.info("File logging initialized")
+        # Flush buffered logs to file if we had a memory buffer
+        if _early_log_buffer:
+            _early_log_buffer.setTarget(file_handler)
+            _early_log_buffer.flush()
+            _early_log_buffer.close()
+            migaku_logger.removeHandler(_early_log_buffer)
+            _early_log_buffer = None
 
-    except Exception as e:
-        print(f"Failed to set up Migaku file logging: {e}")
+        migaku_logger.info("File logging initialized")
+        return True
+
+    except Exception:
+        # If file logging setup fails, will retry later
+        return False
+
+# Set up memory buffer to capture early logs before profile is loaded
+migaku_logger = logging.getLogger('migaku')
+migaku_logger.setLevel(logging.INFO)
+_early_log_buffer = MemoryHandler(capacity=1000, flushLevel=logging.ERROR)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+_early_log_buffer.setFormatter(formatter)
+migaku_logger.addHandler(_early_log_buffer)
+
+# Try to initialize file logging immediately (likely will fail, but worth trying)
+setup_file_logging()
+
+# Initialize sub modules
+logger.info("Importing addon modules...")
+try:
+    from . import (
+        anki_version,
+        browser,
+        card_layout,
+        card_type_selector,
+        click_play_audio,
+        editor,
+        inplace_editor,
+        migaku_connection,
+        note_type_dialogs,
+        note_type_mgr,
+        reviewer,
+        toolbar,
+        webview_contextmenu,
+        welcome_wizard,
+        menu,
+    )
+    logger.info("All addon modules imported successfully")
+except Exception as e:
+    logger.error(f"Failed to import addon modules: {type(e).__name__}: {e}", exc_info=True)
+    raise
 
 
 def setup_hooks():
@@ -174,6 +232,10 @@ def setup_hooks():
     # )
 
 
+logger.info("Setting up menu and hooks...")
 menu.setup_menu()
 setup_hooks()
 anki_version.check_anki_version_dialog()
+
+logger.info("✓ Migaku Anki Addon loaded successfully")
+logger.info("=" * 60)

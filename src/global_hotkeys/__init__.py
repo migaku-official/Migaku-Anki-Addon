@@ -1,3 +1,4 @@
+import logging
 from aqt.qt import QGridLayout, QWidget, QLabel, QPushButton, Qt
 from aqt import mw
 
@@ -6,8 +7,18 @@ from .. import config
 from .hotkeys import HotkeyHandler
 from .key_sequence import KeySequence
 
+logger = logging.getLogger("migaku.hotkeys")
 
-hotkey_handler = HotkeyHandler(mw)
+# Initialize hotkey handler with error handling
+hotkey_handler = None
+try:
+    logger.info("Initializing global hotkey handler...")
+    hotkey_handler = HotkeyHandler(mw)
+    logger.info(f"Hotkey handler initialized successfully. Available: {hotkey_handler.is_available()}")
+except Exception as e:
+    logger.error(f"Failed to initialize hotkey handler: {type(e).__name__}: {e}", exc_info=True)
+    # Continue without hotkeys rather than crashing the entire addon
+    logger.warning("Continuing without global hotkey support")
 
 
 class HotkeyConfigWidget(QWidget):

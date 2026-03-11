@@ -1,7 +1,10 @@
+import logging
 from aqt.qt import QObject, pyqtSignal
 from magicy.keyboard import Key, Listener
 
 from .key_sequence import KeySequence
+
+logger = logging.getLogger("migaku.hotkeys.keyboard")
 
 modifier_map = {
     Key.shift: 1 << 0,
@@ -24,8 +27,15 @@ class KeyboardHandler(QObject):
         self.actions = {False: {}, True: {}}
         self.modifiers = 0
 
-        self.listener = Listener(on_press=self.on_press, on_release=self.on_release)
-        self.listener.start()
+        try:
+            logger.info("Creating keyboard listener...")
+            self.listener = Listener(on_press=self.on_press, on_release=self.on_release)
+            logger.info("Starting keyboard listener thread...")
+            self.listener.start()
+            logger.info("Keyboard listener thread started successfully")
+        except Exception as e:
+            logger.error(f"Failed to start keyboard listener: {type(e).__name__}: {e}", exc_info=True)
+            raise
 
     def is_available(self):
         if hasattr(self.listener, "IS_TRUSTED") and not self.listener.IS_TRUSTED:

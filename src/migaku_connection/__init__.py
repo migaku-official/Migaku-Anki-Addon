@@ -42,17 +42,22 @@ class MigakuServerThread(QThread):
         self.actual_port = None  # Store the port that was successfully bound
 
     def run(self):
-        self.loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(self.loop)
+        logger.info("Web server thread starting...")
+        try:
+            self.loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(self.loop)
 
-        port = config.get("port", DEFAULT_PORT)
-        actual_port = port if port else DEFAULT_PORT
+            port = config.get("port", DEFAULT_PORT)
+            actual_port = port if port else DEFAULT_PORT
+            logger.info(f"Attempting to bind to port {actual_port}...")
+        except Exception as e:
+            logger.error(f"Failed to initialize event loop: {type(e).__name__}: {e}", exc_info=True)
+            return
 
         try:
             self.server.listen(actual_port)
             self.actual_port = actual_port
             logger.info(f"Migaku server started successfully on port {actual_port}")
-            print(f"Migaku server listening on port {actual_port}")
         except OSError as e:
             # Try to get more diagnostic info about what's using the port
             port_info = self._get_port_info(actual_port)
@@ -85,9 +90,9 @@ class MigakuServerThread(QThread):
                 )
             )
             logger.error(f"Failed to start Migaku server on port {actual_port}: {e}")
-            print(f"Migaku server failed to start: {e}")
             return
 
+        logger.info("Starting Tornado IOLoop...")
         tornado.ioloop.IOLoop.instance().start()
 
     def _get_port_info(self, port):
@@ -244,12 +249,18 @@ class MigakuConnection(QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        logger.info("Initializing Migaku connection")
+        logger.info("Initializing Migaku connection...")
 
-        self.ffmpeg = ProgramManager("ffmpeg", self)
-        self.ffprobe = ProgramManager("ffprobe", self)
-        os.environ["PATH"] += os.pathsep + str(Path(self.ffmpeg.program_path).parent)
-        os.environ["PATH"] += os.pathsep + str(Path(self.ffprobe.program_path).parent)
+        try:
+            logger.info("Setting up ffmpeg/ffprobe program managers...")
+            self.ffmpeg = ProgramManager("ffmpeg", self)
+            self.ffprobe = ProgramManager("ffprobe", self)
+            os.environ["PATH"] += os.pathsep + str(Path(self.ffmpeg.program_path).parent)
+            os.environ["PATH"] += os.pathsep + str(Path(self.ffprobe.program_path).parent)
+            logger.info(f"ffmpeg path: {self.ffmpeg.program_path}")
+            logger.info(f"ffprobe path: {self.ffprobe.program_path}")
+        except Exception as e:
+            logger.warning(f"Failed to set up ffmpeg/ffprobe: {type(e).__name__}: {e}", exc_info=True)
 
         self.connector_lock = QMutex()
         self.connector = None
@@ -257,9 +268,15 @@ class MigakuConnection(QObject):
         self.msg_id = 0
         self.msg_handlers = {}
 
-        self.server = tornado.web.Application(self.handlers, connection=self)
-        self.thread = MigakuServerThread(self.server)
-        self.thread.start()
+        try:
+            logger.info("Starting Tornado web server thread...")
+            self.server = tornado.web.Application(self.handlers, connection=self)
+            self.thread = MigakuServerThread(self.server)
+            self.thread.start()
+            logger.info("Web server thread started successfully")
+        except Exception as e:
+            logger.error(f"Failed to start web server: {type(e).__name__}: {e}", exc_info=True)
+            raise
 
     def _get_msg_id(self):
         self.msg_id += 1

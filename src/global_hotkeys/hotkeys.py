@@ -1,3 +1,4 @@
+import logging
 from aqt.qt import QObject, QTimer
 from aqt import mw
 from magicy.keyboard import Key, Controller
@@ -8,6 +9,8 @@ from .. import util
 
 from .key_sequence import KeySequence
 from .keyboard import KeyboardHandler
+
+logger = logging.getLogger("migaku.hotkeys")
 
 
 class HotkeyHandlerBase(QObject):
@@ -42,13 +45,18 @@ class HotkeyHandlerBase(QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
 
+        logger.info("Initializing HotkeyHandler...")
+
         self.selected_text_handler = None
 
         self.keyboard_controller = Controller()
 
+        logger.info("Creating KeyboardHandler...")
         self.keyboard_handler = KeyboardHandler()
         self.keyboard_handler.action_fired.connect(self.on_action_fired)
+        logger.info(f"KeyboardHandler created. Available: {self.keyboard_handler.is_available()}")
 
+        logger.info("Registering hotkey actions...")
         for action, default_sequence, _ in self.hotkeys:
             sequence_tuple = config.get("hotkey_" + action)
             if sequence_tuple:
@@ -57,6 +65,7 @@ class HotkeyHandlerBase(QObject):
             else:
                 sequence = default_sequence
                 self.keyboard_handler.add_action(action, sequence)
+        logger.info(f"Registered {len(self.hotkeys)} hotkey actions")
 
     def is_available(self):
         return self.keyboard_handler.is_available()
