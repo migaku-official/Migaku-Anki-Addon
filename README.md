@@ -116,6 +116,62 @@ This will output debug messages to the console when running Anki from the termin
 
 **Note:** Python changes are loaded directly by Anki - no compilation or build step is needed.
 
+### Running Tests
+
+The repository includes unit tests for syntax parsing functionality across all supported languages.
+
+#### Prerequisites
+
+- Node.js (v14 or higher)
+
+#### Run Tests Manually
+
+```bash
+# Simple approach - no installation needed
+node tests/syntax-parser.test.js
+# or
+./run-tests.sh
+
+# Or with npm (optional)
+npm test
+```
+
+#### Automatic Testing on Git Push
+
+The repository uses a pre-push git hook to automatically run tests before every `git push`. If any tests fail, the push is rejected to prevent broken code from reaching the repository.
+
+**First-time setup:**
+
+```bash
+./install-hooks.sh
+```
+
+This copies the hook from `hooks/pre-push` to `.git/hooks/pre-push` and makes it executable.
+
+**Hook behavior:**
+
+When you run `git push`, it will automatically run unit tests.
+
+**Bypassing the hook (emergency only):**
+
+```bash
+git push --no-verify
+```
+
+⚠️ Use carefully! It's better to fix the tests than to push broken code.
+
+**Troubleshooting:**
+
+If the hook isn't running:
+
+```bash
+# Check if it exists and is executable
+ls -la .git/hooks/pre-push
+
+# Reinstall if needed
+./install-hooks.sh
+```
+
 ## Release Process
 
 ### Creating a New Release
@@ -125,6 +181,7 @@ This will output debug messages to the console when running Anki from the termin
    - Commit the changes to your feature branch
 
 2. **Merge to master:**
+
    ```bash
    git checkout master
    git pull origin master
@@ -133,6 +190,7 @@ This will output debug messages to the console when running Anki from the termin
    ```
 
 3. **Create and push a tag:**
+
    ```bash
    git tag 0.4.0  # Use the new version number
    git push origin 0.4.0
@@ -147,6 +205,7 @@ This will output debug messages to the console when running Anki from the termin
 ### QA Testing a Release Candidate
 
 **Step 1: Download the Test Build**
+
 1. Go to https://github.com/migaku-official/Migaku-Anki-Addon/releases
 2. Find the release version (e.g., 0.4.0)
 3. Download `Migaku.ankiaddon`
@@ -156,24 +215,28 @@ This will output debug messages to the console when running Anki from the termin
 ⚠️ **Important: Close Anki first before proceeding!**
 
 **Mac:**
+
 ```bash
 cd ~/Library/Application\ Support/Anki2/addons21/
 mv 1846879528 ~/Desktop/1846879528.backup
 ```
 
 **Windows:**
+
 ```cmd
 cd %APPDATA%\Anki2\addons21\
 move 1846879528 %USERPROFILE%\Desktop\1846879528.backup
 ```
 
 **Linux:**
+
 ```bash
 cd ~/.local/share/Anki2/addons21/
 mv 1846879528 ~/Desktop/1846879528.backup
 ```
 
 **Step 3: Install Test Version**
+
 1. Open Anki
 2. Go to **Tools → Add-ons**
 3. Click **Install from file...**
@@ -181,23 +244,27 @@ mv 1846879528 ~/Desktop/1846879528.backup
 5. Restart Anki
 
 **Step 4: Test the Add-on**
+
 - Verify all functionality works as expected
 - Test new features mentioned in the changelog
 - Check compatibility with current Anki version
 - Test connection to Migaku Browser Extension
 
 **Step 5: Restore Production Version (After Testing)**
+
 ```bash
 # Close Anki first
 cd [addons folder path from Step 2]
 rm -rf 1846879528
 mv ~/Desktop/1846879528.backup 1846879528
 ```
+
 Then restart Anki.
 
 ### Publishing to AnkiWeb
 
 After QA approval:
+
 1. Go to https://ankiweb.net/shared/upload
 2. Sign in with your AnkiWeb account
 3. Update addon **1846879528**

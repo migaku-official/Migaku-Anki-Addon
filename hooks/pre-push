@@ -1,0 +1,24 @@
+#!/bin/bash
+# Pre-push hook to run tests before pushing
+# This prevents pushing code that fails tests
+
+echo "🔍 Running tests before push..."
+echo ""
+
+# Run the tests
+./run-tests.sh
+
+# Capture the exit code
+TEST_EXIT_CODE=$?
+
+# If tests failed, prevent the push
+if [ $TEST_EXIT_CODE -ne 0 ]; then
+    echo ""
+    echo "❌ Push rejected: Tests must pass before pushing"
+    echo "Fix the failing tests and try again."
+    exit 1
+fi
+
+echo ""
+echo "✅ Tests passed - proceeding with push"
+exit 0
