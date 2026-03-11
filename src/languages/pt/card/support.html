@@ -28,7 +28,8 @@
         function parseSyntax(text) {
             let ret = []
 
-            const syntax_re = new RegExp(/(([a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F]+?)\[(.*?)\])/gm)
+            // Match both old format word[metadata] and new format (word)[metadata|alternatives]
+            const syntax_re = new RegExp(/(?:\(([a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F]+?)\)|([a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F]+?))\[(.*?)\]/gm)
             let last_idx = 0
             let match
 
@@ -43,14 +44,16 @@
                         })
                     }
 
-                    const args = match[3].split(',')
+                    // Handle pipe-separated alternatives - use only the first one
+                    const metadata = match[3].split('|')[0]
+                    const args = metadata.split(',')
                     const dict_form = args[0] || ''
                     const word_pos = args[1] || ''
                     const gender = args[2] || 'x'
 
                     ret.push({
                         type: 'syntax',
-                        text: match[2],
+                        text: match[1] || match[2],  // match[1] for (word), match[2] for word
                         dict_form: dict_form,
                         word_pos: word_pos,
                         gender: gender
