@@ -376,7 +376,7 @@ class ListenerMixin(object):
     """A mixin for *X* event listeners.
 
     Subclasses should set a value for :attr:`_EVENTS` and implement
-    :meth:`_handle`.
+    :meth:`_handle_event`.
     """
 
     #: The events for which to listen
@@ -477,7 +477,7 @@ class ListenerMixin(object):
             event, data = self._EVENT_PARSER.parse_binary_value(
                 data, self._display_record.display, None, None
             )
-            self._handle(self._display_stop, event)
+            self._handle_event(self._display_stop, event)
 
     def _initialize(self, display):
         """Initialises this listener.
@@ -489,7 +489,7 @@ class ListenerMixin(object):
         """
         pass
 
-    def _handle(self, display, event):
+    def _handle_event(self, display, event):
         """The device specific callback handler.
 
         This method calls the appropriate callback registered when this

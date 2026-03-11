@@ -542,7 +542,7 @@ class Listener(ListenerMixin, _base.Listener):
             min_keycode, keycode_count
         )
 
-    def _handle(self, display, event):
+    def _handle_event(self, display, event):
         # Convert the event to a KeyCode; this may fail, and in that case we
         # pass None
         try:

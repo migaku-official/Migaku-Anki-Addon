@@ -131,7 +131,7 @@ class Listener(ListenerMixin, _base.Listener):
     def __init__(self, *args, **kwargs):
         super(Listener, self).__init__(*args, **kwargs)
 
-    def _handle(self, dummy_display, event):
+    def _handle_event(self, dummy_display, event):
         px = event.root_x
         py = event.root_y
 
