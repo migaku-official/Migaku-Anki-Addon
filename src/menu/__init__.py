@@ -10,6 +10,7 @@ from . import (
     balance_scheduler,
     dayoff_window,
     vacation_window,
+    export_logs,
 )
 
 menu = QMenu("Migaku", aqt.mw)
@@ -45,6 +46,7 @@ deckItem.triggered.connect(deckTrigger)
 
 def setup_menu():
     menu.addAction(settings_window.action)
+    menu.addAction(export_logs.action)
 
     menu.addSeparator()
     menu.addAction(ease_reset.action)

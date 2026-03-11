@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from platform import platform
 import sys
 import os
+import logging
 
 import aqt
 from aqt.qt import *
@@ -34,6 +35,38 @@ from . import (
     welcome_wizard,
     menu,
 )
+
+
+def setup_file_logging():
+    """Set up file logging for debugging. Logs are written to profile folder."""
+    try:
+        log_file = os.path.join(aqt.mw.pm.profileFolder(), "migaku_addon.log")
+
+        # Create file handler with rotation (max 5MB, keep 2 backups)
+        from logging.handlers import RotatingFileHandler
+        handler = RotatingFileHandler(
+            log_file,
+            maxBytes=5*1024*1024,  # 5MB
+            backupCount=2,
+            encoding='utf-8'
+        )
+
+        # Format: timestamp - logger name - level - message
+        formatter = logging.Formatter(
+            '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        )
+        handler.setFormatter(formatter)
+        handler.setLevel(logging.DEBUG)
+
+        # Add handler to all Migaku loggers
+        migaku_logger = logging.getLogger('migaku')
+        migaku_logger.addHandler(handler)
+        migaku_logger.setLevel(logging.INFO)  # Set to DEBUG for verbose logging
+
+        migaku_logger.info("File logging initialized")
+
+    except Exception as e:
+        print(f"Failed to set up Migaku file logging: {e}")
 
 
 def setup_hooks():
@@ -94,6 +127,7 @@ def setup_hooks():
     )
 
     aqt.gui_hooks.profile_did_open.append(note_type_mgr.update_all_installed)
+    aqt.gui_hooks.profile_did_open.append(setup_file_logging)
 
     aqt.gui_hooks.collection_did_load.append(toolbar.inject_migaku_toolbar)
 
