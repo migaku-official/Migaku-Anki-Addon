@@ -29,7 +29,8 @@
             let ret = []
 
             // Match both old format word[metadata] and new format (word)[metadata|alternatives]
-            const syntax_re = new RegExp(/(?:\(([a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F]+?)\)|([a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F]+?))\[(.*?)\]/gm)
+            // Includes apostrophes for contractions like (d')[de,adp]
+            const syntax_re = new RegExp(/(?:\(([a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F']+?)\)|([a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F']+?))\[(.*?)\]/gm)
             let last_idx = 0
             let match
 

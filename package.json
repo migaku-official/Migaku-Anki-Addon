@@ -1,0 +1,20 @@
+{
+  "name": "migaku-anki-addon-tests",
+  "version": "1.0.0",
+  "description": "Test suite for Migaku Anki Add-on",
+  "scripts": {
+    "test": "node tests/syntax-parser.test.js",
+    "test:watch": "nodemon --watch tests --watch src/languages tests/syntax-parser.test.js"
+  },
+  "keywords": [
+    "anki",
+    "language-learning",
+    "testing"
+  ],
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
