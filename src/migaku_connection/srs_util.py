@@ -567,20 +567,27 @@ async def handle_card(
     if preview:
         return card_data
 
-    # New or learning
-    if card.queue == 0 or card.queue == 1:
-        due = 0
-        interval = 0
-
-    # Review
-    elif card.queue == 2 or card.queue == 3:
-        offset = max(0, card.due - aqt.mw.col.sched.today)
-        due = srs_today + offset
-        interval = max(1, card.ivl)
-
+    # New (0), Learning (1), Review (2), Relearning (3), User Buried (-2), Sched Buried (-3)
+    if card.queue in (0, 1, 2, 3, -2, -3):
+        if card.type in (0, 1):
+            due = 0
+            interval = 0
+        else:
+            offset = max(0, card.due - aqt.mw.col.sched.today)
+            due = srs_today + offset
+            interval = max(1, card.ivl)
     else:
         print(f"skipped {card.id}: unsupported queue {card.queue}")
         return None
+
+    anki_type_map = {0: "NEW", 1: "LEARNING", 2: "REVIEW", 3: "RELEARNING"}
+    anki_type_str = anki_type_map.get(card.type, "NEW")
+
+    if card.queue in (1, 3):
+        if card.type == 3:
+            anki_type_str = "RELEARNING"
+        else:
+            anki_type_str = "LEARNING"
 
     return {
         "first": card_data,
@@ -588,5 +595,7 @@ async def handle_card(
             "due": due,
             "interval": interval,
             "ankiTypeId": src_id,
+            "ankiType": anki_type_str,
+            "ankiPreviousInterval": max(1, card.ivl) if card.type == 3 else None
         },
     }
