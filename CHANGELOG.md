@@ -1,3 +1,8 @@
+## 0.5.0
+
+- [FEATURE] Export detailed Anki card types and intervals to support KnownStatus mapping
+- [FIX] Un-skip and export User Buried and Sched Buried cards to preserve word learning progress
+
 ## 0.4.0
 
 - [FEATURE] Add Migaku > Export Debug Logs menu item
