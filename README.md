@@ -265,11 +265,14 @@ Then restart Anki.
 
 After QA approval:
 
-1. Go to https://ankiweb.net/shared/upload
-2. Sign in with your AnkiWeb account
-3. Update addon **1846879528**
-4. Upload the `Migaku.ankiaddon` file from the GitHub release
-5. Update the description if needed (using `ankiweb.html`)
+1. Go to https://ankiweb.net
+2. Sign in with our AnkiWeb account `organization@migaku.com` (at time of writing, at least Saxon and Christo have access)
+3. Go to our addon's page: https://ankiweb.net/shared/info/1846879528
+4. Scroll down until you see the **Update** button (it's above Reviews. If you are logged in with an account with access you should see it)
+5. Click **Update** 
+6. Under Upload file, click **Choose file** to select the new `.addon` file (note: "branches" are way to distinguish which Anki versions an addon applies to. It can remain `Branch 2` unless this change is not compatible with the same Anki versions as our last addon version) (note: if **Choose file** button does not work, try a different browser like Safari)
+7. Optionally, bump the max Anki version that this branch is compatible with
+8. Optionally, update the description if needed (using `ankiweb.html`)
 
 ## Things that often break
 
