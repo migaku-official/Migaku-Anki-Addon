@@ -48,7 +48,7 @@ def process_image_asset(image: ImageAsset):
     if image.src.startswith("data:image/webp;base64,"):
         data = image.src.split(",", 1)[1]
         move_file_to_media_dir(b64decode(data), name)
-    elif image.input.startswith("http"):
+    elif image.src.startswith("http"):
         data = requests.get(image.src, allow_redirects=True)
         move_file_to_media_dir(data.content, name)
 
