@@ -193,7 +193,8 @@ main.container .card audio {
 .migaku-card-unknown,
 .migaku-card-translation,
 .migaku-card-examples,
-.migaku-card-definitions {
+.migaku-card-definitions,
+.migaku-card-notes {
   word-break: break-word;
 }
 
