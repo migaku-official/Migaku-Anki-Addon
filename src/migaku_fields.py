@@ -18,6 +18,7 @@ def infer_migaku_type(
     "definitions",
     "exampleSentences",
     "notes",
+    "reading",
 ]:
     if re.search(
         r"(audio|音声|音频|오디오|audio|áudio|audio|audio|áudio)", name, re.IGNORECASE
@@ -76,6 +77,11 @@ def infer_migaku_type(
         return "definitions"
     if re.search(r"(note|ノート|笔记|노트|nota|nota|note|notiz|nota)", name, re.IGNORECASE):
         return "notes"
+    if re.search(
+        r"(reading|furigana|pinyin|jyutping|romaji|romanization|ipa|pronunciation|ふりがな|読み|よみ|拼音|读音|발음|lectura|pronúncia|prononciation|aussprache|pronuncia)",
+        name, re.IGNORECASE
+    ):
+        return "reading"
     return "none"
 
 
