@@ -27,6 +27,7 @@ class CardReceiver(MigakuHTTPHandler):
             self.create_card(card)
         except Exception as e:
             logger.error(f"Failed to process card receiver request: {e}", exc_info=True)
+            self.set_status(400)
             self.finish({"success": False, "error": f"Invalid request: {str(e)}."})
         return
 
@@ -60,6 +61,7 @@ class CardReceiver(MigakuHTTPHandler):
                     "Could not create Migaku Card: No fields to map to."
                 )
             )
+            self.set_status(400)
             self.finish(
                 {
                     "success": False,
