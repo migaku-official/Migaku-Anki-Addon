@@ -40,6 +40,7 @@ class CardFields:
     restImages: str = ""
     exampleSentences: str = ""
     notes: str = ""
+    reading: str = ""
 
 
 def process_image_asset(image: ImageAsset):
@@ -71,6 +72,24 @@ REMOVE_RE_EURO_BRACES = re.compile(r"\{([^}]*)\}")
 REMOVE_RE_BRACKETS = re.compile(r"(?:\(([^)]*)\))?(\[(?!sound:).*?\])(?![^{]*})")
 REMOVE_RE_CJ = re.compile(r"( +|\[(?!sound:).*?\])(?![^{]*})")
 REMOVE_RE_K = re.compile(r"(\[(?!sound:).*?\])(?![^{]*})")
+EXTRACT_RE_READINGS = re.compile(r"\[(?!sound:)(.*?)\]")
+STRIP_RE_PITCH = re.compile(r";[a-zA-Z0-9]+")
+
+def extract_readings_cjk(text: str) -> str:
+    parts = EXTRACT_RE_READINGS.findall(text)
+    cleaned = [STRIP_RE_PITCH.sub("", p) for p in parts]
+    return "".join(p for p in cleaned if p)
+
+def extract_readings_euro(text: str) -> str:
+    parts = []
+    for bracket in EXTRACT_RE_READINGS.findall(text):
+        fields = bracket.split("|")[0].split(",")  # take first pipe-separated alternative
+        if len(fields) < 3:
+            continue
+        ipa = fields[2].split(";")[0].strip()
+        if len(ipa) > 1:  # skip single-letter gender markers (m/f/n/x)
+            parts.append(ipa)
+    return " ".join(parts)
 
 def remove_syntax_cj(text: str):
     text = REMOVE_RE_EURO_BRACES.sub(r"\1", text)
@@ -113,6 +132,8 @@ def card_fields_from_dict(data: dict[str, any]):
     targetWordNoSyntax = remove_syntax_k(targetWord) if k_found else remove_syntax_cj(targetWord) if cjk_found else remove_syntax_euro(targetWord)
     sentenceNoSyntax = remove_syntax_k(sentence) if k_found else remove_syntax_cj(sentence) if cjk_found else remove_syntax_euro(sentence)
 
+    readings = extract_readings_cjk(targetWord) if (cjk_found or k_found) else extract_readings_euro(targetWord)
+
     return CardFields(
         targetWord=targetWord,
         targetWordNoSyntax=targetWordNoSyntax,
@@ -127,4 +148,5 @@ def card_fields_from_dict(data: dict[str, any]):
         restImages=restImages,
         exampleSentences=data.get("exampleSentences", ""),
         notes=data.get("notes", ""),
+        reading=readings,
     )
