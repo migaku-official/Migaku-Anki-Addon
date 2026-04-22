@@ -59,6 +59,9 @@ def infer_migaku_type(
     ):
         return "exampleSentences"
 
+    if re.search(r"(alternate|alternativ|alternativo|alternat)", name, re.IGNORECASE):
+        return "none"
+
     if re.search(r"(sentence|文|句|문장|frase|phrase|satz|frase)", name, re.IGNORECASE):
         return "sentence"
 
