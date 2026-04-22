@@ -1,3 +1,8 @@
+## 0.5.1
+- [FEAT] Save Migaku-generated Notes into the Notes field
+- [FEAT] Add Reading field for pronunciation guidance, pre-populated for CN, JA, EN, and a few other languages
+- [FIX] Stop duplicating CN Sentence into Alternate Sentence field
+
 ## 0.5.0
 
 - [FEATURE] Export detailed Anki card types and intervals to support KnownStatus mapping
