@@ -1,6 +1,6 @@
 ## 0.5.1
-- [FEAT] Save Migaku-generated Notes into the Notes field
-- [FEAT] Add Reading field for pronunciation guidance, pre-populated for CN, JA, EN, and a few other languages
+- [FEATURE] Save Migaku-generated Notes into the Notes field
+- [FEATURE] Add Reading field for pronunciation guidance, pre-populated for CN, JA, EN, and a few other languages
 - [FIX] Stop duplicating CN Sentence into Alternate Sentence field
 
 ## 0.5.0
