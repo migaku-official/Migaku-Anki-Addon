@@ -43,6 +43,7 @@ const selectorOptions = [
   { value: 'definitions', text: 'Definitions' },
   { value: 'exampleSentences', text: 'Example Sentences' },
   { value: 'notes', text: 'Notes' },
+  { value: 'reading', text: 'Reading' },
 ]
 
 function getSelectorField(editorField, settings) {
