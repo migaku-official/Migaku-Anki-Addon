@@ -1,4 +1,10 @@
+## 0.5.2
+
+- [FIX] Add spacing above new Notes field
+- [FIX] Expose new Reading field in Field Maps
+
 ## 0.5.1
+
 - [FEATURE] Save Migaku-generated Notes into the Notes field
 - [FEATURE] Add Reading field for pronunciation guidance, pre-populated for CN, JA, EN, and a few other languages
 - [FIX] Stop duplicating CN Sentence into Alternate Sentence field
