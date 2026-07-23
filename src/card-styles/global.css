@@ -58,13 +58,13 @@ main.container .migaku-card audio {
   max-width: 760px;
   margin: 0 auto;
   text-align: left;
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 9px 20px rgba(0 0 90 / 14%), 0 3.76px 8.3555px rgba(0 0 90 / 8.3%), 0 2.0103px 4.4673px rgba(0 0 90 / 5%), 0 1.1269px 2.5043px rgba(0 0 90 / 2.6%), 0 .5985px 1.33px rgba(0 0 90 / .8%);
 }
 
 .migaku-card {
   padding: 24px 16px 8px;
-  background: #fff;
-  border-radius: 24px;
-  box-shadow: 0 9px 20px rgba(0 0 90 / 14%), 0 3.76px 8.3555px rgba(0 0 90 / 8.3%), 0 2.0103px 4.4673px rgba(0 0 90 / 5%), 0 1.1269px 2.5043px rgba(0 0 90 / 2.6%), 0 .5985px 1.33px rgba(0 0 90 / .8%);
 }
 
 .migaku-card-front .migaku-card-content {
@@ -215,15 +215,11 @@ main.container .migaku-card audio {
 }
 
 .ankidroid_dark_mode .migaku-card,
-.nightMode .migaku-card {
-  background: #202047;
-  box-shadow: 0 9px 20px rgb(0 0 0 / 18%), 0 3.76px 8.3556px rgb(0 0 0 / 14.4%), 0 2.0103px 4.4673px rgb(0 0 0 / 8.11%), 0 1.127px 2.5043px rgb(0 0 0 / 3.63%), 0 .5985px 1.33px rgb(0 0 0 / 2.8%);
-}
-
+.nightMode .migaku-card,
 .ankidroid_dark_mode .migaku-typeselect,
 .nightMode .migaku-typeselect {
-  background: #363c4a;
-  box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.15);
+  background: #202047;
+  box-shadow: 0 9px 20px rgb(0 0 0 / 18%), 0 3.76px 8.3556px rgb(0 0 0 / 14.4%), 0 2.0103px 4.4673px rgb(0 0 0 / 8.11%), 0 1.127px 2.5043px rgb(0 0 0 / 3.63%), 0 .5985px 1.33px rgb(0 0 0 / 2.8%);
 }
 
 .ankidroid_dark_mode .sentence-separator,
