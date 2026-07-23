@@ -1,0 +1,55 @@
+{
+  "languages": [
+    "de",
+    "en",
+    "es",
+    "fr",
+    "it",
+    "ja",
+    "ko",
+    "pt",
+    "vi",
+    "yue",
+    "zh_CN",
+    "zh_TW"
+  ],
+  "hashes": {
+    "front.html": {
+      "default": "66fc6bbbd07f31785a00a762029c9bd8f6e3b8876faa2cdc82075066ac269b22",
+      "overrides": {
+        "ja": "9329ddd76e732c389217b47d9c8ede62a718c54d85ecedbe8a6573c5e6b3eabc",
+        "yue": "f8d26572ca4d4600620956b9bb8c401cc2c24731bcf3a81a4fbbb67dba0ebec5",
+        "zh_CN": "3ad8d6545abe528133d57c624d0a6dc45e3113b148caaadc23468608d26176f5",
+        "zh_TW": "09ba0729dcfb7c3c88095d029ef9ecfd3642eaac71a3ae9311ed515ddd2a4820"
+      }
+    },
+    "back.html": {
+      "default": "053845ca8ec652d7e7c8127ff4220476550598c7ae05511702dd7b47b31c4ad1",
+      "overrides": {
+        "en": "86dd0bac7ed8e1edfc3d8f84e616e02b59b6fdbc7fe6934d444b6083c8a9dcc1",
+        "ja": "7c2b659430ee659f13165fc3c7d7824823e96470f365e7a03f4c06ee7756549d",
+        "ko": "86dd0bac7ed8e1edfc3d8f84e616e02b59b6fdbc7fe6934d444b6083c8a9dcc1",
+        "vi": "86dd0bac7ed8e1edfc3d8f84e616e02b59b6fdbc7fe6934d444b6083c8a9dcc1",
+        "yue": "ceccf3dcc619580e1fb6f420081f24b20fa11b3a24526b1516e5658cb592d00a",
+        "zh_CN": "119cdd06098903bcd8f8bfe9e75ce6dd0dc8e274ee49489ed146a270fba689c5",
+        "zh_TW": "2b7cc9338b66f52004ada0fe25ba68b9235a47bec8c78c21118e2c0fe7e21f90"
+      }
+    },
+    "support.html": {
+      "default": "adba6c48081eb3388e7130232bab6a2aed97c0c5c1bccc79455c0d48f43d8dfa",
+      "overrides": {
+        "en": "fd002e5ee4ad5992f575ef868fccec7eab8ec91ada5bab78535a98862cfdad40",
+        "es": "0cc36beb2d73aba7a4d3dee99ba29ba9854336b458c0a1a5b2452256ee471e76",
+        "fr": "02a804711dfadf0aabc783f55b86c0b8dfb1697c4cef5aaf17d8d451eb252a32",
+        "it": "83051d5dfd4dad630c968c875732870698cd5c00dbf76478c7b8a569130151b8",
+        "ja": "0a7284a21da9affb2137f11f1f87bb4c573316600b64f73e4badf54b4c031412",
+        "ko": "b36f3526e6df02161fa43922a3e91ebdfc517230f0650f4216d7dfaf6b24f2c2",
+        "pt": "0cc36beb2d73aba7a4d3dee99ba29ba9854336b458c0a1a5b2452256ee471e76",
+        "vi": "a9ad8f8b518e56d9d806026e5de14c67b80ccd29e109f7df95a478d81f435b8b",
+        "yue": "14a44c2184ca63a08aa34b5a7502cd1efb7ccb4a199ce385b23df47bfd8ccbab",
+        "zh_CN": "48264fb6d541ab218fda9a85c2827ed32f031e0ad029f36f4a021c5688420560",
+        "zh_TW": "4b337bbc923679be3b423884112c844e5564bb6a78a4e2017c2f74f675438ab0"
+      }
+    }
+  }
+}
