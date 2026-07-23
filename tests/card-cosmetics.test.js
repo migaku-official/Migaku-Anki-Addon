@@ -29,7 +29,7 @@ const ankidroid = renderCardDocument({
 assert.match(light, /\.migaku-header\s*\{\s*display: none;/);
 assert.match(
   light,
-  /main\.container\s*\{[^}]*padding: 120px 16px 160px;[^}]*background: #ede3ff;/s,
+  /main\.container\s*\{[^}]*padding: 80px 16px 120px;[^}]*background: #ede3ff;/s,
 );
 assert.match(light, /\.card\s*\{[^}]*color: rgb\(0, 0, 90\);/s);
 assert.match(
@@ -42,7 +42,7 @@ assert.match(
 );
 assert.match(
   light,
-  /#content\s*\{[^}]*display: flex;[^}]*flex-direction: column;[^}]*min-height: calc\(100vh - 280px\);/s,
+  /#content\s*\{[^}]*display: flex;[^}]*flex-direction: column;[^}]*height: calc\(100vh - 200px\);/s,
 );
 assert.match(light, /main\.container \.migaku-card\s*\{[^}]*flex: 1;/s);
 assert.match(light, /\.migaku-card\s*\{[^}]*background: #fff;[^}]*border-radius: 24px;/s);

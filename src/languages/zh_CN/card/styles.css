@@ -15,9 +15,9 @@ body {
 
 main.container {
   margin: 0px;
-  padding: 120px 16px 160px;
+  padding: 80px 16px 120px;
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
   background: #ede3ff;
 }
 
@@ -37,7 +37,7 @@ main.container .migaku-card audio {
   margin: 0px;
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - 280px);
+  height: calc(100vh - 200px);
 }
 
 .card,
