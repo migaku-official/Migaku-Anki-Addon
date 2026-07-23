@@ -185,7 +185,7 @@ const fixtures = {
   },
 };
 
-const getFixture = (language, fixtureName) => {
+const buildLocalizedFixture = (language, fixtureName) => {
   const fixture = fixtures[fixtureName];
   if (!fixture) throw new Error(`Unknown fixture: ${fixtureName}`);
   const profile = syntaxProfiles[language];
@@ -201,4 +201,4 @@ const getFixture = (language, fixtureName) => {
   };
 };
 
-module.exports = { fixtures, getFixture };
+module.exports = { buildLocalizedFixture, fixtures };

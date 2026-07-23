@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const contract = require("./template-contract.json");
-const { fixtures, getFixture } = require("./fixtures");
+const { buildLocalizedFixture } = require("./fixtures");
 const { renderTemplate } = require("./template-engine");
 
 const themes = {
@@ -32,9 +32,7 @@ const renderCardDocument = ({
   assertOption(contract.languages, language, "language");
   assertOption(["front", "back"], side, "side");
   assertOption(Object.keys(themes), theme, "theme");
-  assertOption(Object.keys(fixtures), fixtureName, "fixture");
-
-  const fixture = getFixture(language, fixtureName);
+  const fixture = buildLocalizedFixture(language, fixtureName);
   const frontTemplate = readCardFile(rootDir, language, "front.html");
   const frontSide = renderTemplate(frontTemplate, fixture.fields);
   const fields = { ...fixture.fields, FrontSide: frontSide };
