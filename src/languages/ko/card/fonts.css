@@ -1,16 +1,17 @@
 /* Migaku UI default: LINE Seed KR */
+/* Canonical variable: $font-ko in packages/ui/src/styles/scss/_variables.scss. */
 /* Imported from packages/ui/src/styles/scss/fonts/line-seed-kr.scss. */
 
 @font-face {
   font-family: cardFont;
   font-weight: 400;
   font-style: normal;
-  src: url('/_LINESeedKR-Rg.woff2') format('woff2');
+  src: url('/_migaku-card-line-seed-kr-LINESeedKR-Rg.woff2') format('woff2');
 }
 
 @font-face {
   font-family: cardFont;
   font-weight: 700;
   font-style: normal;
-  src: url('/_LINESeedKR-Bd.woff2') format('woff2');
+  src: url('/_migaku-card-line-seed-kr-LINESeedKR-Bd.woff2') format('woff2');
 }

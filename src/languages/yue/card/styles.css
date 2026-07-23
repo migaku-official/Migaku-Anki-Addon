@@ -1,4 +1,5 @@
 /* Migaku UI default: Chiron Hei HK WS */
+/* Canonical variable: $font-yue in packages/ui/src/styles/scss/_variables.scss. */
 /* Imported from packages/ui/src/styles/scss/fonts/chiron-hei-hk.scss. */
 
 @font-face {
@@ -44,7 +45,7 @@
     U+a779-a787, U+a789, U+a7ad-a7ae, U+a7b3, U+a7b5, U+a7f2-a7f4, U+ab53,
     U+ab66-ab67, U+fb00-fb04, U+feff, U+ff5e, U+1f10d-1f10f, U+1f12f,
     U+1f16a-1f16f, U+1f4a9, U+1f512, U+1f748, U+1f916;
-  src: url('/_ChironHeiHK-lgc.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-lgc.woff2') format('woff2');
 }
 
 @font-face {
@@ -70,7 +71,7 @@
     U+2a45b, U+2a5c6, U+2a5cb, U+2a601, U+2a632, U+2a64a, U+2a65b, U+2a6a9,
     U+2adff, U+2f825, U+2f83b, U+2f840, U+2f878, U+2f894, U+2f8a6, U+2f8cd,
     U+2f994, U+2f9b2, U+2f9bc, U+2f9d4;
-  src: url('/_ChironHeiHK-gf_0.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_0.woff2') format('woff2');
 }
 
 @font-face {
@@ -95,7 +96,7 @@
     U+28bff, U+28c03, U+28c09, U+28c1c-28c1d, U+28c23, U+28c26, U+28c2b, U+28c30,
     U+28c39, U+28c3b, U+28cca, U+28ccd, U+28cd2, U+28d34, U+28d99, U+28db9,
     U+28e0f, U+28e36, U+28e39, U+28e65-28e66, U+28e97, U+28eac;
-  src: url('/_ChironHeiHK-gf_1.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_1.woff2') format('woff2');
 }
 
 @font-face {
@@ -121,7 +122,7 @@
     U+27d98, U+27dbd, U+27ddc, U+27e4d, U+27e4f, U+27f2e, U+27ff9, U+28002,
     U+28009, U+2801e, U+28023-28024, U+28048, U+28083, U+28090, U+280bd-280be,
     U+280e8-280e9, U+280f4, U+2812e, U+2814f, U+2815d, U+2816f;
-  src: url('/_ChironHeiHK-gf_2.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_2.woff2') format('woff2');
 }
 
 @font-face {
@@ -147,7 +148,7 @@
     U+26b75, U+26b82, U+26b96-26b97, U+26b9d, U+26bb3, U+26bc0, U+26bf7, U+26c21,
     U+26c40-26c41, U+26c46, U+26c7e-26c82, U+26ca4, U+26cb7-26cb8, U+26cbd,
     U+26cc0, U+26cc3, U+26cd1, U+26d22-26d2a, U+26d51, U+26d74;
-  src: url('/_ChironHeiHK-gf_3.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_3.woff2') format('woff2');
 }
 
 @font-face {
@@ -172,7 +173,7 @@
     U+25683, U+25695, U+256e3, U+256f6, U+25706, U+2571d, U+25725, U+2573d,
     U+25772, U+257c7, U+257df-257e1, U+25857, U+2585d, U+25872, U+258c8, U+258de,
     U+258e1, U+25903, U+25946, U+25956, U+259ac, U+259cc, U+25a54, U+25a95;
-  src: url('/_ChironHeiHK-gf_4.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_4.woff2') format('woff2');
 }
 
 @font-face {
@@ -196,7 +197,7 @@
     U+24916-24917, U+24919, U+2492f, U+24933-24934, U+2493e-24943, U+24962-24963,
     U+24974-24976, U+2497b, U+2497f, U+24982, U+24988-2498f, U+24994, U+249a4,
     U+249a7, U+249a9, U+249ab-249ad, U+249b7-249ba;
-  src: url('/_ChironHeiHK-gf_5.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_5.woff2') format('woff2');
 }
 
 @font-face {
@@ -221,7 +222,7 @@
     U+23d40, U+23d5b, U+23d7e, U+23d8f, U+23db6-23dbd, U+23de3, U+23df8, U+23e06,
     U+23e11, U+23e2c-23e31, U+23e39, U+23e88-23e8b, U+23eb9, U+23ebf, U+23ed7,
     U+23ef7-23efc, U+23f35, U+23f41, U+23f4a;
-  src: url('/_ChironHeiHK-gf_6.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_6.woff2') format('woff2');
 }
 
 @font-face {
@@ -250,7 +251,7 @@
     U+22cc2, U+22cc6, U+22cc9, U+22d07-22d08, U+22d12, U+22d44, U+22d4c, U+22d67,
     U+22d8d, U+22d95, U+22da0, U+22da3-22da4, U+22db7, U+22dee, U+22e0d, U+22e36,
     U+22e42, U+22e78;
-  src: url('/_ChironHeiHK-gf_7.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_7.woff2') format('woff2');
 }
 
 @font-face {
@@ -274,7 +275,7 @@
     U+21861-21864, U+21877, U+2187b, U+21883-21885, U+2189e-218a2, U+218be-218bf,
     U+218d1, U+218d6-218d9, U+218fa, U+21903-21905, U+21910-21912, U+21915,
     U+2191c, U+21922;
-  src: url('/_ChironHeiHK-gf_8.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_8.woff2') format('woff2');
 }
 
 @font-face {
@@ -300,7 +301,7 @@
     U+20f2d-20f2e, U+20f30-20f31, U+20f3b, U+20f4c, U+20f64, U+20f8d, U+20f90,
     U+20fad, U+20fb4-20fb6, U+20fbc, U+20fdf, U+20fea-20fed, U+21014,
     U+2101d-2101e, U+2104f, U+2105c, U+2106f, U+21075;
-  src: url('/_ChironHeiHK-gf_9.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_9.woff2') format('woff2');
 }
 
 @font-face {
@@ -315,7 +316,7 @@
     U+202a0, U+202b7, U+202bf-202c0, U+202e5, U+2030a, U+20325, U+20341,
     U+20345-20347, U+2037e-20380, U+203a0, U+203a7, U+203b5, U+203c9, U+203cb,
     U+203f5, U+203fc, U+20413-20414, U+2041f, U+20465, U+20487;
-  src: url('/_ChironHeiHK-gf_10.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_10.woff2') format('woff2');
 }
 
 @font-face {
@@ -329,7 +330,7 @@
     U+1f158, U+1f15b, U+1f15d-1f15e, U+1f162-1f163, U+1f170-1f171, U+1f174,
     U+1f177-1f178, U+1f17d-1f17f, U+1f192-1f195, U+1f197-1f19a, U+1f21a, U+1f22f,
     U+1f232-1f237, U+1f239-1f23a, U+1f250-1f251;
-  src: url('/_ChironHeiHK-gf_15.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_15.woff2') format('woff2');
 }
 
 @font-face {
@@ -347,7 +348,7 @@
     U+fa19, U+fa1b, U+fa1d, U+fa26, U+fa2c, U+fe33-fe36, U+fe38-fe44,
     U+fe49-fe51, U+fe54, U+fe56-fe57, U+fe59-fe5c, U+fe5f-fe66, U+fe68-fe6a,
     U+ff04, U+ff07, U+ff26-ff2c, U+ff31-ff32, U+ff35-ff36;
-  src: url('/_ChironHeiHK-gf_16.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_16.woff2') format('woff2');
 }
 
 @font-face {
@@ -358,7 +359,7 @@
   unicode-range: U+f901-f902, U+f904, U+f906-f907, U+f909-f90a, U+f90f, U+f914,
     U+f918-f919, U+f91b, U+f91d, U+f91f, U+f923, U+f925, U+f92d-f92f, U+f934,
     U+f937-f938, U+f93d, U+f93f, U+f941, U+f949, U+f94c, U+f94e;
-  src: url('/_ChironHeiHK-gf_17.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_17.woff2') format('woff2');
 }
 
 @font-face {
@@ -379,7 +380,7 @@
     U+adc8, U+addc, U+ade0, U+adf8-adf9, U+adfc, U+ae00, U+ae08-ae09, U+ae30,
     U+ae34, U+ae38, U+ae40, U+ae4a, U+ae4c, U+ae54, U+ae5d, U+ae68, U+aebc,
     U+aed8, U+aef4, U+af2c-af2d, U+af34, U+af43, U+afb8;
-  src: url('/_ChironHeiHK-gf_25.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_25.woff2') format('woff2');
 }
 
 @font-face {
@@ -402,7 +403,7 @@
     U+9f07-9f09, U+9f10, U+9f14-9f15, U+9f17, U+9f19, U+9f22, U+9f26-9f27,
     U+9f29, U+9f2c, U+9f2f, U+9f31, U+9f34, U+9f37, U+9f39, U+9f3d-9f3e, U+9f41,
     U+9f44-9f45, U+9f4c-9f4e;
-  src: url('/_ChironHeiHK-gf_26.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_26.woff2') format('woff2');
 }
 
 @font-face {
@@ -424,7 +425,7 @@
     U+9d77, U+9d7a, U+9d7c, U+9d7e, U+9d83, U+9d87, U+9d89, U+9d8f, U+9d91-9d93,
     U+9d96, U+9d98, U+9d9a, U+9da1-9da2, U+9da5, U+9da9, U+9dab-9dac,
     U+9db1-9db2, U+9db5, U+9db9-9dbd, U+9dbf;
-  src: url('/_ChironHeiHK-gf_27.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_27.woff2') format('woff2');
 }
 
 @font-face {
@@ -446,7 +447,7 @@
     U+9bdd, U+9be1-9be2, U+9be4-9be5, U+9be7, U+9be9-9bea, U+9bed-9bee,
     U+9bf0-9bf1, U+9bf4-9bf5, U+9bf7, U+9bf9, U+9bfd, U+9bff, U+9c02, U+9c06,
     U+9c08-9c0a;
-  src: url('/_ChironHeiHK-gf_28.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_28.woff2') format('woff2');
 }
 
 @font-face {
@@ -467,7 +468,7 @@
     U+9a3b-9a3c, U+9a3e, U+9a40-9a44, U+9a4a, U+9a4c-9a4e, U+9a52, U+9a56,
     U+9a58, U+9a5c, U+9a62-9a65, U+9a69-9a6b, U+9a6d, U+9a6f-9a71, U+9a73-9a74,
     U+9a76, U+9a78-9a79, U+9a7b-9a7c, U+9a7e-9a7f, U+9a81-9a82;
-  src: url('/_ChironHeiHK-gf_29.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_29.woff2') format('woff2');
 }
 
 @font-face {
@@ -488,7 +489,7 @@
     U+98d8-98da, U+98dc, U+98de, U+98e0-98e1, U+98e3, U+98e5-98e9, U+98eb-98ee,
     U+98f1, U+98f4-98f5, U+9901, U+9908-9909, U+990c, U+990e, U+9911-9912,
     U+9914, U+9916-9917;
-  src: url('/_ChironHeiHK-gf_30.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_30.woff2') format('woff2');
 }
 
 @font-face {
@@ -510,7 +511,7 @@
     U+9768, U+976c-976d, U+9771, U+9773, U+9776, U+977a, U+977c, U+9780,
     U+9784-9789, U+978e-978f, U+9798, U+979b, U+979d-979f, U+97a3, U+97a5-97a6,
     U+97a8, U+97ab-97ac, U+97ae, U+97b1-97b2, U+97b4, U+97b6;
-  src: url('/_ChironHeiHK-gf_31.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_31.woff2') format('woff2');
 }
 
 @font-face {
@@ -531,7 +532,7 @@
     U+95ea-95eb, U+95ef-95f0, U+95f2-95f3, U+95f5, U+95f7-95fa, U+95fd,
     U+9600-9602, U+9607-9609, U+960e, U+9610-9611, U+9614, U+9616, U+9619-961a,
     U+961c-961d, U+961f, U+9621;
-  src: url('/_ChironHeiHK-gf_32.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_32.woff2') format('woff2');
 }
 
 @font-face {
@@ -550,7 +551,7 @@
     U+9465, U+9467-9468, U+946a, U+946c-946d, U+946f, U+9471, U+9474-9477,
     U+9479, U+947b, U+947e-9481, U+9485, U+9488-948a, U+948e, U+9492-9493,
     U+9497, U+9499, U+949b-94a3, U+94a5-94a9, U+94ac, U+94ae-94af;
-  src: url('/_ChironHeiHK-gf_33.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_33.woff2') format('woff2');
 }
 
 @font-face {
@@ -568,7 +569,7 @@
     U+933c, U+9340-9349, U+934f-9352, U+9354, U+9356-935a, U+935c-9360,
     U+9362-936c, U+936e, U+9370-9371, U+9373-9374, U+9376, U+9378-937a,
     U+937c-937d, U+9381, U+9384-9387;
-  src: url('/_ChironHeiHK-gf_34.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_34.woff2') format('woff2');
 }
 
 @font-face {
@@ -587,7 +588,7 @@
     U+9244, U+9246, U+9248-9249, U+924b-9251, U+9253, U+9255, U+9258, U+925a,
     U+925d-925f, U+9262, U+9265-9267, U+926b-926f, U+9271-9272, U+9274,
     U+9276-9278, U+927a-927c, U+927e;
-  src: url('/_ChironHeiHK-gf_35.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_35.woff2') format('woff2');
 }
 
 @font-face {
@@ -609,7 +610,7 @@
     U+9104, U+9106, U+9112, U+9114-911a, U+911c, U+911e, U+9120, U+9122-9123,
     U+9129, U+912b, U+912f, U+9131-9132, U+9134, U+9136, U+9139-913a, U+9143,
     U+9146, U+9148-914a, U+914e-9151, U+9154, U+9156-9157, U+9159-915a;
-  src: url('/_ChironHeiHK-gf_36.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_36.woff2') format('woff2');
 }
 
 @font-face {
@@ -631,7 +632,7 @@
     U+8f90, U+8f93, U+8f95-8f97, U+8f99, U+8f9e-8fa0, U+8fa2, U+8fa5, U+8fa7,
     U+8fa9, U+8fab, U+8fae, U+8fb3, U+8fb5-8fb8, U+8fba-8fbd, U+8fbf,
     U+8fc1-8fc2;
-  src: url('/_ChironHeiHK-gf_37.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_37.woff2') format('woff2');
 }
 
 @font-face {
@@ -652,7 +653,7 @@
     U+8e08-8e0a, U+8e0e, U+8e14, U+8e16, U+8e18, U+8e1d-8e21, U+8e23,
     U+8e26-8e28, U+8e2a-8e2b, U+8e2d-8e2e, U+8e30-8e31, U+8e35, U+8e39-8e3a,
     U+8e3c-8e3d, U+8e40-8e42, U+8e46-8e47, U+8e49-8e4e;
-  src: url('/_ChironHeiHK-gf_38.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_38.woff2') format('woff2');
 }
 
 @font-face {
@@ -673,7 +674,7 @@
     U+8c85, U+8c89-8c8a, U+8c8d-8c8e, U+8c90, U+8c94, U+8c98-8c99, U+8c9b,
     U+8c9f, U+8ca3-8ca4, U+8cad-8cb0, U+8cb2, U+8cb9-8cba, U+8cbd, U+8cc1-8cc2,
     U+8cc4-8cc5, U+8ccd, U+8ccf-8cd2, U+8cd4-8cd6, U+8cd9-8cda;
-  src: url('/_ChironHeiHK-gf_39.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_39.woff2') format('woff2');
 }
 
 @font-face {
@@ -696,7 +697,7 @@
     U+8b0f-8b10, U+8b13-8b14, U+8b16, U+8b1a, U+8b1c, U+8b1f, U+8b21-8b22,
     U+8b26, U+8b28, U+8b2b, U+8b2d-8b2e, U+8b33, U+8b3f, U+8b41, U+8b43, U+8b46,
     U+8b4c-8b4e;
-  src: url('/_ChironHeiHK-gf_40.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_40.woff2') format('woff2');
 }
 
 @font-face {
@@ -719,7 +720,7 @@
     U+8964-8966, U+896c, U+8971, U+8974, U+8977, U+897b, U+897e, U+8980,
     U+8982-8983, U+8987-898a, U+898c, U+8991, U+8994-8995, U+8997-8998, U+899a,
     U+899c;
-  src: url('/_ChironHeiHK-gf_41.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_41.woff2') format('woff2');
 }
 
 @font-face {
@@ -740,7 +741,7 @@
     U+87d2, U+87d6, U+87da-87dc, U+87e0-87e1, U+87e3, U+87e5, U+87e7,
     U+87ea-87eb, U+87ee-87ef, U+87f3-87f7, U+87fe, U+8802-8806, U+880a-880b,
     U+880e-8811, U+8813, U+8815-8816, U+8818;
-  src: url('/_ChironHeiHK-gf_42.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_42.woff2') format('woff2');
 }
 
 @font-face {
@@ -762,7 +763,7 @@
     U+8659-865a, U+865c, U+8662, U+866b-866c, U+866f-8673, U+8677, U+867a-867b,
     U+867d-867e, U+8680-8682, U+868b-868d, U+8692-8696, U+869a, U+869c-869d,
     U+86a0-86a1, U+86a3-86a4, U+86a7-86aa, U+86ad;
-  src: url('/_ChironHeiHK-gf_43.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_43.woff2') format('woff2');
 }
 
 @font-face {
@@ -784,7 +785,7 @@
     U+84f3-84f4, U+84f7-84f8, U+84fa, U+84fc-84fd, U+84ff-8500, U+8503-8506,
     U+850c, U+8510-8511, U+8515, U+8517, U+851d-851f, U+8524, U+852b, U+852f,
     U+8532-8535;
-  src: url('/_ChironHeiHK-gf_44.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_44.woff2') format('woff2');
 }
 
 @font-face {
@@ -804,7 +805,7 @@
     U+839b-839c, U+83a0, U+83a2, U+83a4, U+83a7-83aa, U+83ac, U+83af-83b5,
     U+83b7, U+83b9-83ba, U+83bc-83c0, U+83c2, U+83c4-83c5, U+83c8-83c9, U+83cb,
     U+83cd;
-  src: url('/_ChironHeiHK-gf_45.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_45.woff2') format('woff2');
 }
 
 @font-face {
@@ -827,7 +828,7 @@
     U+8262, U+8264-8265, U+8268, U+826b, U+826e, U+8270, U+8273, U+8276,
     U+8278-8279, U+827b, U+827d, U+827f, U+8283-8284, U+8287-828a, U+828d-8291,
     U+8293-8294, U+8298, U+829a-829c, U+829e;
-  src: url('/_ChironHeiHK-gf_46.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_46.woff2') format('woff2');
 }
 
 @font-face {
@@ -849,7 +850,7 @@
     U+80e3-80e5, U+80e7, U+80e9, U+80eb-80ed, U+80ef-80f1, U+80f3-80f4,
     U+80f6-80f7, U+80fc, U+80fe-80ff, U+8101, U+8103, U+8107, U+8109, U+810c,
     U+810e-8115, U+8117-8118, U+811a-811b, U+811e, U+8121-8125;
-  src: url('/_ChironHeiHK-gf_47.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_47.woff2') format('woff2');
 }
 
 @font-face {
@@ -869,7 +870,7 @@
     U+7f68, U+7f6b, U+7f71, U+7f78, U+7f7d-7f7e, U+7f81-7f83, U+7f86-7f87,
     U+7f8b-7f8d, U+7f8f, U+7f91, U+7f93-7f95, U+7f97, U+7f99-7f9a, U+7f9d,
     U+7f9f, U+7fa1-7fa3, U+7fa5, U+7fa7, U+7fad-7faf;
-  src: url('/_ChironHeiHK-gf_48.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_48.woff2') format('woff2');
 }
 
 @font-face {
@@ -889,7 +890,7 @@
     U+7e22, U+7e25-7e27, U+7e29, U+7e2d, U+7e2f-7e30, U+7e32-7e37, U+7e39,
     U+7e3b, U+7e44-7e45, U+7e47-7e48, U+7e4a-7e4b, U+7e4d, U+7e50-7e52, U+7e56,
     U+7e58-7e5b, U+7e62, U+7e65, U+7e67-7e68, U+7e6c-7e70, U+7e76;
-  src: url('/_ChironHeiHK-gf_49.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_49.woff2') format('woff2');
 }
 
 @font-face {
@@ -911,7 +912,7 @@
     U+7cd3, U+7cd7, U+7cda, U+7cdc-7cdd, U+7ce0, U+7ce2, U+7ce6, U+7ce8, U+7cea,
     U+7ced, U+7cf2-7cf6, U+7cf8-7cfa, U+7cfc, U+7d02, U+7d06-7d0a, U+7d0f,
     U+7d11-7d12, U+7d15, U+7d18, U+7d1c;
-  src: url('/_ChironHeiHK-gf_50.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_50.woff2') format('woff2');
 }
 
 @font-face {
@@ -932,7 +933,7 @@
     U+7b5d, U+7b60, U+7b62, U+7b65-7b67, U+7b69, U+7b6c-7b6f, U+7b72-7b76,
     U+7b79, U+7b7b, U+7b7e, U+7b82, U+7b84-7b85, U+7b87, U+7b8b, U+7b8d-7b93,
     U+7b95-7b96, U+7b98, U+7b9c-7b9d, U+7ba0, U+7ba2;
-  src: url('/_ChironHeiHK-gf_51.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_51.woff2') format('woff2');
 }
 
 @font-face {
@@ -954,7 +955,7 @@
     U+7a0e, U+7a10-7a11, U+7a14, U+7a17-7a19, U+7a1c, U+7a1e-7a1f, U+7a23,
     U+7a26, U+7a2a, U+7a2c-7a2d, U+7a32-7a33, U+7a37, U+7a39-7a3a, U+7a3c,
     U+7a3e, U+7a42;
-  src: url('/_ChironHeiHK-gf_52.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_52.woff2') format('woff2');
 }
 
 @font-face {
@@ -976,7 +977,7 @@
     U+78ad, U+78af, U+78b1-78b2, U+78b4, U+78b6, U+78b8-78b9, U+78be,
     U+78c7-78c9, U+78cb, U+78ce, U+78d0-78d5, U+78d7-78d8, U+78de, U+78e3-78e4,
     U+78e6;
-  src: url('/_ChironHeiHK-gf_53.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_53.woff2') format('woff2');
 }
 
 @font-face {
@@ -997,7 +998,7 @@
     U+772f, U+7733-7736, U+7738, U+773b, U+773d, U+7741, U+7743-7744, U+7746,
     U+774c, U+774e-7752, U+7755, U+7758-775a, U+775f-7760, U+7762, U+7765-7766,
     U+7768-776a, U+776c-776e, U+7771-7772, U+7777-7778, U+777a-777b, U+777d;
-  src: url('/_ChironHeiHK-gf_54.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_54.woff2') format('woff2');
 }
 
 @font-face {
@@ -1018,7 +1019,7 @@
     U+75c2-75c4, U+75c8-75ca, U+75cc-75cd, U+75d2, U+75d4, U+75d9, U+75dc,
     U+75df, U+75e2-75e4, U+75e6-75e7, U+75e9-75ec, U+75f0-75f3, U+75f7,
     U+75f9-75fa, U+75fc, U+75fe-7602, U+7607-760a, U+760c-760d, U+7610, U+7615;
-  src: url('/_ChironHeiHK-gf_55.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_55.woff2') format('woff2');
 }
 
 @font-face {
@@ -1034,7 +1035,7 @@
     U+746b-746e, U+7471-7477, U+7479-747a, U+747c-747f, U+7481-7482, U+7484-7486,
     U+7488-748a, U+748c-7490, U+7492, U+7498-74a1, U+74a3-74a7, U+74a9-74ab,
     U+74ae, U+74b1-74b2, U+74b4-74b5, U+74b8-74ba;
-  src: url('/_ChironHeiHK-gf_56.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_56.woff2') format('woff2');
 }
 
 @font-face {
@@ -1055,7 +1056,7 @@
     U+738c, U+738e-738f, U+7391-7395, U+7397-7398, U+739b-739c, U+739e,
     U+73a0-73a2, U+73a5-73a8, U+73aa, U+73ad-73ae, U+73b3-73ba, U+73bc, U+73bf,
     U+73c2, U+73c4-73c6, U+73c9, U+73cb;
-  src: url('/_ChironHeiHK-gf_57.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_57.woff2') format('woff2');
 }
 
 @font-face {
@@ -1076,7 +1077,7 @@
     U+722e, U+7230, U+7237, U+723b, U+723f-7242, U+724b, U+724d, U+7250,
     U+7252-7253, U+7255-7258, U+725c-725d, U+7263-7266, U+726a-726b, U+726e-7270,
     U+7273-7275;
-  src: url('/_ChironHeiHK-gf_58.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_58.woff2') format('woff2');
 }
 
 @font-face {
@@ -1096,7 +1097,7 @@
     U+70ca-70cc, U+70d0, U+70d2, U+70d4-70d6, U+70d9-70dd, U+70df, U+70e6-70e9,
     U+70eb-70ec, U+70ef, U+70f1, U+70f4-70f5, U+70f7, U+70fa, U+70fd-70ff,
     U+7104-7106, U+7109, U+710c, U+7110, U+7113-7114;
-  src: url('/_ChironHeiHK-gf_59.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_59.woff2') format('woff2');
 }
 
 @font-face {
@@ -1115,7 +1116,7 @@
     U+6f92, U+6f94-6f97, U+6f9c-6f9d, U+6f9f-6fa0, U+6fa2-6fa3, U+6fa5-6fa8,
     U+6faa-6fab, U+6fae-6faf, U+6fb4-6fb6, U+6fb9-6fbc, U+6fbe, U+6fc2,
     U+6fc6-6fcb, U+6fce;
-  src: url('/_ChironHeiHK-gf_60.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_60.woff2') format('woff2');
 }
 
 @font-face {
@@ -1135,7 +1136,7 @@
     U+6e59, U+6e5c, U+6e5e-6e61, U+6e63-6e66, U+6e69-6e6b, U+6e6e, U+6e70-6e76,
     U+6e78, U+6e7c, U+6e7f-6e80, U+6e83, U+6e85-6e86, U+6e88-6e89, U+6e8b,
     U+6e8d-6e8f, U+6e93, U+6e98-6e9a;
-  src: url('/_ChironHeiHK-gf_61.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_61.woff2') format('woff2');
 }
 
 @font-face {
@@ -1154,7 +1155,7 @@
     U+6d2d-6d31, U+6d33-6d3a, U+6d3c, U+6d3f, U+6d43-6d47, U+6d4a-6d4b,
     U+6d4e-6d4f, U+6d51-6d53, U+6d57-6d58, U+6d5a-6d5c, U+6d5e-6d65, U+6d67,
     U+6d6c-6d6d, U+6d6f-6d72, U+6d75;
-  src: url('/_ChironHeiHK-gf_62.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_62.woff2') format('woff2');
 }
 
 @font-face {
@@ -1176,7 +1177,7 @@
     U+6c10, U+6c13, U+6c16, U+6c18-6c1a, U+6c1c, U+6c1f, U+6c21-6c22, U+6c24,
     U+6c26, U+6c28-6c2a, U+6c2c, U+6c2e-6c33, U+6c35-6c37, U+6c39-6c3a,
     U+6c3d-6c3f, U+6c43, U+6c46, U+6c49-6c4f;
-  src: url('/_ChironHeiHK-gf_63.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_63.woff2') format('woff2');
 }
 
 @font-face {
@@ -1196,7 +1197,7 @@
     U+6a62-6a63, U+6a65-6a66, U+6a6a, U+6a71, U+6a74, U+6a79-6a7a, U+6a7c,
     U+6a7e-6a82, U+6a84, U+6a87, U+6a89-6a8a, U+6a8d-6a92, U+6a97, U+6a99,
     U+6a9c-6aa1, U+6aa3-6aa5, U+6aa7;
-  src: url('/_ChironHeiHK-gf_64.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_64.woff2') format('woff2');
 }
 
 @font-face {
@@ -1218,7 +1219,7 @@
     U+6917-691c, U+6925, U+692a, U+692c-692d, U+6932, U+6934, U+6936, U+6939,
     U+693c-6940, U+6942-6943, U+6946, U+6949, U+6952, U+6954-6957, U+6959,
     U+695b-695f, U+6961-6963;
-  src: url('/_ChironHeiHK-gf_65.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_65.woff2') format('woff2');
 }
 
 @font-face {
@@ -1237,7 +1238,7 @@
     U+67aa-67ae, U+67b0-67b5, U+67b7-67bc, U+67bf-67c3, U+67c5-67c6, U+67c8-67ca,
     U+67ce, U+67d2, U+67d6-67d9, U+67db-67e0, U+67e2, U+67e4, U+67e9-67ea,
     U+67f0, U+67f2, U+67f6-67fb, U+67fe, U+6800-6805, U+6808-6809;
-  src: url('/_ChironHeiHK-gf_66.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_66.woff2') format('woff2');
 }
 
 @font-face {
@@ -1258,7 +1259,7 @@
     U+666b-666c, U+6672-6673, U+6677-6679, U+667b-667e, U+6681-6685, U+668b-6690,
     U+6692, U+6698, U+669a, U+669d, U+669f-66a0, U+66a4, U+66a6-66a7, U+66aa,
     U+66ad, U+66b2-66b3, U+66b5-66b6, U+66b8-66bc, U+66be;
-  src: url('/_ChironHeiHK-gf_67.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_67.woff2') format('woff2');
 }
 
 @font-face {
@@ -1279,7 +1280,7 @@
     U+6509-650a, U+6511-6512, U+6516, U+6518-6519, U+651b, U+651f-6523,
     U+6525-6526, U+6529, U+652b, U+652e, U+6530, U+6532, U+6534-6535,
     U+6537-6538, U+653a, U+653d, U+6542-6543, U+6549, U+654c;
-  src: url('/_ChironHeiHK-gf_68.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_68.woff2') format('woff2');
 }
 
 @font-face {
@@ -1299,7 +1300,7 @@
     U+63a6, U+63ac-63af, U+63b1-63b4, U+63b7, U+63b9-63bb, U+63bd-63be, U+63c1,
     U+63c3-63c4, U+63c8, U+63cd-63ce, U+63d1, U+63d6, U+63dc, U+63de, U+63e0,
     U+63e2-63e4, U+63e6, U+63e9, U+63f0, U+63f2-63f3, U+63f5-63f8, U+63fa-63fc;
-  src: url('/_ChironHeiHK-gf_69.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_69.woff2') format('woff2');
 }
 
 @font-face {
@@ -1319,7 +1320,7 @@
     U+6251, U+6255, U+6259-625a, U+625e, U+6260-6262, U+6265-6269, U+626b-626c,
     U+6270-6273, U+6275, U+627a-627d, U+6282-6283, U+6285-6286, U+6289, U+628c,
     U+628e, U+6290, U+6294, U+629a-629e, U+62a0;
-  src: url('/_ChironHeiHK-gf_70.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_70.woff2') format('woff2');
 }
 
 @font-face {
@@ -1340,7 +1341,7 @@
     U+60fa-60fb, U+60fd, U+60ff-6100, U+6103, U+6106-6107, U+610a-610e, U+6110,
     U+6112-6116, U+6119, U+6120, U+6122-6124, U+6128-6130, U+6134, U+6136,
     U+613c-613f;
-  src: url('/_ChironHeiHK-gf_71.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_71.woff2') format('woff2');
 }
 
 @font-face {
@@ -1362,7 +1363,7 @@
     U+5fb1, U+5fb3-5fb4, U+5fba, U+5fbc, U+5fc2, U+5fc4, U+5fc6, U+5fc9, U+5fcb,
     U+5fce-5fd6, U+5fdb-5fdf, U+5fe1, U+5fe4, U+5fe7, U+5fea, U+5fec-5fee,
     U+5ff1, U+5ff3;
-  src: url('/_ChironHeiHK-gf_72.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_72.woff2') format('woff2');
 }
 
 @font-face {
@@ -1383,7 +1384,7 @@
     U+5e18-5e1c, U+5e1f-5e22, U+5e27-5e28, U+5e2f-5e30, U+5e34, U+5e37, U+5e3a,
     U+5e3c, U+5e40, U+5e42-5e44, U+5e47-5e48, U+5e54, U+5e57-5e5b, U+5e5e-5e5f,
     U+5e61-5e62, U+5e64, U+5e6a, U+5e6c, U+5e6e, U+5e75, U+5e77, U+5e7a, U+5e80;
-  src: url('/_ChironHeiHK-gf_73.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_73.woff2') format('woff2');
 }
 
 @font-face {
@@ -1403,7 +1404,7 @@
     U+5cab-5cad, U+5cb5, U+5cb7, U+5cba-5cbb, U+5cc1-5cc2, U+5cc8, U+5cca-5ccb,
     U+5cce, U+5cd1-5cd2, U+5cd5-5cd6, U+5cd8-5cda, U+5cdf-5ce1, U+5ce5-5ce6,
     U+5ce8-5cea, U+5ced-5cee, U+5cf1, U+5cf4-5cf5;
-  src: url('/_ChironHeiHK-gf_74.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_74.woff2') format('woff2');
 }
 
 @font-face {
@@ -1423,7 +1424,7 @@
     U+5b1d, U+5b1f, U+5b21-5b23, U+5b28, U+5b2a-5b2d, U+5b32, U+5b34,
     U+5b36-5b38, U+5b3e-5b41, U+5b43-5b46, U+5b4a-5b4c, U+5b4f, U+5b51, U+5b53,
     U+5b59, U+5b5b-5b5c, U+5b62, U+5b65, U+5b68, U+5b6c-5b6e, U+5b70;
-  src: url('/_ChironHeiHK-gf_75.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_75.woff2') format('woff2');
 }
 
 @font-face {
@@ -1444,7 +1445,7 @@
     U+59e3-59e5, U+59e9-59eb, U+59ee-59f3, U+59f5-59f9, U+59fc-59fd, U+5a00,
     U+5a02, U+5a04-5a07, U+5a09, U+5a0b-5a0d, U+5a11-5a13, U+5a16-5a17, U+5a1a,
     U+5a1e, U+5a20-5a21, U+5a23-5a24, U+5a27, U+5a29-5a2f, U+5a32-5a34;
-  src: url('/_ChironHeiHK-gf_76.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_76.woff2') format('woff2');
 }
 
 @font-face {
@@ -1465,7 +1466,7 @@
     U+587c-5881, U+5887-5889, U+588e, U+5890-5892, U+5896-589a, U+589d, U+58a1,
     U+58a3, U+58a6-58a7, U+58a9-58aa, U+58ac, U+58b0-58b1, U+58b5-58b6,
     U+58bb-58bc;
-  src: url('/_ChironHeiHK-gf_77.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_77.woff2') format('woff2');
 }
 
 @font-face {
@@ -1486,7 +1487,7 @@
     U+5711, U+5715, U+5717, U+571c-571d, U+5723-5724, U+5727, U+5729-572a,
     U+572c, U+572e-572f, U+5732, U+5734-5735, U+573b, U+573d, U+573f, U+5741,
     U+5743, U+5746, U+574b-574d, U+574f, U+5752, U+5754, U+575a;
-  src: url('/_ChironHeiHK-gf_78.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_78.woff2') format('woff2');
 }
 
 @font-face {
@@ -1508,7 +1509,7 @@
     U+55cc-55cd, U+55d0, U+55d2, U+55d4-55d9, U+55db, U+55dd-55df, U+55e1-55e6,
     U+55e9-55ea, U+55ec, U+55ee, U+55f1-55f3, U+55f5-55f7, U+55f9-55fb, U+55fe,
     U+5600-5602, U+5608, U+560c;
-  src: url('/_ChironHeiHK-gf_79.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_79.woff2') format('woff2');
 }
 
 @font-face {
@@ -1528,7 +1529,7 @@
     U+5474, U+5476, U+5478, U+547b, U+547e-547f, U+5482-5488, U+548a,
     U+548d-5491, U+5493-5494, U+5498-549e, U+54a1-54a5, U+54ab, U+54ad-54af,
     U+54b4-54b5, U+54b7;
-  src: url('/_ChironHeiHK-gf_80.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_80.woff2') format('woff2');
 }
 
 @font-face {
@@ -1551,7 +1552,7 @@
     U+531a, U+531c-531d, U+5324, U+5327, U+532c-532e, U+5331-5333, U+5338,
     U+533b-533e, U+5342, U+5344-5345, U+534b-534d, U+534f-5350, U+5358,
     U+535d-535f, U+5362-5364;
-  src: url('/_ChironHeiHK-gf_81.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_81.woff2') format('woff2');
 }
 
 @font-face {
@@ -1572,7 +1573,7 @@
     U+5186, U+5188-5189, U+518b, U+518f, U+5191, U+5193, U+5195-5197,
     U+519a-519c, U+519e, U+51a2, U+51a6-51a9, U+51ab, U+51ad-51af, U+51b1-51b6,
     U+51b8, U+51ba-51c0, U+51c3-51c5;
-  src: url('/_ChironHeiHK-gf_82.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_82.woff2') format('woff2');
 }
 
 @font-face {
@@ -1593,7 +1594,7 @@
     U+5013-5015, U+501b-501c, U+501e, U+5022-5025, U+5027-5028, U+502c-502e,
     U+5030-5032, U+5034, U+5036, U+503a-503b, U+503e, U+5040-5041, U+5043,
     U+5045-5046, U+5048, U+504a-504c;
-  src: url('/_ChironHeiHK-gf_83.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_83.woff2') format('woff2');
 }
 
 @font-face {
@@ -1616,7 +1617,7 @@
     U+4eb9, U+4ebb-4ebc, U+4ebf, U+4ec2-4ec6, U+4ec8-4ec9, U+4ecf, U+4ed1,
     U+4ed3, U+4edc-4ee1, U+4ee7-4eeb, U+4eee-4eef, U+4ef1, U+4ef3-4ef5, U+4ef8,
     U+4efa, U+4efc, U+4f00, U+4f02-4f03, U+4f05, U+4f07-4f08;
-  src: url('/_ChironHeiHK-gf_84.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_84.woff2') format('woff2');
 }
 
 @font-face {
@@ -1641,7 +1642,7 @@
     U+492d, U+492f-4930, U+4935, U+493c-493e, U+4945, U+4951, U+4953, U+4965,
     U+496a, U+4972, U+4989, U+49a1, U+49a7, U+49df, U+49e5, U+49e7, U+4a0f,
     U+4a1d, U+4a24, U+4a35, U+4a3b, U+4a96, U+4aa4, U+4ab4, U+4ab8, U+4ad1;
-  src: url('/_ChironHeiHK-gf_85.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_85.woff2') format('woff2');
 }
 
 @font-face {
@@ -1667,7 +1668,7 @@
     U+40f8, U+40fa, U+4102-4104, U+4109, U+410e, U+411b, U+4131-4132, U+4167,
     U+416c, U+416e, U+417c, U+417f, U+4181, U+4190, U+41b2, U+41c4, U+41ca,
     U+41cf;
-  src: url('/_ChironHeiHK-gf_86.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_86.woff2') format('woff2');
 }
 
 @font-face {
@@ -1693,7 +1694,7 @@
     U+3a97, U+3aab, U+3abd, U+3ade, U+3ae0, U+3af0, U+3af2, U+3af5, U+3afb,
     U+3b0e, U+3b19, U+3b22, U+3b2b, U+3b39, U+3b42, U+3b58, U+3b60, U+3b71-3b72,
     U+3b7b-3b7c, U+3b80;
-  src: url('/_ChironHeiHK-gf_87.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_87.woff2') format('woff2');
 }
 
 @font-face {
@@ -1716,7 +1717,7 @@
     U+347d-347e, U+3493, U+3496, U+34a5, U+34af, U+34bc, U+34c1, U+34c8, U+34df,
     U+34e4, U+34e6, U+34fb, U+3506, U+353e, U+3551, U+3553, U+3559, U+3561,
     U+3569, U+356d, U+3570;
-  src: url('/_ChironHeiHK-gf_88.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_88.woff2') format('woff2');
 }
 
 @font-face {
@@ -1727,7 +1728,7 @@
   unicode-range: U+2702, U+271a, U+273d, U+2740, U+2756, U+2776-277e,
     U+2780-2782, U+278a-278c, U+27a1, U+2934-2935, U+29bf, U+2b05-2b07, U+2f00,
     U+2f08, U+2f12, U+2f24, U+2f29, U+2f2f, U+2f3c;
-  src: url('/_ChironHeiHK-gf_89.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_89.woff2') format('woff2');
 }
 
 @font-face {
@@ -1738,7 +1739,7 @@
   unicode-range: U+25a3-25a4, U+25a6-25a9, U+25c7-25c8, U+25d0-25d3, U+25e2-25e5,
     U+25ef, U+2600-2603, U+2609, U+260e-260f, U+261c-261f, U+262f, U+2662,
     U+2664, U+2667-2669, U+266c-266f, U+267b, U+26a0, U+26bd-26be;
-  src: url('/_ChironHeiHK-gf_90.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_90.woff2') format('woff2');
 }
 
 @font-face {
@@ -1752,7 +1753,7 @@
     U+2528, U+252b-252c, U+252f, U+2533-2534, U+2537, U+253b-253c, U+2541,
     U+2543-2545, U+254b, U+2550-2570, U+2572, U+2574, U+2579, U+2580-258a,
     U+258c-2595, U+2597;
-  src: url('/_ChironHeiHK-gf_91.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_91.woff2') format('woff2');
 }
 
 @font-face {
@@ -1764,7 +1765,7 @@
     U+21e8-21e9, U+2205, U+2207-2208, U+221d, U+2220, U+2225, U+2227-2228,
     U+222a, U+222e, U+2234-2235, U+223d, U+226a-226b, U+226e-226f, U+2282-2283,
     U+2295-2296, U+2299, U+22a5, U+22bf, U+2312, U+2460-2471, U+2474-2476;
-  src: url('/_ChironHeiHK-gf_92.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_92.woff2') format('woff2');
 }
 
 @font-face {
@@ -1773,7 +1774,7 @@
   font-weight: 200 900;
   font-display: swap;
   unicode-range: U+2002-2003, U+2025, U+2042;
-  src: url('/_ChironHeiHK-gf_93.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_93.woff2') format('woff2');
 }
 
 @font-face {
@@ -1782,7 +1783,7 @@
   font-weight: 200 900;
   font-display: swap;
   unicode-range: U+2eb;
-  src: url('/_ChironHeiHK-gf_98.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_98.woff2') format('woff2');
 }
 
 @font-face {
@@ -1812,7 +1813,7 @@
     U+93e2, U+964b, U+96c1, U+96cc-96cd, U+96db, U+973e, U+97a0, U+9803, U+9876,
     U+9879, U+9955, U+9986, U+99f1, U+9a5b, U+9abc, U+9c57, U+9c9c, U+9d1b,
     U+9d26, U+9d51, U+9eef, U+9f99, U+c2a4, U+ff25, U+ff2d-ff2e, U+ff34, U+ffe5;
-  src: url('/_ChironHeiHK-gf_100.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_100.woff2') format('woff2');
 }
 
 @font-face {
@@ -1842,7 +1843,7 @@
     U+9257, U+9310, U+93df, U+94fe, U+95a5, U+95a9, U+962e, U+968f-9690, U+9704,
     U+9713, U+97f6, U+9824, U+986b, U+9884, U+9886, U+98e2, U+991a, U+99a5,
     U+99dd, U+9ab8, U+9b41, U+9b77, U+9bad, U+c774, U+fe52, U+ff02;
-  src: url('/_ChironHeiHK-gf_101.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_101.woff2') format('woff2');
 }
 
 @font-face {
@@ -1872,7 +1873,7 @@
     U+91dc, U+9293, U+92f8, U+9472, U+9598, U+95ed, U+95fb, U+9605, U+96c7,
     U+9739, U+9742, U+9761, U+99ad, U+9ae6, U+9b1a, U+9b44, U+9bc9, U+9d3f,
     U+9dd7, U+9e7c, U+9e92, U+fe5d-fe5e, U+ff22-ff24, U+ff2f-ff30, U+ff33;
-  src: url('/_ChironHeiHK-gf_102.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_102.woff2') format('woff2');
 }
 
 @font-face {
@@ -1903,7 +1904,7 @@
     U+9699, U+96b8, U+9709, U+978d, U+9811, U+9830, U+98ce, U+9945, U+99ed,
     U+9a8c, U+9ad3, U+9baa, U+9be8, U+9c77, U+9cf6, U+9d72, U+9e1f, U+9ec4,
     U+fe31, U+fe55, U+ff03, U+ff20, U+ff3b, U+ff3d;
-  src: url('/_ChironHeiHK-gf_103.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_103.woff2') format('woff2');
 }
 
 @font-face {
@@ -1934,7 +1935,7 @@
     U+925b, U+9264, U+929c, U+92b9, U+9320, U+934d, U+935b, U+9444, U+957f,
     U+96a7, U+97ad, U+97cc, U+9898, U+98ea, U+9921, U+9952, U+9a55, U+9b0d,
     U+9b91, U+9bca, U+9ebd, U+9f4b, U+ff1c-ff1d, U+ff21, U+ff38, U+ff9f;
-  src: url('/_ChironHeiHK-gf_104.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_104.woff2') format('woff2');
 }
 
 @font-face {
@@ -1964,7 +1965,7 @@
     U+8fd9, U+902e, U+90ca, U+916a, U+916c, U+921e, U+9245, U+947c, U+9594,
     U+95a8, U+95ee, U+95f4, U+9706, U+971e, U+9756, U+980c, U+9891, U+98b1,
     U+98fc, U+9903, U+9957, U+99ae, U+99ff, U+9db4, U+ff16-ff19;
-  src: url('/_ChironHeiHK-gf_105.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_105.woff2') format('woff2');
 }
 
 @font-face {
@@ -1995,7 +1996,7 @@
     U+9009, U+9017, U+9175, U+9187, U+918b, U+91d8, U+9214, U+946b, U+9470,
     U+9640, U+9675, U+96ef, U+9716, U+97cb, U+97e9, U+985b, U+99b3, U+9b4f,
     U+9d09, U+9e9f, U+9edb, U+9f90, U+ff05, U+ff14;
-  src: url('/_ChironHeiHK-gf_106.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_106.woff2') format('woff2');
 }
 
 @font-face {
@@ -2027,7 +2028,7 @@
     U+92b3, U+932b, U+93fd, U+95ca, U+964c, U+96c0, U+970d, U+9774, U+97fb,
     U+9812, U+9817, U+9913, U+9935, U+99c1, U+9b31, U+9d5d, U+9d6c, U+9e79,
     U+fe30, U+ff0b, U+ff10, U+ff15;
-  src: url('/_ChironHeiHK-gf_107.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_107.woff2') format('woff2');
 }
 
 @font-face {
@@ -2058,7 +2059,7 @@
     U+8fa8, U+906e, U+9077, U+90aa, U+90b1, U+90c1, U+9165, U+919c, U+92c1,
     U+95d6, U+95e8, U+975a, U+98c6, U+9ecf, U+9f0e, U+9f52, U+ff06, U+ff0a,
     U+ff12-ff13;
-  src: url('/_ChironHeiHK-gf_108.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_108.woff2') format('woff2');
 }
 
 @font-face {
@@ -2089,7 +2090,7 @@
     U+9646, U+9676, U+96d5, U+971c, U+9838, U+9875, U+98c4, U+99db, U+9a45,
     U+9a5f, U+9a6c, U+9ad2, U+9cf4, U+9d28, U+9daf, U+9df9, U+9e7d, U+9f9c,
     U+ff11, U+ff1e;
-  src: url('/_ChironHeiHK-gf_109.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_109.woff2') format('woff2');
 }
 
 @font-face {
@@ -2120,7 +2121,7 @@
     U+9075, U+90ce, U+90ed, U+9130, U+91ac, U+91e3, U+9285, U+9298, U+92ea,
     U+9326, U+937e, U+93c8, U+95c6, U+9677, U+9727, U+994b, U+99a8, U+99d0,
     U+9a30, U+9a37, U+9b42, U+9b45, U+9d3b, U+9e7f, U+9ee8, U+9f3b, U+c5b4;
-  src: url('/_ChironHeiHK-gf_110.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_110.woff2') format('woff2');
 }
 
 @font-face {
@@ -2152,7 +2153,7 @@
     U+912d, U+9177, U+91c7, U+9336, U+9451, U+947d, U+963b, U+966a, U+9670,
     U+9769, U+9813, U+98fd, U+99d5, U+9a19, U+9b27, U+9b6f, U+9ece, U+9ed8,
     U+9f13, U+9f20, U+ad6d, U+d55c;
-  src: url('/_ChironHeiHK-gf_111.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_111.woff2') format('woff2');
 }
 
 @font-face {
@@ -2183,7 +2184,7 @@
     U+8fea, U+9014, U+9055, U+907a, U+9178, U+92fc, U+934b, U+9396, U+93ae,
     U+9583, U+9663, U+96bb, U+9707, U+9738, U+9846, U+9905, U+9a0e, U+9aa8,
     U+9b25, U+9b3c, U+9ce5, U+9cf3, U+9ea5, U+9eb5, U+9f4a, U+9f61, U+ff0d;
-  src: url('/_ChironHeiHK-gf_112.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_112.woff2') format('woff2');
 }
 
 @font-face {
@@ -2215,7 +2216,7 @@
     U+91dd, U+964d, U+9686, U+968e, U+9694, U+969c, U+96de, U+96e8, U+96ea,
     U+96f7, U+975c, U+9760, U+978b, U+9858, U+9918, U+9aee, U+9ebb, U+ff0e-ff0f,
     U+ff5c;
-  src: url('/_ChironHeiHK-gf_113.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_113.woff2') format('woff2');
 }
 
 @font-face {
@@ -2235,7 +2236,7 @@
     U+7af9, U+7d9c, U+7da0, U+7e23, U+7e41, U+8056, U+8173, U+822a, U+8349,
     U+83dc, U+8840, U+885b, U+8907, U+8a34, U+8cb4, U+8dd1, U+8fd4, U+8ff0,
     U+93e1, U+984f, U+98ef, U+9b54;
-  src: url('/_ChironHeiHK-gf_114.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_114.woff2') format('woff2');
 }
 
 @font-face {
@@ -2266,7 +2267,7 @@
     U+9592, U+9678, U+967d, U+968a, U+96aa, U+96c5, U+96d6, U+96dc, U+96f6,
     U+9732, U+9748, U+9802, U+9806, U+9808, U+9818, U+983b, U+984d, U+9867,
     U+98db, U+98f2, U+98fe, U+9a5a, U+9b06, U+9b5a, U+9bae, U+9e97, U+ff1b;
-  src: url('/_ChironHeiHK-gf_115.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_115.woff2') format('woff2');
 }
 
 @font-face {
@@ -2298,7 +2299,7 @@
     U+9644, U+9662, U+9673, U+96a8, U+96c4, U+96d9, U+96e2-96e3, U+96f2, U+9752,
     U+97d3, U+97ff, U+9805, U+9810, U+986f, U+990a, U+9910, U+9928, U+9ec3,
     U+9ed1, U+9f8d;
-  src: url('/_ChironHeiHK-gf_116.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_116.woff2') format('woff2');
 }
 
 @font-face {
@@ -2329,7 +2330,7 @@
     U+8cea, U+8cfc, U+8f09, U+8fd1, U+9001, U+901f-9020, U+9054, U+90a3, U+914d,
     U+91cf, U+9304, U+95b1, U+9650, U+9664, U+969b, U+96b1, U+96c6, U+9700,
     U+975e, U+97f3, U+98a8, U+98df, U+9999, U+99ac, U+9a57, U+9ebc;
-  src: url('/_ChironHeiHK-gf_117.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_117.woff2') format('woff2');
 }
 
 @font-face {
@@ -2360,7 +2361,7 @@
     U+904a-904b, U+904e, U+9053, U+9078, U+9084, U+90e8, U+90fd, U+91cd, U+91d1,
     U+9577, U+9580, U+9593, U+9762, U+982d, U+984c, U+985e, U+9996, U+9ad4,
     U+9ad8, U+9ede, U+ff01, U+ff08-ff09, U+ff1f;
-  src: url('/_ChironHeiHK-gf_118.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_118.woff2') format('woff2');
 }
 
 @font-face {
@@ -2375,7 +2376,7 @@
     U+65bc, U+65e5, U+662f, U+6642, U+6700, U+6703, U+6708-6709, U+672c, U+6b63,
     U+70b9-70ba, U+751f, U+7528, U+767c, U+7684, U+7db2, U+884c, U+958b, U+95dc,
     U+96fb, U+9801, U+ff0c, U+ff1a;
-  src: url('/_ChironHeiHK-gf_119.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-gf_119.woff2') format('woff2');
 }
 
 @font-face {
@@ -2389,7 +2390,7 @@
     U+753d, U+7831, U+7a4b, U+7c30, U+7c78, U+7e3f, U+811d, U+8626, U+89fc,
     U+8a68, U+8b4a, U+8b7f, U+8c6d, U+8de6, U+8e1c, U+93a4, U+9464, U+962c,
     U+9724, U+9726, U+9d86, U+9db8;
-  src: url('/_ChironHeiHK-ictw.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-ictw.woff2') format('woff2');
 }
 
 @font-face {
@@ -2405,7 +2406,7 @@
     U+88c3, U+8904, U+8c3a, U+8cce, U+8ec8, U+9197, U+92fa, U+933a, U+9453,
     U+974d, U+974f, U+976b, U+979c, U+99c8, U+9af7, U+9bd2, U+9c04, U+9c76,
     U+9d2c, U+9da4;
-  src: url('/_ChironHeiHK-icjp.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-icjp.woff2') format('woff2');
 }
 
 @font-face {
@@ -2416,7 +2417,7 @@
   unicode-range: U+5ef1, U+6250, U+6264, U+65d0, U+6a16, U+6be7, U+7502, U+7650,
     U+7935, U+7a47, U+82b5, U+85b6, U+8f2e, U+9b01, U+9b0e, U+9beb, U+2bb37,
     U+2d25d;
-  src: url('/_ChironHeiHK-ichk.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-ichk.woff2') format('woff2');
 }
 
 @font-face {
@@ -2425,7 +2426,7 @@
   font-weight: 200 900;
   font-display: swap;
   unicode-range: U+32ff, U+3402, U+35e9, U+210ab, U+29e3d, U+2d253, U+301db;
-  src: url('/_ChironHeiHK-m0.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-m0.woff2') format('woff2');
 }
 
 @font-face {
@@ -2436,7 +2437,7 @@
   unicode-range: U+2f01-2f07, U+2f09-2f11, U+2f13-2f23, U+2f25-2f28, U+2f2a-2f2e,
     U+2f30-2f3b, U+2f3d-2f3e, U+2f40-2f41, U+2f43-2f44, U+2f46-2f62, U+2f65-2f82,
     U+2f84-2f8e, U+2f90-2fd4, U+31c0-31e3;
-  src: url('/_ChironHeiHK-kxst.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-kxst.woff2') format('woff2');
 }
 
 @font-face {
@@ -2468,7 +2469,7 @@
     U+29d71, U+29e19, U+29e36, U+29f27, U+2a04e, U+2a41e, U+2a590, U+2a612,
     U+2a736, U+2ae5a, U+2b74f, U+2b758, U+2b75b, U+2b77a-2b77b, U+2b7bc, U+2b7c2,
     U+2b7e7, U+2b81b, U+2b8c6, U+2c816, U+2c9b0, U+308fb, U+30e6c, U+31c7f;
-  src: url('/_ChironHeiHK-twm.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-twm.woff2') format('woff2');
 }
 
 @font-face {
@@ -2478,7 +2479,7 @@
   font-display: swap;
   unicode-range: U+2eae, U+2ff0-2fff, U+31ef, U+9268, U+9273, U+99f9, U+9bf2,
     U+b515, U+bcf8;
-  src: url('/_ChironHeiHK-m1.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-m1.woff2') format('woff2');
 }
 
 @font-face {
@@ -2487,7 +2488,7 @@
   font-weight: 200 900;
   font-display: swap;
   unicode-range: U+30729, U+30edd-30ede, U+3106c;
-  src: url('/_ChironHeiHK-exg.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-exg.woff2') format('woff2');
 }
 
 @font-face {
@@ -2545,7 +2546,7 @@
     U+5dc0, U+5dc6-5dc7, U+5dcf, U+5dd1, U+5dd5, U+5ddf, U+5e0e, U+5e17,
     U+5e23-5e24, U+5e29, U+5e3e, U+5e41, U+5e4a-5e4b, U+5e4d-5e4f, U+5e53,
     U+5e5c-5e5d, U+5e60, U+5e66-5e69;
-  src: url('/_ChironHeiHK-bf_0.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-bf_0.woff2') format('woff2');
 }
 
 @font-face {
@@ -2602,7 +2603,7 @@
     U+6b28, U+6b2d, U+6b2f, U+6b33-6b34, U+6b3c, U+6b3f, U+6b41-6b42, U+6b45,
     U+6b4a-6b4b, U+6b4d, U+6b51, U+6b56, U+6b5e, U+6b6d, U+6b76, U+6b7e, U+6b88,
     U+6b8c, U+6b8e-6b8f;
-  src: url('/_ChironHeiHK-bf_1.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-bf_1.woff2') format('woff2');
 }
 
 @font-face {
@@ -2659,7 +2660,7 @@
     U+7731-7732, U+7739, U+7745, U+774a-774b, U+774d, U+7754, U+7756, U+7767,
     U+776f, U+777c, U+7781-7783, U+7788, U+778f, U+7795, U+7797, U+7799-779b,
     U+779d, U+77a1, U+77a3, U+77a8, U+77ab, U+77b2, U+77b5, U+77ba;
-  src: url('/_ChironHeiHK-bf_2.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-bf_2.woff2') format('woff2');
 }
 
 @font-face {
@@ -2716,7 +2717,7 @@
     U+82c0, U+82c2-82c3, U+82e8, U+82ec-82ed, U+82f2, U+82f5, U+8319, U+8320,
     U+8322, U+8324-8326, U+8329, U+8341, U+8348, U+834d-834e, U+8353, U+8374,
     U+8376, U+8381, U+8387-8388, U+838b-838d, U+838f-8390;
-  src: url('/_ChironHeiHK-bf_3.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-bf_3.woff2') format('woff2');
 }
 
 @font-face {
@@ -2769,7 +2770,7 @@
     U+8a8b, U+8a96, U+8a99, U+8aab, U+8ab8, U+8aba-8abb, U+8abd, U+8ac0, U+8ac3,
     U+8ac5, U+8ac8, U+8ad3-8ad5, U+8ad8-8ad9, U+8ae8, U+8aef-8af0, U+8afb,
     U+8aff, U+8b06, U+8b08, U+8b11-8b12, U+8b15, U+8b18, U+8b1e, U+8b23-8b25;
-  src: url('/_ChironHeiHK-bf_4.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-bf_4.woff2') format('woff2');
 }
 
 @font-face {
@@ -2823,7 +2824,7 @@
     U+95db, U+95df, U+95e3, U+961e, U+9620, U+9622-9623, U+962d, U+9630,
     U+9639-963a, U+963d, U+964a, U+966b, U+966d, U+966f, U+9671, U+967c, U+967e,
     U+9680;
-  src: url('/_ChironHeiHK-bf_5.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-bf_5.woff2') format('woff2');
 }
 
 @font-face {
@@ -2876,7 +2877,7 @@
     U+9f00-9f01, U+9f06, U+9f0a, U+9f0f, U+9f12, U+9f16, U+9f18, U+9f1a-9f1c,
     U+9f1e, U+9f23-9f25, U+9f28, U+9f2a-9f2b, U+9f2d-9f2e, U+9f30, U+9f32-9f33,
     U+9f35-9f36, U+9f38, U+9f40, U+9f42-9f43, U+9f46-9f49, U+9f55-9f56;
-  src: url('/_ChironHeiHK-bf_6.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-bf_6.woff2') format('woff2');
 }
 
 @font-face {
@@ -2886,7 +2887,7 @@
   font-display: swap;
   unicode-range: U+9f58, U+9f5b, U+9f5d-9f5e, U+9f64-9f65, U+9f6b, U+9f6e-9f71,
     U+9f74-9f75, U+9f78-9f7b, U+9f7e, U+9f92, U+fa0d;
-  src: url('/_ChironHeiHK-bf_7.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-bf_7.woff2') format('woff2');
 }
 
 @font-face {
@@ -2917,7 +2918,7 @@
     U+36b2-36b4, U+36b6-36b8, U+36ba-36bb, U+36bd-36be, U+36c2, U+36c6,
     U+36cd-36d2, U+36d5, U+36d7-36dc, U+36de, U+36e7-36f4, U+36f6-36fe, U+3702,
     U+3704-3707, U+3709, U+370b-370c, U+370e-3712;
-  src: url('/_ChironHeiHK-kx_0.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-kx_0.woff2') format('woff2');
 }
 
 @font-face {
@@ -2941,7 +2942,7 @@
     U+390a-3913, U+3916, U+391a-3926, U+3928-392b, U+392e-3931, U+3933-393b,
     U+393e, U+3940-394c, U+394e-3956, U+395a-3962, U+3964-3969, U+396c-3977,
     U+3979-397a, U+397c-397f, U+3981-3987, U+398b-3991, U+3993-3998;
-  src: url('/_ChironHeiHK-kx_1.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-kx_1.woff2') format('woff2');
 }
 
 @font-face {
@@ -2966,7 +2967,7 @@
     U+3bc3, U+3bc5-3bd0, U+3bd3-3bd6, U+3bd8-3bdc, U+3bdf-3be6, U+3bea-3beb,
     U+3bed-3bf1, U+3bf6-3bfe, U+3c00-3c06, U+3c08-3c0c, U+3c0e-3c10, U+3c12,
     U+3c14, U+3c16-3c17, U+3c19-3c1b, U+3c1d-3c34, U+3c36-3c37, U+3c39-3c4f;
-  src: url('/_ChironHeiHK-kx_2.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-kx_2.woff2') format('woff2');
 }
 
 @font-face {
@@ -2992,7 +2993,7 @@
     U+3ec3-3ec4, U+3ec9, U+3ecb, U+3ecd-3ece, U+3ed2-3ed5, U+3edd, U+3edf-3ee0,
     U+3eed-3eef, U+3ef1-3ef2, U+3ef5-3ef9, U+3efd-3efe, U+3f09-3f0d, U+3f0f-3f12,
     U+3f14-3f20;
-  src: url('/_ChironHeiHK-kx_3.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-kx_3.woff2') format('woff2');
 }
 
 @font-face {
@@ -3014,7 +3015,7 @@
     U+4118-411a, U+411c-4122, U+4124-412a, U+412c-4130, U+4133, U+4136-4138,
     U+413a-4148, U+414a-415e, U+4160-4166, U+4168-4169, U+416d, U+416f-417b,
     U+417d-417e, U+4182-4185;
-  src: url('/_ChironHeiHK-kx_4.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-kx_4.woff2') format('woff2');
 }
 
 @font-face {
@@ -3033,7 +3034,7 @@
     U+435f, U+4361-436d, U+436f-4392, U+4394-4396, U+4398-4399, U+439c-439d,
     U+439f-43a4, U+43a6-43ab, U+43ae-43b1, U+43b3-43b9, U+43bb-43bd, U+43bf-43c0,
     U+43c2-43c7, U+43c9-43d8;
-  src: url('/_ChironHeiHK-kx_5.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-kx_5.woff2') format('woff2');
 }
 
 @font-face {
@@ -3056,7 +3057,7 @@
     U+45d7-45d9, U+45db-45e8, U+45eb-45ec, U+45ee-45f2, U+45f5-45fa, U+45fc-4602,
     U+4604-4605, U+4607-460e, U+4610-4614, U+4618-461a, U+461c-461d, U+461f-4624,
     U+4626, U+4628-4631, U+4633-463b, U+463d-4649, U+464e-4652;
-  src: url('/_ChironHeiHK-kx_6.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-kx_6.woff2') format('woff2');
 }
 
 @font-face {
@@ -3075,7 +3076,7 @@
     U+4817-4820, U+4822-4836, U+4838-4839, U+483b-4843, U+4845-484d, U+484f-4856,
     U+4858-485c, U+485e-4870, U+4872-4877, U+487a, U+487c-487f, U+4883-488c,
     U+488e, U+4890-4897, U+4899-489a;
-  src: url('/_ChironHeiHK-kx_7.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-kx_7.woff2') format('woff2');
 }
 
 @font-face {
@@ -3095,7 +3096,7 @@
     U+4a25-4a34, U+4a36, U+4a38-4a3a, U+4a3c-4a43, U+4a45-4a4d, U+4a4f-4a95,
     U+4a97-4a9e, U+4aa0-4aa2, U+4aa5-4aa9, U+4aab-4ab3, U+4ab5-4ab7, U+4ab9-4acb,
     U+4acd-4ad0, U+4ad2-4ae3, U+4ae5-4ae6, U+4ae8-4afe;
-  src: url('/_ChironHeiHK-kx_8.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-kx_8.woff2') format('woff2');
 }
 
 @font-face {
@@ -3114,7 +3115,7 @@
     U+4c99-4c9c, U+4ca5-4cad, U+4caf, U+4cb1-4cb2, U+4cb4-4cb5, U+4cb8-4ccc,
     U+4cce-4ce0, U+4ce3-4ce4, U+4ce6-4cec, U+4cee-4d06, U+4d0a-4d0f, U+4d11-4d12,
     U+4d1a-4d20, U+4d22-4d27, U+4d29-4d33, U+4d35-4d75;
-  src: url('/_ChironHeiHK-kx_9.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-kx_9.woff2') format('woff2');
 }
 
 @font-face {
@@ -3169,7 +3170,7 @@
     U+5c26, U+5c29, U+5c2e-5c2f, U+5c32, U+5c35-5c36, U+5c52, U+5c5a, U+5c5f,
     U+5c6b, U+5c70, U+5c75, U+5c87, U+5c8e, U+5cb2, U+5cb4, U+5cb9, U+5ccd,
     U+5cdc-5cdd, U+5ceb, U+5cf2-5cf3;
-  src: url('/_ChironHeiHK-kx_10.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-kx_10.woff2') format('woff2');
 }
 
 @font-face {
@@ -3228,7 +3229,7 @@
     U+6e6c-6e6d, U+6e7a, U+6e7d, U+6e91, U+6e95, U+6ea8-6ea9, U+6eac-6ead,
     U+6ed7, U+6ef0, U+6f10, U+6f1b, U+6f1d, U+6f42, U+6f65, U+6f68, U+6f71,
     U+6f83;
-  src: url('/_ChironHeiHK-kx_11.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-kx_11.woff2') format('woff2');
 }
 
 @font-face {
@@ -3287,7 +3288,7 @@
     U+7f59, U+7f64, U+7f6f, U+7f80, U+7f84, U+7f90, U+7f98, U+7fab, U+7fc4,
     U+7fc6, U+7fc8, U+7fd3, U+7fd6, U+7fe4, U+7ff6, U+8009-800a, U+8013, U+801a,
     U+8023, U+802b, U+802d, U+803a, U+8044-8045, U+8049, U+804e;
-  src: url('/_ChironHeiHK-kx_12.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-kx_12.woff2') format('woff2');
 }
 
 @font-face {
@@ -3347,7 +3348,7 @@
     U+91bf, U+91db, U+91de, U+91e0, U+91ef, U+91f2, U+91fb, U+920b, U+921b,
     U+921d, U+921f-9220, U+9222, U+922f, U+9242-9243, U+9247, U+9259, U+925c,
     U+9269-926a, U+9275, U+9290, U+9292, U+929e-929f;
-  src: url('/_ChironHeiHK-kx_13.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-kx_13.woff2') format('woff2');
 }
 
 @font-face {
@@ -3409,7 +3410,7 @@
     U+21046, U+21055, U+210e7, U+21111, U+21113, U+21123, U+21135, U+21161,
     U+211a0, U+211d2, U+21219, U+2125a, U+21274, U+21284-21285, U+2128d, U+212ef,
     U+21333-21334, U+21356;
-  src: url('/_ChironHeiHK-kx_14.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-kx_14.woff2') format('woff2');
 }
 
 @font-face {
@@ -3477,7 +3478,7 @@
     U+25251, U+2527b, U+252af, U+252b3, U+252bc, U+252dd, U+2530b, U+2531b,
     U+25323, U+2532f, U+2533d-2533e, U+2536f, U+2538a, U+253b1, U+253b5, U+253e0,
     U+253ea-253eb, U+253fb, U+253fe;
-  src: url('/_ChironHeiHK-kx_15.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-kx_15.woff2') format('woff2');
 }
 
 @font-face {
@@ -3545,7 +3546,7 @@
     U+297bf, U+297d7, U+29823, U+29839, U+2983b, U+2987b, U+298ae, U+298b2,
     U+298b7, U+298bc, U+298d8, U+298e1, U+298fd, U+29944, U+2994b, U+2996b,
     U+29982;
-  src: url('/_ChironHeiHK-kx_16.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-kx_16.woff2') format('woff2');
 }
 
 @font-face {
@@ -3566,7 +3567,7 @@
     U+2a51b-2a51c, U+2a54b, U+2a596-2a597, U+2a5a1, U+2a5b7, U+2a5c9, U+2a5cc,
     U+2a5ea, U+2a600, U+2a602, U+2a60f, U+2a628-2a629, U+2a664, U+2a67b, U+2a69d,
     U+2a6ae, U+2a6b0;
-  src: url('/_ChironHeiHK-kx_17.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-kx_17.woff2') format('woff2');
 }
 
 @font-face {
@@ -3616,7 +3617,7 @@
     U+40ef, U+40fc, U+4100, U+410a, U+4116-4117, U+4123, U+412b, U+4134-4135,
     U+4139, U+416a-416b, U+4186-4187, U+418b-418c, U+4192, U+41ae, U+41b4,
     U+41dd, U+41f3-41f4, U+4228-4229, U+4247, U+426d, U+42c5-42c7, U+42d4;
-  src: url('/_ChironHeiHK-cw_0.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-cw_0.woff2') format('woff2');
 }
 
 @font-face {
@@ -3675,7 +3676,7 @@
     U+7dd5, U+7e28, U+7e83-7e84, U+7f3c, U+7f46, U+7f56, U+7faa, U+8032,
     U+8040-8041, U+8053, U+806b, U+810b, U+8135, U+81a4, U+822e, U+8248, U+824d,
     U+825d, U+8260, U+82c6, U+82c9, U+8310, U+8312-8313, U+8315, U+83b8;
-  src: url('/_ChironHeiHK-cw_1.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-cw_1.woff2') format('woff2');
 }
 
 @font-face {
@@ -3742,7 +3743,7 @@
     U+2e7cf, U+2f80f, U+2f83e, U+2f890, U+2f899, U+2f9de, U+2fa15, U+30006,
     U+30261, U+3051d, U+3054e, U+30569, U+305e3, U+309d2, U+30c83, U+315da,
     U+31b90, U+31bcd, U+31c2e, U+31c57, U+31f5a, U+31f5c;
-  src: url('/_ChironHeiHK-cw_2.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-cw_2.woff2') format('woff2');
 }
 
 @font-face {
@@ -3751,7 +3752,7 @@
   font-weight: 200 900;
   font-display: swap;
   unicode-range: U+321b9, U+322a6, U+322df;
-  src: url('/_ChironHeiHK-cw_3.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-cw_3.woff2') format('woff2');
 }
 
 @font-face {
@@ -3790,7 +3791,7 @@
     U+32776, U+3288a, U+328c4, U+328c8, U+328d9-328da, U+329d6, U+32a3f,
     U+32b2a-32b2b, U+32c87, U+32cd1, U+32e8b, U+32e98, U+32fee, U+330a4, U+33117,
     U+332a6, U+33332, U+33419, U+3345c;
-  src: url('/_ChironHeiHK-nc.woff2') format('woff2');
+  src: url('/_migaku-card-chiron-hei-hk-nc.woff2') format('woff2');
 }
 
 body {

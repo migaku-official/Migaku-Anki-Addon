@@ -1,4 +1,5 @@
 /* Migaku UI default: Noto Sans JP */
+/* Canonical variable: $font-ja in packages/ui/src/styles/scss/_variables.scss. */
 /* Imported from packages/ui/src/styles/scss/fonts/noto-sans-jp.scss. */
 
 @font-face {
@@ -7,7 +8,7 @@
   font-weight: 400;
   font-stretch: 100%;
   font-display: swap;
-  src: url('/_noto-sans-jp-latin-400-normal.woff2') format('woff2');
+  src: url('/_migaku-card-noto-sans-jp-noto-sans-jp-latin-400-normal.woff2') format('woff2');
 }
 
 @font-face {
@@ -16,7 +17,7 @@
   font-weight: 400;
   font-stretch: 100%;
   font-display: swap;
-  src: url('/_noto-sans-jp-japanese-400-normal.woff2') format('woff2');
+  src: url('/_migaku-card-noto-sans-jp-noto-sans-jp-japanese-400-normal.woff2') format('woff2');
 }
 
 @font-face {
@@ -25,7 +26,7 @@
   font-weight: 400;
   font-stretch: 100%;
   font-display: swap;
-  src: url('/_noto-sans-jp-latin-ext-400-normal.woff2') format('woff2');
+  src: url('/_migaku-card-noto-sans-jp-noto-sans-jp-latin-ext-400-normal.woff2') format('woff2');
 }
 
 @font-face {
@@ -34,7 +35,7 @@
   font-weight: 500;
   font-stretch: 100%;
   font-display: swap;
-  src: url('/_noto-sans-jp-latin-500-normal.woff2') format('woff2');
+  src: url('/_migaku-card-noto-sans-jp-noto-sans-jp-latin-500-normal.woff2') format('woff2');
 }
 
 @font-face {
@@ -43,7 +44,7 @@
   font-weight: 500;
   font-stretch: 100%;
   font-display: swap;
-  src: url('/_noto-sans-jp-japanese-500-normal.woff2') format('woff2');
+  src: url('/_migaku-card-noto-sans-jp-noto-sans-jp-japanese-500-normal.woff2') format('woff2');
 }
 
 @font-face {
@@ -52,7 +53,7 @@
   font-weight: 500;
   font-stretch: 100%;
   font-display: swap;
-  src: url('/_noto-sans-jp-latin-ext-500-normal.woff2') format('woff2');
+  src: url('/_migaku-card-noto-sans-jp-noto-sans-jp-latin-ext-500-normal.woff2') format('woff2');
 }
 
 @font-face {
@@ -61,7 +62,7 @@
   font-weight: 700;
   font-stretch: 100%;
   font-display: swap;
-  src: url('/_noto-sans-jp-latin-700-normal.woff2') format('woff2');
+  src: url('/_migaku-card-noto-sans-jp-noto-sans-jp-latin-700-normal.woff2') format('woff2');
 }
 
 @font-face {
@@ -70,7 +71,7 @@
   font-weight: 700;
   font-stretch: 100%;
   font-display: swap;
-  src: url('/_noto-sans-jp-japanese-700-normal.woff2') format('woff2');
+  src: url('/_migaku-card-noto-sans-jp-noto-sans-jp-japanese-700-normal.woff2') format('woff2');
 }
 
 @font-face {
@@ -79,7 +80,7 @@
   font-weight: 700;
   font-stretch: 100%;
   font-display: swap;
-  src: url('/_noto-sans-jp-latin-ext-700-normal.woff2') format('woff2');
+  src: url('/_migaku-card-noto-sans-jp-noto-sans-jp-latin-ext-700-normal.woff2') format('woff2');
 }
 
 @font-face {
@@ -88,7 +89,7 @@
   font-weight: 900;
   font-stretch: 100%;
   font-display: swap;
-  src: url('/_noto-sans-jp-latin-900-normal.woff2') format('woff2');
+  src: url('/_migaku-card-noto-sans-jp-noto-sans-jp-latin-900-normal.woff2') format('woff2');
 }
 
 @font-face {
@@ -97,7 +98,7 @@
   font-weight: 900;
   font-stretch: 100%;
   font-display: swap;
-  src: url('/_noto-sans-jp-japanese-900-normal.woff2') format('woff2');
+  src: url('/_migaku-card-noto-sans-jp-noto-sans-jp-japanese-900-normal.woff2') format('woff2');
 }
 
 @font-face {
@@ -106,5 +107,5 @@
   font-weight: 900;
   font-stretch: 100%;
   font-display: swap;
-  src: url('/_noto-sans-jp-latin-ext-900-normal.woff2') format('woff2');
+  src: url('/_migaku-card-noto-sans-jp-noto-sans-jp-latin-ext-900-normal.woff2') format('woff2');
 }

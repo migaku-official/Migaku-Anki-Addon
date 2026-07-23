@@ -1,4 +1,5 @@
 /* Migaku UI default: Inter */
+/* Canonical variable: $font-latin in packages/ui/src/styles/scss/_variables.scss. */
 /* Imported from packages/ui/src/styles/scss/fonts/inter.scss. */
 
 @font-face {
@@ -6,7 +7,7 @@
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
-  src: url('/_InterVariable.woff2') format('woff2');
+  src: url('/_migaku-card-inter-InterVariable.woff2') format('woff2');
 }
 
 @font-face {
@@ -14,7 +15,7 @@
   font-style: italic;
   font-weight: 100 900;
   font-display: swap;
-  src: url('/_InterVariable-Italic.woff2') format('woff2');
+  src: url('/_migaku-card-inter-InterVariable-Italic.woff2') format('woff2');
 }
 
 body {
