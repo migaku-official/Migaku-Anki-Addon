@@ -9,11 +9,13 @@ This document describes the major runtime boundaries in the Migaku Anki add-on a
 | `src/__init__.py` | Add-on initialization and Anki hook registration |
 | `src/migaku_connection/` | HTTP and WebSocket integration with other Migaku clients |
 | `src/note_type_mgr.py` | Creates, updates, and identifies Migaku note types |
+| `src/card-styles/` | Shared card CSS and compatibility inputs |
 | `src/languages/` | Language definitions and language-specific card assets |
 | `src/editor/` | Anki editor integration |
 | `src/menu/` | Add-on menu actions and supporting UI |
 | `src/lib/` | Dependencies bundled with the add-on |
 | `dev/card-preview/` | Development-only card rendering and live-preview tooling |
+| `tools/card-styles.js` | Compiles shared CSS plus language fonts into shipped stylesheets |
 | `tests/` | Node-based regression tests for parsers and card tooling |
 
 Production code is loaded directly from `src/` by Anki. The `dev/` and `tests/` directories are development infrastructure and are not part of card execution inside Anki.
@@ -79,12 +81,19 @@ The contract tests hash every shipped `front.html`, `back.html`, and `support.ht
 
 ## Card Front-end Lab
 
-The Card Front-end Lab is an isolated development surface under `dev/card-preview/`. It reads the production card assets directly; there is no copied preview template or generated stylesheet.
+The Card Front-end Lab is an isolated development surface under
+`dev/card-preview/`. It reads production templates and generated production
+stylesheets directly; there is no copied preview template.
 
 ```text
-production card files
-          |
-          v
+global.css ---- language fonts.css ---- legacy-variants.json
+     \                 |                 /
+      +---------- card-styles.js -------+
+                         |
+                         v
+          src/languages/*/card/styles.css
+                         |
+                         v
 card-document.js ---- fixtures.js
           |                |
           +------> template-engine.js
@@ -103,9 +112,10 @@ The components have narrow responsibilities:
 | `template-engine.js` | Resolves Anki-style field substitutions and section conditionals needed by the fixtures |
 | `fixtures.js` | Supplies representative sentence, vocabulary, audio, and stress-test field data |
 | `card-document.js` | Reads real card assets and produces a standalone preview document |
-| `server.js` | Serves the lab UI, preview route, media, and live-reload events |
+| `server.js` | Compiles stale styles, then serves the lab UI, preview route, media, and live-reload events |
 | `template-contract.js` | Verifies protected template files against approved hashes |
 | `template-contract.json` | Stores the language list and approved template hashes |
+| `tools/card-styles.js` | Produces deterministic per-language `styles.css` files from shared and language inputs |
 
 The preview renderer is intentionally not a complete Anki emulator. It provides the DOM and visual states needed for CSS work, but final validation must still happen in Anki because the reviewer, scheduler, WebView, audio replacement, and platform integrations belong to Anki.
 
@@ -114,8 +124,12 @@ The preview renderer is intentionally not a complete Anki emulator. It provides 
 Development tooling may depend on production card files:
 
 ```text
+tools/card-styles -> src/card-styles
+tools/card-styles -> src/languages/*/card
+dev/card-preview -> tools/card-styles
 dev/card-preview -> src/languages/*/card
 tests            -> dev/card-preview
+tests            -> tools/card-styles
 tests            -> src/languages/*/card
 ```
 
@@ -136,7 +150,8 @@ The existing syntax-parser suite remains part of the same top-level test command
 
 - Keep production HTML and JavaScript unchanged.
 - Use existing card classes as the styling API.
-- Make production CSS files the source of truth.
+- Make shared CSS and language font compiler inputs the source of truth.
+- Keep generated production stylesheets current.
 - Do not add a second set of preview-only styles.
 - Exercise light, Anki dark, and AnkiDroid dark themes.
 - Exercise both normal content and pathological overflow content.

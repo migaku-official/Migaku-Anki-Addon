@@ -32,6 +32,10 @@ CARD_PREVIEW_PORT=4174 npm run dev:cards
 
 The server binds to `127.0.0.1`, so the lab is available only on the local machine.
 
+Starting the lab compiles the shared card stylesheet. While it runs, saving the
+shared CSS or a language font source rebuilds the generated language stylesheets
+before the preview reloads.
+
 ## Controls
 
 The toolbar changes the preview URL and rerenders the iframe:
@@ -48,20 +52,37 @@ Control state is stored in the page query string. A particular combination can t
 
 ## What to edit
 
-Card assets live under:
+Shared card styling lives at:
 
 ```text
-src/languages/<language>/card/
+src/card-styles/global.css
 ```
 
 For a cosmetic-only change:
 
-- Make primary changes in `styles.css`.
+- Make global cosmetic changes in `src/card-styles/global.css`.
+- Change `src/languages/<language>/card/fonts.css` only for language-specific
+  font declarations.
+- Treat `src/languages/<language>/card/styles.css` as generated output; do not
+  edit it directly.
 - Change `support.css` only when the language-support presentation also needs work.
 - Add or replace files in `media/` only when the CSS or existing templates reference them correctly.
 - Do not change `front.html`, `back.html`, or `support.html`.
 
-The lab watches every language card directory and `dev/card-preview/`. Saving a watched file sends a server-sent `reload` event to the lab, which reloads the current iframe without restarting the server.
+The lab watches `src/card-styles/`, every language card directory, and
+`dev/card-preview/`. Saving a watched file compiles stale stylesheets, then sends
+a server-sent `reload` event to the lab. The current iframe reloads without
+restarting the server.
+
+Run the compiler without the lab when needed:
+
+```bash
+npm run build:card-styles
+```
+
+`src/card-styles/legacy-variants.json` records the small pre-existing differences
+required to reproduce the old language stylesheets byte-for-byte. It is a
+compatibility input, not the normal place for cosmetic work.
 
 ## Production parity
 
@@ -114,13 +135,14 @@ When a visual bug depends on a new content shape, add a named fixture rather tha
 
 ## Recommended CSS loop
 
-1. Start with the sentence fixture on the front and back.
-2. Check the vocabulary and audio branches.
-3. Check the stress fixture at 390 px.
-4. Check both dark themes.
-5. Repeat the matrix for languages with different font assets, especially Japanese, Korean, Simplified Chinese, Traditional Chinese, and Cantonese.
-6. Run the complete regression suite.
-7. Validate representative cards inside desktop Anki and AnkiDroid.
+1. Start the lab and edit `src/card-styles/global.css`.
+2. Start with the sentence fixture on the front and back.
+3. Check the vocabulary and audio branches.
+4. Check the stress fixture at 390 px.
+5. Check both dark themes.
+6. Repeat the matrix for languages with different font assets, especially Japanese, Korean, Simplified Chinese, Traditional Chinese, and Cantonese.
+7. Run the complete regression suite.
+8. Validate representative cards inside desktop Anki and AnkiDroid.
 
 The lab is optimized for fast discovery. Real Anki validation remains the release gate.
 
@@ -136,6 +158,8 @@ The card-specific suites are:
 
 | Test | Protected behavior |
 | --- | --- |
+| `tests/card-styles.test.js` | Shared-style compilation, generated output, and freshness detection |
+| `node tools/card-styles.js --check` | Every committed language stylesheet matches its compiler inputs |
 | `tests/card-preview.test.js` | Template fields and nested section semantics |
 | `tests/card-template-contract.test.js` | Approved hashes for all functional card HTML |
 | `tests/card-document.test.js` | Composition of real assets into front/back documents |
@@ -171,10 +195,12 @@ Never regenerate or accept every hash merely to make the suite green.
 When adding a language:
 
 1. Add its production card directory and assets.
-2. Add its language code to `template-contract.json`.
-3. Add approved hashes for its functional templates.
-4. Verify that it appears in the lab language selector.
-5. Run the full regression suite.
+2. Add `card/fonts.css` with the language's `@font-face` declarations.
+3. Add its language code to `template-contract.json`.
+4. Add approved hashes for its functional templates.
+5. Run `npm run build:card-styles`.
+6. Verify that it appears in the lab language selector.
+7. Run the full regression suite.
 
 The preview server derives its language options and watched card directories from the contract language list.
 
@@ -211,6 +237,7 @@ Document intentional platform exceptions in the CSS near the relevant selector.
 A cosmetic card change is complete when:
 
 - Functional template hashes remain unchanged.
+- Generated language stylesheets are current.
 - Front and back render correctly.
 - Sentence, vocabulary, audio, and stress fixtures remain usable.
 - Light, Anki dark, and AnkiDroid dark modes have adequate contrast.

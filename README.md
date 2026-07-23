@@ -137,9 +137,17 @@ Open [http://127.0.0.1:4173](http://127.0.0.1:4173). Use the controls to switch 
 - Sentence, vocabulary, audio, and stress-test content
 - Wide, tablet, and mobile viewport widths
 
-Edit a language's files under `src/languages/<language>/card/`. The preview reloads automatically whenever card HTML, CSS, support files, or preview fixtures change. It reads those files directly, so there is no separate preview copy to keep synchronized.
+Edit shared cosmetics in `src/card-styles/global.css`. Language font declarations
+live in `src/languages/<language>/card/fonts.css`; the corresponding `styles.css`
+files are generated and should not be edited directly. The preview compiles stale
+styles and reloads automatically whenever card sources, support files, or preview
+fixtures change.
 
-Run `npm test` before committing. The card contract regression test protects every shipped `front.html`, `back.html`, and `support.html` file by hash. CSS is intentionally unrestricted. A contract failure means functional card markup or support JavaScript changed and must not be accepted as part of a cosmetic-only change.
+Run `npm test` before committing. The suite verifies generated stylesheet
+freshness and protects every shipped `front.html`, `back.html`, and `support.html`
+file by hash. CSS is intentionally unrestricted. A contract failure means
+functional card markup or support JavaScript changed and must not be accepted as
+part of a cosmetic-only change.
 
 See [Card Front-end Development](docs/CARD_FRONTEND_DEVELOPMENT.md) for the complete workflow, safety model, fixtures, troubleshooting, and definition of done.
 
