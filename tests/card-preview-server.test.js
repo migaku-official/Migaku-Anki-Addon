@@ -105,6 +105,7 @@ const run = async () => {
   assert.strictEqual(app.statusCode, 200);
   assert.match(app.body, /Card Front-end Lab/);
   assert.match(app.body, /id="language"/);
+  assert.match(app.body, /id="theme-toggle"/);
   assert.match(app.body, />Syntax showcase<\/option>/);
   assert.match(app.body, /new EventSource\("\/events"\)/);
   assert.match(app.body, /html, body\s*\{[^}]*height: 100%;[^}]*overflow: hidden;/s);
@@ -117,6 +118,8 @@ const run = async () => {
   assert.match(app.body, /iframe\s*\{[^}]*height: 100%;[^}]*min-height: 0;/s);
   assert.match(app.body, /frame\.addEventListener\("load",/);
   assert.match(app.body, /side\.value = side\.value === "front" \? "back" : "front"/);
+  assert.match(app.body, /theme\.value = theme\.value === "light" \? "dark" : "light"/);
+  assert.match(app.body, /themeToggle\.addEventListener\("click", toggleTheme\)/);
 
   const preview = await request(
     port,

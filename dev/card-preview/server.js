@@ -69,6 +69,7 @@ const renderAppShell = () => `<!doctype html>
     }
     select { min-width: 96px; padding: 0 24px 0 7px; }
     #fixture { min-width: 132px; }
+    #theme-toggle { flex: 0 0 auto; min-width: 58px; }
     button { padding: 0 8px; cursor: pointer; }
     button:hover, button[aria-pressed="true"] { border-color: #6d8dff; background: #31416f; }
     .viewport-picker { display: flex; gap: 4px; }
@@ -114,6 +115,7 @@ const renderAppShell = () => `<!doctype html>
       <label>Theme
         <select id="theme"><option value="light">Light</option><option value="dark">Anki dark</option><option value="ankidroid">AnkiDroid dark</option></select>
       </label>
+      <button type="button" id="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false">Dark</button>
       <label>Viewport
         <span class="viewport-picker">
           <button type="button" data-viewport="100%" aria-label="Responsive desktop" aria-pressed="true">Wide</button>
@@ -131,6 +133,8 @@ const renderAppShell = () => `<!doctype html>
   <script>
     const controls = ["language", "side", "fixture", "theme"].map((id) => document.getElementById(id));
     const side = document.getElementById("side");
+    const theme = document.getElementById("theme");
+    const themeToggle = document.getElementById("theme-toggle");
     const device = document.getElementById("device");
     const frame = document.getElementById("preview");
     const status = document.getElementById("status");
@@ -152,12 +156,28 @@ const renderAppShell = () => `<!doctype html>
       side.value = side.value === "front" ? "back" : "front";
       render();
     };
+    const syncThemeToggle = () => {
+      const isDark = theme.value !== "light";
+      themeToggle.setAttribute("aria-label", "Switch to " + (isDark ? "light" : "dark") + " mode");
+      themeToggle.setAttribute("aria-pressed", String(isDark));
+      themeToggle.textContent = isDark ? "Light" : "Dark";
+    };
+    const toggleTheme = () => {
+      theme.value = theme.value === "light" ? "dark" : "light";
+      syncThemeToggle();
+      render();
+    };
     const setViewport = (button) => {
       viewportButtons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
       device.style.setProperty("--preview-width", button.dataset.viewport);
     };
     applyQuery();
-    controls.forEach((control) => control.addEventListener("change", render));
+    syncThemeToggle();
+    controls.forEach((control) => control.addEventListener("change", () => {
+      if (control === theme) syncThemeToggle();
+      render();
+    }));
+    themeToggle.addEventListener("click", toggleTheme);
     frame.addEventListener("load", () =>
       frame.contentDocument?.addEventListener("click", (event) => {
         if (event.target.closest(interactivePreviewSelector)) return;
