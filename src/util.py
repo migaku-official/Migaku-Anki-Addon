@@ -50,7 +50,7 @@ def make_icon(*path_parts):
 
 
 def default_icon():
-    return make_icon("migaku_200.png")
+    return make_icon("migaku_mark.svg")
 
 
 def show_info(

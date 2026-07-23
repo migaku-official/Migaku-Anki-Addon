@@ -12,9 +12,12 @@ from . import config, util, note_type_mgr
 class WelcomeWidget(SettingsWidget):
     TITLE = "Welcome!"
     SUBTITLE = "This is the first time you are using the Migaku Anki add-on."
-    PIXMAP = "migaku_side.png"
 
     def init_ui(self):
+        logo_lbl = QLabel()
+        logo_lbl.setPixmap(util.make_pixmap("migaku_logo.svg"))
+        self.lyt.addWidget(logo_lbl)
+
         welcome_lbl = QLabel(
             "Migaku Anki provides all features you need to optimally learn languages with Anki and Migaku.<br><br>"
             "This setup will give you a quick overview over the feature-set and explain how to use it.<br><br>"
