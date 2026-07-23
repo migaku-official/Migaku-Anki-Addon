@@ -1,0 +1,43 @@
+{
+  "de": {
+    "textStyle": "bold"
+  },
+  "es": {
+    "textStyle": "bold"
+  },
+  "fr": {
+    "mobileCommentGap": true,
+    "textStyle": "bold"
+  },
+  "it": {
+    "mobileCommentGap": true,
+    "textStyle": "bold"
+  },
+  "ja": {
+    "mobileCommentGap": true,
+    "textStyle": "bold"
+  },
+  "ko": {
+    "mobileCommentGap": true,
+    "textStyle": "bold"
+  },
+  "pt": {
+    "mobileCommentGap": true,
+    "textStyle": "bold"
+  },
+  "yue": {
+    "alternateSentence": true,
+    "mobileCommentGap": true,
+    "textStyle": "bold"
+  },
+  "zh_CN": {
+    "alternateSentence": true,
+    "mobileCommentGap": true,
+    "textStyle": "bold"
+  },
+  "zh_TW": {
+    "alternateSentence": true,
+    "mobileCommentGap": true,
+    "textStyle": "heavyItalic"
+  }
+}

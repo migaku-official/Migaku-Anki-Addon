@@ -1,0 +1,9 @@
+@font-face {
+  font-family: cardFont;
+  src: url('/_NotoSerifTC.ttf');
+}
+
+@font-face {
+  font-family: cardFontAlt;
+  src: url('/_NotoSerifSC.ttf');
+}

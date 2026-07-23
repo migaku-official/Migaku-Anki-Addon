@@ -1,9 +1,26 @@
 const fs = require("fs");
 const path = require("path");
 
+const alternateSentenceStyles = [
+  ".migaku-card-sentence-alternate {",
+  "  text-align: center;",
+  "  width: 100%;",
+  "  font-size: 20px;",
+  "  margin-top: 10px;",
+  "  color: rgb(180, 180, 180);",
+  "}",
+  "",
+].join("\n");
+const canonicalTextStyles = "t {\n  font-style: bold;\n}";
+const textStyleVariants = {
+  bold: "t {\n  font-weight: bold;\n}",
+  heavyItalic: "t {\n  font-weight: 900;\n  font-style: italic;\n}",
+};
+
 const getCardStylePaths = (rootDir, language) => ({
   fonts: path.join(rootDir, "src", "languages", language, "card", "fonts.css"),
   global: path.join(rootDir, "src", "card-styles", "global.css"),
+  legacyVariants: path.join(rootDir, "src", "card-styles", "legacy-variants.json"),
   output: path.join(rootDir, "src", "languages", language, "card", "styles.css"),
 });
 
@@ -20,9 +37,47 @@ const getCardStyleLanguages = (rootDir) => {
 const readStyleSource = (filePath) =>
   fs.readFileSync(filePath, "utf8").replace(/\r\n/g, "\n").trim();
 
+const replaceRequired = (source, search, replacement, label) => {
+  if (!source.includes(search)) throw new Error(`Could not apply ${label} card style variant`);
+  return source.replace(search, replacement);
+};
+
+const getLegacyVariant = (paths, language) =>
+  fs.existsSync(paths.legacyVariants)
+    ? JSON.parse(fs.readFileSync(paths.legacyVariants, "utf8"))[language] || {}
+    : {};
+
+const applyLegacyVariant = (source, variant) => {
+  const withAlternateSentence = variant.alternateSentence
+    ? replaceRequired(
+        source,
+        ".migaku-card-unknown {",
+        `${alternateSentenceStyles}\n.migaku-card-unknown {`,
+        "alternate sentence",
+      )
+    : source;
+  const withTextStyle = variant.textStyle
+    ? replaceRequired(
+        withAlternateSentence,
+        canonicalTextStyles,
+        textStyleVariants[variant.textStyle],
+        "text style",
+      )
+    : withAlternateSentence;
+  return variant.mobileCommentGap
+    ? replaceRequired(
+        withTextStyle,
+        "  /* For mobile phones: */\n",
+        "  /* For mobile phones: */\n\n",
+        "mobile comment gap",
+      )
+    : withTextStyle;
+};
+
 const compileCardStyles = (rootDir, language) => {
   const paths = getCardStylePaths(rootDir, language);
-  return `${readStyleSource(paths.fonts)}\n\n${readStyleSource(paths.global)}\n`;
+  const globalStyles = applyLegacyVariant(readStyleSource(paths.global), getLegacyVariant(paths, language));
+  return `${readStyleSource(paths.fonts)}\n\n${globalStyles}\n`;
 };
 
 const checkCardStyles = (rootDir) => {

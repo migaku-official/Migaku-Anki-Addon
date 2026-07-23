@@ -17,7 +17,27 @@ fs.mkdirSync(cardStylesDir, { recursive: true });
 fs.mkdirSync(languageCardDir, { recursive: true });
 fs.writeFileSync(
   path.join(cardStylesDir, "global.css"),
-  ".card {\n  color: var(--card-color);\n}\n",
+  [
+    ".migaku-card-unknown {",
+    "  color: var(--card-color);",
+    "}",
+    "",
+    "t {",
+    "  font-style: bold;",
+    "}",
+    "",
+    "@media only screen and (max-width: 450px) {",
+    "  /* For mobile phones: */",
+    "  .migaku-card {",
+    "    width: 100%;",
+    "  }",
+    "}",
+    "",
+  ].join("\n"),
+);
+fs.writeFileSync(
+  path.join(cardStylesDir, "legacy-variants.json"),
+  `${JSON.stringify({ en: { alternateSentence: true, mobileCommentGap: true, textStyle: "bold" } }, null, 2)}\n`,
 );
 fs.writeFileSync(
   path.join(languageCardDir, "fonts.css"),
@@ -25,8 +45,37 @@ fs.writeFileSync(
 );
 fs.writeFileSync(path.join(languageCardDir, "styles.css"), "stale\n");
 
-const expected =
-  "@font-face {\n  font-family: cardFont;\n  src: url('/font.ttf');\n}\n\n.card {\n  color: var(--card-color);\n}\n";
+const expected = [
+  "@font-face {",
+  "  font-family: cardFont;",
+  "  src: url('/font.ttf');",
+  "}",
+  "",
+  ".migaku-card-sentence-alternate {",
+  "  text-align: center;",
+  "  width: 100%;",
+  "  font-size: 20px;",
+  "  margin-top: 10px;",
+  "  color: rgb(180, 180, 180);",
+  "}",
+  "",
+  ".migaku-card-unknown {",
+  "  color: var(--card-color);",
+  "}",
+  "",
+  "t {",
+  "  font-weight: bold;",
+  "}",
+  "",
+  "@media only screen and (max-width: 450px) {",
+  "  /* For mobile phones: */",
+  "",
+  "  .migaku-card {",
+  "    width: 100%;",
+  "  }",
+  "}",
+  "",
+].join("\n");
 
 assert.strictEqual(compileCardStyles(sandbox, "en"), expected);
 assert.deepStrictEqual(checkCardStyles(sandbox), {
