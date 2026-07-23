@@ -272,7 +272,9 @@ After QA approval:
 5. Click **Update** 
 6. Under Upload file, click **Choose file** to select the new `.addon` file (note: "branches" are way to distinguish which Anki versions an addon applies to. It can remain `Branch 2` unless this change is not compatible with the same Anki versions as our last addon version) (note: if **Choose file** button does not work, try a different browser like Safari)
 7. Optionally, bump the max Anki version that this branch is compatible with
-8. Optionally, update the description if needed (using `ankiweb.html`)
+8. Optionally, update the description by copying the contents of `ankiweb.html`
+
+`ankiweb.html` is the canonical source for the AnkiWeb description. Make description changes in this file first, then publish them to AnkiWeb.
 
 ## Things that often break
 
