@@ -1,0 +1,54 @@
+const assert = require("assert");
+const path = require("path");
+
+const { renderCardDocument } = require("../dev/card-preview/card-document");
+
+const rootDir = path.resolve(__dirname, "..");
+const light = renderCardDocument({
+  fixtureName: "syntax",
+  language: "en",
+  rootDir,
+  side: "front",
+  theme: "light",
+});
+const dark = renderCardDocument({
+  fixtureName: "syntax",
+  language: "en",
+  rootDir,
+  side: "back",
+  theme: "dark",
+});
+
+assert.match(light, /\.migaku-header\s*\{\s*display: none;/);
+assert.match(
+  light,
+  /main\.container\s*\{[^}]*padding: 120px 16px 160px;[^}]*background: #ede3ff;/s,
+);
+assert.match(light, /\.card\s*\{[^}]*color: rgb\(0, 0, 90\);/s);
+assert.match(
+  light,
+  /\.migaku-card-translation,\s*\.migaku-card-examples\s*\{[^}]*color: inherit;/s,
+);
+assert.match(
+  light,
+  /\.migaku-card,\s*\.migaku-typeselect\s*\{[^}]*width: 100%;[^}]*max-width: 760px;/s,
+);
+assert.match(
+  light,
+  /#content\s*\{[^}]*display: flex;[^}]*flex-direction: column;[^}]*min-height: calc\(100vh - 280px\);/s,
+);
+assert.match(light, /main\.container \.migaku-card\s*\{[^}]*flex: 1;/s);
+assert.match(light, /\.migaku-card\s*\{[^}]*background: #fff;[^}]*border-radius: 24px;/s);
+assert.match(
+  light,
+  /box-shadow: 0 9px 20px rgba\(0 0 90 \/ 14%\), 0 3\.76px 8\.3555px rgba\(0 0 90 \/ 8\.3%\), 0 2\.0103px 4\.4673px rgba\(0 0 90 \/ 5%\), 0 1\.1269px 2\.5043px rgba\(0 0 90 \/ 2\.6%\), 0 \.5985px 1\.33px rgba\(0 0 90 \/ \.8%\);/,
+);
+
+assert.match(dark, /\.nightMode\.card\s*\{[^}]*color: #fff;/s);
+assert.match(dark, /\.nightMode main\.container\s*\{[^}]*background: #0a002a;/s);
+assert.match(
+  dark,
+  /\.nightMode \.migaku-card\s*\{[^}]*background: #202047;[^}]*box-shadow: 0 9px 20px rgb\(0 0 0 \/ 18%\), 0 3\.76px 8\.3556px rgb\(0 0 0 \/ 14\.4%\), 0 2\.0103px 4\.4673px rgb\(0 0 0 \/ 8\.11%\), 0 1\.127px 2\.5043px rgb\(0 0 0 \/ 3\.63%\), 0 \.5985px 1\.33px rgb\(0 0 0 \/ 2\.8%\);/s,
+);
+
+console.log("✓ card cosmetic contract");
