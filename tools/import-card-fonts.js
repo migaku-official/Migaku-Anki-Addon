@@ -42,6 +42,11 @@ const getFontFaces = ({ family, source }) => {
       .trim();
     return { assetName, css, sourceUrl };
   });
+  const sourceUrlsByAsset = new Map();
+  preparedFaces.forEach(({ assetName, sourceUrl }) => {
+    if (sourceUrlsByAsset.has(assetName) && sourceUrlsByAsset.get(assetName) !== sourceUrl) throw new Error(`Conflicting font asset name ${assetName} in ${source}`);
+    sourceUrlsByAsset.set(assetName, sourceUrl);
+  });
   return preparedFaces;
 };
 const validateWoff2 = (data, sourceUrl) => {
