@@ -22,7 +22,7 @@ const previewCommandShim = "<script>const pycmd = () => {};</script>";
 
 assert.match(front, /^<!doctype html>/);
 assert.match(front, /data-preview-side="front"/);
-assert.match(front, /Learning a language opens another window onto the world\./);
+assert.match(front, /\(language\)\[language,noun,ˈlæŋɡwɪdʒ\]/);
 assert.doesNotMatch(front, /{{[^{}]+}}/);
 
 assert.match(back, /data-preview-side="back"/);
@@ -32,5 +32,24 @@ assert.match(back, /\.migaku-card/);
 assert.ok(back.includes(previewCommandShim));
 assert.ok(back.indexOf(previewCommandShim) < back.indexOf('class="migaku-typeselect"'));
 assert.doesNotMatch(back, /{{[^{}]+}}/);
+
+const syntaxCases = {
+  de: "(Sprache)[Sprache,nn,f]",
+  en: "(language)[language,noun,ˈlæŋɡwɪdʒ]",
+  ja: "言語[げんご,げんご;h]",
+  ko: "언어[언어$:nng]",
+  yue: "語言[jyu5 jin4;n]",
+};
+
+Object.entries(syntaxCases).forEach(([language, targetWord]) => {
+  const syntaxDocument = renderCardDocument({
+    fixtureName: "syntax",
+    language,
+    rootDir,
+    side: "back",
+    theme: "light",
+  });
+  assert.ok(syntaxDocument.includes(targetWord));
+});
 
 console.log("✓ card preview renders the shipped front and back");

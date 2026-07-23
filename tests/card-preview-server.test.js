@@ -105,6 +105,7 @@ const run = async () => {
   assert.strictEqual(app.statusCode, 200);
   assert.match(app.body, /Card Front-end Lab/);
   assert.match(app.body, /id="language"/);
+  assert.match(app.body, />Syntax showcase<\/option>/);
   assert.match(app.body, /new EventSource\("\/events"\)/);
 
   const preview = await request(
