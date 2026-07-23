@@ -213,10 +213,13 @@ When adding a language:
 1. Add its production card directory and assets.
 2. Add `card/fonts.css` with the language's `@font-face` declarations.
 3. Add its language code to `template-contract.json`.
-4. Add approved hashes for its functional templates.
-5. Run `npm run build:card-styles`.
-6. Verify that it appears in the lab language selector.
-7. Run the full regression suite.
+4. Add its annotated sentence, target word, and translation to `syntaxProfiles`
+   in `dev/card-preview/fixtures.js`.
+5. Add approved hashes for its functional templates.
+6. Run `npm run build:card-styles`.
+7. Verify that it appears in the lab language selector and that the syntax
+   showcase renders its word coloring and popup metadata.
+8. Run the full regression suite.
 
 The preview server derives its language options and watched card directories from the contract language list.
 
