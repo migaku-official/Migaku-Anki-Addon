@@ -110,7 +110,11 @@ sending commands or changing card data.
 
 ## Fixtures
 
-Fixtures are defined in `dev/card-preview/fixtures.js`.
+Fixtures are defined in `dev/card-preview/fixtures.js`. Every language supplies
+its own annotated sentence, target word, and translation using the formats in
+the [Migaku syntax reference guide](https://magenta-dirigible-0d8.notion.site/Syntax-reference-guide-2a55f4eb6327491ca80792e3a935d07a).
+Changing the lab language therefore exercises that language's parser, coloring,
+and popup metadata rather than reusing English content.
 
 ### Sentence
 
@@ -123,6 +127,12 @@ A vocabulary-card state that exercises target-word and word-audio branches.
 ### Audio
 
 An audio-card state that exercises the audio-first conditional branch with deliberately sparse supporting fields.
+
+### Syntax showcase
+
+A focused annotated sentence and target word for checking dictionary forms,
+parts of speech, gender colors, IPA, readings, tones, pitch accents, and popup
+layout. Use this fixture first when changing `.word` or `.popup` styles.
 
 ### Stress test
 
@@ -141,12 +151,13 @@ When a visual bug depends on a new content shape, add a named fixture rather tha
 
 1. Start the lab and edit `src/card-styles/global.css`.
 2. Start with the sentence fixture on the front and back.
-3. Check the vocabulary and audio branches.
-4. Check the stress fixture at 390 px.
-5. Check both dark themes.
-6. Repeat the matrix for languages with different font assets, especially Japanese, Korean, Simplified Chinese, Traditional Chinese, and Cantonese.
-7. Run the complete regression suite.
-8. Validate representative cards inside desktop Anki and AnkiDroid.
+3. Check the syntax showcase for coloring and popups.
+4. Check the vocabulary and audio branches.
+5. Check the stress fixture at 390 px.
+6. Check both dark themes.
+7. Repeat the matrix for languages with different font assets, especially Japanese, Korean, Simplified Chinese, Traditional Chinese, and Cantonese.
+8. Run the complete regression suite.
+9. Validate representative cards inside desktop Anki and AnkiDroid.
 
 The lab is optimized for fast discovery. Real Anki validation remains the release gate.
 
@@ -166,6 +177,7 @@ The card-specific suites are:
 | `node tools/card-styles.js --check` | Every committed language stylesheet matches its compiler inputs |
 | `tests/card-preview.test.js` | Template fields and nested section semantics |
 | `tests/card-template-contract.test.js` | Approved hashes for all functional card HTML |
+| `tests/card-fixtures.test.js` | Language-specific sentence and target-word syntax |
 | `tests/card-document.test.js` | Composition of real assets into front/back documents |
 | `tests/card-preview-server.test.js` | Lab shell, preview route, state parameters, and invalid-input responses |
 

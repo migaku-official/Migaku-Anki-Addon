@@ -119,7 +119,7 @@ The components have narrow responsibilities:
 | Component | Responsibility |
 | --- | --- |
 | `template-engine.js` | Resolves Anki-style field substitutions and section conditionals needed by the fixtures |
-| `fixtures.js` | Supplies representative sentence, vocabulary, audio, and stress-test field data |
+| `fixtures.js` | Supplies language-specific syntax profiles plus sentence, vocabulary, audio, syntax, and stress-test field data |
 | `card-document.js` | Reads real card assets and produces a standalone preview document |
 | `server.js` | Compiles stale styles, then serves the lab UI, preview route, media, and live-reload events |
 | `template-contract.js` | Verifies protected template files against approved hashes |
