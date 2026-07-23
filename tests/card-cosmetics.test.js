@@ -46,6 +46,7 @@ assert.match(
 );
 assert.match(light, /main\.container \.migaku-card\s*\{[^}]*flex: 1;/s);
 assert.match(light, /\.migaku-card\s*\{[^}]*background: #fff;[^}]*border-radius: 24px;/s);
+assert.match(light, /\.dict-form\s*\{[^}]*white-space: nowrap;[^}]*word-break: normal;/s);
 assert.match(
   light,
   /box-shadow: 0 9px 20px rgba\(0 0 90 \/ 14%\), 0 3\.76px 8\.3555px rgba\(0 0 90 \/ 8\.3%\), 0 2\.0103px 4\.4673px rgba\(0 0 90 \/ 5%\), 0 1\.1269px 2\.5043px rgba\(0 0 90 \/ 2\.6%\), 0 \.5985px 1\.33px rgba\(0 0 90 \/ \.8%\);/,

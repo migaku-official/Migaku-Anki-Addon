@@ -180,6 +180,11 @@ main.container .migaku-card audio {
   word-break: break-word;
 }
 
+.dict-form {
+  white-space: nowrap;
+  word-break: normal;
+}
+
 .migaku-typeselect {
   background: #fff;
   margin-top: 20px;
