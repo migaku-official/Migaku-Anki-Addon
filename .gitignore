@@ -19,3 +19,4 @@ __pycache__/
 ._*
 
 tmp/
+/scratchpad-*.md

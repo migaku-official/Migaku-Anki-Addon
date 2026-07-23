@@ -1,0 +1,1 @@
+- When giving the user commands to copy/paste, use the `scratchpad` skill to put them in a root session file.
