@@ -20,7 +20,7 @@ const expectedTargetWords = {
   es: "(idioma)[idioma,noun,m]",
   fr: "(langue)[langue,noun,f]",
   it: "(lingua)[lingua,noun,f]",
-  ja: "言語[げんご,げんご;h]",
+  ja: "言語[げんご;h]",
   ko: "언어[언어$:nng]",
   pt: "(língua)[língua,noun,f]",
   vi: "(ngôn)[ngôn,noun,ŋoːn˧]",
@@ -35,6 +35,9 @@ Object.entries(expectedTargetWords).forEach(([language, targetWord]) => {
   assert.ok(fixture.fields.Sentence.includes(targetWord));
   assert.ok(fixture.fields.Translation);
 });
+const japanese = buildLocalizedFixture("ja", "syntax");
+assert.ok(japanese.fields.Sentence.includes("世界[せかい;h]"));
+assert.ok(japanese.fields.Sentence.includes("窓[まど;a]"));
 
 ["sentence", "vocabulary"].forEach((fixtureName) => {
   const fixture = buildLocalizedFixture("ja", fixtureName);
@@ -85,13 +88,19 @@ assert.ok(stress.fields.Translation.includes("intentionally long translation"));
   assert.ok([...sentence.matchAll(/[\u3400-\u9fff]+\[[^;\]]+;[a-z]+\]/gu)].length > 2);
 });
 
+const japaneseAnnotations = [
+  ...buildLocalizedFixture("ja", "syntax").fields.Sentence.matchAll(
+    /[\u3400-\u9fff]+\[([^\]]+)\]/gu,
+  ),
+];
+assert.ok(japaneseAnnotations.length > 4);
 assert.ok(
-  [
-    ...buildLocalizedFixture("ja", "syntax").fields.Sentence.matchAll(
-      /[\u3400-\u9fff]+\[[^,\]]+,[^;\]]+;[hanok]\d*\]/gu,
-    ),
-  ].length > 2,
+  japaneseAnnotations.every(([, metadata]) =>
+    /^(?:[^,;\]]+|[^,;\]]+,[^;\]]+);[hanok]\d*$/u.test(metadata),
+  ),
 );
+assert.ok(japaneseAnnotations.some(([, metadata]) => !metadata.includes(",")));
+assert.ok(japaneseAnnotations.some(([, metadata]) => metadata.includes(",")));
 assert.ok(
   [
     ...buildLocalizedFixture("ko", "syntax").fields.Sentence.matchAll(

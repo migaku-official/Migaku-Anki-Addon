@@ -36,7 +36,7 @@ assert.doesNotMatch(back, /{{[^{}]+}}/);
 const syntaxCases = {
   de: "(Sprache)[Sprache,nn,f]",
   en: "(language)[language,noun,ˈlæŋɡwɪdʒ]",
-  ja: "言語[げんご,げんご;h]",
+  ja: "言語[げんご;h]",
   ko: "언어[언어$:nng]",
   yue: "語言[jyu5 jin4;n]",
 };

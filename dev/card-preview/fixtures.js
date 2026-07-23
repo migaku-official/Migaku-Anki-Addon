@@ -39,8 +39,8 @@ const syntaxProfiles = {
   },
   ja: {
     sentence:
-      "言語[げんご,げんご;h]を 学[まな,まなぶ;n2]ぶと、世界[せかい,せかい;h]への 窓[まど,まど;a]が 開[ひら,ひらく;n2]きます。",
-    targetWord: "言語[げんご,げんご;h]",
+      "言語[げんご;h]を 学[まな,まなぶ;n2]ぶと、世界[せかい;h]への 窓[まど;a]が 開[ひら,ひらく;n2]きます。",
+    targetWord: "言語[げんご;h]",
     translation: syntaxTranslation,
   },
   ko: {
