@@ -36,7 +36,7 @@ Object.entries(expectedTargetWords).forEach(([language, targetWord]) => {
   assert.ok(fixture.fields.Translation);
 });
 
-["sentence", "vocabulary", "stress"].forEach((fixtureName) => {
+["sentence", "vocabulary"].forEach((fixtureName) => {
   const fixture = buildLocalizedFixture("ja", fixtureName);
   assert.strictEqual(fixture.fields["Target Word"], expectedTargetWords.ja);
   assert.ok(fixture.fields.Sentence.includes(expectedTargetWords.ja));
@@ -46,15 +46,58 @@ const audio = buildLocalizedFixture("zh_CN", "audio");
 assert.ok(audio.fields.Sentence.includes(expectedTargetWords.zh_CN));
 assert.strictEqual(audio.fields["Target Word"], "");
 
+const stress = buildLocalizedFixture("ja", "stress");
+assert.ok(stress.fields.Sentence.includes(expectedTargetWords.ja));
+assert.ok(stress.fields.Sentence.includes("verylongunbrokencontentthatmustwrap"));
+assert.ok(stress.fields["Target Word"].includes("非常に長い対象語句"));
+assert.ok(stress.fields.Translation.includes("intentionally long translation"));
+
 ["de", "en", "es", "fr", "it", "pt", "vi"].forEach((language) => {
   const sentence = buildLocalizedFixture(language, "syntax").fields.Sentence;
-  const annotatedWords = [...sentence.matchAll(/\(([^)]+)\)\[/g)].map((match) => match[1]);
-  assert.ok(annotatedWords.length > 0);
-  assert.ok(annotatedWords.every((word) => /^[a-zA-Z\u00C0-\u024F]+$/u.test(word)));
+  const annotations = [...sentence.matchAll(/\(([^)]+)\)\[([^\]]+)\]/g)];
+  assert.ok(annotations.length > 0);
+  assert.ok(annotations.every(([, word]) => /^[a-zA-Z\u00C0-\u024F]+$/u.test(word)));
+  assert.ok(annotations.every(([, , metadata]) => [2, 3].includes(metadata.split(",").length)));
 });
 
-["yue", "zh_CN", "zh_TW"].forEach((language) =>
-  assert.doesNotMatch(buildLocalizedFixture(language, "syntax").fields.Sentence, /;\s/u),
+["de", "es", "fr", "it", "pt"].forEach((language) => {
+  const annotations = [
+    ...buildLocalizedFixture(language, "syntax").fields.Sentence.matchAll(/\([^)]+\)\[([^\]]+)\]/g),
+  ];
+  assert.ok(
+    annotations.every(([, metadata]) => {
+      const gender = metadata.split(",")[2];
+      return !gender || /^[fmnx]$/u.test(gender);
+    }),
+  );
+});
+
+["en", "vi"].forEach((language) => {
+  const annotations = [
+    ...buildLocalizedFixture(language, "syntax").fields.Sentence.matchAll(/\([^)]+\)\[([^\]]+)\]/g),
+  ];
+  assert.ok(annotations.every(([, metadata]) => metadata.split(",")[2]));
+});
+
+["yue", "zh_CN", "zh_TW"].forEach((language) => {
+  const sentence = buildLocalizedFixture(language, "syntax").fields.Sentence;
+  assert.doesNotMatch(sentence, /;\s/u);
+  assert.ok([...sentence.matchAll(/[\u3400-\u9fff]+\[[^;\]]+;[a-z]+\]/gu)].length > 2);
+});
+
+assert.ok(
+  [
+    ...buildLocalizedFixture("ja", "syntax").fields.Sentence.matchAll(
+      /[\u3400-\u9fff]+\[[^,\]]+,[^;\]]+;[hanok]\d*\]/gu,
+    ),
+  ].length > 2,
+);
+assert.ok(
+  [
+    ...buildLocalizedFixture("ko", "syntax").fields.Sentence.matchAll(
+      /[\uac00-\ud7af]+\[[^\]$]+\$:[a-z]+\]/gu,
+    ),
+  ].length > 2,
 );
 
 console.log("✓ card fixtures provide language syntax showcases");

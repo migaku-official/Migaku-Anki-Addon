@@ -4,12 +4,14 @@ const image = (label, color) =>
 const dataImage = (label, color) =>
   `data:image/svg+xml,${encodeURIComponent(image(label, color))}`;
 
+const syntaxTranslation = "Learning a language opens another window onto the world.";
+
 const syntaxProfiles = {
   de: {
     sentence:
       "(Eine)[ein,art,f] (Sprache)[Sprache,nn,f] (zu)[zu,zu,x] (lernen)[lernen,v,x] (öffnet)[öffnen,v,x] (ein)[ein,art,n] (weiteres)[weit,adj,n] (Fenster)[Fenster,nn,n] (zur)[zu,prepart,f] (Welt)[Welt,nn,f].",
     targetWord: "(Sprache)[Sprache,nn,f]",
-    translation: "Learning a language opens another window onto the world.",
+    translation: syntaxTranslation,
   },
   en: {
     sentence:
@@ -21,61 +23,61 @@ const syntaxProfiles = {
     sentence:
       "(Aprender)[aprender,verb] (un)[uno,article,m] (idioma)[idioma,noun,m] (abre)[abrir,verb] (otra)[otro,adj,f] (ventana)[ventana,noun,f] (al)[al,article,m] (mundo)[mundo,noun,m].",
     targetWord: "(idioma)[idioma,noun,m]",
-    translation: "Learning a language opens another window onto the world.",
+    translation: syntaxTranslation,
   },
   fr: {
     sentence:
       "(Apprendre)[apprendre,verb] (une)[un,article,f] (langue)[langue,noun,f] (ouvre)[ouvrir,verb] (une)[un,article,f] (autre)[autre,adj,f] (fenêtre)[fenêtre,noun,f] (sur)[sur,prep] (le)[le,article,m] (monde)[monde,noun,m].",
     targetWord: "(langue)[langue,noun,f]",
-    translation: "Learning a language opens another window onto the world.",
+    translation: syntaxTranslation,
   },
   it: {
     sentence:
       "(Imparare)[imparare,verb] (una)[uno,article,f] (lingua)[lingua,noun,f] (apre)[aprire,verb] (una)[uno,article,f] (nuova)[nuovo,adj,f] (finestra)[finestra,noun,f] (sul)[su,prep,m] (mondo)[mondo,noun,m].",
     targetWord: "(lingua)[lingua,noun,f]",
-    translation: "Learning a language opens another window onto the world.",
+    translation: syntaxTranslation,
   },
   ja: {
     sentence:
       "言語[げんご,げんご;h]を 学[まな,まなぶ;n2]ぶと、世界[せかい,せかい;h]への 窓[まど,まど;a]が 開[ひら,ひらく;n2]きます。",
     targetWord: "言語[げんご,げんご;h]",
-    translation: "Learning a language opens another window onto the world.",
+    translation: syntaxTranslation,
   },
   ko: {
     sentence:
       "언어[언어$:nng]를 배우면[배우다$:v] 세상[세상$:nng]을 보는[보다$:v] 또 다른[다르다$:a] 창문[창문$:nng]이 열립니다[열리다$:v].",
     targetWord: "언어[언어$:nng]",
-    translation: "Learning a language opens another window onto the world.",
+    translation: syntaxTranslation,
   },
   pt: {
     sentence:
       "(Aprender)[aprender,verb] (uma)[um,article,f] (língua)[língua,noun,f] (abre)[abrir,verb] (outra)[outro,adj,f] (janela)[janela,noun,f] (para)[para,prep] (o)[o,article,m] (mundo)[mundo,noun,m].",
     targetWord: "(língua)[língua,noun,f]",
-    translation: "Learning a language opens another window onto the world.",
+    translation: syntaxTranslation,
   },
   vi: {
     sentence:
       "Học một (ngôn)[ngôn,noun,ŋoːn˧] ngữ mở (ra)[ra,part,zaː˧] một cửa sổ khác nhìn (ra)[ra,part,zaː˧] thế giới.",
     targetWord: "(ngôn)[ngôn,noun,ŋoːn˧]",
-    translation: "Learning a language opens another window onto the world.",
+    translation: syntaxTranslation,
   },
   yue: {
     sentence:
       "學習[hok6 zaap6;v]一門[jat1 mun4;q]語言[jyu5 jin4;n]，就會打開[daa2 hoi1;v]另一扇[ling6 jat1 sin3;q]望向[mong6 hoeng3;v]世界[sai3 gaai3;n]嘅窗[coeng1;n]。",
     targetWord: "語言[jyu5 jin4;n]",
-    translation: "Learning a language opens another window onto the world.",
+    translation: syntaxTranslation,
   },
   zh_CN: {
     sentence:
       "学习[xue2 xi2;v]一门[yi1 men2;q]语言[yu3 yan2;n]，就会打开[da3 kai1;v]另一扇[ling4 yi1 shan4;q]看向[kan4 xiang4;v]世界[shi4 jie4;n]的窗户[chuang1 hu5;n]。",
     targetWord: "语言[yu3 yan2;n]",
-    translation: "Learning a language opens another window onto the world.",
+    translation: syntaxTranslation,
   },
   zh_TW: {
     sentence:
       "學習[xue2 xi2;v]一門[yi1 men2;q]語言[yu3 yan2;n]，就會打開[da3 kai1;v]另一扇[ling4 yi1 shan4;q]看向[kan4 xiang4;v]世界[shi4 jie4;n]的窗戶[chuang1 hu5;n]。",
     targetWord: "語言[yu3 yan2;n]",
-    translation: "Learning a language opens another window onto the world.",
+    translation: syntaxTranslation,
   },
 };
 
@@ -190,13 +192,18 @@ const buildLocalizedFixture = (language, fixtureName) => {
   if (!fixture) throw new Error(`Unknown fixture: ${fixtureName}`);
   const profile = syntaxProfiles[language];
   if (!profile) throw new Error(`Missing syntax fixture for language: ${language}`);
+  const mergeStressContent = (localizedValue, fixtureValue) =>
+    fixtureName === "stress" ? `${localizedValue} ${fixtureValue}` : localizedValue;
   return {
     ...fixture,
     fields: {
       ...fixture.fields,
-      Sentence: profile.sentence,
-      "Target Word": fixtureName === "audio" ? fixture.fields["Target Word"] : profile.targetWord,
-      Translation: profile.translation,
+      Sentence: mergeStressContent(profile.sentence, fixture.fields.Sentence),
+      "Target Word": mergeStressContent(
+        fixtureName === "audio" ? fixture.fields["Target Word"] : profile.targetWord,
+        fixture.fields["Target Word"],
+      ),
+      Translation: mergeStressContent(profile.translation, fixture.fields.Translation),
     },
   };
 };
