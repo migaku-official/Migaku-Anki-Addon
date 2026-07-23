@@ -41,7 +41,7 @@ src/languages/<language>/card/
 └── media/
 ```
 
-Font defaults originate in the adjacent `migaku-front-end` component library. `tools/import-card-fonts.js` converts its hosted `@font-face` declarations to offline `cardFont` declarations and stores the WOFF2 assets under each language's `media/` directory.
+Font defaults originate in the adjacent `migaku-front-end` component library. `tools/import-card-fonts.js` reads its canonical `_variables.scss` mapping, converts the matching hosted `@font-face` declarations to offline `cardFont` declarations, validates each WOFF2 file, namespaces it for Anki's collection-global media store, and writes it under each language's `media/` directory.
 
 The production flow is:
 

@@ -101,7 +101,7 @@ Card fonts follow the component library defaults:
 | Traditional Chinese | Noto Sans TC |
 | Cantonese | Chiron Hei HK WS |
 
-The committed `fonts.css` and `media/*.woff2` files are offline card artifacts. Refresh them from an adjacent component-library checkout with `node tools/import-card-fonts.js ../migaku-front-end`, then run `npm run build:card-styles`. The importer selects the component library's active WOFF2 faces, rewrites them to the `cardFont` family, prefixes Anki media filenames with `_`, and replaces the old language font media.
+The committed `fonts.css` and `media/*.woff2` files are offline card artifacts. Refresh them from an adjacent component-library checkout with `node tools/import-card-fonts.js ../migaku-front-end`, then run `npm run build:card-styles`. The importer reads the canonical defaults from the component library's `_variables.scss`, selects the matching WOFF2 faces, validates their headers and bounds, rewrites them to the `cardFont` family, and gives every Anki media file a collision-resistant `_migaku-card-<font-source>-` prefix.
 
 ## Production parity
 
@@ -231,16 +231,20 @@ Never regenerate or accept every hash merely to make the suite green.
 
 When adding a language:
 
-1. Add its production card directory and assets.
-2. Add `card/fonts.css` with the language's `@font-face` declarations.
-3. Add its language code to `template-contract.json`.
-4. Add its annotated sentence, target word, and translation to `syntaxProfiles`
+1. Add its production card directory, templates, and supporting assets.
+2. Add its component-library font mapping to `fontGroups` in
+   `tools/import-card-fonts.js`.
+3. Add its expected asset count to `expectedAssetCounts` in
+   `tests/card-fonts.test.js`.
+4. Run `node tools/import-card-fonts.js ../migaku-front-end`.
+5. Add its language code to `template-contract.json`.
+6. Add its annotated sentence, target word, and translation to `syntaxProfiles`
    in `dev/card-preview/fixtures.js`.
-5. Add approved hashes for its functional templates.
-6. Run `npm run build:card-styles`.
-7. Verify that it appears in the lab language selector and that the syntax
+7. Add approved hashes for its functional templates.
+8. Run `npm run build:card-styles`.
+9. Verify that it appears in the lab language selector and that the syntax
    showcase renders its word coloring and popup metadata.
-8. Run the full regression suite.
+10. Run the full regression suite.
 
 The preview server derives its language options and watched card directories from the contract language list.
 
