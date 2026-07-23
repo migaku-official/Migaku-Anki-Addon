@@ -18,6 +18,7 @@ const textStyleVariants = {
 };
 
 const getCardStylePaths = (rootDir, language) => ({
+  card: path.join(rootDir, "src", "languages", language, "card"),
   fonts: path.join(rootDir, "src", "languages", language, "card", "fonts.css"),
   global: path.join(rootDir, "src", "card-styles", "global.css"),
   legacyVariants: path.join(rootDir, "src", "card-styles", "legacy-variants.json"),
@@ -30,16 +31,19 @@ const getCardStyleLanguages = (rootDir) => {
     .readdirSync(languagesDir, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
-    .filter((language) => fs.existsSync(getCardStylePaths(rootDir, language).fonts))
+    .filter((language) => fs.existsSync(getCardStylePaths(rootDir, language).card))
     .sort();
 };
 
 const readStyleSource = (filePath) =>
   fs.readFileSync(filePath, "utf8").replace(/\r\n/g, "\n").trim();
 
-const replaceRequired = (source, search, replacement, label) => {
-  if (!source.includes(search)) throw new Error(`Could not apply ${label} card style variant`);
-  return source.replace(search, replacement);
+const replaceLegacyFragment = (source, search, replacement) =>
+  source.includes(search) ? source.replace(search, replacement) : source;
+
+const getTextStyleVariant = (name) => {
+  if (!Object.hasOwn(textStyleVariants, name)) throw new Error(`Unknown text style variant: ${name}`);
+  return textStyleVariants[name];
 };
 
 const getLegacyVariant = (paths, language) =>
@@ -49,27 +53,24 @@ const getLegacyVariant = (paths, language) =>
 
 const applyLegacyVariant = (source, variant) => {
   const withAlternateSentence = variant.alternateSentence
-    ? replaceRequired(
+    ? replaceLegacyFragment(
         source,
         ".migaku-card-unknown {",
         `${alternateSentenceStyles}\n.migaku-card-unknown {`,
-        "alternate sentence",
       )
     : source;
   const withTextStyle = variant.textStyle
-    ? replaceRequired(
+    ? replaceLegacyFragment(
         withAlternateSentence,
         canonicalTextStyles,
-        textStyleVariants[variant.textStyle],
-        "text style",
+        getTextStyleVariant(variant.textStyle),
       )
     : withAlternateSentence;
   return variant.mobileCommentGap
-    ? replaceRequired(
+    ? replaceLegacyFragment(
         withTextStyle,
         "  /* For mobile phones: */\n",
         "  /* For mobile phones: */\n\n",
-        "mobile comment gap",
       )
     : withTextStyle;
 };
@@ -80,21 +81,29 @@ const compileCardStyles = (rootDir, language) => {
   return `${readStyleSource(paths.fonts)}\n\n${globalStyles}\n`;
 };
 
-const checkCardStyles = (rootDir) => {
+const inspectCardStyles = (rootDir) => {
   const languages = getCardStyleLanguages(rootDir);
+  const compiled = Object.fromEntries(
+    languages.map((language) => [language, compileCardStyles(rootDir, language)]),
+  );
   const stale = languages.filter((language) => {
     const paths = getCardStylePaths(rootDir, language);
     const actual = fs.existsSync(paths.output) ? fs.readFileSync(paths.output, "utf8") : "";
-    return actual !== compileCardStyles(rootDir, language);
+    return actual !== compiled[language];
   });
+  return { compiled, languages, stale };
+};
+
+const checkCardStyles = (rootDir) => {
+  const { languages, stale } = inspectCardStyles(rootDir);
   return { languages, stale };
 };
 
 const writeCardStyles = (rootDir) => {
-  const { languages, stale } = checkCardStyles(rootDir);
+  const { compiled, languages, stale } = inspectCardStyles(rootDir);
   stale.forEach((language) => {
     const paths = getCardStylePaths(rootDir, language);
-    fs.writeFileSync(paths.output, compileCardStyles(rootDir, language));
+    fs.writeFileSync(paths.output, compiled[language]);
   });
   return { languages, written: stale };
 };

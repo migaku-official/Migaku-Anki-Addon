@@ -208,12 +208,17 @@ const createWatchers = (rootDir, notify) => {
     writeCardStyles(rootDir);
     notify();
   };
-  return directories.map((directory) =>
-    fs.watch(directory, () => {
+  const watchers = directories.map((directory) =>
+    fs.watch(directory, (eventType, filename) => {
+      if (filename && filename.toString() === "styles.css") return;
       if (debounce.timeout) clearTimeout(debounce.timeout);
       debounce.timeout = setTimeout(refresh, 80);
     }),
   );
+  return () => {
+    if (debounce.timeout) clearTimeout(debounce.timeout);
+    watchers.forEach((watcher) => watcher.close());
+  };
 };
 
 const createPreviewServer = ({ rootDir, watch = true }) => {
@@ -221,7 +226,7 @@ const createPreviewServer = ({ rootDir, watch = true }) => {
   const clients = new Set();
   const notify = () =>
     clients.forEach((client) => client.write(`event: reload\ndata: ${Date.now()}\n\n`));
-  const watchers = watch ? createWatchers(rootDir, notify) : [];
+  const closeWatchers = watch ? createWatchers(rootDir, notify) : () => {};
   const server = http.createServer((req, res) => {
     const url = new URL(req.url, "http://localhost");
     if (url.pathname === "/") return send(res, 200, "text/html", renderAppShell());
@@ -256,7 +261,7 @@ const createPreviewServer = ({ rootDir, watch = true }) => {
     send(res, 404, "text/plain", "Not found");
   });
   server.on("close", () => {
-    watchers.forEach((watcher) => watcher.close());
+    closeWatchers();
     clients.forEach((client) => client.end());
   });
   return server;

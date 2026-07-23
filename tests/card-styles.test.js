@@ -92,6 +92,24 @@ assert.deepStrictEqual(checkCardStyles(sandbox), {
   stale: [],
 });
 
+fs.writeFileSync(path.join(cardStylesDir, "global.css"), ".redesign {\n  color: blue;\n}\n");
+assert.strictEqual(
+  compileCardStyles(sandbox, "en"),
+  "@font-face {\n  font-family: cardFont;\n  src: url('/font.ttf');\n}\n\n.redesign {\n  color: blue;\n}\n",
+);
+
+fs.writeFileSync(
+  path.join(cardStylesDir, "legacy-variants.json"),
+  `${JSON.stringify({ en: { textStyle: "typo" } }, null, 2)}\n`,
+);
+assert.throws(() => compileCardStyles(sandbox, "en"), /Unknown text style variant/);
+fs.writeFileSync(path.join(cardStylesDir, "legacy-variants.json"), "{}\n");
+
+const missingFontsDir = path.join(sandbox, "src", "languages", "fr", "card");
+fs.mkdirSync(missingFontsDir, { recursive: true });
+fs.writeFileSync(path.join(missingFontsDir, "styles.css"), "stale\n");
+assert.throws(() => checkCardStyles(sandbox), /fonts\.css/);
+
 fs.rmSync(sandbox, { force: true, recursive: true });
 
 console.log("✓ card styles compile from global and language sources");

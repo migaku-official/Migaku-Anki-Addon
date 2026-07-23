@@ -1,8 +1,11 @@
 const assert = require("assert");
+const fs = require("fs");
 const http = require("http");
+const os = require("os");
 const path = require("path");
 
 const { createPreviewServer } = require("../dev/card-preview/server");
+const contract = require("../dev/card-preview/template-contract.json");
 
 const request = (port, requestPath) =>
   new Promise((resolve, reject) => {
@@ -18,6 +21,45 @@ const request = (port, requestPath) =>
     });
     req.on("error", reject);
   });
+
+const waitFor = (predicate, timeoutMs = 2000) =>
+  new Promise((resolve, reject) => {
+    const startedAt = Date.now();
+    const poll = () => {
+      if (predicate()) return resolve();
+      if (Date.now() - startedAt > timeoutMs) return reject(new Error("Timed out waiting for live style rebuild"));
+      setTimeout(poll, 20);
+    };
+    poll();
+  });
+
+const testLiveStyleRebuild = async () => {
+  const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "migaku-card-preview-"));
+  const globalStylesDir = path.join(rootDir, "src", "card-styles");
+  fs.mkdirSync(path.join(rootDir, "dev", "card-preview"), { recursive: true });
+  fs.mkdirSync(globalStylesDir, { recursive: true });
+  fs.writeFileSync(path.join(globalStylesDir, "global.css"), ".card {\n  color: red;\n}\n");
+  fs.writeFileSync(path.join(globalStylesDir, "legacy-variants.json"), "{}\n");
+  contract.languages.forEach((language) => {
+    const cardDir = path.join(rootDir, "src", "languages", language, "card");
+    fs.mkdirSync(cardDir, { recursive: true });
+    fs.writeFileSync(path.join(cardDir, "fonts.css"), `/* ${language} font */\n`);
+  });
+  const server = createPreviewServer({ rootDir });
+  try {
+    await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    fs.writeFileSync(path.join(globalStylesDir, "global.css"), ".card {\n  color: blue;\n}\n");
+    await waitFor(() =>
+      fs
+        .readFileSync(path.join(rootDir, "src", "languages", "en", "card", "styles.css"), "utf8")
+        .includes("color: blue"),
+    );
+  } finally {
+    if (server.listening) await new Promise((resolve) => server.close(resolve));
+    fs.rmSync(rootDir, { force: true, recursive: true });
+  }
+};
 
 const run = async () => {
   const server = createPreviewServer({
@@ -49,6 +91,7 @@ const run = async () => {
   assert.match(invalid.body, /Unknown side/);
 
   await new Promise((resolve) => server.close(resolve));
+  await testLiveStyleRebuild();
   console.log("✓ card preview server exposes the live development workflow");
 };
 
