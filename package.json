@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "Test suite for Migaku Anki Add-on",
   "scripts": {
+    "build:card-styles": "node tools/card-styles.js",
+    "check:card-styles": "node tools/card-styles.js --check",
     "dev:cards": "node dev/card-preview/server.js",
-    "test": "node tests/card-preview.test.js && node tests/card-template-contract.test.js && node tests/card-document.test.js && node tests/card-preview-server.test.js && node tests/syntax-parser.test.js",
-    "test:watch": "nodemon --watch tests --watch dev/card-preview --watch src/languages --exec \"npm test\""
+    "test": "node tests/card-styles.test.js && node tools/card-styles.js --check && node tests/card-preview.test.js && node tests/card-template-contract.test.js && node tests/card-document.test.js && node tests/card-preview-server.test.js && node tests/syntax-parser.test.js",
+    "test:watch": "nodemon --watch tests --watch dev/card-preview --watch src/card-styles --watch src/languages --watch tools/card-styles.js --exec \"npm test\""
   },
   "keywords": [
     "anki",

@@ -5,6 +5,7 @@ const path = require("path");
 const { renderCardDocument } = require("./card-document");
 const contract = require("./template-contract.json");
 const { fixtures } = require("./fixtures");
+const { writeCardStyles } = require("../../tools/card-styles");
 
 const contentTypes = {
   ".gif": "image/gif",
@@ -197,20 +198,26 @@ const serveMedia = (rootDir, pathname, res) => {
 const createWatchers = (rootDir, notify) => {
   const directories = [
     path.join(rootDir, "dev", "card-preview"),
+    path.join(rootDir, "src", "card-styles"),
     ...contract.languages.map((language) =>
       path.join(rootDir, "src", "languages", language, "card"),
     ),
   ];
   const debounce = { timeout: null };
+  const refresh = () => {
+    writeCardStyles(rootDir);
+    notify();
+  };
   return directories.map((directory) =>
     fs.watch(directory, () => {
       if (debounce.timeout) clearTimeout(debounce.timeout);
-      debounce.timeout = setTimeout(notify, 80);
+      debounce.timeout = setTimeout(refresh, 80);
     }),
   );
 };
 
 const createPreviewServer = ({ rootDir, watch = true }) => {
+  writeCardStyles(rootDir);
   const clients = new Set();
   const notify = () =>
     clients.forEach((client) => client.write(`event: reload\ndata: ${Date.now()}\n\n`));
