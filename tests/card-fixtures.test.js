@@ -96,7 +96,7 @@ const japaneseAnnotations = [
 assert.ok(japaneseAnnotations.length > 4);
 assert.ok(
   japaneseAnnotations.every(([, metadata]) =>
-    /^(?:[^,;\]]+|[^,;\]]+,[^;\]]+);[hanok]\d*$/u.test(metadata),
+    /^(?:[^,;\]]+|[^,;\]]+,[^,;\]]+);[hanok]\d*$/u.test(metadata),
   ),
 );
 assert.ok(japaneseAnnotations.some(([, metadata]) => !metadata.includes(",")));
