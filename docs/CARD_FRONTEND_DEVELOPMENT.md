@@ -179,6 +179,7 @@ The card-specific suites are:
 | `tests/card-template-contract.test.js` | Approved hashes for all functional card HTML |
 | `tests/card-fixtures.test.js` | Language-specific sentence and target-word syntax |
 | `tests/card-document.test.js` | Composition of real assets into front/back documents |
+| `tests/card-cosmetics.test.js` | Shared light/dark surface and layout tokens in rendered cards |
 | `tests/card-preview-server.test.js` | Lab shell, preview route, state parameters, and invalid-input responses |
 
 `run-tests.sh` invokes the same complete npm test command. The pre-push workflow can therefore continue using the repository's shell runner.
