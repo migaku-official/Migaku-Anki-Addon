@@ -44,7 +44,7 @@ The toolbar changes the preview URL and rerenders the iframe:
 | --- | --- |
 | Language | Every language listed in `template-contract.json` |
 | Side | Front or back |
-| Fixture | Sentence, vocabulary, audio, or stress test |
+| Fixture | Sentence, vocabulary, audio, syntax showcase, or stress test |
 | Theme | Light, Anki dark, or AnkiDroid dark |
 | Viewport | Responsive wide view, 768 px tablet, or 390 px mobile |
 
