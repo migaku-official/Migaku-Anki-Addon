@@ -107,6 +107,16 @@ const run = async () => {
   assert.match(app.body, /id="language"/);
   assert.match(app.body, />Syntax showcase<\/option>/);
   assert.match(app.body, /new EventSource\("\/events"\)/);
+  assert.match(app.body, /html, body\s*\{[^}]*height: 100%;[^}]*overflow: hidden;/s);
+  assert.match(app.body, /\.app\s*\{[^}]*height: 100vh;[^}]*overflow: hidden;/s);
+  assert.match(app.body, /\.toolbar\s*\{[^}]*flex-wrap: nowrap;[^}]*padding: 4px 8px;/s);
+  assert.match(app.body, /\.brand\s*\{[^}]*display: none;/s);
+  assert.match(app.body, /select\s*\{[^}]*min-width: 96px;/s);
+  assert.match(app.body, /\.workspace\s*\{[^}]*overflow: hidden;/s);
+  assert.match(app.body, /\.device\s*\{[^}]*height: 100%;[^}]*min-height: 0;/s);
+  assert.match(app.body, /iframe\s*\{[^}]*height: 100%;[^}]*min-height: 0;/s);
+  assert.match(app.body, /frame\.addEventListener\("load",/);
+  assert.match(app.body, /side\.value = side\.value === "front" \? "back" : "front"/);
 
   const preview = await request(
     port,

@@ -39,41 +39,45 @@ const renderAppShell = () => `<!doctype html>
       color: #f6f7fb;
     }
     * { box-sizing: border-box; }
-    body { min-height: 100vh; margin: 0; background: #111318; }
-    .app { display: grid; grid-template-rows: auto minmax(0, 1fr); min-height: 100vh; }
+    html, body { height: 100%; overflow: hidden; }
+    body { margin: 0; background: #111318; }
+    .app { display: grid; grid-template-rows: auto minmax(0, 1fr); height: 100vh; overflow: hidden; }
     .toolbar {
       position: relative;
       z-index: 1;
       display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: end;
-      padding: 14px 18px;
+      flex-wrap: nowrap;
+      gap: 8px;
+      align-items: center;
+      padding: 4px 8px;
+      overflow-x: auto;
+      overflow-y: hidden;
       border-bottom: 1px solid #30343d;
       background: #1a1d24;
       box-shadow: 0 10px 30px rgb(0 0 0 / 25%);
     }
-    .brand { align-self: center; margin-right: auto; }
-    .brand strong { display: block; font-size: 15px; }
-    .brand span, .status { color: #9da3b1; font-size: 12px; }
-    label { display: grid; gap: 5px; color: #afb5c2; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+    .brand { display: none; }
+    .brand span, .status { display: none; }
+    label { display: grid; flex: 0 0 auto; gap: 1px; color: #afb5c2; font-size: 8px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
     select, button {
-      min-height: 36px;
+      min-height: 26px;
       border: 1px solid #3b404b;
-      border-radius: 8px;
+      border-radius: 6px;
       background: #242832;
       color: #f6f7fb;
       font: inherit;
     }
-    select { min-width: 132px; padding: 0 32px 0 10px; }
-    button { padding: 0 12px; cursor: pointer; }
+    select { min-width: 96px; padding: 0 24px 0 7px; }
+    #fixture { min-width: 132px; }
+    button { padding: 0 8px; cursor: pointer; }
     button:hover, button[aria-pressed="true"] { border-color: #6d8dff; background: #31416f; }
-    .viewport-picker { display: flex; gap: 5px; }
-    .viewport-picker button { min-width: 40px; }
-    .workspace { min-height: 0; overflow: auto; padding: 24px; background-color: #111318; background-image: radial-gradient(#2d323d 1px, transparent 1px); background-size: 18px 18px; }
+    .viewport-picker { display: flex; gap: 4px; }
+    .viewport-picker button { min-width: 34px; }
+    .workspace { min-height: 0; overflow: hidden; padding: 8px; background-color: #111318; background-image: radial-gradient(#2d323d 1px, transparent 1px); background-size: 18px 18px; }
     .device {
       width: min(100%, var(--preview-width, 100%));
-      min-height: calc(100vh - 120px);
+      height: 100%;
+      min-height: 0;
       margin: 0 auto;
       overflow: hidden;
       border: 1px solid #3b404b;
@@ -82,13 +86,9 @@ const renderAppShell = () => `<!doctype html>
       box-shadow: 0 18px 60px rgb(0 0 0 / 35%);
       transition: width 180ms ease;
     }
-    iframe { display: block; width: 100%; height: calc(100vh - 122px); min-height: 640px; border: 0; background: white; }
+    iframe { display: block; width: 100%; height: 100%; min-height: 0; border: 0; background: white; }
     @media (max-width: 760px) {
-      .toolbar { align-items: stretch; }
-      .brand { flex-basis: 100%; }
-      label { flex: 1 1 120px; }
-      select { width: 100%; min-width: 0; }
-      .workspace { padding: 10px; }
+      .workspace { padding: 8px; }
     }
   </style>
 </head>
@@ -130,10 +130,12 @@ const renderAppShell = () => `<!doctype html>
   </div>
   <script>
     const controls = ["language", "side", "fixture", "theme"].map((id) => document.getElementById(id));
+    const side = document.getElementById("side");
     const device = document.getElementById("device");
     const frame = document.getElementById("preview");
     const status = document.getElementById("status");
     const viewportButtons = Array.from(document.querySelectorAll("[data-viewport]"));
+    const interactivePreviewSelector = "a, audio, button, input, label, select, textarea, .word, .popup";
     const query = new URLSearchParams(window.location.search);
     const applyQuery = () => controls.forEach((control) => {
       const value = query.get(control.id);
@@ -146,12 +148,22 @@ const renderAppShell = () => `<!doctype html>
       params.set("_reload", Date.now().toString());
       frame.src = "/preview?" + params.toString();
     };
+    const toggleSide = () => {
+      side.value = side.value === "front" ? "back" : "front";
+      render();
+    };
     const setViewport = (button) => {
       viewportButtons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
       device.style.setProperty("--preview-width", button.dataset.viewport);
     };
     applyQuery();
     controls.forEach((control) => control.addEventListener("change", render));
+    frame.addEventListener("load", () =>
+      frame.contentDocument?.addEventListener("click", (event) => {
+        if (event.target.closest(interactivePreviewSelector)) return;
+        toggleSide();
+      }),
+    );
     viewportButtons.forEach((button) => button.addEventListener("click", () => setViewport(button)));
     const events = new EventSource("/events");
     events.addEventListener("reload", () => {
