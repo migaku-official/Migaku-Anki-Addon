@@ -55,9 +55,7 @@ const waitForEvent = (port, eventName, trigger, timeoutMs = 2000) =>
       });
       trigger();
     });
-    req.on("error", (error) => {
-      if (!state.settled) finish(error);
-    });
+    req.on("error", (error) => !state.settled && finish(error));
   });
 
 const testLiveStyleRebuild = async () => {
