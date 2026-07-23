@@ -49,6 +49,7 @@ const renderCardDocument = ({
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>const pycmd = () => {};</script>
   <style>${styles}\n${supportStyles}</style>
 </head>
 <body class="${themes[theme]}" data-preview-fixture="${fixtureName}" data-preview-side="${side}" data-preview-theme="${theme}">

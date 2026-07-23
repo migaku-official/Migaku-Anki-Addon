@@ -18,6 +18,7 @@ const back = renderCardDocument({
   side: "back",
   theme: "dark",
 });
+const previewCommandShim = "<script>const pycmd = () => {};</script>";
 
 assert.match(front, /^<!doctype html>/);
 assert.match(front, /data-preview-side="front"/);
@@ -28,6 +29,8 @@ assert.match(back, /data-preview-side="back"/);
 assert.match(back, /class="card nightMode"/);
 assert.match(back, /Eine Sprache zu lernen öffnet ein weiteres Fenster zur Welt\./);
 assert.match(back, /\.migaku-card/);
+assert.ok(back.includes(previewCommandShim));
+assert.ok(back.indexOf(previewCommandShim) < back.indexOf('class="migaku-typeselect"'));
 assert.doesNotMatch(back, /{{[^{}]+}}/);
 
 console.log("✓ card preview renders the shipped front and back");

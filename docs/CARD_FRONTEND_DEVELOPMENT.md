@@ -104,6 +104,10 @@ The selected fixture supplies note fields. The lightweight renderer resolves the
 
 The rendered card is placed inside a small Anki-like document containing `main.container`, `#qa`, `#content`, and the appropriate body classes for the selected theme.
 
+The document also provides a preview-only no-op `pycmd` bridge. This keeps
+Anki-gated presentation such as the back-side card-type switcher visible without
+sending commands or changing card data.
+
 ## Fixtures
 
 Fixtures are defined in `dev/card-preview/fixtures.js`.
