@@ -42,7 +42,8 @@ const replaceLegacyFragment = (source, search, replacement) =>
   source.includes(search) ? source.replace(search, replacement) : source;
 
 const getTextStyleVariant = (name) => {
-  if (!Object.hasOwn(textStyleVariants, name)) throw new Error(`Unknown text style variant: ${name}`);
+  if (!Object.prototype.hasOwnProperty.call(textStyleVariants, name))
+    throw new Error(`Unknown text style variant: ${name}`);
   return textStyleVariants[name];
 };
 
