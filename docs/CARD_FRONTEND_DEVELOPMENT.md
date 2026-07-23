@@ -209,7 +209,8 @@ The preview server derives its language options and watched card directories fro
 ### The preview does not reload
 
 - Confirm the server process is still running.
-- Confirm the edited file is under `src/languages/<language>/card/` or `dev/card-preview/`.
+- Confirm the edited file is under `src/card-styles/`,
+  `src/languages/<language>/card/`, or `dev/card-preview/`.
 - Refresh the lab page once to recreate the event stream.
 - Check whether another process is replacing files through a path outside the watched directory.
 

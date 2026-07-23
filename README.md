@@ -145,7 +145,8 @@ fixtures change.
 
 Run `npm test` before committing. The suite verifies generated stylesheet
 freshness and protects every shipped `front.html`, `back.html`, and `support.html`
-file by hash. CSS is intentionally unrestricted. A contract failure means
+file by hash. Shared cosmetic CSS is intentionally unrestricted, while
+behavior-adjacent `support.css` still requires care. A contract failure means
 functional card markup or support JavaScript changed and must not be accepted as
 part of a cosmetic-only change.
 

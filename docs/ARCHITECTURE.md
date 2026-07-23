@@ -34,7 +34,8 @@ Every supported language owns a card asset directory:
 src/languages/<language>/card/
 ├── front.html
 ├── back.html
-├── styles.css
+├── fonts.css
+├── styles.css (generated)
 ├── support.html
 ├── support.css
 └── media/
@@ -43,7 +44,13 @@ src/languages/<language>/card/
 The production flow is:
 
 ```text
-language card source files
+src/card-styles/global.css + language fonts.css
+          |
+          v
+tools/card-styles.js
+          |
+          v
+generated language styles.css + language card source files
           |
           v
 src/note_type_mgr.py
@@ -71,7 +78,9 @@ Card functionality is distributed across several asset types:
 | `front.html` | Front-side field selection, conditionals, structure, and classes | Protected; do not change |
 | `back.html` | Back-side field selection, conditionals, structure, and classes | Protected; do not change |
 | `support.html` | Language-specific browser-side behavior | Protected; do not change |
-| `styles.css` | Main layout and visual presentation | Freely editable |
+| `src/card-styles/global.css` | Shared layout and visual presentation | Primary cosmetic surface |
+| `fonts.css` | Language-specific font declarations | Edit only for font configuration |
+| `styles.css` | Generated production note-type CSS | Do not edit directly |
 | `support.css` | Presentation required by language support features | Editable with extra care |
 | `media/` | Fonts, logos, images, and other referenced card assets | Filenames and references are contractual |
 
@@ -137,12 +146,13 @@ Production code must not depend on `dev/` or `tests/`. This keeps the preview la
 
 ## Regression layers
 
-The card workflow is protected at four seams:
+The card workflow is protected at five seams:
 
-1. Template engine behavior: field substitution and nested conditionals.
-2. Template contract: all shipped functional HTML files match approved hashes.
-3. Document rendering: real front/back files, CSS, support assets, and fixtures compose successfully.
-4. HTTP workflow: the lab shell and preview route expose valid development states and errors.
+1. Style compilation: every card language has font input, deterministic output, and current generated CSS.
+2. Template engine behavior: field substitution and nested conditionals.
+3. Template contract: all shipped functional HTML files match approved hashes.
+4. Document rendering: real front/back files, CSS, support assets, and fixtures compose successfully.
+5. HTTP workflow: the lab shell, preview route, and live style rebuild expose valid development states and errors.
 
 The existing syntax-parser suite remains part of the same top-level test command.
 
