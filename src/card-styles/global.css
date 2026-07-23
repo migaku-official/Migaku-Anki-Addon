@@ -61,6 +61,7 @@ main.container .migaku-card audio {
 }
 
 .migaku-card {
+  padding: 24px 16px 8px;
   background: #fff;
   border-radius: 24px;
   box-shadow: 0 9px 20px rgba(0 0 90 / 14%), 0 3.76px 8.3555px rgba(0 0 90 / 8.3%), 0 2.0103px 4.4673px rgba(0 0 90 / 5%), 0 1.1269px 2.5043px rgba(0 0 90 / 2.6%), 0 .5985px 1.33px rgba(0 0 90 / .8%);

@@ -45,7 +45,7 @@ assert.match(
   /#content\s*\{[^}]*display: flex;[^}]*flex-direction: column;[^}]*height: calc\(100vh - 200px\);/s,
 );
 assert.match(light, /main\.container \.migaku-card\s*\{[^}]*flex: 1;/s);
-assert.match(light, /\.migaku-card\s*\{[^}]*background: #fff;[^}]*border-radius: 24px;/s);
+assert.match(light, /\.migaku-card\s*\{[^}]*padding: 24px 16px 8px;[^}]*background: #fff;[^}]*border-radius: 24px;/s);
 assert.match(light, /\.dict-form\s*\{[^}]*white-space: nowrap;[^}]*word-break: normal;/s);
 assert.match(
   light,
