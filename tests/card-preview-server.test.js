@@ -35,7 +35,7 @@ const waitFor = (predicate, timeoutMs = 2000) =>
 
 const waitForEvent = (port, eventName, trigger, timeoutMs = 2000) =>
   new Promise((resolve, reject) => {
-    const state = { body: "", settled: false };
+    const state = { body: "", settled: false, triggered: false };
     const timeout = setTimeout(
       () => finish(new Error(`Timed out waiting for ${eventName} event`)),
       timeoutMs,
@@ -51,9 +51,12 @@ const waitForEvent = (port, eventName, trigger, timeoutMs = 2000) =>
     const req = http.get({ host: "127.0.0.1", path: "/events", port }, (res) => {
       res.on("data", (chunk) => {
         state.body += chunk.toString("utf8");
+        if (!state.triggered && state.body.includes("event: ready\n")) {
+          state.triggered = true;
+          setTimeout(trigger, 50);
+        }
         if (state.body.includes(`event: ${eventName}\n`)) finish();
       });
-      trigger();
     });
     req.on("error", (error) => !state.settled && finish(error));
   });
