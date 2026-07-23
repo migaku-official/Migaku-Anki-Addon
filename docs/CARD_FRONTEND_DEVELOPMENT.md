@@ -50,6 +50,10 @@ The toolbar changes the preview URL and rerenders the iframe:
 
 Control state is stored in the page query string. A particular combination can therefore be bookmarked or shared with another developer running the lab.
 
+Click non-interactive space inside the rendered card to toggle between front and back. The lab updates the Side control and query string. Links, audio, form controls, syntax words, and popups remain interactive without changing sides.
+
+The toolbar and preview fill the browser viewport without page scrolling. The toolbar stays compact so the card receives the remaining height.
+
 ## What to edit
 
 Shared card styling lives at:
