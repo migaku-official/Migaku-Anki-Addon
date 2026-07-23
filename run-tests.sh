@@ -20,9 +20,9 @@ NODE_VERSION=$(node --version)
 echo "Using Node.js $NODE_VERSION"
 echo ""
 
-# Run syntax parser tests
-echo "Running syntax-parser tests..."
-node tests/syntax-parser.test.js
+# Run the complete test suite
+echo "Running all tests..."
+npm test
 
 # Exit with test result
 if [ $? -eq 0 ]; then

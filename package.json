@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Test suite for Migaku Anki Add-on",
   "scripts": {
-    "test": "node tests/syntax-parser.test.js",
-    "test:watch": "nodemon --watch tests --watch src/languages tests/syntax-parser.test.js"
+    "dev:cards": "node dev/card-preview/server.js",
+    "test": "node tests/card-preview.test.js && node tests/card-template-contract.test.js && node tests/card-document.test.js && node tests/card-preview-server.test.js && node tests/syntax-parser.test.js",
+    "test:watch": "nodemon --watch tests --watch dev/card-preview --watch src/languages --exec \"npm test\""
   },
   "keywords": [
     "anki",

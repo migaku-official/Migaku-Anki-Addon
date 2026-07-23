@@ -116,9 +116,29 @@ This will output debug messages to the console when running Anki from the termin
 
 **Note:** Python changes are loaded directly by Anki - no compilation or build step is needed.
 
+### Developing Card Styles
+
+The Card Front-end Lab renders the shipped note-type templates and styles with realistic fixture content:
+
+```bash
+npm run dev:cards
+```
+
+Open [http://127.0.0.1:4173](http://127.0.0.1:4173). Use the controls to switch between:
+
+- Front and back templates
+- All supported languages
+- Light, Anki dark, and AnkiDroid dark themes
+- Sentence, vocabulary, audio, and stress-test content
+- Wide, tablet, and mobile viewport widths
+
+Edit a language's files under `src/languages/<language>/card/`. The preview reloads automatically whenever card HTML, CSS, support files, or preview fixtures change. It reads those files directly, so there is no separate preview copy to keep synchronized.
+
+Run `npm test` before committing. The card contract regression test protects every shipped `front.html`, `back.html`, and `support.html` file by hash. CSS is intentionally unrestricted. A contract failure means functional card markup or support JavaScript changed and must not be accepted as part of a cosmetic-only change.
+
 ### Running Tests
 
-The repository includes unit tests for syntax parsing functionality across all supported languages.
+The repository includes syntax parsing tests plus card template contract, rendering, and preview-server regression tests.
 
 #### Prerequisites
 
@@ -127,13 +147,11 @@ The repository includes unit tests for syntax parsing functionality across all s
 #### Run Tests Manually
 
 ```bash
-# Simple approach - no installation needed
-node tests/syntax-parser.test.js
-# or
-./run-tests.sh
-
-# Or with npm (optional)
+# Complete test suite
 npm test
+
+# Equivalent shell runner
+./run-tests.sh
 ```
 
 #### Automatic Testing on Git Push
