@@ -33,6 +33,33 @@ const waitFor = (predicate, timeoutMs = 2000) =>
     poll();
   });
 
+const waitForEvent = (port, eventName, trigger, timeoutMs = 2000) =>
+  new Promise((resolve, reject) => {
+    const state = { body: "", settled: false };
+    const timeout = setTimeout(
+      () => finish(new Error(`Timed out waiting for ${eventName} event`)),
+      timeoutMs,
+    );
+    const finish = (error) => {
+      if (state.settled) return;
+      state.settled = true;
+      clearTimeout(timeout);
+      req.destroy();
+      if (error) return reject(error);
+      resolve();
+    };
+    const req = http.get({ host: "127.0.0.1", path: "/events", port }, (res) => {
+      res.on("data", (chunk) => {
+        state.body += chunk.toString("utf8");
+        if (state.body.includes(`event: ${eventName}\n`)) finish();
+      });
+      trigger();
+    });
+    req.on("error", (error) => {
+      if (!state.settled) finish(error);
+    });
+  });
+
 const testLiveStyleRebuild = async () => {
   const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "migaku-card-preview-"));
   const globalStylesDir = path.join(rootDir, "src", "card-styles");
@@ -48,8 +75,12 @@ const testLiveStyleRebuild = async () => {
   const server = createPreviewServer({ rootDir });
   try {
     await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
-    await new Promise((resolve) => setTimeout(resolve, 50));
-    fs.writeFileSync(path.join(globalStylesDir, "global.css"), ".card {\n  color: blue;\n}\n");
+    await waitForEvent(server.address().port, "reload", () =>
+      fs.writeFileSync(
+        path.join(globalStylesDir, "global.css"),
+        ".card {\n  color: blue;\n}\n",
+      ),
+    );
     await waitFor(() =>
       fs
         .readFileSync(path.join(rootDir, "src", "languages", "en", "card", "styles.css"), "utf8")
