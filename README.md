@@ -4,6 +4,11 @@ Note: We renamed the pynput library to magicy in order to avoid Windows Real-tim
 
 ## Docs
 
+Project documentation:
+
+- [Architecture](docs/ARCHITECTURE.md)
+- [Card Front-end Development](docs/CARD_FRONTEND_DEVELOPMENT.md)
+
 Some guidelines to work with this codebase:
 
 For anything that uses the server created by the Migaku-Anki-Addon, the main entrance can be seen as the MigakuConnection object in `migaku_connection/__init__.py`.
@@ -135,6 +140,8 @@ Open [http://127.0.0.1:4173](http://127.0.0.1:4173). Use the controls to switch 
 Edit a language's files under `src/languages/<language>/card/`. The preview reloads automatically whenever card HTML, CSS, support files, or preview fixtures change. It reads those files directly, so there is no separate preview copy to keep synchronized.
 
 Run `npm test` before committing. The card contract regression test protects every shipped `front.html`, `back.html`, and `support.html` file by hash. CSS is intentionally unrestricted. A contract failure means functional card markup or support JavaScript changed and must not be accepted as part of a cosmetic-only change.
+
+See [Card Front-end Development](docs/CARD_FRONTEND_DEVELOPMENT.md) for the complete workflow, safety model, fixtures, troubleshooting, and definition of done.
 
 ### Running Tests
 
