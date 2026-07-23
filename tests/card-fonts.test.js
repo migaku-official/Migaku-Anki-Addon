@@ -1,6 +1,7 @@
 const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
+const { languages } = require("../dev/card-preview/template-contract.json");
 
 const rootDir = path.resolve(__dirname, "..");
 const expectedAssetCounts = {
@@ -17,6 +18,7 @@ const expectedAssetCounts = {
   zh_CN: 8,
   zh_TW: 8,
 };
+assert.deepEqual(Object.keys(expectedAssetCounts).sort(), languages.slice().sort(), "every supported language should have a font contract");
 
 Object.entries(expectedAssetCounts).forEach(([language, assetCount]) => {
   const cardDir = path.join(rootDir, "src", "languages", language, "card");
