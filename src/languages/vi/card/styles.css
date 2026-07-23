@@ -1,6 +1,20 @@
+/* Migaku UI default: Inter */
+/* Imported from packages/ui/src/styles/scss/fonts/inter.scss. */
+
 @font-face {
   font-family: cardFont;
-  src: url('/_NotoSerif.ttf');
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/_InterVariable.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: cardFont;
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/_InterVariable-Italic.woff2') format('woff2');
 }
 
 body {
