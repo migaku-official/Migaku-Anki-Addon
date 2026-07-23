@@ -18,6 +18,13 @@ const dark = renderCardDocument({
   side: "back",
   theme: "dark",
 });
+const ankidroid = renderCardDocument({
+  fixtureName: "syntax",
+  language: "en",
+  rootDir,
+  side: "back",
+  theme: "ankidroid",
+});
 
 assert.match(light, /\.migaku-header\s*\{\s*display: none;/);
 assert.match(
@@ -49,6 +56,20 @@ assert.match(dark, /\.nightMode main\.container\s*\{[^}]*background: #0a002a;/s)
 assert.match(
   dark,
   /\.nightMode \.migaku-card\s*\{[^}]*background: #202047;[^}]*box-shadow: 0 9px 20px rgb\(0 0 0 \/ 18%\), 0 3\.76px 8\.3556px rgb\(0 0 0 \/ 14\.4%\), 0 2\.0103px 4\.4673px rgb\(0 0 0 \/ 8\.11%\), 0 1\.127px 2\.5043px rgb\(0 0 0 \/ 3\.63%\), 0 \.5985px 1\.33px rgb\(0 0 0 \/ 2\.8%\);/s,
+);
+
+assert.match(ankidroid, /class="card ankidroid_dark_mode"/);
+assert.match(
+  ankidroid,
+  /\.ankidroid_dark_mode\.card,\s*\.nightMode\.card\s*\{[^}]*color: #fff;/s,
+);
+assert.match(
+  ankidroid,
+  /\.ankidroid_dark_mode main\.container,\s*\.nightMode main\.container\s*\{[^}]*background: #0a002a;/s,
+);
+assert.match(
+  ankidroid,
+  /\.ankidroid_dark_mode \.migaku-card,\s*\.nightMode \.migaku-card\s*\{[^}]*background: #202047;/s,
 );
 
 console.log("✓ card cosmetic contract");
