@@ -31,7 +31,7 @@ const getFontFaces = ({ family, source }) => {
   const faces = stripComments(fs.readFileSync(sourcePath, "utf8")).match(/@font-face\s*\{[\s\S]*?\}/g) || [];
   const selectedFaces = faces.filter((face) => face.match(/font-family:\s*['"]?([^;'"]+)['"]?\s*;/)?.[1] === family);
   if (!selectedFaces.length) throw new Error(`No font faces selected from ${source}`);
-  return selectedFaces.map((face) => {
+  const preparedFaces = selectedFaces.map((face) => {
     const sourceUrl = face.match(/https:\/\/migaku-public-data\.migaku\.com\/[^'")?]+\.woff2(?:\?[^'")]+)?/)?.[0];
     if (!sourceUrl) throw new Error(`Missing hosted WOFF2 source in ${source}`);
     const assetName = `_migaku-card-${path.basename(source, ".scss")}-${path.basename(new URL(sourceUrl).pathname)}`;
@@ -42,6 +42,7 @@ const getFontFaces = ({ family, source }) => {
       .trim();
     return { assetName, css, sourceUrl };
   });
+  return preparedFaces;
 };
 const validateWoff2 = (data, sourceUrl) => {
   if (data.length < 48 || data.subarray(0, 4).toString("ascii") !== "wOF2") throw new Error(`Invalid WOFF2 header from ${sourceUrl}`);
@@ -116,9 +117,10 @@ const importFonts = async () => {
       const mediaDir = path.join(cardDir, "media");
       fs.mkdirSync(mediaDir, { recursive: true });
       if (fs.existsSync(fontsPath)) {
-        getReferencedAssets(fs.readFileSync(fontsPath, "utf8")).forEach((asset) =>
-          fs.rmSync(path.join(mediaDir, asset), { force: true }),
-        );
+        getReferencedAssets(fs.readFileSync(fontsPath, "utf8")).forEach((asset) => {
+          const assetPath = path.join(mediaDir, asset);
+          if (fs.existsSync(assetPath)) fs.unlinkSync(assetPath);
+        });
       }
       fs.writeFileSync(fontsPath, css);
       new Map(faces.map((face) => [face.assetName, face.sourceUrl])).forEach((sourceUrl, assetName) =>
