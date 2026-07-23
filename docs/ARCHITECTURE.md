@@ -41,10 +41,19 @@ src/languages/<language>/card/
 └── media/
 ```
 
+Font defaults originate in the adjacent `migaku-front-end` component library. `tools/import-card-fonts.js` converts its hosted `@font-face` declarations to offline `cardFont` declarations and stores the WOFF2 assets under each language's `media/` directory.
+
 The production flow is:
 
 ```text
-src/card-styles/global.css + language fonts.css
+migaku-front-end language fonts
+          |
+          v
+tools/import-card-fonts.js
+          |
+          +--> language fonts.css + media/*.woff2
+          |
+src/card-styles/global.css
           |
           v
 tools/card-styles.js

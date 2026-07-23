@@ -88,6 +88,21 @@ npm run build:card-styles
 required to reproduce the old language stylesheets byte-for-byte. It is a
 compatibility input, not the normal place for cosmetic work.
 
+### Font defaults
+
+Card fonts follow the component library defaults:
+
+| Languages | Default |
+| --- | --- |
+| German, English, Spanish, French, Italian, Portuguese, Vietnamese | Inter |
+| Japanese | Noto Sans JP |
+| Korean | LINE Seed KR |
+| Simplified Chinese | Noto Sans SC |
+| Traditional Chinese | Noto Sans TC |
+| Cantonese | Chiron Hei HK WS |
+
+The committed `fonts.css` and `media/*.woff2` files are offline card artifacts. Refresh them from an adjacent component-library checkout with `node tools/import-card-fonts.js ../migaku-front-end`, then run `npm run build:card-styles`. The importer selects the component library's active WOFF2 faces, rewrites them to the `cardFont` family, prefixes Anki media filenames with `_`, and replaces the old language font media.
+
 ## Production parity
 
 `card-document.js` reads these files on every preview request:
@@ -178,6 +193,7 @@ The card-specific suites are:
 | Test | Protected behavior |
 | --- | --- |
 | `tests/card-styles.test.js` | Shared-style compilation, generated output, and freshness detection |
+| `tests/card-fonts.test.js` | Component-library font mapping, offline WOFF2 completeness, media naming, and generated-style parity |
 | `node tools/card-styles.js --check` | Every committed language stylesheet matches its compiler inputs |
 | `tests/card-preview.test.js` | Template fields and nested section semantics |
 | `tests/card-template-contract.test.js` | Approved hashes for all functional card HTML |
@@ -243,6 +259,7 @@ The preview server derives its language options and watched card directories fro
 - Confirm the asset exists in a language's `card/media/` directory.
 - Use the exact filename referenced by the CSS or template.
 - Remember that Anki media filenames are effectively global within a collection.
+- Run `node tests/card-fonts.test.js` to catch missing, remote, stale, or invalid font media.
 - Verify the same asset inside Anki before release.
 
 ### The lab and Anki differ
