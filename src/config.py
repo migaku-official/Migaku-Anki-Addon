@@ -18,13 +18,5 @@ def set(key, value, do_write=False):
         write()
 
 
-if get("fieldMappingDefaultsVersion") is None:
-    set(
-        "fieldMappingDefaultsVersion",
-        2 if get("first_run", True) else 1,
-        do_write=True,
-    )
-
-
 def has(key):
     return key in _config

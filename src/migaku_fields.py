@@ -10,9 +10,7 @@ def infer_migaku_type(
 ) -> Literal[
     "none",
     "sentence",
-    "sentenceNoSyntax",
     "targetWord",
-    "targetWordNoSyntax",
     "translation",
     "sentenceAudio",
     "wordAudio",
@@ -41,11 +39,7 @@ def infer_migaku_type(
     if re.search(
         r"(word|単語|单词|단어|palabra|palavra|mot|wort|palavra)", name, re.IGNORECASE
     ):
-        return (
-            "targetWordNoSyntax"
-            if get("fieldMappingDefaultsVersion", 1) >= 2
-            else "targetWord"
-        )
+        return "targetWord"
 
     if re.search(
         r"(image|画像|图片|이미지|imagen|imagem|image|bild|imagem)", name, re.IGNORECASE
@@ -69,11 +63,7 @@ def infer_migaku_type(
         return "none"
 
     if re.search(r"(sentence|文|句|문장|frase|phrase|satz|frase)", name, re.IGNORECASE):
-        return (
-            "sentenceNoSyntax"
-            if get("fieldMappingDefaultsVersion", 1) >= 2
-            else "sentence"
-        )
+        return "sentence"
 
     if re.search(
         r"(translation|訳|译|번역|traducción|traduction|übersetzung|tradução)",
