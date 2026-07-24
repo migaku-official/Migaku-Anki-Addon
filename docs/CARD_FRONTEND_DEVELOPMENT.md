@@ -56,7 +56,8 @@ Click non-interactive space inside the rendered card to toggle between front and
 
 The toolbar and preview fill the browser viewport without page scrolling. The toolbar stays compact so the card receives the remaining height.
 
-The Fields menu writes one repeated `field` query parameter per enabled field.
+The Fields menu writes a `fields=configured` marker and one repeated `field`
+query parameter per enabled field. The marker preserves the all-fields-off state.
 Unchecking a field supplies an empty value to the shipped template, so real
 Anki conditional rendering can be inspected without editing a fixture.
 

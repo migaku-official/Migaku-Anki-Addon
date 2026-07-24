@@ -173,6 +173,14 @@ const run = async () => {
   assert.match(conditionalPreview.body, /\(language\)\[language,noun/);
   assert.doesNotMatch(conditionalPreview.body, /\(Learning\)\[learn,verb/);
 
+  const emptyPreview = await request(
+    port,
+    "/preview?language=en&side=back&theme=dark&fixture=sentence&fields=configured",
+  );
+  assert.doesNotMatch(emptyPreview.body, /\(language\)\[language,noun/);
+  assert.doesNotMatch(emptyPreview.body, /\(Learning\)\[learn,verb/);
+  assert.doesNotMatch(emptyPreview.body, /fixture-media/);
+
   for (const [asset, contentType] of [
     ["target-word.mp3", "audio/mpeg"],
     ["sentence.m4a", "audio/mp4"],

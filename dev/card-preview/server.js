@@ -191,6 +191,7 @@ const renderAppShell = () => `<!doctype html>
     else syncFixtureFields();
     const getParams = () => {
       const params = new URLSearchParams(Object.fromEntries(controls.map((control) => [control.id, control.value])));
+      params.set("fields", "configured");
       fieldToggles.filter((toggle) => toggle.checked).forEach((toggle) => params.append("field", toggle.dataset.field));
       return params;
     };
@@ -344,7 +345,7 @@ const createPreviewServer = ({ rootDir, watch = true }) => {
     if (url.pathname === "/preview") {
       try {
         const document = renderCardDocument({
-          enabledFields: url.searchParams.has("field")
+          enabledFields: url.searchParams.has("fields") || url.searchParams.has("field")
             ? url.searchParams.getAll("field")
             : undefined,
           fixtureName: url.searchParams.get("fixture") || "sentence",
