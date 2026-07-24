@@ -148,11 +148,15 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-typeselect form::before\s*\{[^}]*content: "Card type";[^}]*font-size: 1rem;[^}]*text-align: left;/s,
+  /\.migaku-typeselect form::before\s*\{[^}]*grid-area: section-title;[^}]*content: "Customise card type";[^}]*font-size: 1rem;[^}]*font-weight: 700;[^}]*text-align: left;/s,
 );
 assert.match(
   light,
-  /\.migaku-card-mode-control\s*\{[^}]*display: flex;[^}]*align-items: center;[^}]*gap: 8px;/s,
+  /\.migaku-card-mode-control\s*\{[^}]*grid-area: card-mode;[^}]*display: grid;[^}]*grid-template-areas:[^}]*"title title title"[^}]*"sentence toggle vocab";[^}]*align-items: center;[^}]*justify-items: start;[^}]*column-gap: 8px;/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-mode-control::before\s*\{[^}]*grid-area: title;[^}]*content: "Which field is on the front";[^}]*font-size: 1rem;/s,
 );
 assert.match(
   light,
@@ -167,7 +171,34 @@ assert.match(
   light,
   /\.migaku-card-mode-control input:checked ~ span\s*\{[^}]*font-weight: 700;/s,
 );
-assert.match(light, /\.migaku-audio-card-control\s*\{[^}]*display: grid;[^}]*justify-items: start;/s);
+assert.match(
+  light,
+  /\.migaku-audio-card-control\s*\{[^}]*display: grid;[^}]*grid-template-areas:[^}]*"title title title"[^}]*"text toggle audio";[^}]*align-items: center;[^}]*justify-items: start;[^}]*column-gap: 8px;/s,
+);
+assert.match(
+  light,
+  /\.migaku-audio-card-control > span::after\s*\{[^}]*content: "Text or audio on the front";[^}]*font-size: 1rem;/s,
+);
+assert.match(
+  light,
+  /\.migaku-audio-card-control::before,\s*\.migaku-audio-card-control::after\s*\{[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.875rem;[^}]*font-weight: 400;/s,
+);
+assert.match(
+  light,
+  /\.migaku-audio-card-control::before\s*\{[^}]*grid-area: text;[^}]*content: "Text";[^}]*font-weight: 700;/s,
+);
+assert.match(
+  light,
+  /\.migaku-audio-card-control::after\s*\{[^}]*grid-area: audio;[^}]*content: "Audio";/s,
+);
+assert.match(
+  light,
+  /\.migaku-audio-card-control:has\(input:checked\)::before\s*\{[^}]*font-weight: 400;/s,
+);
+assert.match(
+  light,
+  /\.migaku-audio-card-control:has\(input:checked\)::after\s*\{[^}]*font-weight: 700;/s,
+);
 assert.match(
   light,
   /\.migaku-typeselect input\[type="checkbox"\]\s*\{[^}]*appearance: none;[^}]*width: 44px;[^}]*height: 24px;[^}]*border-radius: 999px;/s,
@@ -203,7 +234,7 @@ assert.match(
 );
 assert.match(
   dark,
-  /\.ankidroid_dark_mode \.migaku-card-translation,\s*\.nightMode \.migaku-card-translation,\s*\.ankidroid_dark_mode \.migaku-type-toggle,\s*\.nightMode \.migaku-type-toggle,\s*\.ankidroid_dark_mode \.migaku-card-mode-control span,\s*\.nightMode \.migaku-card-mode-control span\s*\{[^}]*color: rgba\(255 255 255 \/ 60%\);/s,
+  /\.ankidroid_dark_mode \.migaku-card-translation,\s*\.nightMode \.migaku-card-translation,\s*\.ankidroid_dark_mode \.migaku-type-toggle,\s*\.nightMode \.migaku-type-toggle,\s*\.ankidroid_dark_mode \.migaku-card-mode-control span,\s*\.nightMode \.migaku-card-mode-control span,\s*\.ankidroid_dark_mode \.migaku-audio-card-control::before,\s*\.nightMode \.migaku-audio-card-control::before,\s*\.ankidroid_dark_mode \.migaku-audio-card-control::after,\s*\.nightMode \.migaku-audio-card-control::after\s*\{[^}]*color: rgba\(255 255 255 \/ 60%\);/s,
 );
 assert.match(
   dark,

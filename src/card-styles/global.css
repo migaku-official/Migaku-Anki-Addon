@@ -332,34 +332,41 @@ main.container .migaku-card audio {
 .migaku-typeselect form {
   display: grid;
   grid-template-areas:
-    "card-title audio"
+    "section-title section-title"
     "card-mode audio";
   grid-template-columns: auto auto;
   align-items: flex-start;
   justify-content: flex-start;
   column-gap: 24px;
-  row-gap: 4px;
+  row-gap: 12px;
 }
 
 .migaku-typeselect form::before {
-  grid-area: card-title;
-  content: "Card type";
+  grid-area: section-title;
+  content: "Customise card type";
   font-size: 1rem;
-  text-align: left;
-}
-
-.migaku-audio-card-control > span {
-  font-size: 1rem;
+  font-weight: 700;
   text-align: left;
 }
 
 .migaku-card-mode-control {
   grid-area: card-mode;
-  display: flex;
+  display: grid;
+  grid-template-areas:
+    "title title title"
+    "sentence toggle vocab";
   align-items: center;
-  gap: 8px;
+  justify-items: start;
+  column-gap: 8px;
+  row-gap: 4px;
   white-space: nowrap;
   cursor: pointer;
+}
+
+.migaku-card-mode-control::before {
+  grid-area: title;
+  content: "Which field is on the front";
+  font-size: 1rem;
 }
 
 .migaku-card-mode-control span {
@@ -372,7 +379,16 @@ main.container .migaku-card audio {
 }
 
 .migaku-card-mode-control span:first-child {
+  grid-area: sentence;
   font-weight: 700;
+}
+
+.migaku-card-mode-control input {
+  grid-area: toggle;
+}
+
+.migaku-card-mode-control span:last-child {
+  grid-area: vocab;
 }
 
 .migaku-card-mode-control:has(input:checked) span:first-child {
@@ -386,9 +402,58 @@ main.container .migaku-card audio {
 .migaku-audio-card-control {
   grid-area: audio;
   display: grid;
+  grid-template-areas:
+    "title title title"
+    "text toggle audio";
+  align-items: center;
   justify-items: start;
-  gap: 4px;
+  column-gap: 8px;
+  row-gap: 4px;
   cursor: pointer;
+}
+
+.migaku-audio-card-control > span {
+  grid-area: title;
+  font-size: 0;
+  text-align: left;
+}
+
+.migaku-audio-card-control > span::after {
+  content: "Text or audio on the front";
+  font-size: 1rem;
+}
+
+.migaku-audio-card-control::before,
+.migaku-audio-card-control::after {
+  display: flex;
+  align-items: center;
+  min-height: 24px;
+  color: rgba(0 0 90 / 60%);
+  font-size: .875rem;
+  font-weight: 400;
+}
+
+.migaku-audio-card-control::before {
+  grid-area: text;
+  content: "Text";
+  font-weight: 700;
+}
+
+.migaku-audio-card-control input {
+  grid-area: toggle;
+}
+
+.migaku-audio-card-control::after {
+  grid-area: audio;
+  content: "Audio";
+}
+
+.migaku-audio-card-control:has(input:checked)::before {
+  font-weight: 400;
+}
+
+.migaku-audio-card-control:has(input:checked)::after {
+  font-weight: 700;
 }
 
 .migaku-typeselect input[type="checkbox"] {
@@ -438,14 +503,14 @@ main.container .migaku-card audio {
 
   .migaku-typeselect form {
     grid-template-areas:
-      "card-title"
+      "section-title"
       "card-mode"
       "audio";
     grid-template-columns: 1fr;
   }
 
   .migaku-audio-card-control {
-    margin-top: 12px;
+    margin-top: 0;
   }
 }
 
@@ -496,7 +561,11 @@ main.container .migaku-card audio {
 .ankidroid_dark_mode .migaku-type-toggle,
 .nightMode .migaku-type-toggle,
 .ankidroid_dark_mode .migaku-card-mode-control span,
-.nightMode .migaku-card-mode-control span {
+.nightMode .migaku-card-mode-control span,
+.ankidroid_dark_mode .migaku-audio-card-control::before,
+.nightMode .migaku-audio-card-control::before,
+.ankidroid_dark_mode .migaku-audio-card-control::after,
+.nightMode .migaku-audio-card-control::after {
   color: rgba(255 255 255 / 60%);
 }
 
