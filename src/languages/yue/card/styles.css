@@ -3894,7 +3894,7 @@ main.container .migaku-card audio {
   margin-top: 10px;
 }
 
-.migaku-card-front .migaku-card-sentence-alternate {
+.migaku-card-sentence-alternate {
   text-align: center;
   width: 100%;
   font-size: 20px;
@@ -3902,7 +3902,7 @@ main.container .migaku-card audio {
   color: rgb(180, 180, 180);
 }
 
-.migaku-card-unknown {
+.migaku-card-front .migaku-card-unknown {
   margin-top: 10px;
   font-size: 46px;
 }

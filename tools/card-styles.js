@@ -56,8 +56,8 @@ const applyLegacyVariant = (source, variant) => {
   const withAlternateSentence = variant.alternateSentence
     ? replaceLegacyFragment(
         source,
-        ".migaku-card-unknown {",
-        `${alternateSentenceStyles}\n.migaku-card-unknown {`,
+        ".migaku-card-front .migaku-card-unknown {",
+        `${alternateSentenceStyles}\n.migaku-card-front .migaku-card-unknown {`,
       )
     : source;
   const withTextStyle = variant.textStyle

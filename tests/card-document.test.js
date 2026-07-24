@@ -1,7 +1,11 @@
 const assert = require("assert");
+const fs = require("fs");
 const path = require("path");
 
 const { renderCardDocument } = require("../dev/card-preview/card-document");
+const contract = require("../dev/card-preview/template-contract.json");
+const { buildLocalizedFixture } = require("../dev/card-preview/fixtures");
+const { renderTemplate } = require("../dev/card-preview/template-engine");
 
 const rootDir = path.resolve(__dirname, "..");
 const front = renderCardDocument({
@@ -53,6 +57,26 @@ assert.match(
   audioFront,
   /class="migaku-card migaku-card-front">[\s\S]*class="migaku-card-content">[\s\S]*<audio controls/,
 );
+
+contract.languages.forEach((language) => {
+  const template = fs.readFileSync(
+    path.join(rootDir, "src", "languages", language, "card", "front.html"),
+    "utf8",
+  );
+  const sentenceFields = buildLocalizedFixture(language, "sentence").fields;
+  const vocabularyFields = buildLocalizedFixture(language, "vocabulary").fields;
+  const sentence = renderTemplate(template, sentenceFields);
+  const vocabulary = renderTemplate(template, vocabularyFields);
+  const emptySentence = renderTemplate(template, { ...sentenceFields, Sentence: "" });
+  const emptyTargetWord = renderTemplate(template, { ...vocabularyFields, "Target Word": "" });
+
+  assert.match(sentence, /class="field migaku-card-sentence"/);
+  assert.doesNotMatch(sentence, /class="field migaku-card-unknown"/);
+  assert.match(vocabulary, /class="field migaku-card-unknown"/);
+  assert.doesNotMatch(vocabulary, /class="field migaku-card-sentence"/);
+  assert.doesNotMatch(emptySentence, /class="field migaku-card-sentence"/);
+  assert.doesNotMatch(emptyTargetWord, /class="field migaku-card-unknown"/);
+});
 
 assert.match(back, /data-preview-side="back"/);
 assert.match(back, /class="card nightMode"/);

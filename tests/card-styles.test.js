@@ -18,7 +18,7 @@ fs.mkdirSync(languageCardDir, { recursive: true });
 fs.writeFileSync(
   path.join(cardStylesDir, "global.css"),
   [
-    ".migaku-card-unknown {",
+    ".migaku-card-front .migaku-card-unknown {",
     "  color: var(--card-color);",
     "}",
     "",
@@ -59,7 +59,7 @@ const expected = [
   "  color: rgb(180, 180, 180);",
   "}",
   "",
-  ".migaku-card-unknown {",
+  ".migaku-card-front .migaku-card-unknown {",
   "  color: var(--card-color);",
   "}",
   "",
