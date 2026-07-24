@@ -156,7 +156,7 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-typeselect form::before\s*\{[^}]*grid-area: section-title;[^}]*content: "Customize front of card";[^}]*font-size: 1rem;[^}]*font-weight: 700;[^}]*text-align: left;/s,
+  /\.migaku-typeselect form::before\s*\{[^}]*grid-area: section-title;[^}]*content: "Customize front of card";[^}]*font-size: 1\.25rem;[^}]*font-weight: 700;[^}]*text-align: left;/s,
 );
 assert.match(
   light,

@@ -162,7 +162,8 @@ translation share the same 16 px vertical margin, and the button label is bold.
 The card-type controls
 also start hidden. The half-opacity `Customize front of card` button remains in place,
 changes its text to `Dismiss`, and reveals a panel beneath it. The panel contains
-two left-aligned on/off controls beneath a `Customize front of card` heading.
+two left-aligned on/off controls beneath a `Customize front of card` heading at
+`1.25rem`.
 `Which field is on the front:` selects Sentence or Vocab, while
 `Text or audio on the front:` selects Text or Audio. Both pairs use
 secondary-text color at `0.875rem`, with the selected side emboldened. The controls
