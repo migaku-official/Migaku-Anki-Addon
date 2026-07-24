@@ -114,7 +114,7 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-card-back \.migaku-card-translation\s*\{[^}]*order: 6;[^}]*font-size: 0\.875rem;[^}]*color: rgba\(0 0 90 \/ 60%\);/s,
+  /\.migaku-card-back \.migaku-card-translation\s*\{[^}]*order: 6;[^}]*margin: 16px auto;[^}]*font-size: 0\.875rem;[^}]*color: rgba\(0 0 90 \/ 60%\);/s,
 );
 assert.match(
   light,
@@ -156,7 +156,16 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-card-mode-control span\s*\{[^}]*display: flex;[^}]*align-items: center;[^}]*font-size: \.875rem;/s,
+  /\.migaku-card-mode-control span\s*\{[^}]*display: flex;[^}]*align-items: center;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.875rem;[^}]*font-weight: 400;/s,
+);
+assert.match(light, /\.migaku-card-mode-control span:first-child\s*\{[^}]*font-weight: 700;/s);
+assert.match(
+  light,
+  /\.migaku-card-mode-control:has\(input:checked\) span:first-child\s*\{[^}]*font-weight: 400;/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-mode-control input:checked ~ span\s*\{[^}]*font-weight: 700;/s,
 );
 assert.match(light, /\.migaku-audio-card-control\s*\{[^}]*display: grid;[^}]*justify-items: start;/s);
 assert.match(
@@ -194,7 +203,7 @@ assert.match(
 );
 assert.match(
   dark,
-  /\.ankidroid_dark_mode \.migaku-card-translation,\s*\.nightMode \.migaku-card-translation,\s*\.ankidroid_dark_mode \.migaku-type-toggle,\s*\.nightMode \.migaku-type-toggle\s*\{[^}]*color: rgba\(255 255 255 \/ 60%\);/s,
+  /\.ankidroid_dark_mode \.migaku-card-translation,\s*\.nightMode \.migaku-card-translation,\s*\.ankidroid_dark_mode \.migaku-type-toggle,\s*\.nightMode \.migaku-type-toggle,\s*\.ankidroid_dark_mode \.migaku-card-mode-control span,\s*\.nightMode \.migaku-card-mode-control span\s*\{[^}]*color: rgba\(255 255 255 \/ 60%\);/s,
 );
 assert.match(
   dark,

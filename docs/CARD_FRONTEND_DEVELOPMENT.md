@@ -157,11 +157,14 @@ Inline `<t>` elements supplied by Anki fields render with bold font weight so
 target-word emphasis survives inside sentences.
 
 Translation starts hidden behind a `See Translation` button. Activating it
-reveals the translation and removes the one-time button. The card-type controls
+reveals the translation and removes the one-time button. The button and revealed
+translation share the same 16 px vertical margin. The card-type controls
 also start hidden. The half-opacity `Change card type` button remains in place,
 changes its text to `Dismiss`, and reveals a panel beneath it. The panel contains
 two left-aligned on/off controls beneath a `Card type` heading: Sentence/Vocab
-selects the card content and Audio card selects its audio variant. The controls
+selects the card content and Audio card selects its audio variant. Sentence and
+Vocab use secondary-text color at `0.875rem`, with the selected side emboldened.
+The controls
 share one row when space permits and stack on narrow cards. Together they
 preserve the four existing `s`, `v`, `as`, and `av` states. Switch changes
 continue to send the existing

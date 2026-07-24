@@ -258,6 +258,7 @@ main.container .migaku-card audio {
 
 .migaku-card-back .migaku-card-translation {
   order: 6;
+  margin: 16px auto;
   font-size: 0.875rem;
   color: rgba(0 0 90 / 60%);
   text-align: center;
@@ -441,7 +442,21 @@ main.container .migaku-card audio {
   display: flex;
   align-items: center;
   min-height: 24px;
+  color: rgba(0 0 90 / 60%);
   font-size: .875rem;
+  font-weight: 400;
+}
+
+.migaku-card-mode-control span:first-child {
+  font-weight: 700;
+}
+
+.migaku-card-mode-control:has(input:checked) span:first-child {
+  font-weight: 400;
+}
+
+.migaku-card-mode-control input:checked ~ span {
+  font-weight: 700;
 }
 
 .migaku-audio-card-control {
@@ -555,7 +570,9 @@ main.container .migaku-card audio {
 .ankidroid_dark_mode .migaku-card-translation,
 .nightMode .migaku-card-translation,
 .ankidroid_dark_mode .migaku-type-toggle,
-.nightMode .migaku-type-toggle {
+.nightMode .migaku-type-toggle,
+.ankidroid_dark_mode .migaku-card-mode-control span,
+.nightMode .migaku-card-mode-control span {
   color: rgba(255 255 255 / 60%);
 }
 
