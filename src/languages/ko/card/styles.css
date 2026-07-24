@@ -29,12 +29,6 @@ main.container {
   background: #ede3ff;
 }
 
-main.container::after {
-  display: block;
-  height: 200px;
-  content: "";
-}
-
 main.container #qa {
   margin-top: 0px;
   height: 100%;
@@ -52,6 +46,10 @@ main.container .migaku-card-shell {
   width: 100%;
   max-width: 760px;
   margin: 0 auto 16px;
+}
+
+main.container .migaku-card-shell:has(> .migaku-type-toggle) {
+  margin-bottom: 96px;
 }
 
 main.container .migaku-card audio {

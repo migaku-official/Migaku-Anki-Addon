@@ -165,10 +165,10 @@ continue to send the existing
 entry point when `pycmd` is absent.
 Both card-type controls are anchored to the production card shell, so their
 absolute position follows the actual card height rather than the preview viewport.
-Because the card-type controls are absolutely positioned, `main.container`
-provides a 200 px in-flow trailing spacer after `#qa`. This preserves the card's
-full-height calculation while giving both the collapsed button and expanded
-switch panel reliable scroll runway beneath them.
+Because the card-type controls are absolutely positioned, a card shell that
+contains the toggle receives a 96 px bottom margin. The margin participates at
+the button's containing block, leaving visible room beneath the collapsed button
+and expanded switch panel without shortening front-only shells.
 The `main.container` → `#qa` → `#content` height chain remains explicit so the
 card fills the available padded layout on both the front and back.
 
