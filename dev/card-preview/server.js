@@ -84,7 +84,7 @@ const renderAppShell = () => `<!doctype html>
       display: grid;
       flex: 0 0 auto;
       place-items: center;
-      margin-left: auto;
+      margin-left: 0;
       width: 28px;
       min-width: 28px;
       padding: 0;
@@ -94,8 +94,10 @@ const renderAppShell = () => `<!doctype html>
     button:hover, button[aria-pressed="true"] { border-color: #6d8dff; background: #31416f; }
     .viewport-picker { display: flex; gap: 4px; }
     .viewport-picker button { min-width: 34px; }
+    .toolbar-actions { margin-left: auto; display: flex; align-items: center; gap: 4px; }
     .field-menu { position: relative; flex: 0 0 auto; }
-    .field-menu summary { min-height: 26px; padding: 5px 8px; border: 1px solid #3b404b; border-radius: 6px; background: #242832; cursor: pointer; list-style: none; }
+    .field-menu summary { display: grid; place-items: center; width: 28px; min-height: 26px; padding: 0; border: 1px solid #3b404b; border-radius: 6px; background: #242832; cursor: pointer; list-style: none; }
+    .field-menu summary svg { width: 16px; height: 16px; }
     .field-menu-content { position: fixed; z-index: 2; top: 38px; right: 44px; display: grid; grid-template-columns: repeat(2, minmax(150px, 1fr)); gap: 4px 12px; padding: 10px; border: 1px solid #3b404b; border-radius: 10px; background: #1a1d24; box-shadow: 0 12px 32px rgb(0 0 0 / 40%); }
     .field-toggle { display: flex; align-items: center; gap: 6px; font-size: 10px; letter-spacing: 0; text-transform: none; }
     .workspace { min-height: 0; overflow: hidden; padding: 8px; background-color: #111318; background-image: radial-gradient(#2d323d 1px, transparent 1px); background-size: 18px 18px; }
@@ -146,11 +148,13 @@ const renderAppShell = () => `<!doctype html>
           <button type="button" data-viewport="390px" aria-label="Mobile">390</button>
         </span>
       </label>
-      <details class="field-menu">
-        <summary>Fields</summary>
-        <div class="field-menu-content">${renderFieldToggles()}</div>
-      </details>
-      <button type="button" id="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false"><i data-lucide="moon"></i></button>
+      <div class="toolbar-actions">
+        <details class="field-menu">
+          <summary aria-label="Choose populated fields" title="Fields"><i data-lucide="list"></i></summary>
+          <div class="field-menu-content">${renderFieldToggles()}</div>
+        </details>
+        <button type="button" id="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false"><i data-lucide="moon"></i></button>
+      </div>
     </header>
     <main class="workspace">
       <div class="device" id="device">

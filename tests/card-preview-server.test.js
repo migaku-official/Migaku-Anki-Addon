@@ -124,9 +124,15 @@ const run = async () => {
     app.body,
     /id="theme-toggle"[^>]*aria-label="Switch to dark mode"[^>]*><i data-lucide="moon"><\/i><\/button>/,
   );
+  assert.match(
+    app.body,
+    /<div class="toolbar-actions">[\s\S]*<summary aria-label="Choose populated fields" title="Fields"><i data-lucide="list"><\/i><\/summary>[\s\S]*id="theme-toggle"/,
+  );
   assert.match(app.body, /<script src="\/vendor\/lucide\.js"><\/script>/);
   assert.match(app.body, /lucide\.createIcons\(\)/);
-  assert.match(app.body, /#theme-toggle\s*\{[^}]*margin-left: auto;[^}]*width: 28px;/s);
+  assert.match(app.body, /\.toolbar-actions\s*\{[^}]*margin-left: auto;[^}]*display: flex;/s);
+  assert.match(app.body, /\.field-menu summary\s*\{[^}]*display: grid;[^}]*width: 28px;[^}]*padding: 0;/s);
+  assert.match(app.body, /#theme-toggle\s*\{[^}]*margin-left: 0;[^}]*width: 28px;/s);
   assert.match(app.body, />Syntax showcase<\/option>/);
   assert.match(app.body, /new EventSource\("\/events"\)/);
   assert.match(app.body, /html, body\s*\{[^}]*height: 100%;[^}]*overflow: hidden;/s);

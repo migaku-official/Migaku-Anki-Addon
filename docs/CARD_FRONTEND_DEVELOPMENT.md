@@ -48,9 +48,9 @@ The toolbar changes the preview URL and rerenders the iframe:
 | Theme | Light, Anki dark, or AnkiDroid dark |
 | Theme toggle | Right-aligned moon/sun icon that switches directly between Light and Anki dark |
 | Viewport | Responsive wide view, 768 px tablet, or 390 px mobile |
-| Fields | Checklist for every standard note field |
+| Fields | Right-aligned list icon that opens a checklist for every standard note field |
 
-Control state is stored in the page query string. A particular combination can therefore be bookmarked or shared with another developer running the lab. The icon-only theme toggle uses the locally installed Lucide package, updates the same Theme control and query parameter, and stays anchored to the right edge of the toolbar. The Theme select retains direct access to AnkiDroid dark mode.
+Control state is stored in the page query string. A particular combination can therefore be bookmarked or shared with another developer running the lab. The icon-only Fields and theme controls use the locally installed Lucide package and stay grouped at the right edge of the toolbar. The theme button updates the same Theme control and query parameter, while the Theme select retains direct access to AnkiDroid dark mode.
 
 Click non-interactive space inside the rendered card to toggle between front and back. The lab updates the Side control and query string. Links, audio, form controls, syntax words, and popups remain interactive without changing sides.
 
