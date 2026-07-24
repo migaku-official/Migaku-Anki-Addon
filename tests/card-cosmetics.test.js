@@ -45,6 +45,10 @@ assert.match(
   /#content\s*\{[^}]*display: flex;[^}]*flex-direction: column;[^}]*height: calc\(100vh - 200px\);/s,
 );
 assert.match(light, /main\.container \.migaku-card\s*\{[^}]*flex: 1;/s);
+assert.match(
+  light,
+  /main\.container \.migaku-card-shell\s*\{[^}]*position: relative;[^}]*flex: 1;[^}]*max-width: 760px;/s,
+);
 assert.match(light, /\.migaku-card\s*\{[^}]*padding: 24px 16px 8px;/s);
 assert.match(light, /\.migaku-card-front \.migaku-card-content\s*\{[^}]*font-size: 32px;/s);
 assert.match(light, /\.migaku-card-front \.migaku-card-unknown\s*\{[^}]*font-size: 46px;/s);
@@ -78,7 +82,7 @@ assert.match(light, /\.migaku-card-back \.migaku-card-definitions\s*\{[^}]*order
 assert.match(light, /\.migaku-card-back \.migaku-card-images\s*\{[^}]*order: 11;[^}]*width: 100%;/s);
 assert.match(
   light,
-  /\.migaku-type-toggle\s*\{[^}]*position: absolute;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*background: transparent;/s,
+  /\.migaku-card-shell > \.migaku-type-toggle\s*\{[^}]*position: absolute;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*background: transparent;/s,
 );
 assert.match(light, /\.migaku-type-toggle:hover\s*\{[^}]*text-decoration: underline;/s);
 assert.match(light, /\.migaku-typeselect h2\s*\{[^}]*text-align: center;[^}]*font-weight: 700;/s);

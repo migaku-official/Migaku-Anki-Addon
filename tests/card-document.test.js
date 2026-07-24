@@ -20,7 +20,7 @@ const createInteractiveElement = (hidden) => {
   };
   return element;
 };
-const executeBackInteractions = (template, fields) => {
+const executeBackInteractions = (template, fields, hasPycmd = true) => {
   const rendered = renderTemplate(template, fields);
   const scripts = [...rendered.matchAll(/<script>([\s\S]*?)<\/script>/g)];
   const translationToggle = createInteractiveElement(false);
@@ -37,15 +37,18 @@ const executeBackInteractions = (template, fields) => {
   };
   const commands = [];
 
-  vm.runInNewContext(scripts[scripts.length - 1][1], {
+  const context = {
     document: { querySelector: (selector) => elements[selector] },
-    pycmd: (command) => commands.push(command),
-  });
+  };
+  if (hasPycmd) context.pycmd = (command) => commands.push(command);
+  vm.runInNewContext(scripts[scripts.length - 1][1], context);
   const initialType = form.elements.type.value;
   translationToggle.click();
-  typeToggle.click();
-  form.elements.type.value = "av";
-  form.onchange();
+  if (hasPycmd) {
+    typeToggle.click();
+    form.elements.type.value = "av";
+    form.onchange();
+  }
 
   return { commands, initialType, translation, translationToggle, typeSelector, typeToggle };
 };
@@ -151,6 +154,17 @@ contract.languages.forEach((language) => {
   );
   const fields = buildLocalizedFixture(language, "sentence").fields;
   const interactions = executeBackInteractions(template, fields);
+  const vocabularyInteractions = executeBackInteractions(
+    template,
+    buildLocalizedFixture(language, "vocabulary").fields,
+  );
+  const audioFields = buildLocalizedFixture(language, "audio").fields;
+  const audioInteractions = executeBackInteractions(template, audioFields);
+  const audioVocabularyInteractions = executeBackInteractions(template, {
+    ...audioFields,
+    "Is Vocabulary Card": "1",
+  });
+  const noPycmdInteractions = executeBackInteractions(template, fields, false);
   const localizedBack = renderCardDocument({
     fixtureName: "sentence",
     language,
@@ -158,8 +172,20 @@ contract.languages.forEach((language) => {
     side: "back",
     theme: "light",
   });
+  const audioBack = renderCardDocument({
+    fixtureName: "audio",
+    language,
+    rootDir,
+    side: "back",
+    theme: "light",
+  });
   const emptyTranslation = renderTemplate(template, { ...fields, Translation: "" });
+  const emptySentenceVocabulary = renderTemplate(template, {
+    ...buildLocalizedFixture(language, "vocabulary").fields,
+    Sentence: "",
+  });
 
+  assert.match(localizedBack, /class="migaku-card-shell"/);
   assert.match(localizedBack, /class="UiButton migaku-translation-toggle"/);
   assert.match(localizedBack, /id="migaku-card-translation" class="migaku-card-translation" hidden/);
   assert.match(localizedBack, /class="UiButton migaku-type-toggle"/);
@@ -171,14 +197,22 @@ contract.languages.forEach((language) => {
   assert.match(localizedBack, /typeSelector\.hidden = false/);
   assert.match(localizedBack, /typeToggle\.remove\(\)/);
   assert.match(localizedBack, /pycmd\('update_card_type\|'/);
+  assert.match(audioBack, /class="sentence-separator"/);
   assert.doesNotMatch(emptyTranslation, /class="UiButton migaku-translation-toggle"/);
   assert.doesNotMatch(emptyTranslation, /id="migaku-card-translation"/);
+  assert.match(emptySentenceVocabulary, /class="sentence-separator"/);
   assert.strictEqual(interactions.translation.hidden, false);
   assert.strictEqual(interactions.translationToggle.removed, true);
   assert.strictEqual(interactions.typeSelector.hidden, false);
   assert.strictEqual(interactions.typeToggle.removed, true);
   assert.strictEqual(interactions.initialType, "s");
   assert.deepStrictEqual(interactions.commands, ["update_card_type|av"]);
+  assert.strictEqual(vocabularyInteractions.initialType, "v");
+  assert.strictEqual(audioInteractions.initialType, "as");
+  assert.strictEqual(audioVocabularyInteractions.initialType, "av");
+  assert.strictEqual(noPycmdInteractions.typeToggle.hidden, true);
+  assert.strictEqual(noPycmdInteractions.typeSelector.hidden, true);
+  assert.deepStrictEqual(noPycmdInteractions.commands, []);
 });
 
 const syntaxCases = {

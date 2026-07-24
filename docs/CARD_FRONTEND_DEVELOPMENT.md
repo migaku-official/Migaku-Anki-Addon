@@ -131,13 +131,16 @@ sending commands or changing card data.
 On the back, Target Word and Sentence retain distinct semantic containers and
 render at 46 px and 32 px respectively. The visual order is Target Word,
 Sentence, audio controls, translation, divider, definitions and supporting
-content, then images and screenshot.
+content, then images and screenshot. The divider remains present when Sentence
+is empty so vocabulary and audio-vocabulary backs keep the same section boundary.
 
 Translation starts hidden behind a `See Translation` button. Activating it
 reveals the translation and removes the one-time button. The card-type radios
 also start hidden: `Change card type` reveals a titled custom-radio panel, and
 radio changes continue to send the existing `update_card_type` command through
 `pycmd`. The production script hides that entry point when `pycmd` is absent.
+Both card-type controls are anchored to the production card shell, so their
+absolute position follows the actual card height rather than the preview viewport.
 
 ## Fixtures
 

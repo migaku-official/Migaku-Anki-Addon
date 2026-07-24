@@ -131,6 +131,16 @@ main.container .migaku-card {
   flex: 1;
 }
 
+main.container .migaku-card-shell {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
 main.container .migaku-card audio {
   width: 150px;
 }
@@ -382,7 +392,7 @@ main.container .migaku-card audio {
   background: #fff;
 }
 
-.migaku-type-toggle {
+.migaku-card-shell > .migaku-type-toggle {
   position: absolute;
   top: calc(100% + 12px);
   left: 50%;
@@ -395,11 +405,11 @@ main.container .migaku-card audio {
   white-space: nowrap;
 }
 
-.migaku-type-toggle:hover {
+.migaku-card-shell > .migaku-type-toggle:hover {
   text-decoration: underline;
 }
 
-.migaku-typeselect {
+.migaku-card-shell > .migaku-typeselect {
   position: absolute;
   top: calc(100% + 12px);
   left: 50%;
