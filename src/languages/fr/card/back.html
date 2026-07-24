@@ -55,27 +55,16 @@
 <button class="UiButton migaku-type-toggle" type="button" aria-expanded="false" aria-controls="migaku-typeselect">Change card type</button>
 
 <div id="migaku-typeselect" class="migaku-typeselect" hidden>
-    <h2>Change card type</h2>
-    <button class="UiButton migaku-type-close" type="button" aria-label="Close card type selector"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
     <form>
-        <label>
-            <input type="radio" id="type-s" name="type" value="s">
-            Sentence
+        <label class="migaku-card-mode-control">
+            <span>Sentence</span>
+            <input type="checkbox" name="vocabulary" role="switch" aria-label="Use vocabulary card">
+            <span>Vocab</span>
         </label>
 
-        <label>
-            <input type="radio" id="type-v" name="type" value="v">
-            Vocab
-        </label>
-
-        <label>
-            <input type="radio" id="type-as" name="type" value="as">
-            Audio Sentence
-        </label>
-
-        <label>
-            <input type="radio" id="type-av" name="type" value="av">
-            Audio Vocab
+        <label class="migaku-audio-card-control">
+            <span>Audio card</span>
+            <input type="checkbox" name="audio" role="switch" aria-label="Use audio card">
         </label>
     </form>
 </div>
@@ -94,23 +83,24 @@
     const typeSelector = document.querySelector('.migaku-typeselect');
     if (typeof (pycmd) !== "undefined") {
         const form = document.querySelector('.migaku-typeselect form');
+        const vocabularyToggle = form.elements['vocabulary'];
+        const audioToggle = form.elements['audio'];
         const isVocabulary = `{{Is Vocabulary Card}}`.replace(/(<([^>]+)>)/ig, '').length;
         const isAudio = `{{Is Audio Card}}`.replace(/(<([^>]+)>)/ig, '').length;
-        const cardType = `${isAudio ? 'a' : ''}${isVocabulary ? 'v' : 's'}`;
-        form.elements["type"].value = cardType;
-        form.onchange = () => pycmd('update_card_type|' + form.elements['type'].value);
-        const typeClose = document.querySelector('.migaku-type-close');
-        typeToggle.addEventListener('click', () => {
-            typeSelector.hidden = false;
-            typeToggle.hidden = true;
-        });
-        typeClose.addEventListener('click', () => {
-            typeSelector.hidden = true;
-            typeToggle.hidden = false;
-        });
+        vocabularyToggle.checked = Boolean(isVocabulary);
+        audioToggle.checked = Boolean(isAudio);
+        const getCardType = () => (audioToggle.checked ? 'a' : '') + (vocabularyToggle.checked ? 'v' : 's');
+        form.onchange = () => pycmd('update_card_type|' + getCardType());
+        const setSelectorExpanded = (expanded) => {
+            typeSelector.hidden = !expanded;
+            typeToggle.textContent = expanded ? 'Dismiss' : 'Change card type';
+            typeToggle.setAttribute('aria-expanded', String(expanded));
+        };
+        typeToggle.addEventListener('click', () => setSelectorExpanded(typeSelector.hidden));
     }
     else {
         typeToggle.hidden = true;
+        typeSelector.hidden = true;
     }
 </script>
 </div>

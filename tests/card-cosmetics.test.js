@@ -95,12 +95,24 @@ assert.match(
 );
 assert.match(light, /main\.container \.migaku-card-shell\s*\{[^}]*margin: 0 auto 16px;/s);
 assert.match(light, /\.migaku-type-toggle:hover\s*\{[^}]*opacity: 1;[^}]*text-decoration: underline;/s);
-assert.match(light, /\.migaku-typeselect h2\s*\{[^}]*text-align: center;[^}]*font-weight: 400;[^}]*opacity: \.5;/s);
-assert.match(light, /\.migaku-type-close\s*\{[^}]*position: absolute;[^}]*right: 8px;[^}]*opacity: \.5;/s);
-assert.match(light, /\.migaku-type-close:hover\s*\{[^}]*opacity: 1;/s);
 assert.match(
   light,
-  /\.migaku-typeselect input\[type="radio"\]\s*\{[^}]*appearance: none;[^}]*border: 2px solid rgba\(0 0 90 \/ 40%\);[^}]*border-radius: 50%;/s,
+  /\.migaku-card-shell > \.migaku-typeselect\s*\{[^}]*top: calc\(100% \+ 38px\);/s,
+);
+assert.match(light, /\.migaku-typeselect form\s*\{[^}]*display: flex;[^}]*flex-wrap: nowrap;[^}]*gap: 24px;/s);
+assert.match(light, /\.migaku-card-mode-control\s*\{[^}]*display: flex;[^}]*gap: 8px;/s);
+assert.match(light, /\.migaku-audio-card-control\s*\{[^}]*display: grid;[^}]*justify-items: center;/s);
+assert.match(
+  light,
+  /\.migaku-typeselect input\[type="checkbox"\]\s*\{[^}]*appearance: none;[^}]*width: 44px;[^}]*height: 24px;[^}]*border-radius: 999px;/s,
+);
+assert.match(
+  light,
+  /\.migaku-typeselect input\[type="checkbox"\]:checked::before\s*\{[^}]*transform: translateX\(20px\);/s,
+);
+assert.match(
+  light,
+  /@media only screen and \(max-width: 520px\)\s*\{[^}]*\.migaku-typeselect form\s*\{[^}]*flex-direction: column;/s,
 );
 assert.doesNotMatch(light, /\.migaku-typeselect\s*\{[^}]*border-radius: 10px;/s);
 assert.match(light, /\.dict-form\s*\{[^}]*white-space: nowrap;[^}]*word-break: normal;/s);
@@ -121,7 +133,11 @@ assert.match(
 );
 assert.match(
   dark,
-  /\.ankidroid_dark_mode \.migaku-card-translation,\s*\.nightMode \.migaku-card-translation,\s*\.ankidroid_dark_mode \.migaku-type-toggle,\s*\.nightMode \.migaku-type-toggle,[^{]+\.nightMode \.migaku-type-close\s*\{[^}]*color: rgba\(255 255 255 \/ 60%\);/s,
+  /\.ankidroid_dark_mode \.migaku-card-translation,\s*\.nightMode \.migaku-card-translation,\s*\.ankidroid_dark_mode \.migaku-type-toggle,\s*\.nightMode \.migaku-type-toggle\s*\{[^}]*color: rgba\(255 255 255 \/ 60%\);/s,
+);
+assert.match(
+  dark,
+  /\.ankidroid_dark_mode \.migaku-typeselect input\[type="checkbox"\],\s*\.nightMode \.migaku-typeselect input\[type="checkbox"\]\s*\{[^}]*background: rgba\(255 255 255 \/ 19%\);/s,
 );
 assert.match(
   dark,

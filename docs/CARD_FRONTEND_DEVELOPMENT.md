@@ -143,11 +143,14 @@ Inline `<t>` elements supplied by Anki fields render with bold font weight so
 target-word emphasis survives inside sentences.
 
 Translation starts hidden behind a `See Translation` button. Activating it
-reveals the translation and removes the one-time button. The card-type radios
-also start hidden: the half-opacity `Change card type` title reveals a titled
-custom-radio panel in the same visual position. Its Lucide X button closes the
-panel and restores the title. Radio changes continue to send the existing `update_card_type` command through
-`pycmd`. The production script hides that entry point when `pycmd` is absent.
+reveals the translation and removes the one-time button. The card-type controls
+also start hidden. The half-opacity `Change card type` button remains in place,
+changes its text to `Dismiss`, and reveals a panel beneath it. The panel contains
+two on/off switches: Sentence/Vocab selects the card content and Audio card
+selects its audio variant. Together they preserve the four existing `s`, `v`,
+`as`, and `av` states. Switch changes continue to send the existing
+`update_card_type` command through `pycmd`. The production script hides that
+entry point when `pycmd` is absent.
 Both card-type controls are anchored to the production card shell, so their
 absolute position follows the actual card height rather than the preview viewport.
 

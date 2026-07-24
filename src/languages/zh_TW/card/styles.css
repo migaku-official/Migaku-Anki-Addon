@@ -403,89 +403,76 @@ main.container .migaku-card audio {
 
 .migaku-card-shell > .migaku-typeselect {
   position: absolute;
-  top: calc(100% + 4px);
+  top: calc(100% + 38px);
   left: 50%;
   transform: translateX(-50%);
   z-index: 2;
-  padding: 4px 16px 16px;
+  padding: 16px;
   text-align: center;
-}
-
-.migaku-typeselect h2 {
-  margin-bottom: 12px;
-  padding: 4px;
-  color: rgba(0 0 90 / 60%);
-  text-align: center;
-  font-size: 1rem;
-  font-weight: 400;
-  opacity: .5;
-}
-
-.migaku-type-close {
-  position: absolute;
-  top: 4px;
-  right: 8px;
-  width: 28px;
-  min-height: 28px;
-  padding: 4px;
-  color: rgba(0 0 90 / 60%);
-  opacity: .5;
-  transition: opacity 120ms ease;
-}
-
-.migaku-type-close:hover {
-  opacity: 1;
-}
-
-.migaku-type-close svg {
-  width: 16px;
-  height: 16px;
-  fill: none;
-  stroke: currentcolor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 2;
 }
 
 .migaku-typeselect form {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px 20px;
+  flex-wrap: nowrap;
+  gap: 24px;
 }
 
-.migaku-typeselect label {
-  display: inline-flex;
+.migaku-card-mode-control {
+  display: flex;
   align-items: center;
   gap: 8px;
   white-space: nowrap;
   cursor: pointer;
 }
 
-.migaku-typeselect input[type="radio"] {
-  appearance: none;
+.migaku-audio-card-control {
   display: grid;
-  place-content: center;
-  width: 18px;
-  height: 18px;
-  border: 2px solid rgba(0 0 90 / 40%);
-  border-radius: 50%;
-  background: transparent;
+  justify-items: center;
+  gap: 4px;
+  cursor: pointer;
 }
 
-.migaku-typeselect input[type="radio"]::before {
-  width: 8px;
-  height: 8px;
+.migaku-typeselect input[type="checkbox"] {
+  appearance: none;
+  position: relative;
+  width: 44px;
+  height: 24px;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(0 0 90 / 18%);
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+
+.migaku-typeselect input[type="checkbox"]::before {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  background: currentcolor;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0 0 90 / 20%);
   content: "";
-  transform: scale(0);
   transition: transform 120ms ease;
 }
 
-.migaku-typeselect input[type="radio"]:checked::before {
-  transform: scale(1);
+.migaku-typeselect input[type="checkbox"]:checked {
+  background: #6750a4;
+}
+
+.migaku-typeselect input[type="checkbox"]:checked::before {
+  transform: translateX(20px);
+}
+
+@media only screen and (max-width: 520px) {
+  .migaku-typeselect form {
+    flex-direction: column;
+    gap: 16px;
+  }
 }
 
 .ankidroid_dark_mode.card,
@@ -533,17 +520,18 @@ main.container .migaku-card audio {
 .ankidroid_dark_mode .migaku-card-translation,
 .nightMode .migaku-card-translation,
 .ankidroid_dark_mode .migaku-type-toggle,
-.nightMode .migaku-type-toggle,
-.ankidroid_dark_mode .migaku-typeselect h2,
-.nightMode .migaku-typeselect h2,
-.ankidroid_dark_mode .migaku-type-close,
-.nightMode .migaku-type-close {
+.nightMode .migaku-type-toggle {
   color: rgba(255 255 255 / 60%);
 }
 
-.ankidroid_dark_mode .migaku-typeselect input[type="radio"],
-.nightMode .migaku-typeselect input[type="radio"] {
-  border-color: rgba(255 255 255 / 40%);
+.ankidroid_dark_mode .migaku-typeselect input[type="checkbox"],
+.nightMode .migaku-typeselect input[type="checkbox"] {
+  background: rgba(255 255 255 / 19%);
+}
+
+.ankidroid_dark_mode .migaku-typeselect input[type="checkbox"]:checked,
+.nightMode .migaku-typeselect input[type="checkbox"]:checked {
+  background: #8c7bd6;
 }
 
 .replay-button {
