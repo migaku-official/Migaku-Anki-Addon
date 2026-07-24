@@ -146,13 +146,17 @@ Translation starts hidden behind a `See Translation` button. Activating it
 reveals the translation and removes the one-time button. The card-type controls
 also start hidden. The half-opacity `Change card type` button remains in place,
 changes its text to `Dismiss`, and reveals a panel beneath it. The panel contains
-two on/off switches: Sentence/Vocab selects the card content and Audio card
-selects its audio variant. Together they preserve the four existing `s`, `v`,
-`as`, and `av` states. Switch changes continue to send the existing
+two left-aligned on/off controls beneath a `Card type` heading: Sentence/Vocab
+selects the card content and Audio card selects its audio variant. The controls
+share one row when space permits and stack on narrow cards. Together they
+preserve the four existing `s`, `v`, `as`, and `av` states. Switch changes
+continue to send the existing
 `update_card_type` command through `pycmd`. The production script hides that
 entry point when `pycmd` is absent.
 Both card-type controls are anchored to the production card shell, so their
 absolute position follows the actual card height rather than the preview viewport.
+The layout retains extra bottom padding beyond the card-height calculation so
+the controls always have scroll runway beneath them.
 
 ## Fixtures
 

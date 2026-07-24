@@ -170,7 +170,7 @@ assert.doesNotMatch(back, /migaku-type-close/);
 assert.match(back, /class="migaku-card-audio-row"/);
 assert.match(
   back,
-  /class="migaku-card-mode-control">[\s\S]*<span>Sentence<\/span>[\s\S]*type="checkbox" name="vocabulary" role="switch"[\s\S]*<span>Vocab<\/span>/,
+  /class="migaku-card-type-control">[\s\S]*<span class="migaku-card-type-title">Card type<\/span>[\s\S]*class="migaku-card-mode-control">[\s\S]*<span>Sentence<\/span>[\s\S]*type="checkbox" name="vocabulary" role="switch"[\s\S]*<span>Vocab<\/span>/,
 );
 assert.match(
   back,

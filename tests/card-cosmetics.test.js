@@ -29,7 +29,7 @@ const ankidroid = renderCardDocument({
 assert.match(light, /\.migaku-header\s*\{\s*display: none;/);
 assert.match(
   light,
-  /main\.container\s*\{[^}]*padding: 80px 16px 120px;[^}]*background: #ede3ff;/s,
+  /main\.container\s*\{[^}]*padding: 80px 16px 240px;[^}]*background: #ede3ff;/s,
 );
 assert.match(light, /\.card\s*\{[^}]*color: rgb\(0, 0, 90\);/s);
 assert.match(
@@ -99,9 +99,31 @@ assert.match(
   light,
   /\.migaku-card-shell > \.migaku-typeselect\s*\{[^}]*top: calc\(100% \+ 38px\);/s,
 );
-assert.match(light, /\.migaku-typeselect form\s*\{[^}]*display: flex;[^}]*flex-wrap: nowrap;[^}]*gap: 24px;/s);
-assert.match(light, /\.migaku-card-mode-control\s*\{[^}]*display: flex;[^}]*gap: 8px;/s);
-assert.match(light, /\.migaku-audio-card-control\s*\{[^}]*display: grid;[^}]*justify-items: center;/s);
+assert.match(
+  light,
+  /\.migaku-card-shell > \.migaku-typeselect\s*\{[^}]*text-align: left;/s,
+);
+assert.match(
+  light,
+  /\.migaku-typeselect form\s*\{[^}]*display: flex;[^}]*justify-content: flex-start;[^}]*flex-wrap: nowrap;[^}]*gap: 24px;/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-type-control\s*\{[^}]*display: grid;[^}]*justify-items: start;/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-type-title\s*\{[^}]*font-size: 1rem;[^}]*text-align: left;/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-mode-control\s*\{[^}]*display: flex;[^}]*align-items: center;[^}]*gap: 8px;/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-mode-control span\s*\{[^}]*display: flex;[^}]*align-items: center;[^}]*font-size: \.875rem;/s,
+);
+assert.match(light, /\.migaku-audio-card-control\s*\{[^}]*display: grid;[^}]*justify-items: start;/s);
 assert.match(
   light,
   /\.migaku-typeselect input\[type="checkbox"\]\s*\{[^}]*appearance: none;[^}]*width: 44px;[^}]*height: 24px;[^}]*border-radius: 999px;/s,
@@ -112,7 +134,7 @@ assert.match(
 );
 assert.match(
   light,
-  /@media only screen and \(max-width: 520px\)\s*\{[^}]*\.migaku-typeselect form\s*\{[^}]*flex-direction: column;/s,
+  /@media only screen and \(max-width: 520px\)\s*\{[^}]*\.migaku-typeselect form\s*\{[^}]*align-items: flex-start;[^}]*flex-direction: column;/s,
 );
 assert.doesNotMatch(light, /\.migaku-typeselect\s*\{[^}]*border-radius: 10px;/s);
 assert.match(light, /\.dict-form\s*\{[^}]*white-space: nowrap;[^}]*word-break: normal;/s);
