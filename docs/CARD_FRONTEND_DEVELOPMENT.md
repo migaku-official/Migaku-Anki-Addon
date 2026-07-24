@@ -164,9 +164,10 @@ continue to send the existing
 `update_card_type` command through `pycmd`. The production script hides that
 entry point when `pycmd` is absent.
 The back card shell is one normal flex-column layout containing the card,
-card-type trigger, optional switch panel, and a 64 px trailing margin. The
-controls remain in document flow, so collapsed and expanded states contribute
-their real height and always leave visible room beneath the final control.
+card-type trigger, optional switch panel, and 64 px of internal bottom padding.
+The controls remain in document flow, so collapsed and expanded states contribute
+their real height. Internal padding remains part of the scrollable box even when
+an overflowing flex layout would omit a trailing margin.
 Front-only shells retain their independent full-height layout.
 The `main.container` → `#qa` → `#content` height chain remains explicit so the
 card fills the available padded layout on both the front and back.

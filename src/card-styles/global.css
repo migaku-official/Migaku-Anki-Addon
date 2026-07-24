@@ -31,7 +31,7 @@ main.container .migaku-card-shell {
 }
 
 main.container .migaku-card-shell:has(> .migaku-type-toggle) {
-  margin-bottom: 64px;
+  padding-bottom: 64px;
 }
 
 main.container .migaku-card audio {

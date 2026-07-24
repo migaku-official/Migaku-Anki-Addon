@@ -98,7 +98,7 @@ assert.match(light, /main\.container\s*\{[^}]*padding: 80px 16px 120px;/s);
 assert.match(light, /main\.container #qa\s*\{[^}]*height: 100%;/s);
 assert.match(
   light,
-  /main\.container \.migaku-card-shell:has\(> \.migaku-type-toggle\)\s*\{[^}]*margin-bottom: 64px;/s,
+  /main\.container \.migaku-card-shell:has\(> \.migaku-type-toggle\)\s*\{[^}]*padding-bottom: 64px;/s,
 );
 assert.match(light, /#content\s*\{[^}]*height: 100%;/s);
 assert.match(light, /\.migaku-type-toggle:hover\s*\{[^}]*opacity: 1;[^}]*text-decoration: underline;/s);
