@@ -26,12 +26,14 @@ const executeBackInteractions = (template, fields, hasPycmd = true) => {
   const translationToggle = createInteractiveElement(false);
   const translation = createInteractiveElement(true);
   const typeToggle = createInteractiveElement(false);
+  const typeClose = createInteractiveElement(false);
   const typeSelector = createInteractiveElement(true);
   const form = { elements: { type: { value: "" } }, onchange: undefined };
   const elements = {
     ".migaku-card-translation": translation,
     ".migaku-translation-toggle": translationToggle,
     ".migaku-type-toggle": typeToggle,
+    ".migaku-type-close": typeClose,
     ".migaku-typeselect": typeSelector,
     ".migaku-typeselect form": form,
   };
@@ -46,8 +48,21 @@ const executeBackInteractions = (template, fields, hasPycmd = true) => {
   translationToggle.click();
   if (hasPycmd) {
     typeToggle.click();
+    const typeSelectorAfterOpen = typeSelector.hidden;
+    const typeToggleAfterOpen = typeToggle.hidden;
     form.elements.type.value = "av";
     form.onchange();
+    typeClose.click();
+    return {
+      commands,
+      initialType,
+      translation,
+      translationToggle,
+      typeSelector,
+      typeSelectorAfterOpen,
+      typeToggle,
+      typeToggleAfterOpen,
+    };
   }
 
   return { commands, initialType, translation, translationToggle, typeSelector, typeToggle };
@@ -141,6 +156,8 @@ assert.match(
 );
 assert.match(back, /id="migaku-typeselect" class="migaku-typeselect" hidden>/);
 assert.match(back, /<h2>Change card type<\/h2>/);
+assert.match(back, /class="UiButton migaku-type-close"[^>]*aria-label="Close card type selector"/);
+assert.match(back, /class="migaku-card-audio-row"/);
 assert.match(back, />\s*Vocab\s*<\/label>/);
 assert.match(back, />\s*Audio Vocab\s*<\/label>/);
 assert.doesNotMatch(back, />\s*Vocabulary\s*<\/label>/);
@@ -195,7 +212,9 @@ contract.languages.forEach((language) => {
   assert.match(localizedBack, /translation\.hidden = false/);
   assert.match(localizedBack, /translationToggle\.remove\(\)/);
   assert.match(localizedBack, /typeSelector\.hidden = false/);
-  assert.match(localizedBack, /typeToggle\.remove\(\)/);
+  assert.match(localizedBack, /typeToggle\.hidden = true/);
+  assert.match(localizedBack, /typeSelector\.hidden = true/);
+  assert.match(localizedBack, /typeToggle\.hidden = false/);
   assert.match(localizedBack, /pycmd\('update_card_type\|'/);
   assert.match(audioBack, /class="sentence-separator"/);
   assert.doesNotMatch(emptyTranslation, /class="UiButton migaku-translation-toggle"/);
@@ -203,8 +222,10 @@ contract.languages.forEach((language) => {
   assert.match(emptySentenceVocabulary, /class="sentence-separator"/);
   assert.strictEqual(interactions.translation.hidden, false);
   assert.strictEqual(interactions.translationToggle.removed, true);
-  assert.strictEqual(interactions.typeSelector.hidden, false);
-  assert.strictEqual(interactions.typeToggle.removed, true);
+  assert.strictEqual(interactions.typeSelectorAfterOpen, false);
+  assert.strictEqual(interactions.typeToggleAfterOpen, true);
+  assert.strictEqual(interactions.typeSelector.hidden, true);
+  assert.strictEqual(interactions.typeToggle.hidden, false);
   assert.strictEqual(interactions.initialType, "s");
   assert.deepStrictEqual(interactions.commands, ["update_card_type|av"]);
   assert.strictEqual(vocabularyInteractions.initialType, "v");

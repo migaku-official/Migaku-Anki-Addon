@@ -119,7 +119,7 @@ global.css ---- language fonts.css ---- legacy-variants.json
           src/languages/*/card/styles.css
                          |
                          v
-card-document.js ---- fixtures.js
+card-document.js ---- fixtures.js ---- dev/card-preview/media/
           |                |
           +------> template-engine.js
                            |
@@ -135,9 +135,9 @@ The components have narrow responsibilities:
 | Component | Responsibility |
 | --- | --- |
 | `template-engine.js` | Resolves Anki-style field substitutions and section conditionals needed by the fixtures |
-| `fixtures.js` | Supplies language-specific syntax profiles plus sentence, vocabulary, audio, syntax, and stress-test field data |
-| `card-document.js` | Reads real card assets and produces a standalone preview document |
-| `server.js` | Compiles stale styles, then serves the lab UI, preview route, media, and live-reload events |
+| `fixtures.js` | Supplies language-specific syntax profiles, fixed regression media references, and sentence, vocabulary, audio, syntax, and stress-test field data |
+| `card-document.js` | Reads real card assets, applies lab field-presence overrides, and produces a standalone preview document |
+| `server.js` | Compiles stale styles, then serves the lab UI, preview route, production media, lab-only fixture media, and live-reload events |
 | `template-contract.js` | Verifies protected template files against approved hashes |
 | `template-contract.json` | Stores the language list and approved template hashes |
 | `tools/card-styles.js` | Produces deterministic per-language `styles.css` files from shared and language inputs |

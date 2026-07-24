@@ -48,12 +48,17 @@ The toolbar changes the preview URL and rerenders the iframe:
 | Theme | Light, Anki dark, or AnkiDroid dark |
 | Theme toggle | Right-aligned moon/sun icon that switches directly between Light and Anki dark |
 | Viewport | Responsive wide view, 768 px tablet, or 390 px mobile |
+| Fields | Checklist for every standard note field |
 
 Control state is stored in the page query string. A particular combination can therefore be bookmarked or shared with another developer running the lab. The icon-only theme toggle uses the locally installed Lucide package, updates the same Theme control and query parameter, and stays anchored to the right edge of the toolbar. The Theme select retains direct access to AnkiDroid dark mode.
 
 Click non-interactive space inside the rendered card to toggle between front and back. The lab updates the Side control and query string. Links, audio, form controls, syntax words, and popups remain interactive without changing sides.
 
 The toolbar and preview fill the browser viewport without page scrolling. The toolbar stays compact so the card receives the remaining height.
+
+The Fields menu writes one repeated `field` query parameter per enabled field.
+Unchecking a field supplies an empty value to the shipped template, so real
+Anki conditional rendering can be inspected without editing a fixture.
 
 ## What to edit
 
@@ -130,7 +135,7 @@ sending commands or changing card data.
 
 On the back, Target Word and Sentence retain distinct semantic containers and
 render at 46 px and 32 px respectively. The visual order is Target Word,
-Sentence, audio controls, translation, divider, definitions and supporting
+Sentence, a dedicated row containing both audio controls, translation, divider, definitions and supporting
 content, then images and screenshot. The divider remains present when Sentence
 is empty so vocabulary and audio-vocabulary backs keep the same section boundary.
 Inline `<t>` elements supplied by Anki fields render with bold font weight so
@@ -138,8 +143,9 @@ target-word emphasis survives inside sentences.
 
 Translation starts hidden behind a `See Translation` button. Activating it
 reveals the translation and removes the one-time button. The card-type radios
-also start hidden: `Change card type` reveals a titled custom-radio panel, and
-radio changes continue to send the existing `update_card_type` command through
+also start hidden: the half-opacity `Change card type` title reveals a titled
+custom-radio panel in the same visual position. Its Lucide X button closes the
+panel and restores the title. Radio changes continue to send the existing `update_card_type` command through
 `pycmd`. The production script hides that entry point when `pycmd` is absent.
 Both card-type controls are anchored to the production card shell, so their
 absolute position follows the actual card height rather than the preview viewport.
@@ -151,6 +157,11 @@ its own annotated sentence, target word, and translation using the formats in
 the [Migaku syntax reference guide](https://magenta-dirigible-0d8.notion.site/Syntax-reference-guide-2a55f4eb6327491ca80792e3a935d07a).
 Changing the lab language therefore exercises that language's parser, coloring,
 and popup metadata rather than reusing English content.
+
+Every fixture also receives the same lab-only target-word audio, sentence audio,
+and Vegeta screenshot from `dev/card-preview/media/`. The preview server exposes
+these through `/fixture-media/`; they are regression assets and are not installed
+as production note-type media.
 
 ### Sentence
 

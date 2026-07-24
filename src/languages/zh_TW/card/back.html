@@ -11,7 +11,10 @@
   <div class="migaku-card-screenshot">{{editable:Screenshot}}</div>
 
   <div class="migaku-card-content">
-    <div class="migaku-card-sentence-audio">{{editable:Sentence Audio}}</div>
+    <div class="migaku-card-audio-row">
+      <div class="migaku-card-sentence-audio">{{editable:Sentence Audio}}</div>
+      <div class="migaku-card-unknown-audio">{{editable:Word Audio}}</div>
+    </div>
     <div class="migaku-card-sentence">
       <div class="field" data-reading="yes" data-reading-type="bopomofo" data-tone-coloring="yes">{{editable:Sentence}}</div>
     </div>
@@ -25,9 +28,6 @@
     </div>
     {{/Alternate Sentence}}
     <hr class="sentence-separator" />
-    <div class="migaku-card-unknown-audio migaku-indented">
-      {{editable:Word Audio}}
-    </div>
     <div class="migaku-card-unknown migaku-indented">
       <div class="field" data-reading="yes" data-reading-type="bopomofo" data-tone-coloring="yes">{{editable:Target Word}}</div>
     </div>
@@ -49,6 +49,7 @@
 
 <div id="migaku-typeselect" class="migaku-typeselect" hidden>
   <h2>Change card type</h2>
+  <button class="UiButton migaku-type-close" type="button" aria-label="Close card type selector"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
   <form>
     <label>
       <input type="radio" id="type-s" name="type" value="s" />
@@ -91,9 +92,14 @@
     const cardType = `${isAudio ? 'a' : ''}${isVocabulary ? 'v' : 's'}`
     form.elements['type'].value = cardType
     form.onchange = () => pycmd('update_card_type|' + form.elements['type'].value)
+    const typeClose = document.querySelector('.migaku-type-close')
     typeToggle.addEventListener('click', () => {
       typeSelector.hidden = false
-      typeToggle.remove()
+      typeToggle.hidden = true
+    })
+    typeClose.addEventListener('click', () => {
+      typeSelector.hidden = true
+      typeToggle.hidden = false
     })
   } else {
     typeToggle.hidden = true

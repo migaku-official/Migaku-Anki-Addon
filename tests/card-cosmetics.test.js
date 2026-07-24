@@ -63,7 +63,7 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-card-back \.migaku-card-sentence-audio,\s*\.migaku-card-back \.migaku-card-unknown-audio\s*\{[^}]*order: 4;[^}]*width: auto;/s,
+  /\.migaku-card-back \.migaku-card-audio-row\s*\{[^}]*order: 4;[^}]*display: flex;[^}]*width: 100%;/s,
 );
 assert.match(
   light,
@@ -82,10 +82,12 @@ assert.match(light, /\.migaku-card-back \.migaku-card-definitions\s*\{[^}]*order
 assert.match(light, /\.migaku-card-back \.migaku-card-images\s*\{[^}]*order: 11;[^}]*width: 100%;/s);
 assert.match(
   light,
-  /\.migaku-card-shell > \.migaku-type-toggle\s*\{[^}]*position: absolute;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*background: transparent;/s,
+  /\.migaku-card-shell > \.migaku-type-toggle\s*\{[^}]*position: absolute;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*background: transparent;[^}]*font-weight: 700;[^}]*opacity: \.5;/s,
 );
-assert.match(light, /\.migaku-type-toggle:hover\s*\{[^}]*text-decoration: underline;/s);
-assert.match(light, /\.migaku-typeselect h2\s*\{[^}]*text-align: center;[^}]*font-weight: 700;/s);
+assert.match(light, /\.migaku-type-toggle:hover\s*\{[^}]*opacity: 1;[^}]*text-decoration: underline;/s);
+assert.match(light, /\.migaku-typeselect h2\s*\{[^}]*text-align: center;[^}]*font-weight: 700;[^}]*opacity: \.5;/s);
+assert.match(light, /\.migaku-type-close\s*\{[^}]*position: absolute;[^}]*right: 8px;[^}]*opacity: \.5;/s);
+assert.match(light, /\.migaku-type-close:hover\s*\{[^}]*opacity: 1;/s);
 assert.match(
   light,
   /\.migaku-typeselect input\[type="radio"\]\s*\{[^}]*appearance: none;[^}]*border: 2px solid rgba\(0 0 90 \/ 40%\);[^}]*border-radius: 50%;/s,
@@ -105,7 +107,7 @@ assert.match(
 );
 assert.match(
   dark,
-  /\.ankidroid_dark_mode \.migaku-card-translation,\s*\.nightMode \.migaku-card-translation,\s*\.ankidroid_dark_mode \.migaku-type-toggle,\s*\.nightMode \.migaku-type-toggle\s*\{[^}]*color: rgba\(255 255 255 \/ 60%\);/s,
+  /\.ankidroid_dark_mode \.migaku-card-translation,\s*\.nightMode \.migaku-card-translation,\s*\.ankidroid_dark_mode \.migaku-type-toggle,\s*\.nightMode \.migaku-type-toggle,[^{]+\.nightMode \.migaku-type-close\s*\{[^}]*color: rgba\(255 255 255 \/ 60%\);/s,
 );
 assert.match(
   dark,
