@@ -138,8 +138,9 @@ Audio fixture fields use Anki-style `[sound:filename]` values. The document
 renderer converts those values into `.replay-button` controls backed by hidden
 fixture audio and preview-only playback wiring. Clicking a replay button starts
 its audio from the beginning; clicking the same button while it is playing
-pauses and resets it. The lab therefore exercises the same audio-button selectors
-as Anki without changing production templates.
+pauses and resets it, then releases button focus so its playback animation stops
+too. The lab therefore exercises the same audio-button selectors as Anki without
+changing production templates.
 
 On the back, Target Word and Sentence retain distinct semantic containers and
 render at 46 px and 32 px respectively. The visual order is Target Word,

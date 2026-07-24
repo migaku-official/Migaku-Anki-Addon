@@ -124,8 +124,10 @@ const previewAudio = {
   },
 };
 const previewAudioButton = {
+  blurCalls: 0,
   nextElementSibling: previewAudio,
   addEventListener: (_, listener) => previewAudioButton.click = listener,
+  blur: () => previewAudioButton.blurCalls += 1,
 };
 
 assert.ok(previewAudioScript);
@@ -140,6 +142,7 @@ previewAudioButton.click();
 assert.strictEqual(previewAudio.currentTime, 0);
 assert.strictEqual(previewAudio.pauseCalls, 1);
 assert.strictEqual(previewAudio.playCalls, 1);
+assert.strictEqual(previewAudioButton.blurCalls, 1);
 
 assert.match(front, /^<!doctype html>/);
 assert.match(front, /data-preview-side="front"/);

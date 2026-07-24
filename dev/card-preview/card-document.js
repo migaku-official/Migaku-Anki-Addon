@@ -34,6 +34,7 @@ document.querySelectorAll("[data-preview-audio-button]").forEach((button) => {
   const stopAudio = () => {
     audio.pause();
     audio.currentTime = 0;
+    button.blur();
   };
   button.addEventListener("click", () => {
     if (!audio.paused) return stopAudio();
