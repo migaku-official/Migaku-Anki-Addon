@@ -5,7 +5,7 @@ body {
 
 main.container {
   margin: 0px;
-  padding: 80px 16px 200px;
+  padding: 80px 16px 120px;
   width: 100%;
   height: 100vh;
   background: #ede3ff;
@@ -31,7 +31,7 @@ main.container .migaku-card-shell {
 }
 
 main.container .migaku-card-shell:has(> .migaku-type-toggle) {
-  margin-bottom: 96px;
+  margin-bottom: 64px;
 }
 
 main.container .migaku-card audio {
@@ -309,13 +309,12 @@ main.container .migaku-card audio {
 }
 
 .migaku-card-shell > .migaku-type-toggle {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
+  position: static;
+  align-self: center;
   min-height: auto;
+  margin: 4px auto 0;
   padding: 4px;
+  transform: none;
   color: rgba(0 0 90 / 60%);
   background: transparent;
   font-size: 1rem;
@@ -331,12 +330,10 @@ main.container .migaku-card audio {
 }
 
 .migaku-card-shell > .migaku-typeselect {
-  position: absolute;
-  top: calc(100% + 38px);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
+  position: static;
+  margin: 8px auto 0;
   padding: 16px;
+  transform: none;
   text-align: left;
 }
 

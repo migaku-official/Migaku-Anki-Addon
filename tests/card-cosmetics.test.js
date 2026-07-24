@@ -29,7 +29,7 @@ const ankidroid = renderCardDocument({
 assert.match(light, /\.migaku-header\s*\{\s*display: none;/);
 assert.match(
   light,
-  /main\.container\s*\{[^}]*padding: 80px 16px 200px;[^}]*background: #ede3ff;/s,
+  /main\.container\s*\{[^}]*padding: 80px 16px 120px;[^}]*background: #ede3ff;/s,
 );
 assert.match(light, /\.card\s*\{[^}]*color: rgb\(0, 0, 90\);/s);
 assert.match(
@@ -91,20 +91,20 @@ assert.match(light, /\.migaku-card-back \.migaku-card-definitions\s*\{[^}]*order
 assert.match(light, /\.migaku-card-back \.migaku-card-images\s*\{[^}]*order: 11;[^}]*width: 100%;/s);
 assert.match(
   light,
-  /\.migaku-card-shell > \.migaku-type-toggle\s*\{[^}]*position: absolute;[^}]*top: calc\(100% \+ 4px\);[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*background: transparent;[^}]*font-weight: 400;[^}]*opacity: \.5;/s,
+  /\.migaku-card-shell > \.migaku-type-toggle\s*\{[^}]*position: static;[^}]*align-self: center;[^}]*margin: 4px auto 0;[^}]*transform: none;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*background: transparent;[^}]*font-weight: 400;[^}]*opacity: \.5;/s,
 );
 assert.match(light, /main\.container \.migaku-card-shell\s*\{[^}]*margin: 0 auto 16px;/s);
-assert.match(light, /main\.container\s*\{[^}]*padding: 80px 16px 200px;/s);
+assert.match(light, /main\.container\s*\{[^}]*padding: 80px 16px 120px;/s);
 assert.match(light, /main\.container #qa\s*\{[^}]*height: 100%;/s);
 assert.match(
   light,
-  /main\.container \.migaku-card-shell:has\(> \.migaku-type-toggle\)\s*\{[^}]*margin-bottom: 96px;/s,
+  /main\.container \.migaku-card-shell:has\(> \.migaku-type-toggle\)\s*\{[^}]*margin-bottom: 64px;/s,
 );
 assert.match(light, /#content\s*\{[^}]*height: 100%;/s);
 assert.match(light, /\.migaku-type-toggle:hover\s*\{[^}]*opacity: 1;[^}]*text-decoration: underline;/s);
 assert.match(
   light,
-  /\.migaku-card-shell > \.migaku-typeselect\s*\{[^}]*top: calc\(100% \+ 38px\);/s,
+  /\.migaku-card-shell > \.migaku-typeselect\s*\{[^}]*position: static;[^}]*margin: 8px auto 0;[^}]*transform: none;/s,
 );
 assert.match(
   light,

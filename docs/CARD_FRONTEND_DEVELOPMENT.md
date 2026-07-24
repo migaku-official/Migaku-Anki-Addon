@@ -163,12 +163,11 @@ preserve the four existing `s`, `v`, `as`, and `av` states. Switch changes
 continue to send the existing
 `update_card_type` command through `pycmd`. The production script hides that
 entry point when `pycmd` is absent.
-Both card-type controls are anchored to the production card shell, so their
-absolute position follows the actual card height rather than the preview viewport.
-Because the card-type controls are absolutely positioned, a card shell that
-contains the toggle receives a 96 px bottom margin. The margin participates at
-the button's containing block, leaving visible room beneath the collapsed button
-and expanded switch panel without shortening front-only shells.
+The back card shell is one normal flex-column layout containing the card,
+card-type trigger, optional switch panel, and a 64 px trailing margin. The
+controls remain in document flow, so collapsed and expanded states contribute
+their real height and always leave visible room beneath the final control.
+Front-only shells retain their independent full-height layout.
 The `main.container` → `#qa` → `#content` height chain remains explicit so the
 card fills the available padded layout on both the front and back.
 
