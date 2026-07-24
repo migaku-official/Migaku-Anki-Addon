@@ -110,7 +110,11 @@ main.container .migaku-card audio {
 
 .migaku-card-back {
   display: flex;
-  flex-direction: column;
+  flex-flow: row wrap;
+  align-content: flex-start;
+  align-items: center;
+  justify-content: center;
+  column-gap: 16px;
 }
 
 .migaku-card-front .migaku-card-content {
@@ -124,14 +128,7 @@ main.container .migaku-card audio {
 }
 
 .migaku-card-back .migaku-card-content {
-  padding: 15px;
-  display: flex;
-  flex-flow: row wrap;
-  align-content: flex-start;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  order: 1;
+  display: contents;
 }
 
 .migaku-indented {
@@ -213,20 +210,9 @@ main.container .migaku-card audio {
   align-self: center;
 }
 
-.migaku-card-screenshot,
-.migaku-card-images {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  align-items: end;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  overflow: hidden;
-  justify-items: center;
-}
-
-.migaku-card-back > .migaku-card-screenshot {
-  order: 2;
+.migaku-card-back .migaku-card-screenshot,
+.migaku-card-back .migaku-card-images {
+  display: contents;
 }
 
 .migaku-card-screenshot br,
@@ -234,30 +220,21 @@ main.container .migaku-card audio {
   display: none;
 }
 
-.migaku-card-images {
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px;
-  margin: auto;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  grid-gap: 5px;
-  grid-template-columns: auto auto auto auto;
+.migaku-card-back .migaku-card-screenshot img {
+  order: 11;
 }
 
-.migaku-card-screenshot img {
-  max-width: 100%;
-  max-height: 365px;
+.migaku-card-back .migaku-card-images img {
+  order: 12;
 }
 
-.migaku-card-images img {
-  max-width: 100%;
-  max-height: 125px;
-}
-
-.migaku-card-screenshot img,
-.migaku-card-images img {
-  width: auto;
-  max-width: min(100%, 450px);
+.migaku-card-back .migaku-card-screenshot img,
+.migaku-card-back .migaku-card-images img {
+  flex: 1 1 300px;
+  width: 100%;
+  max-width: 450px;
+  height: auto;
+  margin-top: 16px;
   border-radius: 16px;
 }
 
@@ -278,11 +255,6 @@ main.container .migaku-card audio {
 
 .migaku-card-back .migaku-card-notes {
   order: 10;
-  width: 100%;
-}
-
-.migaku-card-back .migaku-card-images {
-  order: 11;
   width: 100%;
 }
 
@@ -324,7 +296,7 @@ main.container .migaku-card audio {
 
 .migaku-translation-toggle {
   order: 5;
-  margin: 8px auto;
+  margin: 16px auto;
   background: #fff;
 }
 
@@ -440,6 +412,16 @@ main.container .migaku-card audio {
 }
 
 @media only screen and (max-width: 520px) {
+  .migaku-card-front .migaku-card-unknown,
+  .migaku-card-back .migaku-card-unknown {
+    font-size: 40px;
+  }
+
+  .migaku-card-front .migaku-card-sentence,
+  .migaku-card-back .migaku-card-sentence {
+    font-size: 28px;
+  }
+
   .migaku-typeselect form {
     grid-template-areas:
       "card-title"

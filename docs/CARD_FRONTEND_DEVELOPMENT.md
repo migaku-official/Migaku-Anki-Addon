@@ -144,10 +144,14 @@ pauses and resets it, then releases button focus so its playback animation stops
 too. The lab therefore exercises the same audio-button selectors as Anki without
 changing production templates.
 
-On the back, Target Word and Sentence retain distinct semantic containers and
-render at 46 px and 32 px respectively. The visual order is Target Word,
-Sentence, a dedicated row containing both audio controls, translation, divider, definitions and supporting
-content, then images and screenshot. The divider remains present when Sentence
+On the front and back, Target Word and Sentence retain distinct semantic
+containers and render at 46 px and 32 px respectively, stepping down to 40 px
+and 28 px at the 520 px mobile breakpoint. The back visual order is Target Word,
+Sentence, a dedicated
+row containing both audio controls, translation, divider, definitions and
+supporting content, then one centered wrapping media flow. Screenshots render
+before images; both fields use a 16 px gap, 16 px corner radius, and 450 px
+maximum width. The divider remains present when Sentence
 is empty so vocabulary and audio-vocabulary backs keep the same section boundary.
 Inline `<t>` elements supplied by Anki fields render with bold font weight so
 target-word emphasis survives inside sentences.

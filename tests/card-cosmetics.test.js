@@ -76,9 +76,32 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-card-screenshot img,\s*\.migaku-card-images img\s*\{[^}]*max-width: min\(100%, 450px\);[^}]*border-radius: 16px;/s,
+  /\.migaku-card-back\s*\{[^}]*flex-flow: row wrap;[^}]*justify-content: center;[^}]*column-gap: 16px;/s,
 );
-assert.match(light, /\.migaku-translation-toggle\s*\{[^}]*order: 5;[^}]*background: #fff;/s);
+assert.match(
+  light,
+  /\.migaku-card-back \.migaku-card-content\s*\{[^}]*display: contents;/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-back \.migaku-card-screenshot,\s*\.migaku-card-back \.migaku-card-images\s*\{[^}]*display: contents;/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-back \.migaku-card-screenshot img\s*\{[^}]*order: 11;/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-back \.migaku-card-images img\s*\{[^}]*order: 12;/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-back \.migaku-card-screenshot img,\s*\.migaku-card-back \.migaku-card-images img\s*\{[^}]*flex: 1 1 300px;[^}]*width: 100%;[^}]*max-width: 450px;[^}]*margin-top: 16px;[^}]*border-radius: 16px;/s,
+);
+assert.match(
+  light,
+  /\.migaku-translation-toggle\s*\{[^}]*order: 5;[^}]*margin: 16px auto;[^}]*background: #fff;/s,
+);
 assert.match(
   light,
   /\.migaku-card-back \.migaku-card-translation\s*\{[^}]*order: 6;[^}]*font-size: 0\.875rem;[^}]*color: rgba\(0 0 90 \/ 60%\);/s,
@@ -88,7 +111,6 @@ assert.match(
   /\.sentence-separator\s*\{[^}]*order: 7;[^}]*margin: 8px 0;[^}]*border-color: rgba\(0 0 90 \/ 15%\);/s,
 );
 assert.match(light, /\.migaku-card-back \.migaku-card-definitions\s*\{[^}]*order: 8;[^}]*width: 100%;/s);
-assert.match(light, /\.migaku-card-back \.migaku-card-images\s*\{[^}]*order: 11;[^}]*width: 100%;/s);
 assert.match(
   light,
   /\.migaku-card-shell > \.migaku-type-toggle\s*\{[^}]*position: static;[^}]*align-self: center;[^}]*margin: 4px auto 0;[^}]*transform: none;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*background: transparent;[^}]*font-weight: 400;[^}]*opacity: \.5;/s,
@@ -137,7 +159,11 @@ assert.match(
 );
 assert.match(
   light,
-  /@media only screen and \(max-width: 520px\)\s*\{[^}]*\.migaku-typeselect form\s*\{[^}]*grid-template-columns: 1fr;/s,
+  /@media only screen and \(max-width: 520px\)\s*\{[\s\S]*?\.migaku-typeselect form\s*\{[^}]*grid-template-columns: 1fr;/,
+);
+assert.match(
+  light,
+  /@media only screen and \(max-width: 520px\)\s*\{[\s\S]*?\.migaku-card-front \.migaku-card-unknown,\s*\.migaku-card-back \.migaku-card-unknown\s*\{[^}]*font-size: 40px;[\s\S]*?\.migaku-card-front \.migaku-card-sentence,\s*\.migaku-card-back \.migaku-card-sentence\s*\{[^}]*font-size: 28px;/,
 );
 assert.doesNotMatch(light, /\.migaku-typeselect\s*\{[^}]*border-radius: 10px;/s);
 assert.match(light, /\.dict-form\s*\{[^}]*white-space: nowrap;[^}]*word-break: normal;/s);
