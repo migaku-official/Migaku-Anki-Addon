@@ -15,6 +15,7 @@
     "testing"
   ],
   "devDependencies": {
+    "lucide": "^1.26.0",
     "nodemon": "^3.0.0"
   },
   "engines": {

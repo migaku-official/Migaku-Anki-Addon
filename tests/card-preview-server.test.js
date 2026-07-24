@@ -105,7 +105,13 @@ const run = async () => {
   assert.strictEqual(app.statusCode, 200);
   assert.match(app.body, /Card Front-end Lab/);
   assert.match(app.body, /id="language"/);
-  assert.match(app.body, /id="theme-toggle"/);
+  assert.match(
+    app.body,
+    /id="theme-toggle"[^>]*aria-label="Switch to dark mode"[^>]*><i data-lucide="moon"><\/i><\/button>/,
+  );
+  assert.match(app.body, /<script src="\/vendor\/lucide\.js"><\/script>/);
+  assert.match(app.body, /lucide\.createIcons\(\)/);
+  assert.match(app.body, /#theme-toggle\s*\{[^}]*margin-left: auto;[^}]*width: 28px;/s);
   assert.match(app.body, />Syntax showcase<\/option>/);
   assert.match(app.body, /new EventSource\("\/events"\)/);
   assert.match(app.body, /html, body\s*\{[^}]*height: 100%;[^}]*overflow: hidden;/s);
@@ -128,6 +134,10 @@ const run = async () => {
   assert.strictEqual(preview.statusCode, 200);
   assert.match(preview.body, /data-preview-side="back"/);
   assert.match(preview.body, /Eine Sprache zu lernen/);
+
+  const lucide = await request(port, "/vendor/lucide.js");
+  assert.strictEqual(lucide.statusCode, 200);
+  assert.match(lucide.body, /createIcons/);
 
   const invalid = await request(
     port,

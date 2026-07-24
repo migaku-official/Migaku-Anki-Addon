@@ -7,6 +7,8 @@ const contract = require("./template-contract.json");
 const { fixtures } = require("./fixtures");
 const { writeCardStyles } = require("../../tools/card-styles");
 
+const lucidePath = require.resolve("lucide/dist/umd/lucide.js");
+
 const contentTypes = {
   ".gif": "image/gif",
   ".jpeg": "image/jpeg",
@@ -69,7 +71,16 @@ const renderAppShell = () => `<!doctype html>
     }
     select { min-width: 96px; padding: 0 24px 0 7px; }
     #fixture { min-width: 132px; }
-    #theme-toggle { flex: 0 0 auto; min-width: 58px; }
+    #theme-toggle {
+      display: grid;
+      flex: 0 0 auto;
+      place-items: center;
+      margin-left: auto;
+      width: 28px;
+      min-width: 28px;
+      padding: 0;
+    }
+    #theme-toggle svg { width: 16px; height: 16px; }
     button { padding: 0 8px; cursor: pointer; }
     button:hover, button[aria-pressed="true"] { border-color: #6d8dff; background: #31416f; }
     .viewport-picker { display: flex; gap: 4px; }
@@ -115,7 +126,6 @@ const renderAppShell = () => `<!doctype html>
       <label>Theme
         <select id="theme"><option value="light">Light</option><option value="dark">Anki dark</option><option value="ankidroid">AnkiDroid dark</option></select>
       </label>
-      <button type="button" id="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false">Dark</button>
       <label>Viewport
         <span class="viewport-picker">
           <button type="button" data-viewport="100%" aria-label="Responsive desktop" aria-pressed="true">Wide</button>
@@ -123,6 +133,7 @@ const renderAppShell = () => `<!doctype html>
           <button type="button" data-viewport="390px" aria-label="Mobile">390</button>
         </span>
       </label>
+      <button type="button" id="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false"><i data-lucide="moon"></i></button>
     </header>
     <main class="workspace">
       <div class="device" id="device">
@@ -130,6 +141,7 @@ const renderAppShell = () => `<!doctype html>
       </div>
     </main>
   </div>
+  <script src="/vendor/lucide.js"></script>
   <script>
     const controls = ["language", "side", "fixture", "theme"].map((id) => document.getElementById(id));
     const side = document.getElementById("side");
@@ -160,7 +172,8 @@ const renderAppShell = () => `<!doctype html>
       const isDark = theme.value !== "light";
       themeToggle.setAttribute("aria-label", "Switch to " + (isDark ? "light" : "dark") + " mode");
       themeToggle.setAttribute("aria-pressed", String(isDark));
-      themeToggle.textContent = isDark ? "Light" : "Dark";
+      themeToggle.innerHTML = '<i data-lucide="' + (isDark ? "sun" : "moon") + '"></i>';
+      lucide.createIcons();
     };
     const toggleTheme = () => {
       theme.value = theme.value === "light" ? "dark" : "light";
@@ -262,6 +275,7 @@ const createPreviewServer = ({ rootDir, watch = true }) => {
   const server = http.createServer((req, res) => {
     const url = new URL(req.url, "http://localhost");
     if (url.pathname === "/") return send(res, 200, "text/html", renderAppShell());
+    if (url.pathname === "/vendor/lucide.js") return send(res, 200, "text/javascript", fs.readFileSync(lucidePath));
     if (url.pathname === "/events") {
       res.writeHead(200, {
         "Cache-Control": "no-cache",
