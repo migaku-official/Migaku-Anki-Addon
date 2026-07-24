@@ -15,13 +15,8 @@
   ],
   "hashes": {
     "front.html": {
-      "default": "66fc6bbbd07f31785a00a762029c9bd8f6e3b8876faa2cdc82075066ac269b22",
-      "overrides": {
-        "ja": "9329ddd76e732c389217b47d9c8ede62a718c54d85ecedbe8a6573c5e6b3eabc",
-        "yue": "f8d26572ca4d4600620956b9bb8c401cc2c24731bcf3a81a4fbbb67dba0ebec5",
-        "zh_CN": "3ad8d6545abe528133d57c624d0a6dc45e3113b148caaadc23468608d26176f5",
-        "zh_TW": "09ba0729dcfb7c3c88095d029ef9ecfd3642eaac71a3ae9311ed515ddd2a4820"
-      }
+      "default": "fd16b6fa7d6d47d906ca34df707e5764a7b3032ba9bb5ea8520a1a2a882da204",
+      "overrides": {}
     },
     "back.html": {
       "default": "053845ca8ec652d7e7c8127ff4220476550598c7ae05511702dd7b47b31c4ad1",
