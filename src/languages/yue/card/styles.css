@@ -3801,7 +3801,7 @@ body {
 
 main.container {
   margin: 0px;
-  padding: 80px 16px 360px;
+  padding: 80px 16px 200px;
   width: 100%;
   height: 100vh;
   background: #ede3ff;
@@ -3833,7 +3833,7 @@ main.container .migaku-card audio {
   margin: 0px;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 200px);
+  height: 100%;
   position: relative;
 }
 

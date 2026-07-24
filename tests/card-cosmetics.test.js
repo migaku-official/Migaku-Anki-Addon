@@ -29,7 +29,7 @@ const ankidroid = renderCardDocument({
 assert.match(light, /\.migaku-header\s*\{\s*display: none;/);
 assert.match(
   light,
-  /main\.container\s*\{[^}]*padding: 80px 16px 360px;[^}]*background: #ede3ff;/s,
+  /main\.container\s*\{[^}]*padding: 80px 16px 200px;[^}]*background: #ede3ff;/s,
 );
 assert.match(light, /\.card\s*\{[^}]*color: rgb\(0, 0, 90\);/s);
 assert.match(
@@ -46,7 +46,7 @@ assert.match(
 );
 assert.match(
   light,
-  /#content\s*\{[^}]*display: flex;[^}]*flex-direction: column;[^}]*height: calc\(100vh - 200px\);/s,
+  /#content\s*\{[^}]*display: flex;[^}]*flex-direction: column;[^}]*height: 100%;/s,
 );
 assert.match(light, /main\.container \.migaku-card\s*\{[^}]*flex: 1;/s);
 assert.match(
@@ -94,6 +94,8 @@ assert.match(
   /\.migaku-card-shell > \.migaku-type-toggle\s*\{[^}]*position: absolute;[^}]*top: calc\(100% \+ 4px\);[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*background: transparent;[^}]*font-weight: 400;[^}]*opacity: \.5;/s,
 );
 assert.match(light, /main\.container \.migaku-card-shell\s*\{[^}]*margin: 0 auto 16px;/s);
+assert.match(light, /main\.container\s*\{[^}]*padding: 80px 16px 200px;/s);
+assert.match(light, /#content\s*\{[^}]*height: 100%;/s);
 assert.match(light, /\.migaku-type-toggle:hover\s*\{[^}]*opacity: 1;[^}]*text-decoration: underline;/s);
 assert.match(
   light,
