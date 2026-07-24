@@ -19,9 +19,12 @@
         <div class="migaku-card-sentence">
             <div class="field" data-popup="yes" data-furigana="yes" data-pitch-coloring="yes" data-pitch-shapes="yes">{{editable:Sentence}}</div>
         </div>
-        <div class="migaku-card-translation">
-            {{editable:Translation}}
-        </div>
+        {{#Translation}}
+            <button class="UiButton migaku-translation-toggle" type="button" aria-expanded="false" aria-controls="migaku-card-translation">See Translation</button>
+            <div id="migaku-card-translation" class="migaku-card-translation" hidden>
+                {{editable:Translation}}
+            </div>
+        {{/Translation}}
         {{#Sentence}}
             <hr class="sentence-separator">
         {{/Sentence}}
@@ -48,7 +51,10 @@
 </div>
 
 
-<div class="migaku-typeselect">
+<button class="UiButton migaku-type-toggle" type="button" aria-expanded="false" aria-controls="migaku-typeselect">Change card type</button>
+
+<div id="migaku-typeselect" class="migaku-typeselect" hidden>
+    <h2>Change card type</h2>
     <form>
         <label>
             <input type="radio" id="type-s" name="type" value="s">
@@ -57,7 +63,7 @@
 
         <label>
             <input type="radio" id="type-v" name="type" value="v">
-            Vocabulary
+            Vocab
         </label>
 
         <label>
@@ -67,27 +73,36 @@
 
         <label>
             <input type="radio" id="type-av" name="type" value="av">
-            Audio Vocabulary
+            Audio Vocab
         </label>
     </form>
 </div>
 
 <script>
+    const translationToggle = document.querySelector('.migaku-translation-toggle');
+    const translation = document.querySelector('.migaku-card-translation');
+    if (translationToggle && translation) {
+        translationToggle.addEventListener('click', () => {
+            translation.hidden = false;
+            translationToggle.remove();
+        });
+    }
+
+    const typeToggle = document.querySelector('.migaku-type-toggle');
+    const typeSelector = document.querySelector('.migaku-typeselect');
     if (typeof (pycmd) !== "undefined") {
         const form = document.querySelector('.migaku-typeselect form');
-
-        let card_type = `{{Is Vocabulary Card}}`.replace(/(<([^>]+)>)/ig, '').length ? 'v' : 's';
-        if (`{{Is Audio Card}}`.replace(/(<([^>]+)>)/ig, '').length) {
-            card_type = 'a' + card_type;
-        }
-        form.elements["type"].value = card_type;
-
-        form.onchange = function () {
-            const card_type = form.elements['type'].value;
-            pycmd('update_card_type|' + card_type);
-        }
+        const isVocabulary = `{{Is Vocabulary Card}}`.replace(/(<([^>]+)>)/ig, '').length;
+        const isAudio = `{{Is Audio Card}}`.replace(/(<([^>]+)>)/ig, '').length;
+        const cardType = `${isAudio ? 'a' : ''}${isVocabulary ? 'v' : 's'}`;
+        form.elements["type"].value = cardType;
+        form.onchange = () => pycmd('update_card_type|' + form.elements['type'].value);
+        typeToggle.addEventListener('click', () => {
+            typeSelector.hidden = false;
+            typeToggle.remove();
+        });
     }
     else {
-        document.querySelector('.migaku-typeselect').style.display = 'none';
+        typeToggle.hidden = true;
     }
 </script>

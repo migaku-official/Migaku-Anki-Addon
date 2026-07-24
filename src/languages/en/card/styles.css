@@ -48,6 +48,7 @@ main.container .migaku-card audio {
   display: flex;
   flex-direction: column;
   height: calc(100vh - 200px);
+  position: relative;
 }
 
 .card,
@@ -87,6 +88,11 @@ main.container .migaku-card audio {
   padding: 24px 16px 8px;
 }
 
+.migaku-card-back {
+  display: flex;
+  flex-direction: column;
+}
+
 .migaku-card-front .migaku-card-content {
   padding: 20px;
   text-align: center;
@@ -96,9 +102,12 @@ main.container .migaku-card audio {
 .migaku-card-back .migaku-card-content {
   padding: 15px;
   display: flex;
-  flex-direction: column;
-  align-items: start;
+  flex-flow: row wrap;
+  align-content: flex-start;
+  align-items: center;
+  justify-content: center;
   position: relative;
+  order: 1;
 }
 
 .migaku-indented {
@@ -106,9 +115,12 @@ main.container .migaku-card audio {
 }
 
 .sentence-separator {
+  order: 7;
   width: 100%;
-  margin: 15px 0px;
-  border-color: rgb(220, 220, 220);
+  margin: 8px 0;
+  border: 0;
+  border-top: 1px solid;
+  border-color: rgba(0 0 90 / 15%);
 }
 
 .migaku-card-front .migaku-card-sentence {
@@ -123,26 +135,51 @@ main.container .migaku-card audio {
   font-size: 46px;
 }
 
-.migaku-card-translation,
-.migaku-card-examples {
-  color: inherit;
+.migaku-card-back .migaku-card-unknown {
+  order: 1;
+  font-size: 46px;
+  text-align: center;
+  width: 100%;
+  margin-left: 0;
 }
 
-.migaku-card-translation,
-.migaku-card-sentence-audio {
+.migaku-card-back .migaku-card-sentence {
+  order: 2;
+  font-size: 32px;
   text-align: center;
   width: 100%;
 }
 
-.migaku-card-sentence-audio,
-.migaku-card-unknown-audio {
-  display: flex;
-  flex-wrap: wrap;
+.migaku-card-back .migaku-card-sentence-alternate {
+  order: 3;
+  text-align: center;
   width: 100%;
 }
 
-.migaku-card-sentence-audio {
+.migaku-card-examples {
+  color: inherit;
+}
+
+.migaku-card-back .migaku-card-translation {
+  order: 6;
+  font-size: 0.875rem;
+  color: rgba(0 0 90 / 60%);
+  text-align: center;
+  width: 100%;
+}
+
+.migaku-card-back .migaku-card-sentence-audio,
+.migaku-card-back .migaku-card-unknown-audio {
+  order: 4;
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
+  width: auto;
+  margin: 8px 4px;
+}
+
+.migaku-card-back .migaku-translation-toggle {
+  align-self: center;
 }
 
 .migaku-card-screenshot,
@@ -155,6 +192,10 @@ main.container .migaku-card audio {
   border-top-right-radius: 10px;
   overflow: hidden;
   justify-items: center;
+}
+
+.migaku-card-back > .migaku-card-screenshot {
+  order: 2;
 }
 
 .migaku-card-screenshot br,
@@ -187,6 +228,26 @@ main.container .migaku-card audio {
   margin-bottom: 15px;
 }
 
+.migaku-card-back .migaku-card-definitions {
+  order: 8;
+  width: 100%;
+}
+
+.migaku-card-back .migaku-card-examples {
+  order: 9;
+  width: 100%;
+}
+
+.migaku-card-back .migaku-card-notes {
+  order: 10;
+  width: 100%;
+}
+
+.migaku-card-back .migaku-card-images {
+  order: 11;
+  width: 100%;
+}
+
 .migaku-card-sentence,
 .migaku-card-unknown,
 .migaku-card-translation,
@@ -201,16 +262,107 @@ main.container .migaku-card audio {
   word-break: normal;
 }
 
+.UiButton {
+  appearance: none;
+  cursor: pointer;
+  user-select: none;
+  color: inherit;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  position: relative;
+  display: inline-flex;
+  min-height: 34px;
+  background: none;
+  border-width: 0px;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: none;
+  gap: 4px;
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: 20px;
+}
+
+.migaku-translation-toggle {
+  order: 5;
+  margin: 8px auto;
+  background: #fff;
+}
+
+.migaku-type-toggle {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  min-height: auto;
+  padding: 4px;
+  color: rgba(0 0 90 / 60%);
+  background: transparent;
+  white-space: nowrap;
+}
+
+.migaku-type-toggle:hover {
+  text-decoration: underline;
+}
+
 .migaku-typeselect {
-  margin-top: 20px;
-  padding: 10px 5px;
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  padding: 16px;
   text-align: center;
 }
 
+.migaku-typeselect h2 {
+  margin-bottom: 12px;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.migaku-typeselect form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+}
+
 .migaku-typeselect label {
-  padding: 0 7px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   white-space: nowrap;
-  font-family: sans-serif;
+  cursor: pointer;
+}
+
+.migaku-typeselect input[type="radio"] {
+  appearance: none;
+  display: grid;
+  place-content: center;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(0 0 90 / 40%);
+  border-radius: 50%;
+  background: transparent;
+}
+
+.migaku-typeselect input[type="radio"]::before {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentcolor;
+  content: "";
+  transform: scale(0);
+  transition: transform 120ms ease;
+}
+
+.migaku-typeselect input[type="radio"]:checked::before {
+  transform: scale(1);
 }
 
 .ankidroid_dark_mode.card,
@@ -224,8 +376,6 @@ main.container .migaku-card audio {
   background: #0a002a;
 }
 
-.ankidroid_dark_mode .migaku-card-translation,
-.nightMode.card .migaku-card-translation,
 .ankidroid_dark_mode .migaku-card-examples,
 .nightMode.card .migaku-card-examples {
   color: inherit;
@@ -241,7 +391,24 @@ main.container .migaku-card audio {
 
 .ankidroid_dark_mode .sentence-separator,
 .nightMode .sentence-separator {
-  border-color: rgb(175, 175, 175);
+  border-color: rgba(255 255 255 / 19%);
+}
+
+.ankidroid_dark_mode .migaku-translation-toggle,
+.nightMode .migaku-translation-toggle {
+  background: #2b2b60;
+}
+
+.ankidroid_dark_mode .migaku-card-translation,
+.nightMode .migaku-card-translation,
+.ankidroid_dark_mode .migaku-type-toggle,
+.nightMode .migaku-type-toggle {
+  color: rgba(255 255 255 / 60%);
+}
+
+.ankidroid_dark_mode .migaku-typeselect input[type="radio"],
+.nightMode .migaku-typeselect input[type="radio"] {
+  border-color: rgba(255 255 255 / 40%);
 }
 
 .replay-button {

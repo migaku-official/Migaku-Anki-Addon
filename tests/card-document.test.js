@@ -1,6 +1,7 @@
 const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
+const vm = require("vm");
 
 const { renderCardDocument } = require("../dev/card-preview/card-document");
 const contract = require("../dev/card-preview/template-contract.json");
@@ -8,6 +9,46 @@ const { buildLocalizedFixture } = require("../dev/card-preview/fixtures");
 const { renderTemplate } = require("../dev/card-preview/template-engine");
 
 const rootDir = path.resolve(__dirname, "..");
+const createInteractiveElement = (hidden) => {
+  const listeners = {};
+  const element = {
+    hidden,
+    removed: false,
+    addEventListener: (event, listener) => listeners[event] = listener,
+    click: () => listeners.click(),
+    remove: () => element.removed = true,
+  };
+  return element;
+};
+const executeBackInteractions = (template, fields) => {
+  const rendered = renderTemplate(template, fields);
+  const scripts = [...rendered.matchAll(/<script>([\s\S]*?)<\/script>/g)];
+  const translationToggle = createInteractiveElement(false);
+  const translation = createInteractiveElement(true);
+  const typeToggle = createInteractiveElement(false);
+  const typeSelector = createInteractiveElement(true);
+  const form = { elements: { type: { value: "" } }, onchange: undefined };
+  const elements = {
+    ".migaku-card-translation": translation,
+    ".migaku-translation-toggle": translationToggle,
+    ".migaku-type-toggle": typeToggle,
+    ".migaku-typeselect": typeSelector,
+    ".migaku-typeselect form": form,
+  };
+  const commands = [];
+
+  vm.runInNewContext(scripts[scripts.length - 1][1], {
+    document: { querySelector: (selector) => elements[selector] },
+    pycmd: (command) => commands.push(command),
+  });
+  const initialType = form.elements.type.value;
+  translationToggle.click();
+  typeToggle.click();
+  form.elements.type.value = "av";
+  form.onchange();
+
+  return { commands, initialType, translation, translationToggle, typeSelector, typeToggle };
+};
 const front = renderCardDocument({
   fixtureName: "sentence",
   language: "en",
@@ -83,8 +124,62 @@ assert.match(back, /class="card nightMode"/);
 assert.match(back, /Eine Sprache zu lernen öffnet ein weiteres Fenster zur Welt\./);
 assert.match(back, /\.migaku-card/);
 assert.ok(back.includes(previewCommandShim));
+assert.match(back, /class="migaku-card-unknown migaku-indented"/);
+assert.match(back, /class="migaku-card-sentence"/);
+assert.match(
+  back,
+  /<button class="UiButton migaku-translation-toggle" type="button" aria-expanded="false" aria-controls="migaku-card-translation">See Translation<\/button>/,
+);
+assert.match(back, /id="migaku-card-translation" class="migaku-card-translation" hidden>/);
+assert.match(back, /<hr class="sentence-separator">/);
+assert.match(
+  back,
+  /<button class="UiButton migaku-type-toggle" type="button" aria-expanded="false" aria-controls="migaku-typeselect">Change card type<\/button>/,
+);
+assert.match(back, /id="migaku-typeselect" class="migaku-typeselect" hidden>/);
+assert.match(back, /<h2>Change card type<\/h2>/);
+assert.match(back, />\s*Vocab\s*<\/label>/);
+assert.match(back, />\s*Audio Vocab\s*<\/label>/);
+assert.doesNotMatch(back, />\s*Vocabulary\s*<\/label>/);
 assert.ok(back.indexOf(previewCommandShim) < back.indexOf('class="migaku-typeselect"'));
 assert.doesNotMatch(back, /{{[^{}]+}}/);
+
+contract.languages.forEach((language) => {
+  const template = fs.readFileSync(
+    path.join(rootDir, "src", "languages", language, "card", "back.html"),
+    "utf8",
+  );
+  const fields = buildLocalizedFixture(language, "sentence").fields;
+  const interactions = executeBackInteractions(template, fields);
+  const localizedBack = renderCardDocument({
+    fixtureName: "sentence",
+    language,
+    rootDir,
+    side: "back",
+    theme: "light",
+  });
+  const emptyTranslation = renderTemplate(template, { ...fields, Translation: "" });
+
+  assert.match(localizedBack, /class="UiButton migaku-translation-toggle"/);
+  assert.match(localizedBack, /id="migaku-card-translation" class="migaku-card-translation" hidden/);
+  assert.match(localizedBack, /class="UiButton migaku-type-toggle"/);
+  assert.match(localizedBack, /id="migaku-typeselect" class="migaku-typeselect" hidden/);
+  assert.match(localizedBack, />\s*Vocab\s*<\/label>/);
+  assert.match(localizedBack, />\s*Audio Vocab\s*<\/label>/);
+  assert.match(localizedBack, /translation\.hidden = false/);
+  assert.match(localizedBack, /translationToggle\.remove\(\)/);
+  assert.match(localizedBack, /typeSelector\.hidden = false/);
+  assert.match(localizedBack, /typeToggle\.remove\(\)/);
+  assert.match(localizedBack, /pycmd\('update_card_type\|'/);
+  assert.doesNotMatch(emptyTranslation, /class="UiButton migaku-translation-toggle"/);
+  assert.doesNotMatch(emptyTranslation, /id="migaku-card-translation"/);
+  assert.strictEqual(interactions.translation.hidden, false);
+  assert.strictEqual(interactions.translationToggle.removed, true);
+  assert.strictEqual(interactions.typeSelector.hidden, false);
+  assert.strictEqual(interactions.typeToggle.removed, true);
+  assert.strictEqual(interactions.initialType, "s");
+  assert.deepStrictEqual(interactions.commands, ["update_card_type|av"]);
+});
 
 const syntaxCases = {
   de: "(Sprache)[Sprache,nn,f]",

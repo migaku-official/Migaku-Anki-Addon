@@ -34,7 +34,7 @@ assert.match(
 assert.match(light, /\.card\s*\{[^}]*color: rgb\(0, 0, 90\);/s);
 assert.match(
   light,
-  /\.migaku-card-translation,\s*\.migaku-card-examples\s*\{[^}]*color: inherit;/s,
+  /\.migaku-card-examples\s*\{[^}]*color: inherit;/s,
 );
 assert.match(
   light,
@@ -49,6 +49,43 @@ assert.match(light, /\.migaku-card\s*\{[^}]*padding: 24px 16px 8px;/s);
 assert.match(light, /\.migaku-card-front \.migaku-card-content\s*\{[^}]*font-size: 32px;/s);
 assert.match(light, /\.migaku-card-front \.migaku-card-unknown\s*\{[^}]*font-size: 46px;/s);
 assert.match(light, /\.migaku-card-front \.migaku-card-sentence\s*\{[^}]*font-size: 32px;/s);
+assert.match(
+  light,
+  /\.migaku-card-back \.migaku-card-unknown\s*\{[^}]*order: 1;[^}]*font-size: 46px;[^}]*text-align: center;[^}]*width: 100%;[^}]*margin-left: 0;/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-back \.migaku-card-sentence\s*\{[^}]*order: 2;[^}]*font-size: 32px;[^}]*text-align: center;[^}]*width: 100%;/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-back \.migaku-card-sentence-audio,\s*\.migaku-card-back \.migaku-card-unknown-audio\s*\{[^}]*order: 4;[^}]*width: auto;/s,
+);
+assert.match(
+  light,
+  /\.UiButton\s*\{[^}]*appearance: none;[^}]*display: inline-flex;[^}]*min-height: 34px;[^}]*padding: 8px 16px;[^}]*border-radius: 20px;/s,
+);
+assert.match(light, /\.migaku-translation-toggle\s*\{[^}]*order: 5;[^}]*background: #fff;/s);
+assert.match(
+  light,
+  /\.migaku-card-back \.migaku-card-translation\s*\{[^}]*order: 6;[^}]*font-size: 0\.875rem;[^}]*color: rgba\(0 0 90 \/ 60%\);/s,
+);
+assert.match(
+  light,
+  /\.sentence-separator\s*\{[^}]*order: 7;[^}]*margin: 8px 0;[^}]*border-color: rgba\(0 0 90 \/ 15%\);/s,
+);
+assert.match(light, /\.migaku-card-back \.migaku-card-definitions\s*\{[^}]*order: 8;[^}]*width: 100%;/s);
+assert.match(light, /\.migaku-card-back \.migaku-card-images\s*\{[^}]*order: 11;[^}]*width: 100%;/s);
+assert.match(
+  light,
+  /\.migaku-type-toggle\s*\{[^}]*position: absolute;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*background: transparent;/s,
+);
+assert.match(light, /\.migaku-type-toggle:hover\s*\{[^}]*text-decoration: underline;/s);
+assert.match(light, /\.migaku-typeselect h2\s*\{[^}]*text-align: center;[^}]*font-weight: 700;/s);
+assert.match(
+  light,
+  /\.migaku-typeselect input\[type="radio"\]\s*\{[^}]*appearance: none;[^}]*border: 2px solid rgba\(0 0 90 \/ 40%\);[^}]*border-radius: 50%;/s,
+);
 assert.doesNotMatch(light, /\.migaku-typeselect\s*\{[^}]*border-radius: 10px;/s);
 assert.match(light, /\.dict-form\s*\{[^}]*white-space: nowrap;[^}]*word-break: normal;/s);
 assert.match(
@@ -58,6 +95,18 @@ assert.match(
 
 assert.match(dark, /\.nightMode\.card\s*\{[^}]*color: #fff;/s);
 assert.match(dark, /\.nightMode main\.container\s*\{[^}]*background: #0a002a;/s);
+assert.match(
+  dark,
+  /\.ankidroid_dark_mode \.migaku-translation-toggle,\s*\.nightMode \.migaku-translation-toggle\s*\{[^}]*background: #2b2b60;/s,
+);
+assert.match(
+  dark,
+  /\.ankidroid_dark_mode \.migaku-card-translation,\s*\.nightMode \.migaku-card-translation,\s*\.ankidroid_dark_mode \.migaku-type-toggle,\s*\.nightMode \.migaku-type-toggle\s*\{[^}]*color: rgba\(255 255 255 \/ 60%\);/s,
+);
+assert.match(
+  dark,
+  /\.ankidroid_dark_mode \.sentence-separator,\s*\.nightMode \.sentence-separator\s*\{[^}]*border-color: rgba\(255 255 255 \/ 19%\);/s,
+);
 assert.match(
   dark,
   /\.ankidroid_dark_mode \.migaku-card,\s*\.nightMode \.migaku-card,\s*\.ankidroid_dark_mode \.migaku-typeselect,\s*\.nightMode \.migaku-typeselect\s*\{[^}]*background: #202047;[^}]*box-shadow: 0 9px 20px rgb\(0 0 0 \/ 18%\), 0 3\.76px 8\.3556px rgb\(0 0 0 \/ 14\.4%\), 0 2\.0103px 4\.4673px rgb\(0 0 0 \/ 8\.11%\), 0 1\.127px 2\.5043px rgb\(0 0 0 \/ 3\.63%\), 0 \.5985px 1\.33px rgb\(0 0 0 \/ 2\.8%\);/s,

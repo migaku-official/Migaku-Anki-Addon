@@ -95,6 +95,13 @@ Card functionality is distributed across several asset types:
 
 The contract tests hash every shipped `front.html`, `back.html`, and `support.html`. A cosmetic change should never require updating those hashes.
 
+An explicitly authorized behavior change may update a protected template and its
+approved hash. The current back template owns two local disclosure interactions:
+translation is revealed once without changing note data, and the card-type form
+is revealed before its existing `pycmd` update command can run. Both interactions
+remain production template behavior; the development lab only supplies its no-op
+`pycmd` bridge so the same controls can be exercised safely.
+
 `support.css` is CSS, but some of its selectors may control the presentation of interactive language support such as readings or popups. Treat it as behavior-adjacent: visual changes are allowed, but visibility, hit targets, and state selectors must remain functional.
 
 ## Card Front-end Lab
