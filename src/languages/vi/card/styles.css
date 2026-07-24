@@ -432,7 +432,7 @@ main.container .migaku-card audio {
 }
 
 t {
-  font-style: bold;
+  font-weight: bold;
 }
 
 @media only screen and (max-width: 768px) {

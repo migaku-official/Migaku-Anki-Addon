@@ -8,6 +8,7 @@ const {
   compileCardStyles,
   writeCardStyles,
 } = require("../tools/card-styles");
+const contract = require("../dev/card-preview/template-contract.json");
 
 const sandbox = fs.mkdtempSync(path.join(os.tmpdir(), "migaku-card-styles-"));
 const cardStylesDir = path.join(sandbox, "src", "card-styles");
@@ -23,7 +24,7 @@ fs.writeFileSync(
     "}",
     "",
     "t {",
-    "  font-style: bold;",
+    "  font-weight: bold;",
     "}",
     "",
     "@media only screen and (max-width: 450px) {",
@@ -109,6 +110,13 @@ const missingFontsDir = path.join(sandbox, "src", "languages", "fr", "card");
 fs.mkdirSync(missingFontsDir, { recursive: true });
 fs.writeFileSync(path.join(missingFontsDir, "styles.css"), "stale\n");
 assert.throws(() => checkCardStyles(sandbox), /fonts\.css/);
+
+const rootDir = path.resolve(__dirname, "..");
+contract.languages.forEach((language) => {
+  const styles = compileCardStyles(rootDir, language);
+  assert.match(styles, /t\s*\{[^}]*font-weight: (?:bold|[7-9]00);/s);
+  assert.doesNotMatch(styles, /t\s*\{[^}]*font-style: bold;/s);
+});
 
 fs.rmSync(sandbox, { force: true, recursive: true });
 

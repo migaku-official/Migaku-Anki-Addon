@@ -11,7 +11,7 @@ const alternateSentenceStyles = [
   "}",
   "",
 ].join("\n");
-const canonicalTextStyles = "t {\n  font-style: bold;\n}";
+const canonicalTextStyles = "t {\n  font-weight: bold;\n}";
 const textStyleVariants = {
   bold: "t {\n  font-weight: bold;\n}",
   heavyItalic: "t {\n  font-weight: 900;\n  font-style: italic;\n}",
