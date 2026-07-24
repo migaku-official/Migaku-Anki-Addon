@@ -4114,11 +4114,20 @@ main.container .migaku-card audio {
   transform: none;
   color: rgba(0 0 90 / 60%);
   background: transparent;
-  font-size: 1rem;
+  font-size: 0;
   font-weight: 400;
   opacity: .5;
   white-space: nowrap;
   transition: opacity 120ms ease;
+}
+
+.migaku-card-shell > .migaku-type-toggle::after {
+  content: "Customize front of card";
+  font-size: 1rem;
+}
+
+.migaku-card-shell > .migaku-type-toggle[aria-expanded="true"]::after {
+  content: "Dismiss";
 }
 
 .migaku-card-shell > .migaku-type-toggle:hover {
@@ -4142,13 +4151,13 @@ main.container .migaku-card audio {
   grid-template-columns: auto auto;
   align-items: flex-start;
   justify-content: flex-start;
-  column-gap: 24px;
+  column-gap: 40px;
   row-gap: 12px;
 }
 
 .migaku-typeselect form::before {
   grid-area: section-title;
-  content: "Customise card type";
+  content: "Customize front of card";
   font-size: 1rem;
   font-weight: 700;
   text-align: left;
@@ -4170,7 +4179,7 @@ main.container .migaku-card audio {
 
 .migaku-card-mode-control::before {
   grid-area: title;
-  content: "Which field is on the front";
+  content: "Which field is on the front:";
   font-size: 1rem;
 }
 
@@ -4224,7 +4233,7 @@ main.container .migaku-card audio {
 }
 
 .migaku-audio-card-control > span::after {
-  content: "Text or audio on the front";
+  content: "Text or audio on the front:";
   font-size: 1rem;
 }
 
@@ -4315,7 +4324,7 @@ main.container .migaku-card audio {
   }
 
   .migaku-audio-card-control {
-    margin-top: 0;
+    margin-top: 12px;
   }
 }
 

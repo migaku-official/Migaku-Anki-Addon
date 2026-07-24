@@ -160,13 +160,14 @@ Translation starts hidden behind a `See Translation` button. Activating it
 reveals the translation and removes the one-time button. The button and revealed
 translation share the same 16 px vertical margin, and the button label is bold.
 The card-type controls
-also start hidden. The half-opacity `Change card type` button remains in place,
+also start hidden. The half-opacity `Customize front of card` button remains in place,
 changes its text to `Dismiss`, and reveals a panel beneath it. The panel contains
-two left-aligned on/off controls beneath a `Customise card type` heading.
-`Which field is on the front` selects Sentence or Vocab, while
-`Text or audio on the front` selects Text or Audio. Both pairs use
+two left-aligned on/off controls beneath a `Customize front of card` heading.
+`Which field is on the front:` selects Sentence or Vocab, while
+`Text or audio on the front:` selects Text or Audio. Both pairs use
 secondary-text color at `0.875rem`, with the selected side emboldened. The controls
-share one row when space permits and stack on narrow cards. Together they
+share one row with a 40 px gap when space permits and stack with 24 px of
+effective separation on narrow cards. Together they
 preserve the four existing `s`, `v`, `as`, and `av` states. Switch changes
 continue to send the existing
 `update_card_type` command through `pycmd`. The production script hides that

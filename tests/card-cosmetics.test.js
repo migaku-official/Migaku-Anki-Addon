@@ -123,7 +123,15 @@ assert.match(
 assert.match(light, /\.migaku-card-back \.migaku-card-definitions\s*\{[^}]*order: 8;[^}]*width: 100%;/s);
 assert.match(
   light,
-  /\.migaku-card-shell > \.migaku-type-toggle\s*\{[^}]*position: static;[^}]*align-self: center;[^}]*margin: 4px auto 0;[^}]*transform: none;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*background: transparent;[^}]*font-weight: 400;[^}]*opacity: \.5;/s,
+  /\.migaku-card-shell > \.migaku-type-toggle\s*\{[^}]*position: static;[^}]*align-self: center;[^}]*margin: 4px auto 0;[^}]*transform: none;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*background: transparent;[^}]*font-size: 0;[^}]*font-weight: 400;[^}]*opacity: \.5;/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-shell > \.migaku-type-toggle::after\s*\{[^}]*content: "Customize front of card";[^}]*font-size: 1rem;/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-shell > \.migaku-type-toggle\[aria-expanded="true"\]::after\s*\{[^}]*content: "Dismiss";/s,
 );
 assert.match(light, /main\.container \.migaku-card-shell\s*\{[^}]*margin: 0 auto 16px;/s);
 assert.match(light, /main\.container\s*\{[^}]*padding: 80px 16px 120px;/s);
@@ -144,11 +152,11 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-typeselect form\s*\{[^}]*display: grid;[^}]*grid-template-columns: auto auto;[^}]*justify-content: flex-start;[^}]*column-gap: 24px;/s,
+  /\.migaku-typeselect form\s*\{[^}]*display: grid;[^}]*grid-template-columns: auto auto;[^}]*justify-content: flex-start;[^}]*column-gap: 40px;/s,
 );
 assert.match(
   light,
-  /\.migaku-typeselect form::before\s*\{[^}]*grid-area: section-title;[^}]*content: "Customise card type";[^}]*font-size: 1rem;[^}]*font-weight: 700;[^}]*text-align: left;/s,
+  /\.migaku-typeselect form::before\s*\{[^}]*grid-area: section-title;[^}]*content: "Customize front of card";[^}]*font-size: 1rem;[^}]*font-weight: 700;[^}]*text-align: left;/s,
 );
 assert.match(
   light,
@@ -156,7 +164,7 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-card-mode-control::before\s*\{[^}]*grid-area: title;[^}]*content: "Which field is on the front";[^}]*font-size: 1rem;/s,
+  /\.migaku-card-mode-control::before\s*\{[^}]*grid-area: title;[^}]*content: "Which field is on the front:";[^}]*font-size: 1rem;/s,
 );
 assert.match(
   light,
@@ -177,7 +185,7 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control > span::after\s*\{[^}]*content: "Text or audio on the front";[^}]*font-size: 1rem;/s,
+  /\.migaku-audio-card-control > span::after\s*\{[^}]*content: "Text or audio on the front:";[^}]*font-size: 1rem;/s,
 );
 assert.match(
   light,
@@ -210,6 +218,10 @@ assert.match(
 assert.match(
   light,
   /@media only screen and \(max-width: 520px\)\s*\{[\s\S]*?\.migaku-typeselect form\s*\{[^}]*grid-template-columns: 1fr;/,
+);
+assert.match(
+  light,
+  /@media only screen and \(max-width: 520px\)\s*\{[\s\S]*?\.migaku-audio-card-control\s*\{[^}]*margin-top: 12px;/,
 );
 assert.match(
   light,
