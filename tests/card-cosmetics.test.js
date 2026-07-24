@@ -29,7 +29,7 @@ const ankidroid = renderCardDocument({
 assert.match(light, /\.migaku-header\s*\{\s*display: none;/);
 assert.match(
   light,
-  /main\.container\s*\{[^}]*padding: 80px 16px 240px;[^}]*background: #ede3ff;/s,
+  /main\.container\s*\{[^}]*padding: 80px 16px 360px;[^}]*background: #ede3ff;/s,
 );
 assert.match(light, /\.card\s*\{[^}]*color: rgb\(0, 0, 90\);/s);
 assert.match(

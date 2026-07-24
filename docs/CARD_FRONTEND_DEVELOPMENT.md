@@ -163,7 +163,8 @@ entry point when `pycmd` is absent.
 Both card-type controls are anchored to the production card shell, so their
 absolute position follows the actual card height rather than the preview viewport.
 The layout retains extra bottom padding beyond the card-height calculation so
-the controls always have scroll runway beneath them.
+both the collapsed Change card type button and the expanded switch panel always
+have comfortable scroll runway beneath them.
 
 ## Fixtures
 
