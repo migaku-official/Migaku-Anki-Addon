@@ -548,7 +548,7 @@ main.container .migaku-card audio {
   content: "";
 }
 
-.migaku-card-sentence-audio .replay-button:focus::after {
+.migaku-card-sentence-audio .replay-button:focus:not(:focus-visible)::after {
   animation: migaku-audio-sentence-lines ease-in-out 3s;
 }
 
@@ -562,7 +562,7 @@ main.container .migaku-card audio {
   pointer-events: none;
 }
 
-.migaku-card-unknown-audio .replay-button:focus::after {
+.migaku-card-unknown-audio .replay-button:focus:not(:focus-visible)::after {
   animation: migaku-audio-progress-circle linear 3s;
 }
 
