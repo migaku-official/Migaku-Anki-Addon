@@ -4,6 +4,7 @@ const {
   buildLocalizedFixture,
   fixtures,
   standardFields,
+  toggleFields,
 } = require("../dev/card-preview/fixtures");
 
 const english = buildLocalizedFixture("en", "syntax");
@@ -129,6 +130,7 @@ assert.deepStrictEqual(standardFields, [
   "Is Vocabulary Card",
   "Is Audio Card",
 ]);
+assert.deepStrictEqual(toggleFields, standardFields.filter((field) => field !== "Reading"));
 Object.keys(expectedTargetWords).forEach((language) =>
   Object.keys(fixtures).forEach((fixtureName) => {
     const { fields } = buildLocalizedFixture(language, fixtureName);

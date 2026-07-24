@@ -48,7 +48,7 @@ The toolbar changes the preview URL and rerenders the iframe:
 | Theme | Light, Anki dark, or AnkiDroid dark |
 | Theme toggle | Right-aligned moon/sun icon that switches directly between Light and Anki dark |
 | Viewport | Responsive wide view, 768 px tablet, or 390 px mobile |
-| Fields | Right-aligned list icon that opens a checklist for every standard note field |
+| Fields | Right-aligned list icon that opens a checklist for visible card content and card-type fields |
 
 Control state is stored in the page query string. A particular combination can therefore be bookmarked or shared with another developer running the lab. The icon-only Fields and theme controls use the locally installed Lucide package and stay grouped at the right edge of the toolbar. The theme button updates the same Theme control and query parameter, while the Theme select retains direct access to AnkiDroid dark mode.
 
@@ -60,6 +60,8 @@ The Fields menu writes a `fields=configured` marker and one repeated `field`
 query parameter per enabled field. The marker preserves the all-fields-off state.
 Unchecking a field supplies an empty value to the shipped template, so real
 Anki conditional rendering can be inspected without editing a fixture.
+The production `Reading` field is intentionally omitted because it supports
+language reading behavior rather than an independently visible card section.
 
 ## What to edit
 

@@ -21,6 +21,7 @@ const standardFields = [
   "Is Vocabulary Card",
   "Is Audio Card",
 ];
+const toggleFields = standardFields.filter((field) => field !== "Reading");
 const fixedMediaFields = {
   Screenshot:
     '<img alt="Vegeta wearing a scouter" src="/fixture-media/vegeta-scouter.png">',
@@ -254,4 +255,5 @@ module.exports = {
   buildLocalizedFixture,
   fixtures,
   standardFields,
+  toggleFields,
 };

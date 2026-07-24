@@ -158,11 +158,11 @@ const run = async () => {
     "Images",
     "Example Sentences",
     "Notes",
-    "Reading",
     "Alternate Sentence",
     "Is Vocabulary Card",
     "Is Audio Card",
   ].forEach((field) => assert.match(app.body, new RegExp(`data-field="${field}"`)));
+  assert.doesNotMatch(app.body, /data-field="Reading"/);
 
   const preview = await request(
     port,

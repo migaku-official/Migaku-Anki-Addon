@@ -7,7 +7,7 @@ const contract = require("./template-contract.json");
 const {
   buildLocalizedFixture,
   fixtures,
-  standardFields,
+  toggleFields,
 } = require("./fixtures");
 const { writeCardStyles } = require("../../tools/card-styles");
 
@@ -32,7 +32,7 @@ const contentTypes = {
 const renderOptions = (items, getLabel = (item) => item) =>
   items.map((item) => `<option value="${item}">${getLabel(item)}</option>`).join("");
 const renderFieldToggles = () =>
-  standardFields
+  toggleFields
     .map((field) => `<label class="field-toggle"><input type="checkbox" data-field="${field}">${field}</label>`)
     .join("");
 
@@ -178,7 +178,7 @@ const renderAppShell = () => `<!doctype html>
       Object.fromEntries(
         Object.keys(fixtures).map((fixtureName) => [
           fixtureName,
-          standardFields.filter(
+          toggleFields.filter(
             (field) => buildLocalizedFixture("en", fixtureName).fields[field],
           ),
         ]),
