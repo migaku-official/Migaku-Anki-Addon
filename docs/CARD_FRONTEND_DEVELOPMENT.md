@@ -165,9 +165,10 @@ continue to send the existing
 entry point when `pycmd` is absent.
 Both card-type controls are anchored to the production card shell, so their
 absolute position follows the actual card height rather than the preview viewport.
-The layout retains extra bottom padding beyond the card-height calculation so
-both the collapsed Change card type button and the expanded switch panel always
-have comfortable scroll runway beneath them.
+Because the card-type controls are absolutely positioned, `main.container`
+provides a 200 px in-flow trailing spacer after `#qa`. This preserves the card's
+full-height calculation while giving both the collapsed button and expanded
+switch panel reliable scroll runway beneath them.
 The `main.container` → `#qa` → `#content` height chain remains explicit so the
 card fills the available padded layout on both the front and back.
 

@@ -96,6 +96,10 @@ assert.match(
 assert.match(light, /main\.container \.migaku-card-shell\s*\{[^}]*margin: 0 auto 16px;/s);
 assert.match(light, /main\.container\s*\{[^}]*padding: 80px 16px 200px;/s);
 assert.match(light, /main\.container #qa\s*\{[^}]*height: 100%;/s);
+assert.match(
+  light,
+  /main\.container::after\s*\{[^}]*display: block;[^}]*height: 200px;[^}]*content: "";/s,
+);
 assert.match(light, /#content\s*\{[^}]*height: 100%;/s);
 assert.match(light, /\.migaku-type-toggle:hover\s*\{[^}]*opacity: 1;[^}]*text-decoration: underline;/s);
 assert.match(

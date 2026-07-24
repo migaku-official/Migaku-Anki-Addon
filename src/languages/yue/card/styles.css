@@ -3807,6 +3807,12 @@ main.container {
   background: #ede3ff;
 }
 
+main.container::after {
+  display: block;
+  height: 200px;
+  content: "";
+}
+
 main.container #qa {
   margin-top: 0px;
   height: 100%;
