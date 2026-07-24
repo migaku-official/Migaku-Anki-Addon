@@ -84,6 +84,16 @@ assert.match(
 );
 assert.match(
   light,
+  /\.migaku-card-back \.migaku-card-content > :not\(\.migaku-card-images\)\s*\{[^}]*max-width: calc\(100% - 30px\);/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-back \.migaku-card-content::before,\s*\.migaku-card-back \.migaku-card-content::after\s*\{[^}]*content: "";[^}]*flex: 0 0 100%;[^}]*height: 15px;/s,
+);
+assert.match(light, /\.migaku-card-back \.migaku-card-content::before\s*\{[^}]*order: 0;/s);
+assert.match(light, /\.migaku-card-back \.migaku-card-content::after\s*\{[^}]*order: 13;/s);
+assert.match(
+  light,
   /\.migaku-card-back \.migaku-card-screenshot,\s*\.migaku-card-back \.migaku-card-images\s*\{[^}]*display: contents;/s,
 );
 assert.match(

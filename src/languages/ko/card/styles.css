@@ -129,6 +129,25 @@ main.container .migaku-card audio {
   display: contents;
 }
 
+.migaku-card-back .migaku-card-content > :not(.migaku-card-images) {
+  max-width: calc(100% - 30px);
+}
+
+.migaku-card-back .migaku-card-content::before,
+.migaku-card-back .migaku-card-content::after {
+  content: "";
+  flex: 0 0 100%;
+  height: 15px;
+}
+
+.migaku-card-back .migaku-card-content::before {
+  order: 0;
+}
+
+.migaku-card-back .migaku-card-content::after {
+  order: 13;
+}
+
 .migaku-indented {
   margin-left: 5%;
 }
