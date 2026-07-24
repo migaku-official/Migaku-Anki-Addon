@@ -105,15 +105,15 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-typeselect form\s*\{[^}]*display: flex;[^}]*justify-content: flex-start;[^}]*flex-wrap: nowrap;[^}]*gap: 24px;/s,
+  /\.migaku-typeselect form\s*\{[^}]*display: grid;[^}]*grid-template-columns: auto auto;[^}]*justify-content: flex-start;[^}]*column-gap: 24px;/s,
 );
 assert.match(
   light,
-  /\.migaku-card-mode-control\s*\{[^}]*display: grid;[^}]*align-items: center;[^}]*column-gap: 8px;/s,
+  /\.migaku-typeselect form::before\s*\{[^}]*content: "Card type";[^}]*font-size: 1rem;[^}]*text-align: left;/s,
 );
 assert.match(
   light,
-  /\.migaku-card-mode-control::before\s*\{[^}]*content: "Card type";[^}]*font-size: 1rem;[^}]*text-align: left;/s,
+  /\.migaku-card-mode-control\s*\{[^}]*display: flex;[^}]*align-items: center;[^}]*gap: 8px;/s,
 );
 assert.match(
   light,
@@ -130,7 +130,7 @@ assert.match(
 );
 assert.match(
   light,
-  /@media only screen and \(max-width: 520px\)\s*\{[^}]*\.migaku-typeselect form\s*\{[^}]*align-items: flex-start;[^}]*flex-direction: column;/s,
+  /@media only screen and \(max-width: 520px\)\s*\{[^}]*\.migaku-typeselect form\s*\{[^}]*grid-template-columns: 1fr;/s,
 );
 assert.doesNotMatch(light, /\.migaku-typeselect\s*\{[^}]*border-radius: 10px;/s);
 assert.match(light, /\.dict-form\s*\{[^}]*white-space: nowrap;[^}]*word-break: normal;/s);

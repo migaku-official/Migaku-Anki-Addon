@@ -412,11 +412,22 @@ main.container .migaku-card audio {
 }
 
 .migaku-typeselect form {
-  display: flex;
+  display: grid;
+  grid-template-areas:
+    "card-title audio"
+    "card-mode audio";
+  grid-template-columns: auto auto;
   align-items: flex-start;
   justify-content: flex-start;
-  flex-wrap: nowrap;
-  gap: 24px;
+  column-gap: 24px;
+  row-gap: 4px;
+}
+
+.migaku-typeselect form::before {
+  grid-area: card-title;
+  content: "Card type";
+  font-size: 1rem;
+  text-align: left;
 }
 
 .migaku-audio-card-control > span {
@@ -425,20 +436,12 @@ main.container .migaku-card audio {
 }
 
 .migaku-card-mode-control {
-  display: grid;
-  grid-template-columns: auto 44px auto;
+  grid-area: card-mode;
+  display: flex;
   align-items: center;
-  column-gap: 8px;
-  row-gap: 4px;
+  gap: 8px;
   white-space: nowrap;
   cursor: pointer;
-}
-
-.migaku-card-mode-control::before {
-  grid-column: 1 / -1;
-  content: "Card type";
-  font-size: 1rem;
-  text-align: left;
 }
 
 .migaku-card-mode-control span {
@@ -449,6 +452,7 @@ main.container .migaku-card audio {
 }
 
 .migaku-audio-card-control {
+  grid-area: audio;
   display: grid;
   justify-items: start;
   gap: 4px;
@@ -491,9 +495,15 @@ main.container .migaku-card audio {
 
 @media only screen and (max-width: 520px) {
   .migaku-typeselect form {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 16px;
+    grid-template-areas:
+      "card-title"
+      "card-mode"
+      "audio";
+    grid-template-columns: 1fr;
+  }
+
+  .migaku-audio-card-control {
+    margin-top: 12px;
   }
 }
 
