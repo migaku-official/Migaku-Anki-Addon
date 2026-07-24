@@ -132,8 +132,8 @@ assert.deepStrictEqual(standardFields, [
 Object.keys(expectedTargetWords).forEach((language) =>
   Object.keys(fixtures).forEach((fixtureName) => {
     const { fields } = buildLocalizedFixture(language, fixtureName);
-    assert.match(fields["Sentence Audio"], /src="\/fixture-media\/sentence\.m4a"/);
-    assert.match(fields["Word Audio"], /src="\/fixture-media\/target-word\.mp3"/);
+    assert.strictEqual(fields["Sentence Audio"], "[sound:sentence.m4a]");
+    assert.strictEqual(fields["Word Audio"], "[sound:target-word.mp3]");
     assert.match(fields.Screenshot, /src="\/fixture-media\/vegeta-scouter\.png"/);
   }),
 );

@@ -134,6 +134,11 @@ The document also provides a preview-only no-op `pycmd` bridge. This keeps
 Anki-gated presentation such as the back-side card-type switcher visible without
 sending commands or changing card data.
 
+Audio fixture fields use Anki-style `[sound:filename]` values. The document
+renderer converts those values into `.replay-button` controls backed by hidden
+fixture audio and preview-only playback wiring. The lab therefore exercises the
+same audio-button selectors as Anki without changing production templates.
+
 On the back, Target Word and Sentence retain distinct semantic containers and
 render at 46 px and 32 px respectively. The visual order is Target Word,
 Sentence, a dedicated row containing both audio controls, translation, divider, definitions and supporting

@@ -106,6 +106,22 @@ const back = renderCardDocument({
   theme: "dark",
 });
 const previewCommandShim = "<script>const pycmd = () => {};</script>";
+const previewAudioScript = [...back.matchAll(/<script>([\s\S]*?)<\/script>/g)]
+  .map((match) => match[1])
+  .find((script) => script.includes("data-preview-audio-button"));
+const previewAudio = { currentTime: 9, playCalls: 0, play: () => previewAudio.playCalls += 1 };
+const previewAudioButton = {
+  nextElementSibling: previewAudio,
+  addEventListener: (_, listener) => previewAudioButton.click = listener,
+};
+
+assert.ok(previewAudioScript);
+vm.runInNewContext(previewAudioScript, {
+  document: { querySelectorAll: () => [previewAudioButton] },
+});
+previewAudioButton.click();
+assert.strictEqual(previewAudio.currentTime, 0);
+assert.strictEqual(previewAudio.playCalls, 1);
 
 assert.match(front, /^<!doctype html>/);
 assert.match(front, /data-preview-side="front"/);
@@ -124,7 +140,7 @@ assert.match(
 assert.doesNotMatch(vocabularyFront, /class="field migaku-card-sentence"/);
 assert.match(
   audioFront,
-  /class="migaku-card migaku-card-front">[\s\S]*class="migaku-card-content">[\s\S]*<audio controls/,
+  /class="migaku-card migaku-card-front">[\s\S]*class="migaku-card-content">[\s\S]*class="replay-button soundLink"/,
 );
 
 contract.languages.forEach((language) => {
@@ -168,6 +184,13 @@ assert.match(back, /id="migaku-typeselect" class="migaku-typeselect" hidden>/);
 assert.doesNotMatch(back, /<h2>/);
 assert.doesNotMatch(back, /migaku-type-close/);
 assert.match(back, /class="migaku-card-audio-row"/);
+assert.match(
+  back,
+  /<button type="button" class="replay-button soundLink" data-preview-audio-button aria-label="Play audio"><\/button><audio hidden preload="none" src="\/fixture-media\/sentence\.m4a"><\/audio>/,
+);
+assert.match(back, /src="\/fixture-media\/target-word\.mp3"/);
+assert.doesNotMatch(back, /<audio controls/);
+assert.doesNotMatch(back, /\[sound:/);
 assert.match(
   back,
   /class="migaku-card-mode-control">[\s\S]*<span>Sentence<\/span>[\s\S]*type="checkbox" name="vocabulary" role="switch"[\s\S]*<span>Vocab<\/span>/,

@@ -24,10 +24,8 @@ const standardFields = [
 const fixedMediaFields = {
   Screenshot:
     '<img alt="Vegeta wearing a scouter" src="/fixture-media/vegeta-scouter.png">',
-  "Sentence Audio":
-    '<audio controls preload="none" src="/fixture-media/sentence.m4a"></audio>',
-  "Word Audio":
-    '<audio controls preload="none" src="/fixture-media/target-word.mp3"></audio>',
+  "Sentence Audio": "[sound:sentence.m4a]",
+  "Word Audio": "[sound:target-word.mp3]",
 };
 const buildFieldFallbacks = (language) => {
   const profile = syntaxProfiles[language];

@@ -21,6 +21,23 @@ const readCardFile = (rootDir, language, fileName) =>
     "utf8",
   );
 
+const renderPreviewAudio = (html) =>
+  html.replace(
+    /\[sound:([^\]]+)]/g,
+    (_, fileName) =>
+      `<button type="button" class="replay-button soundLink" data-preview-audio-button aria-label="Play audio"></button><audio hidden preload="none" src="/fixture-media/${encodeURIComponent(fileName)}"></audio>`,
+  );
+
+const previewAudioScript = `<script>
+document.querySelectorAll("[data-preview-audio-button]").forEach((button) => {
+  const audio = button.nextElementSibling;
+  button.addEventListener("click", () => {
+    audio.currentTime = 0;
+    audio.play();
+  });
+});
+</script>`;
+
 const assertOption = (options, value, optionName) => {
   if (!options.includes(value))
     throw new Error(`Unknown ${optionName} "${value}". Expected one of: ${options.join(", ")}`);
@@ -51,7 +68,7 @@ const renderCardDocument = ({
   const frontSide = renderTemplate(frontTemplate, fixture.fields);
   const fields = { ...fixture.fields, FrontSide: frontSide };
   const template = readCardFile(rootDir, language, `${side}.html`);
-  const card = renderTemplate(template, fields);
+  const card = renderPreviewAudio(renderTemplate(template, fields));
   const styles = readCardFile(rootDir, language, "styles.css");
   const supportStyles = readCardFile(rootDir, language, "support.css");
   const supportScript = readCardFile(rootDir, language, "support.html");
@@ -71,6 +88,7 @@ const renderCardDocument = ({
     </div>
   </main>
   ${supportScript}
+  ${previewAudioScript}
 </body>
 </html>`;
 };
