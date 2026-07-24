@@ -31,7 +31,12 @@ const renderPreviewAudio = (html) =>
 const previewAudioScript = `<script>
 document.querySelectorAll("[data-preview-audio-button]").forEach((button) => {
   const audio = button.nextElementSibling;
+  const stopAudio = () => {
+    audio.pause();
+    audio.currentTime = 0;
+  };
   button.addEventListener("click", () => {
+    if (!audio.paused) return stopAudio();
     audio.currentTime = 0;
     audio.play();
   });

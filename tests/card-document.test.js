@@ -109,7 +109,20 @@ const previewCommandShim = "<script>const pycmd = () => {};</script>";
 const previewAudioScript = [...back.matchAll(/<script>([\s\S]*?)<\/script>/g)]
   .map((match) => match[1])
   .find((script) => script.includes("data-preview-audio-button"));
-const previewAudio = { currentTime: 9, playCalls: 0, play: () => previewAudio.playCalls += 1 };
+const previewAudio = {
+  currentTime: 9,
+  pauseCalls: 0,
+  paused: true,
+  playCalls: 0,
+  pause: () => {
+    previewAudio.pauseCalls += 1;
+    previewAudio.paused = true;
+  },
+  play: () => {
+    previewAudio.playCalls += 1;
+    previewAudio.paused = false;
+  },
+};
 const previewAudioButton = {
   nextElementSibling: previewAudio,
   addEventListener: (_, listener) => previewAudioButton.click = listener,
@@ -121,6 +134,11 @@ vm.runInNewContext(previewAudioScript, {
 });
 previewAudioButton.click();
 assert.strictEqual(previewAudio.currentTime, 0);
+assert.strictEqual(previewAudio.playCalls, 1);
+previewAudio.currentTime = 3;
+previewAudioButton.click();
+assert.strictEqual(previewAudio.currentTime, 0);
+assert.strictEqual(previewAudio.pauseCalls, 1);
 assert.strictEqual(previewAudio.playCalls, 1);
 
 assert.match(front, /^<!doctype html>/);
