@@ -3822,7 +3822,7 @@ main.container .migaku-card-shell {
   flex-direction: column;
   width: 100%;
   max-width: 760px;
-  margin: 0 auto;
+  margin: 0 auto 16px;
 }
 
 main.container .migaku-card audio {
@@ -3880,6 +3880,10 @@ main.container .migaku-card audio {
 }
 
 .migaku-card-front .migaku-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
   padding: 20px;
   text-align: center;
   font-size: 32px;
@@ -3913,7 +3917,7 @@ main.container .migaku-card audio {
   font-size: 32px;
   text-align: center;
   width: 100%;
-  margin-top: 10px;
+  margin: 0;
 }
 
 .migaku-card-sentence-alternate {
@@ -3925,7 +3929,7 @@ main.container .migaku-card audio {
 }
 
 .migaku-card-front .migaku-card-unknown {
-  margin-top: 10px;
+  margin: 0;
   font-size: 46px;
 }
 
@@ -3934,7 +3938,7 @@ main.container .migaku-card audio {
   font-size: 46px;
   text-align: center;
   width: 100%;
-  margin-left: 0;
+  margin: 0 0 8px;
 }
 
 .migaku-card-back .migaku-card-sentence {
@@ -4024,6 +4028,13 @@ main.container .migaku-card audio {
   max-height: 125px;
 }
 
+.migaku-card-screenshot img,
+.migaku-card-images img {
+  width: auto;
+  max-width: min(100%, 450px);
+  border-radius: 16px;
+}
+
 .migaku-card-examples,
 .migaku-card-definitions {
   margin-bottom: 15px;
@@ -4083,6 +4094,7 @@ main.container .migaku-card audio {
   padding: 8px 16px;
   text-decoration: none;
   border-radius: 20px;
+  box-shadow: 0 9px 20px rgba(0 0 90 / 14%), 0 3.76px 8.3555px rgba(0 0 90 / 8.3%), 0 2.0103px 4.4673px rgba(0 0 90 / 5%), 0 1.1269px 2.5043px rgba(0 0 90 / 2.6%), 0 .5985px 1.33px rgba(0 0 90 / .8%);
 }
 
 .migaku-translation-toggle {
@@ -4093,7 +4105,7 @@ main.container .migaku-card audio {
 
 .migaku-card-shell > .migaku-type-toggle {
   position: absolute;
-  top: calc(100% + 12px);
+  top: calc(100% + 4px);
   left: 50%;
   transform: translateX(-50%);
   z-index: 2;
@@ -4102,7 +4114,7 @@ main.container .migaku-card audio {
   color: rgba(0 0 90 / 60%);
   background: transparent;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 400;
   opacity: .5;
   white-space: nowrap;
   transition: opacity 120ms ease;
@@ -4115,7 +4127,7 @@ main.container .migaku-card audio {
 
 .migaku-card-shell > .migaku-typeselect {
   position: absolute;
-  top: calc(100% + 12px);
+  top: calc(100% + 4px);
   left: 50%;
   transform: translateX(-50%);
   z-index: 2;
@@ -4129,7 +4141,7 @@ main.container .migaku-card audio {
   color: rgba(0 0 90 / 60%);
   text-align: center;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 400;
   opacity: .5;
 }
 
@@ -4232,6 +4244,11 @@ main.container .migaku-card audio {
 .ankidroid_dark_mode .migaku-translation-toggle,
 .nightMode .migaku-translation-toggle {
   background: #2b2b60;
+}
+
+.ankidroid_dark_mode .UiButton,
+.nightMode .UiButton {
+  box-shadow: 0 9px 20px rgb(0 0 0 / 18%), 0 3.76px 8.3556px rgb(0 0 0 / 14.4%), 0 2.0103px 4.4673px rgb(0 0 0 / 8.11%), 0 1.127px 2.5043px rgb(0 0 0 / 3.63%), 0 .5985px 1.33px rgb(0 0 0 / 2.8%);
 }
 
 .ankidroid_dark_mode .migaku-card-translation,
