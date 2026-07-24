@@ -374,6 +374,7 @@ main.container .migaku-card audio {
   order: 5;
   margin: 16px auto;
   background: #fff;
+  font-weight: 700;
 }
 
 .migaku-card-shell > .migaku-type-toggle {

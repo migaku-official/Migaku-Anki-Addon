@@ -158,7 +158,8 @@ target-word emphasis survives inside sentences.
 
 Translation starts hidden behind a `See Translation` button. Activating it
 reveals the translation and removes the one-time button. The button and revealed
-translation share the same 16 px vertical margin. The card-type controls
+translation share the same 16 px vertical margin, and the button label is bold.
+The card-type controls
 also start hidden. The half-opacity `Change card type` button remains in place,
 changes its text to `Dismiss`, and reveals a panel beneath it. The panel contains
 two left-aligned on/off controls beneath a `Customise card type` heading.

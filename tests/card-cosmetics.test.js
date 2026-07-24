@@ -110,7 +110,7 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-translation-toggle\s*\{[^}]*order: 5;[^}]*margin: 16px auto;[^}]*background: #fff;/s,
+  /\.migaku-translation-toggle\s*\{[^}]*order: 5;[^}]*margin: 16px auto;[^}]*background: #fff;[^}]*font-weight: 700;/s,
 );
 assert.match(
   light,
