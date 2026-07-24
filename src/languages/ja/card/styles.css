@@ -183,6 +183,11 @@ main.container .migaku-card audio {
   text-align: left;
   background: #fff;
   border-radius: 24px;
+}
+
+.migaku-card,
+.migaku-typeselect,
+.UiButton {
   box-shadow: 0 9px 20px rgba(0 0 90 / 14%), 0 3.76px 8.3555px rgba(0 0 90 / 8.3%), 0 2.0103px 4.4673px rgba(0 0 90 / 5%), 0 1.1269px 2.5043px rgba(0 0 90 / 2.6%), 0 .5985px 1.33px rgba(0 0 90 / .8%);
 }
 
@@ -402,7 +407,6 @@ main.container .migaku-card audio {
   padding: 8px 16px;
   text-decoration: none;
   border-radius: 20px;
-  box-shadow: 0 9px 20px rgba(0 0 90 / 14%), 0 3.76px 8.3555px rgba(0 0 90 / 8.3%), 0 2.0103px 4.4673px rgba(0 0 90 / 5%), 0 1.1269px 2.5043px rgba(0 0 90 / 2.6%), 0 .5985px 1.33px rgba(0 0 90 / .8%);
 }
 
 .migaku-translation-toggle {
@@ -541,6 +545,14 @@ main.container .migaku-card audio {
 .ankidroid_dark_mode .migaku-typeselect,
 .nightMode .migaku-typeselect {
   background: #202047;
+}
+
+.ankidroid_dark_mode .migaku-card,
+.nightMode .migaku-card,
+.ankidroid_dark_mode .migaku-typeselect,
+.nightMode .migaku-typeselect,
+.ankidroid_dark_mode .UiButton,
+.nightMode .UiButton {
   box-shadow: 0 9px 20px rgb(0 0 0 / 18%), 0 3.76px 8.3556px rgb(0 0 0 / 14.4%), 0 2.0103px 4.4673px rgb(0 0 0 / 8.11%), 0 1.127px 2.5043px rgb(0 0 0 / 3.63%), 0 .5985px 1.33px rgb(0 0 0 / 2.8%);
 }
 
@@ -552,11 +564,6 @@ main.container .migaku-card audio {
 .ankidroid_dark_mode .migaku-translation-toggle,
 .nightMode .migaku-translation-toggle {
   background: #2b2b60;
-}
-
-.ankidroid_dark_mode .UiButton,
-.nightMode .UiButton {
-  box-shadow: 0 9px 20px rgb(0 0 0 / 18%), 0 3.76px 8.3556px rgb(0 0 0 / 14.4%), 0 2.0103px 4.4673px rgb(0 0 0 / 8.11%), 0 1.127px 2.5043px rgb(0 0 0 / 3.63%), 0 .5985px 1.33px rgb(0 0 0 / 2.8%);
 }
 
 .ankidroid_dark_mode .migaku-card-translation,
