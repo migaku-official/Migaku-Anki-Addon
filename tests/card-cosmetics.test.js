@@ -109,15 +109,11 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-card-type-control\s*\{[^}]*display: grid;[^}]*justify-items: start;/s,
+  /\.migaku-card-mode-control\s*\{[^}]*display: grid;[^}]*align-items: center;[^}]*column-gap: 8px;/s,
 );
 assert.match(
   light,
-  /\.migaku-card-type-title\s*\{[^}]*font-size: 1rem;[^}]*text-align: left;/s,
-);
-assert.match(
-  light,
-  /\.migaku-card-mode-control\s*\{[^}]*display: flex;[^}]*align-items: center;[^}]*gap: 8px;/s,
+  /\.migaku-card-mode-control::before\s*\{[^}]*content: "Card type";[^}]*font-size: 1rem;[^}]*text-align: left;/s,
 );
 assert.match(
   light,
