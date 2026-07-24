@@ -168,6 +168,8 @@ absolute position follows the actual card height rather than the preview viewpor
 The layout retains extra bottom padding beyond the card-height calculation so
 both the collapsed Change card type button and the expanded switch panel always
 have comfortable scroll runway beneath them.
+The `main.container` → `#qa` → `#content` height chain remains explicit so the
+card fills the available padded layout on both the front and back.
 
 ## Fixtures
 
