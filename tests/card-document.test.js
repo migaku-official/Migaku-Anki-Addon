@@ -11,6 +11,20 @@ const front = renderCardDocument({
   side: "front",
   theme: "light",
 });
+const vocabularyFront = renderCardDocument({
+  fixtureName: "vocabulary",
+  language: "en",
+  rootDir,
+  side: "front",
+  theme: "light",
+});
+const audioFront = renderCardDocument({
+  fixtureName: "audio",
+  language: "en",
+  rootDir,
+  side: "front",
+  theme: "light",
+});
 const back = renderCardDocument({
   fixtureName: "sentence",
   language: "en",
@@ -22,8 +36,23 @@ const previewCommandShim = "<script>const pycmd = () => {};</script>";
 
 assert.match(front, /^<!doctype html>/);
 assert.match(front, /data-preview-side="front"/);
+assert.match(front, /class="migaku-logo"/);
+assert.match(
+  front,
+  /class="migaku-card migaku-card-front">[\s\S]*class="migaku-card-content">[\s\S]*class="field migaku-card-sentence" data-popup="yes"/,
+);
+assert.doesNotMatch(front, /class="field migaku-card-unknown"/);
 assert.match(front, /\(language\)\[language,noun,ˈlæŋɡwɪdʒ\]/);
 assert.doesNotMatch(front, /{{[^{}]+}}/);
+assert.match(
+  vocabularyFront,
+  /class="migaku-card migaku-card-front">[\s\S]*class="migaku-card-content">[\s\S]*class="field migaku-card-unknown" data-popup="yes"/,
+);
+assert.doesNotMatch(vocabularyFront, /class="field migaku-card-sentence"/);
+assert.match(
+  audioFront,
+  /class="migaku-card migaku-card-front">[\s\S]*class="migaku-card-content">[\s\S]*<audio controls/,
+);
 
 assert.match(back, /data-preview-side="back"/);
 assert.match(back, /class="card nightMode"/);

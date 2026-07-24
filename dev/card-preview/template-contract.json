@@ -15,12 +15,12 @@
   ],
   "hashes": {
     "front.html": {
-      "default": "66fc6bbbd07f31785a00a762029c9bd8f6e3b8876faa2cdc82075066ac269b22",
+      "default": "321f8d121d9991d2a8731bbb32c1eb2a5f546f6b5e87ae67a9ae463d77a268f7",
       "overrides": {
-        "ja": "9329ddd76e732c389217b47d9c8ede62a718c54d85ecedbe8a6573c5e6b3eabc",
-        "yue": "f8d26572ca4d4600620956b9bb8c401cc2c24731bcf3a81a4fbbb67dba0ebec5",
-        "zh_CN": "3ad8d6545abe528133d57c624d0a6dc45e3113b148caaadc23468608d26176f5",
-        "zh_TW": "09ba0729dcfb7c3c88095d029ef9ecfd3642eaac71a3ae9311ed515ddd2a4820"
+        "ja": "78d6edac7e43f3cc8c3641379946c81cb24a2417c86d5dcfd96c122d880d765b",
+        "yue": "a89641ac11bedb7a7cf97b335c7fd682778f1a0efdb5a3049498779486238b9c",
+        "zh_CN": "4b95119e4df8b8dc2d91c7f5ed95fc59c1423375a677f73e7a369bbeda34cdc4",
+        "zh_TW": "947e9edf677f5c4dd8e7f72d0a2b36ff535d2370d6fe6b326ddb4efdd1220046"
       }
     },
     "back.html": {
