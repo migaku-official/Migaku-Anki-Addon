@@ -61,8 +61,6 @@ const executeBackInteractions = (template, fields, hasPycmd = true) => {
     typeToggle.click();
     const typeSelectorAfterOpen = typeSelector.hidden;
     const typeToggleTextAfterOpen = typeToggle.textContent;
-    form.elements.audio.checked = true;
-    form.elements.vocabulary.checked = true;
     form.onchange();
     typeToggle.click();
     return {
@@ -241,10 +239,13 @@ contract.languages.forEach((language) => {
   assert.strictEqual(interactions.typeToggle.hidden, false);
   assert.strictEqual(interactions.typeToggle.textContent, "Change card type");
   assert.deepStrictEqual(interactions.initialState, { audio: false, vocabulary: false });
-  assert.deepStrictEqual(interactions.commands, ["update_card_type|av"]);
+  assert.deepStrictEqual(interactions.commands, ["update_card_type|s"]);
   assert.deepStrictEqual(vocabularyInteractions.initialState, { audio: false, vocabulary: true });
+  assert.deepStrictEqual(vocabularyInteractions.commands, ["update_card_type|v"]);
   assert.deepStrictEqual(audioInteractions.initialState, { audio: true, vocabulary: false });
+  assert.deepStrictEqual(audioInteractions.commands, ["update_card_type|as"]);
   assert.deepStrictEqual(audioVocabularyInteractions.initialState, { audio: true, vocabulary: true });
+  assert.deepStrictEqual(audioVocabularyInteractions.commands, ["update_card_type|av"]);
   assert.strictEqual(noPycmdInteractions.typeToggle.hidden, true);
   assert.strictEqual(noPycmdInteractions.typeSelector.hidden, true);
   assert.deepStrictEqual(noPycmdInteractions.commands, []);
