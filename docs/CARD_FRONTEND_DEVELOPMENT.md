@@ -128,11 +128,6 @@ The document also provides a preview-only no-op `pycmd` bridge. This keeps
 Anki-gated presentation such as the back-side card-type switcher visible without
 sending commands or changing card data.
 
-On non-audio fronts, sentence cards render a populated `Sentence` inside
-`.migaku-card-sentence`, while vocabulary cards render a populated `Target Word`
-inside `.migaku-card-unknown`. These field-presence guards preserve the existing
-card-type branches while exposing stable selectors for their distinct typography.
-
 ## Fixtures
 
 Fixtures are defined in `dev/card-preview/fixtures.js`. Every language supplies

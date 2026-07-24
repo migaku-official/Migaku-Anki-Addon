@@ -11,13 +11,6 @@ const front = renderCardDocument({
   side: "front",
   theme: "light",
 });
-const vocabularyFront = renderCardDocument({
-  fixtureName: "vocabulary",
-  language: "en",
-  rootDir,
-  side: "front",
-  theme: "light",
-});
 const back = renderCardDocument({
   fixtureName: "sentence",
   language: "en",
@@ -29,12 +22,8 @@ const previewCommandShim = "<script>const pycmd = () => {};</script>";
 
 assert.match(front, /^<!doctype html>/);
 assert.match(front, /data-preview-side="front"/);
-assert.match(front, /<div class="migaku-card-sentence">/);
-assert.doesNotMatch(front, /class="migaku-card-unknown"/);
 assert.match(front, /\(language\)\[language,noun,ˈlæŋɡwɪdʒ\]/);
 assert.doesNotMatch(front, /{{[^{}]+}}/);
-assert.match(vocabularyFront, /<div class="migaku-card-unknown">/);
-assert.doesNotMatch(vocabularyFront, /class="migaku-card-sentence"/);
 
 assert.match(back, /data-preview-side="back"/);
 assert.match(back, /class="card nightMode"/);
