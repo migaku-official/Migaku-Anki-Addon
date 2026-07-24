@@ -5,6 +5,48 @@ const dataImage = (label, color) =>
   `data:image/svg+xml,${encodeURIComponent(image(label, color))}`;
 
 const syntaxTranslation = "Learning a language opens another window onto the world.";
+const standardFields = [
+  "Sentence",
+  "Translation",
+  "Target Word",
+  "Definitions",
+  "Screenshot",
+  "Sentence Audio",
+  "Word Audio",
+  "Images",
+  "Example Sentences",
+  "Notes",
+  "Reading",
+  "Alternate Sentence",
+  "Is Vocabulary Card",
+  "Is Audio Card",
+];
+const fixedMediaFields = {
+  Screenshot:
+    '<img alt="Vegeta wearing a scouter" src="/fixture-media/vegeta-scouter.png">',
+  "Sentence Audio":
+    '<audio controls preload="none" src="/fixture-media/sentence.m4a"></audio>',
+  "Word Audio":
+    '<audio controls preload="none" src="/fixture-media/target-word.mp3"></audio>',
+};
+const buildFieldFallbacks = (language) => {
+  const profile = syntaxProfiles[language];
+  return {
+    "Alternate Sentence": profile.sentence,
+    Definitions: "<p>Fixture definition.</p>",
+    "Example Sentences": "<p>Fixture example sentence.</p>",
+    Images:
+      '<img alt="Vegeta wearing a scouter" src="/fixture-media/vegeta-scouter.png">',
+    "Is Audio Card": "1",
+    "Is Vocabulary Card": "1",
+    Notes: "<p>Fixture note.</p>",
+    Reading: "Fixture reading",
+    Sentence: profile.sentence,
+    "Target Word": profile.targetWord,
+    Translation: profile.translation,
+    ...fixedMediaFields,
+  };
+};
 
 const syntaxProfiles = {
   de: {
@@ -198,6 +240,7 @@ const buildLocalizedFixture = (language, fixtureName) => {
     ...fixture,
     fields: {
       ...fixture.fields,
+      ...fixedMediaFields,
       Sentence: mergeStressContent(profile.sentence, fixture.fields.Sentence),
       "Target Word": mergeStressContent(
         fixtureName === "audio" ? fixture.fields["Target Word"] : profile.targetWord,
@@ -208,4 +251,9 @@ const buildLocalizedFixture = (language, fixtureName) => {
   };
 };
 
-module.exports = { buildLocalizedFixture, fixtures };
+module.exports = {
+  buildFieldFallbacks,
+  buildLocalizedFixture,
+  fixtures,
+  standardFields,
+};

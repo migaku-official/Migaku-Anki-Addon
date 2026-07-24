@@ -21,6 +21,21 @@ const request = (port, requestPath) =>
     });
     req.on("error", reject);
   });
+const requestBinary = (port, requestPath) =>
+  new Promise((resolve, reject) => {
+    const req = http.get({ host: "127.0.0.1", path: requestPath, port }, (res) => {
+      const chunks = [];
+      res.on("data", (chunk) => chunks.push(chunk));
+      res.on("end", () =>
+        resolve({
+          body: Buffer.concat(chunks),
+          contentType: res.headers["content-type"],
+          statusCode: res.statusCode,
+        }),
+      );
+    });
+    req.on("error", reject);
+  });
 
 const waitFor = (predicate, timeoutMs = 2000) =>
   new Promise((resolve, reject) => {
@@ -126,6 +141,22 @@ const run = async () => {
   assert.match(app.body, /side\.value = side\.value === "front" \? "back" : "front"/);
   assert.match(app.body, /theme\.value = theme\.value === "light" \? "dark" : "light"/);
   assert.match(app.body, /themeToggle\.addEventListener\("click", toggleTheme\)/);
+  [
+    "Sentence",
+    "Translation",
+    "Target Word",
+    "Definitions",
+    "Screenshot",
+    "Sentence Audio",
+    "Word Audio",
+    "Images",
+    "Example Sentences",
+    "Notes",
+    "Reading",
+    "Alternate Sentence",
+    "Is Vocabulary Card",
+    "Is Audio Card",
+  ].forEach((field) => assert.match(app.body, new RegExp(`data-field="${field}"`)));
 
   const preview = await request(
     port,
@@ -134,6 +165,24 @@ const run = async () => {
   assert.strictEqual(preview.statusCode, 200);
   assert.match(preview.body, /data-preview-side="back"/);
   assert.match(preview.body, /Eine Sprache zu lernen/);
+
+  const conditionalPreview = await request(
+    port,
+    "/preview?language=en&side=back&theme=dark&fixture=sentence&field=Target%20Word",
+  );
+  assert.match(conditionalPreview.body, /\(language\)\[language,noun/);
+  assert.doesNotMatch(conditionalPreview.body, /\(Learning\)\[learn,verb/);
+
+  for (const [asset, contentType] of [
+    ["target-word.mp3", "audio/mpeg"],
+    ["sentence.m4a", "audio/mp4"],
+    ["vegeta-scouter.png", "image/png"],
+  ]) {
+    const media = await requestBinary(port, `/fixture-media/${asset}`);
+    assert.strictEqual(media.statusCode, 200);
+    assert.strictEqual(media.contentType, contentType);
+    assert.ok(media.body.length > 1000);
+  }
 
   const lucide = await request(port, "/vendor/lucide.js");
   assert.strictEqual(lucide.statusCode, 200);

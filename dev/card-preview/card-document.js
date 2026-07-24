@@ -2,7 +2,11 @@ const fs = require("fs");
 const path = require("path");
 
 const contract = require("./template-contract.json");
-const { buildLocalizedFixture } = require("./fixtures");
+const {
+  buildFieldFallbacks,
+  buildLocalizedFixture,
+  standardFields,
+} = require("./fixtures");
 const { renderTemplate } = require("./template-engine");
 
 const themes = {
@@ -23,6 +27,7 @@ const assertOption = (options, value, optionName) => {
 };
 
 const renderCardDocument = ({
+  enabledFields,
   fixtureName,
   language,
   rootDir,
@@ -33,6 +38,15 @@ const renderCardDocument = ({
   assertOption(["front", "back"], side, "side");
   assertOption(Object.keys(themes), theme, "theme");
   const fixture = buildLocalizedFixture(language, fixtureName);
+  if (enabledFields) {
+    const enabledFieldSet = new Set(enabledFields);
+    const fallbackFields = buildFieldFallbacks(language);
+    standardFields.forEach((field) => {
+      fixture.fields[field] = enabledFieldSet.has(field)
+        ? fixture.fields[field] || fallbackFields[field]
+        : "";
+    });
+  }
   const frontTemplate = readCardFile(rootDir, language, "front.html");
   const frontSide = renderTemplate(frontTemplate, fixture.fields);
   const fields = { ...fixture.fields, FrontSide: frontSide };

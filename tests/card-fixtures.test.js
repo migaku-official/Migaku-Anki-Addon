@@ -1,6 +1,10 @@
 const assert = require("assert");
 
-const { buildLocalizedFixture } = require("../dev/card-preview/fixtures");
+const {
+  buildLocalizedFixture,
+  fixtures,
+  standardFields,
+} = require("../dev/card-preview/fixtures");
 
 const english = buildLocalizedFixture("en", "syntax");
 
@@ -107,6 +111,31 @@ assert.ok(
       /[\uac00-\ud7af]+\[[^\]$]+\$:[a-z]+\]/gu,
     ),
   ].length > 2,
+);
+
+assert.deepStrictEqual(standardFields, [
+  "Sentence",
+  "Translation",
+  "Target Word",
+  "Definitions",
+  "Screenshot",
+  "Sentence Audio",
+  "Word Audio",
+  "Images",
+  "Example Sentences",
+  "Notes",
+  "Reading",
+  "Alternate Sentence",
+  "Is Vocabulary Card",
+  "Is Audio Card",
+]);
+Object.keys(expectedTargetWords).forEach((language) =>
+  Object.keys(fixtures).forEach((fixtureName) => {
+    const { fields } = buildLocalizedFixture(language, fixtureName);
+    assert.match(fields["Sentence Audio"], /src="\/fixture-media\/sentence\.m4a"/);
+    assert.match(fields["Word Audio"], /src="\/fixture-media\/target-word\.mp3"/);
+    assert.match(fields.Screenshot, /src="\/fixture-media\/vegeta-scouter\.png"/);
+  }),
 );
 
 console.log("✓ card fixtures provide language syntax showcases");

@@ -4,7 +4,11 @@ const path = require("path");
 
 const { renderCardDocument } = require("./card-document");
 const contract = require("./template-contract.json");
-const { fixtures } = require("./fixtures");
+const {
+  buildLocalizedFixture,
+  fixtures,
+  standardFields,
+} = require("./fixtures");
 const { writeCardStyles } = require("../../tools/card-styles");
 
 const lucidePath = require.resolve("lucide/dist/umd/lucide.js");
@@ -14,6 +18,7 @@ const contentTypes = {
   ".jpeg": "image/jpeg",
   ".jpg": "image/jpeg",
   ".mp3": "audio/mpeg",
+  ".m4a": "audio/mp4",
   ".ogg": "audio/ogg",
   ".png": "image/png",
   ".svg": "image/svg+xml",
@@ -26,6 +31,10 @@ const contentTypes = {
 
 const renderOptions = (items, getLabel = (item) => item) =>
   items.map((item) => `<option value="${item}">${getLabel(item)}</option>`).join("");
+const renderFieldToggles = () =>
+  standardFields
+    .map((field) => `<label class="field-toggle"><input type="checkbox" data-field="${field}">${field}</label>`)
+    .join("");
 
 const renderAppShell = () => `<!doctype html>
 <html lang="en">
@@ -85,6 +94,10 @@ const renderAppShell = () => `<!doctype html>
     button:hover, button[aria-pressed="true"] { border-color: #6d8dff; background: #31416f; }
     .viewport-picker { display: flex; gap: 4px; }
     .viewport-picker button { min-width: 34px; }
+    .field-menu { position: relative; flex: 0 0 auto; }
+    .field-menu summary { min-height: 26px; padding: 5px 8px; border: 1px solid #3b404b; border-radius: 6px; background: #242832; cursor: pointer; list-style: none; }
+    .field-menu-content { position: fixed; z-index: 2; top: 38px; right: 44px; display: grid; grid-template-columns: repeat(2, minmax(150px, 1fr)); gap: 4px 12px; padding: 10px; border: 1px solid #3b404b; border-radius: 10px; background: #1a1d24; box-shadow: 0 12px 32px rgb(0 0 0 / 40%); }
+    .field-toggle { display: flex; align-items: center; gap: 6px; font-size: 10px; letter-spacing: 0; text-transform: none; }
     .workspace { min-height: 0; overflow: hidden; padding: 8px; background-color: #111318; background-image: radial-gradient(#2d323d 1px, transparent 1px); background-size: 18px 18px; }
     .device {
       width: min(100%, var(--preview-width, 100%));
@@ -133,6 +146,10 @@ const renderAppShell = () => `<!doctype html>
           <button type="button" data-viewport="390px" aria-label="Mobile">390</button>
         </span>
       </label>
+      <details class="field-menu">
+        <summary>Fields</summary>
+        <div class="field-menu-content">${renderFieldToggles()}</div>
+      </details>
       <button type="button" id="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false"><i data-lucide="moon"></i></button>
     </header>
     <main class="workspace">
@@ -151,13 +168,32 @@ const renderAppShell = () => `<!doctype html>
     const frame = document.getElementById("preview");
     const status = document.getElementById("status");
     const viewportButtons = Array.from(document.querySelectorAll("[data-viewport]"));
+    const fieldToggles = Array.from(document.querySelectorAll("[data-field]"));
     const interactivePreviewSelector = "a, audio, button, input, label, select, textarea, .word, .popup";
+    const fixtureFieldPresence = ${JSON.stringify(
+      Object.fromEntries(
+        Object.keys(fixtures).map((fixtureName) => [
+          fixtureName,
+          standardFields.filter(
+            (field) => buildLocalizedFixture("en", fixtureName).fields[field],
+          ),
+        ]),
+      ),
+    )};
     const query = new URLSearchParams(window.location.search);
     const applyQuery = () => controls.forEach((control) => {
       const value = query.get(control.id);
       if (value && Array.from(control.options).some((option) => option.value === value)) control.value = value;
     });
-    const getParams = () => new URLSearchParams(Object.fromEntries(controls.map((control) => [control.id, control.value])));
+    const enabledQueryFields = query.getAll("field");
+    const syncFixtureFields = () => fieldToggles.forEach((toggle) => toggle.checked = fixtureFieldPresence[document.getElementById("fixture").value].includes(toggle.dataset.field));
+    if (enabledQueryFields.length) fieldToggles.forEach((toggle) => toggle.checked = enabledQueryFields.includes(toggle.dataset.field));
+    else syncFixtureFields();
+    const getParams = () => {
+      const params = new URLSearchParams(Object.fromEntries(controls.map((control) => [control.id, control.value])));
+      fieldToggles.filter((toggle) => toggle.checked).forEach((toggle) => params.append("field", toggle.dataset.field));
+      return params;
+    };
     const render = () => {
       const params = getParams();
       window.history.replaceState(null, "", "?" + params.toString());
@@ -188,8 +224,10 @@ const renderAppShell = () => `<!doctype html>
     syncThemeToggle();
     controls.forEach((control) => control.addEventListener("change", () => {
       if (control === theme) syncThemeToggle();
+      if (control.id === "fixture") syncFixtureFields();
       render();
     }));
+    fieldToggles.forEach((toggle) => toggle.addEventListener("change", render));
     themeToggle.addEventListener("click", toggleTheme);
     frame.addEventListener("load", () =>
       frame.contentDocument?.addEventListener("click", (event) => {
@@ -235,6 +273,22 @@ const serveMedia = (rootDir, pathname, res) => {
   const filePath = findMediaFile(rootDir, requestedLanguage, assetName);
   if (!filePath) return false;
   const contentType = contentTypes[path.extname(filePath).toLowerCase()] || "application/octet-stream";
+  res.writeHead(200, { "Cache-Control": "no-store", "Content-Type": contentType });
+  fs.createReadStream(filePath).pipe(res);
+  return true;
+};
+
+const serveFixtureMedia = (rootDir, pathname, res) => {
+  const filePath = path.join(
+    rootDir,
+    "dev",
+    "card-preview",
+    "media",
+    path.basename(pathname),
+  );
+  if (!fs.existsSync(filePath)) return false;
+  const contentType =
+    contentTypes[path.extname(filePath).toLowerCase()] || "application/octet-stream";
   res.writeHead(200, { "Cache-Control": "no-store", "Content-Type": contentType });
   fs.createReadStream(filePath).pipe(res);
   return true;
@@ -290,6 +344,9 @@ const createPreviewServer = ({ rootDir, watch = true }) => {
     if (url.pathname === "/preview") {
       try {
         const document = renderCardDocument({
+          enabledFields: url.searchParams.has("field")
+            ? url.searchParams.getAll("field")
+            : undefined,
           fixtureName: url.searchParams.get("fixture") || "sentence",
           language: url.searchParams.get("language") || "en",
           rootDir,
@@ -300,6 +357,9 @@ const createPreviewServer = ({ rootDir, watch = true }) => {
       } catch (error) {
         return send(res, 400, "text/plain", error.message);
       }
+    }
+    if (url.pathname.startsWith("/fixture-media/")) {
+      if (serveFixtureMedia(rootDir, decodeURIComponent(url.pathname), res)) return;
     }
     if (url.pathname.startsWith("/media/") || url.pathname.startsWith("/_")) {
       if (serveMedia(rootDir, decodeURIComponent(url.pathname), res)) return;
