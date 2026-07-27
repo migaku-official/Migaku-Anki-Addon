@@ -118,6 +118,10 @@ assert.match(
 );
 assert.match(
   light,
+  /\.migaku-card-back \.migaku-card-translation\[hidden\]\s*\{[^}]*display: none;/s,
+);
+assert.match(
+  light,
   /\.sentence-separator\s*\{[^}]*order: 7;[^}]*margin: 8px 0;[^}]*border-color: rgba\(0 0 90 \/ 15%\);/s,
 );
 assert.match(light, /\.migaku-card-back \.migaku-card-definitions\s*\{[^}]*order: 8;[^}]*width: 100%;/s);

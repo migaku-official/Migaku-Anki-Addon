@@ -160,7 +160,10 @@ Inline `<t>` elements supplied by Anki fields render with bold font weight so
 target-word emphasis survives inside sentences.
 
 Translation starts hidden behind a `See Translation` button. Activating it
-reveals the translation and removes the one-time button. The button and revealed
+reveals the translation and removes the one-time button, with no control for
+hiding it again. The author stylesheet explicitly preserves `display: none` while
+the translation carries its `hidden` attribute so layout styling cannot expose it
+prematurely. The button and revealed
 translation share the same flex order, fixed 34 px height, and 16 px vertical
 margin, plus identical type metrics and padding. Longer translations scroll
 inside that reserved slot, so revealing them does not move surrounding content.

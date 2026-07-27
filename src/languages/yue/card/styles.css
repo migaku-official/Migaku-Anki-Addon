@@ -4005,6 +4005,10 @@ main.container .migaku-card audio {
   width: 100%;
 }
 
+.migaku-card-back .migaku-card-translation[hidden] {
+  display: none;
+}
+
 .migaku-card-back .migaku-card-audio-row {
   order: 4;
   display: flex;
