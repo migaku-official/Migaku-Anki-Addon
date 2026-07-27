@@ -187,7 +187,8 @@ controls. Those reserved widths stay compact: 72 px for Sentence/Vocab and 56 px
 for Text/Audio. A
 smaller secondary-text disclaimer beneath both toggle groups explains that they
 edit the `Is Vocab Card` and `Is Audio Card` fields and therefore determine the
-review front.
+review front. Its two sentences render on separate lines, and the second begins
+with `These values`.
 The controls
 share one row with a 40 px gap when space permits and stack with 24 px of
 effective separation on narrow cards. Together they

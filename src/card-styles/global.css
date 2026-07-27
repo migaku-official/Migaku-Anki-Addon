@@ -381,11 +381,12 @@ ruby {
 
 .migaku-typeselect form::after {
   grid-area: section-disclaimer;
-  content: 'These toggles control the "Is Vocab Card" and "Is Audio Card" fields. Those values determine what is shown on the front of the card when you are reviewing';
+  content: 'These toggles control the "Is Vocab Card" and "Is Audio Card" fields.\A These values determine what is shown on the front of the card when you are reviewing.';
   max-width: 640px;
   color: rgba(0 0 90 / 60%);
   font-size: .75rem;
   line-height: 1.4;
+  white-space: pre-line;
   text-align: left;
 }
 

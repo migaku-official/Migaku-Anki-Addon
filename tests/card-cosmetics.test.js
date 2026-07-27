@@ -164,7 +164,12 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-typeselect form::after\s*\{[^}]*grid-area: section-disclaimer;[^}]*content: 'These toggles control the "Is Vocab Card" and "Is Audio Card" fields\. Those values determine what is shown on the front of the card when you are reviewing';[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.75rem;/s,
+  /\.migaku-typeselect form::after\s*\{[^}]*grid-area: section-disclaimer;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.75rem;[^}]*white-space: pre-line;/s,
+);
+assert.ok(
+  light.includes(
+    `content: 'These toggles control the "Is Vocab Card" and "Is Audio Card" fields.\\A These values determine what is shown on the front of the card when you are reviewing.';`,
+  ),
 );
 assert.match(
   light,
