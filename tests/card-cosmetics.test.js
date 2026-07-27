@@ -173,7 +173,7 @@ assert.ok(
 );
 assert.match(
   light,
-  /\.migaku-card-mode-control\s*\{[^}]*grid-area: card-mode;[^}]*display: grid;[^}]*grid-template-areas:[^}]*"title title title"[^}]*"sentence toggle vocab";[^}]*align-items: center;[^}]*justify-items: start;[^}]*column-gap: 8px;/s,
+  /\.migaku-card-mode-control\s*\{[^}]*grid-area: card-mode;[^}]*display: grid;[^}]*grid-template-areas:[^}]*"title title title"[^}]*"sentence toggle vocab";[^}]*grid-template-columns: 72px 44px 72px;[^}]*align-items: center;[^}]*justify-items: start;[^}]*column-gap: 8px;/s,
 );
 assert.match(
   light,
@@ -207,7 +207,7 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control\s*\{[^}]*--migaku-selected-tick: url\("data:image\/svg\+xml,[^"]+"\);[^}]*display: grid;[^}]*grid-template-areas:[^}]*"title title title"[^}]*"text toggle audio";[^}]*align-items: center;[^}]*justify-items: start;[^}]*column-gap: 8px;/s,
+  /\.migaku-audio-card-control\s*\{[^}]*--migaku-selected-tick: url\("data:image\/svg\+xml,[^"]+"\);[^}]*display: grid;[^}]*grid-template-areas:[^}]*"title title title"[^}]*"text toggle audio";[^}]*grid-template-columns: 56px 44px 56px;[^}]*align-items: center;[^}]*justify-items: start;[^}]*column-gap: 8px;/s,
 );
 assert.match(
   light,

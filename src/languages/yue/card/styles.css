@@ -4200,6 +4200,7 @@ ruby {
   grid-template-areas:
     "title title title"
     "sentence toggle vocab";
+  grid-template-columns: 72px 44px 72px;
   align-items: center;
   justify-items: start;
   column-gap: 8px;
@@ -4271,6 +4272,7 @@ ruby {
   grid-template-areas:
     "title title title"
     "text toggle audio";
+  grid-template-columns: 56px 44px 56px;
   align-items: center;
   justify-items: start;
   column-gap: 8px;

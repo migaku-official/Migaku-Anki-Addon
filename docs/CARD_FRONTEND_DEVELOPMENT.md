@@ -184,7 +184,9 @@ secondary-text color at `0.875rem`, with the selected side emboldened. The contr
 reserve fixed-width label and checkmark space, and the selected side also displays
 a leading Lucide-style tick, so changing weight or selection does not shift the
 controls. Those reserved widths stay compact: 72 px for Sentence/Vocab and 56 px
-for Text/Audio. A
+for Text/Audio. Each toggle row also declares compact fixed grid tracks around
+the 44 px switch so the long headings cannot distribute those controls across
+their full width. A
 smaller secondary-text disclaimer beneath both toggle groups explains that they
 edit the `Is Vocab Card` and `Is Audio Card` fields and therefore determine the
 review front. Its two sentences render on separate lines, and the second begins
