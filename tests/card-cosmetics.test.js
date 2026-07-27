@@ -110,11 +110,11 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-translation-toggle,\s*\.migaku-card-back \.migaku-card-translation\s*\{[^}]*order: 5;[^}]*min-height: 34px;[^}]*margin: 16px auto;/s,
+  /\.migaku-translation-toggle,\s*\.migaku-card-back \.migaku-card-translation\s*\{[^}]*order: 5;[^}]*min-height: 34px;[^}]*margin: 16px auto;[^}]*padding: 8px 16px;[^}]*font-size: \.875rem;[^}]*line-height: 1\.25;/s,
 );
 assert.match(
   light,
-  /\.migaku-card-back \.migaku-card-translation\s*\{[^}]*display: flex;[^}]*align-items: center;[^}]*justify-content: center;[^}]*font-size: 0\.875rem;[^}]*color: rgba\(0 0 90 \/ 60%\);/s,
+  /\.migaku-card-back \.migaku-card-translation\s*\{[^}]*display: flex;[^}]*align-items: center;[^}]*justify-content: center;[^}]*color: rgba\(0 0 90 \/ 60%\);/s,
 );
 assert.match(
   light,

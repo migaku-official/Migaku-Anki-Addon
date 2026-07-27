@@ -162,7 +162,8 @@ target-word emphasis survives inside sentences.
 Translation starts hidden behind a `See Translation` button. Activating it
 reveals the translation and removes the one-time button. The button and revealed
 translation share the same flex order, 34 px minimum height, and 16 px vertical
-margin, so a one-line translation replaces the control without moving surrounding
+margin, plus identical type metrics and padding, so a one-line translation
+replaces the control without moving surrounding
 content. The button label is bold. Japanese ruby annotations use centered
 alignment so readings such as `せかい` remain naturally grouped above their base
 word rather than being distributed across it.
