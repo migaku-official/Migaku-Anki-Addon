@@ -248,6 +248,10 @@ assert.match(
   light,
   /@media only screen and \(max-width: 520px\)\s*\{[\s\S]*?\.migaku-card-front \.migaku-card-unknown,\s*\.migaku-card-back \.migaku-card-unknown\s*\{[^}]*font-size: 40px;[\s\S]*?\.migaku-card-front \.migaku-card-sentence,\s*\.migaku-card-back \.migaku-card-sentence\s*\{[^}]*font-size: 28px;/,
 );
+assert.match(
+  light,
+  /@media only screen and \(max-width: 768px\)\s*\{[^}]*main\.container\s*\{[^}]*padding-top: 16px;/s,
+);
 assert.doesNotMatch(light, /\.migaku-typeselect\s*\{[^}]*border-radius: 10px;/s);
 assert.match(light, /\.dict-form\s*\{[^}]*white-space: nowrap;[^}]*word-break: normal;/s);
 assert.match(light, /ruby\s*\{[^}]*ruby-align: center;/s);

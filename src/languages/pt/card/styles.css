@@ -843,7 +843,9 @@ t {
 }
 
 @media only screen and (max-width: 768px) {
-  /* For mobile phones: */
+  main.container {
+    padding-top: 16px;
+  }
 
   .migaku-card,
   .migaku-typeselect {

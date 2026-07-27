@@ -200,6 +200,9 @@ an overflowing flex layout would omit a trailing margin.
 Front-only shells retain their independent full-height layout.
 The `main.container` → `#qa` → `#content` height chain remains explicit so the
 card fills the available padded layout on both the front and back.
+Desktop layouts retain 80 px of top breathing room. At the existing 768 px
+medium breakpoint and below, the top padding reduces to 16 px to match the
+horizontal gutters.
 
 ## Fixtures
 
