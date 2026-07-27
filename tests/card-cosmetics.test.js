@@ -173,15 +173,15 @@ assert.ok(
 );
 assert.match(
   light,
-  /\.migaku-card-mode-control\s*\{[^}]*grid-area: card-mode;[^}]*display: grid;[^}]*grid-template-areas:[^}]*"title title title"[^}]*"sentence toggle vocab";[^}]*grid-template-columns: 72px 44px 72px;[^}]*align-items: center;[^}]*justify-items: start;[^}]*column-gap: 8px;/s,
+  /\.migaku-card-mode-control\s*\{[^}]*grid-area: card-mode;[^}]*display: flex;[^}]*flex-wrap: wrap;[^}]*align-items: center;[^}]*column-gap: 8px;[^}]*row-gap: 4px;[^}]*white-space: nowrap;/s,
 );
 assert.match(
   light,
-  /\.migaku-card-mode-control::before\s*\{[^}]*grid-area: title;[^}]*content: "Which field is on the front:";[^}]*font-size: 1rem;/s,
+  /\.migaku-card-mode-control::before\s*\{[^}]*flex: 0 0 100%;[^}]*content: "Which field is on the front:";[^}]*font-size: 1rem;/s,
 );
 assert.match(
   light,
-  /\.migaku-card-mode-control span\s*\{[^}]*display: flex;[^}]*align-items: center;[^}]*width: 72px;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.875rem;[^}]*font-weight: 400;/s,
+  /\.migaku-card-mode-control span\s*\{[^}]*display: flex;[^}]*align-items: center;[^}]*width: auto;[^}]*white-space: nowrap;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.875rem;[^}]*font-weight: 400;[^}]*text-decoration: none;/s,
 );
 assert.match(
   light,
@@ -196,18 +196,23 @@ assert.match(
   light,
   /\.migaku-card-mode-control input:checked ~ span::before\s*\{[^}]*opacity: 1;/s,
 );
-assert.match(light, /\.migaku-card-mode-control span:first-child\s*\{[^}]*font-weight: 700;/s);
+assert.match(light, /\.migaku-card-mode-control span:first-child\s*\{[^}]*text-decoration: underline;/s);
 assert.match(
   light,
-  /\.migaku-card-mode-control:has\(input:checked\) span:first-child\s*\{[^}]*font-weight: 400;/s,
+  /\.migaku-card-mode-control:has\(input:checked\) span:first-child\s*\{[^}]*text-decoration: none;/s,
 );
 assert.match(
   light,
-  /\.migaku-card-mode-control input:checked ~ span\s*\{[^}]*font-weight: 700;/s,
+  /\.migaku-card-mode-control input:checked ~ span\s*\{[^}]*text-decoration: underline;/s,
+);
+assert.doesNotMatch(light, /\.migaku-card-mode-control\s*\{[^}]*grid-template-columns:/s);
+assert.match(
+  light,
+  /\.migaku-audio-card-control\s*\{[^}]*--migaku-selected-tick: url\("data:image\/svg\+xml,[^"]+"\);[^}]*--migaku-unselected-tick: url\("data:image\/svg\+xml,[^"]*stroke-opacity='0'[^"]*"\);[^}]*display: flex;[^}]*flex-wrap: wrap;[^}]*align-items: center;[^}]*column-gap: 8px;[^}]*row-gap: 4px;[^}]*white-space: nowrap;/s,
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control\s*\{[^}]*--migaku-selected-tick: url\("data:image\/svg\+xml,[^"]+"\);[^}]*display: grid;[^}]*grid-template-areas:[^}]*"title title title"[^}]*"text toggle audio";[^}]*grid-template-columns: 56px 44px 56px;[^}]*align-items: center;[^}]*justify-items: start;[^}]*column-gap: 8px;/s,
+  /\.migaku-audio-card-control > span\s*\{[^}]*order: 0;[^}]*flex: 0 0 100%;/s,
 );
 assert.match(
   light,
@@ -215,24 +220,29 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control::before,\s*\.migaku-audio-card-control::after\s*\{[^}]*width: 56px;[^}]*padding-left: 16px;[^}]*background-position: left center;[^}]*background-repeat: no-repeat;[^}]*background-size: 14px;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.875rem;[^}]*font-weight: 400;/s,
+  /\.migaku-audio-card-control::before,\s*\.migaku-audio-card-control::after\s*\{[^}]*padding-left: 16px;[^}]*background-position: left center;[^}]*background-repeat: no-repeat;[^}]*background-size: 14px;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.875rem;[^}]*font-weight: 400;[^}]*text-decoration: none;/s,
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control::before\s*\{[^}]*grid-area: text;[^}]*content: "Text";[^}]*background-image: var\(--migaku-selected-tick\);[^}]*font-weight: 700;/s,
+  /\.migaku-audio-card-control::before\s*\{[^}]*order: 1;[^}]*content: "Text";[^}]*background-image: var\(--migaku-selected-tick\);[^}]*text-decoration: underline;/s,
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control::after\s*\{[^}]*grid-area: audio;[^}]*content: "Audio";/s,
+  /\.migaku-audio-card-control input\s*\{[^}]*order: 2;/s,
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control:has\(input:checked\)::before\s*\{[^}]*background-image: none;[^}]*font-weight: 400;/s,
+  /\.migaku-audio-card-control::after\s*\{[^}]*order: 3;[^}]*content: "Audio";[^}]*background-image: var\(--migaku-unselected-tick\);/s,
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control:has\(input:checked\)::after\s*\{[^}]*background-image: var\(--migaku-selected-tick\);[^}]*font-weight: 700;/s,
+  /\.migaku-audio-card-control:has\(input:checked\)::before\s*\{[^}]*background-image: var\(--migaku-unselected-tick\);[^}]*text-decoration: none;/s,
 );
+assert.match(
+  light,
+  /\.migaku-audio-card-control:has\(input:checked\)::after\s*\{[^}]*background-image: var\(--migaku-selected-tick\);[^}]*text-decoration: underline;/s,
+);
+assert.doesNotMatch(light, /\.migaku-audio-card-control\s*\{[^}]*grid-template-columns:/s);
 assert.match(
   light,
   /\.migaku-typeselect input\[type="checkbox"\]\s*\{[^}]*appearance: none;[^}]*width: 44px;[^}]*height: 24px;[^}]*border-radius: 999px;/s,

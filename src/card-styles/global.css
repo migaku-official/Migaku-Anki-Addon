@@ -392,13 +392,9 @@ ruby {
 
 .migaku-card-mode-control {
   grid-area: card-mode;
-  display: grid;
-  grid-template-areas:
-    "title title title"
-    "sentence toggle vocab";
-  grid-template-columns: 72px 44px 72px;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-items: start;
   column-gap: 8px;
   row-gap: 4px;
   white-space: nowrap;
@@ -406,7 +402,7 @@ ruby {
 }
 
 .migaku-card-mode-control::before {
-  grid-area: title;
+  flex: 0 0 100%;
   content: "Which field is on the front:";
   font-size: 1rem;
 }
@@ -414,11 +410,13 @@ ruby {
 .migaku-card-mode-control span {
   display: flex;
   align-items: center;
-  width: 72px;
+  width: auto;
   min-height: 24px;
+  white-space: nowrap;
   color: rgba(0 0 90 / 60%);
   font-size: .875rem;
   font-weight: 400;
+  text-decoration: none;
 }
 
 .migaku-card-mode-control span::before {
@@ -429,24 +427,15 @@ ruby {
 }
 
 .migaku-card-mode-control span:first-child {
-  grid-area: sentence;
-  font-weight: 700;
+  text-decoration: underline;
 }
 
 .migaku-card-mode-control span:first-child::before {
   opacity: 1;
 }
 
-.migaku-card-mode-control input {
-  grid-area: toggle;
-}
-
-.migaku-card-mode-control span:last-child {
-  grid-area: vocab;
-}
-
 .migaku-card-mode-control:has(input:checked) span:first-child {
-  font-weight: 400;
+  text-decoration: none;
 }
 
 .migaku-card-mode-control:has(input:checked) span:first-child::before {
@@ -454,7 +443,7 @@ ruby {
 }
 
 .migaku-card-mode-control input:checked ~ span {
-  font-weight: 700;
+  text-decoration: underline;
 }
 
 .migaku-card-mode-control input:checked ~ span::before {
@@ -463,21 +452,20 @@ ruby {
 
 .migaku-audio-card-control {
   --migaku-selected-tick: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238c7bd6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m20 6-11 11-5-5'/%3E%3C/svg%3E");
+  --migaku-unselected-tick: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238c7bd6' stroke-opacity='0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m20 6-11 11-5-5'/%3E%3C/svg%3E");
   grid-area: audio;
-  display: grid;
-  grid-template-areas:
-    "title title title"
-    "text toggle audio";
-  grid-template-columns: 56px 44px 56px;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-items: start;
   column-gap: 8px;
   row-gap: 4px;
+  white-space: nowrap;
   cursor: pointer;
 }
 
 .migaku-audio-card-control > span {
-  grid-area: title;
+  order: 0;
+  flex: 0 0 100%;
   font-size: 0;
   text-align: left;
 }
@@ -491,7 +479,6 @@ ruby {
 .migaku-audio-card-control::after {
   display: flex;
   align-items: center;
-  width: 56px;
   padding-left: 16px;
   min-height: 24px;
   background-position: left center;
@@ -500,32 +487,34 @@ ruby {
   color: rgba(0 0 90 / 60%);
   font-size: .875rem;
   font-weight: 400;
+  text-decoration: none;
 }
 
 .migaku-audio-card-control::before {
-  grid-area: text;
+  order: 1;
   content: "Text";
   background-image: var(--migaku-selected-tick);
-  font-weight: 700;
+  text-decoration: underline;
 }
 
 .migaku-audio-card-control input {
-  grid-area: toggle;
+  order: 2;
 }
 
 .migaku-audio-card-control::after {
-  grid-area: audio;
+  order: 3;
   content: "Audio";
+  background-image: var(--migaku-unselected-tick);
 }
 
 .migaku-audio-card-control:has(input:checked)::before {
-  background-image: none;
-  font-weight: 400;
+  background-image: var(--migaku-unselected-tick);
+  text-decoration: none;
 }
 
 .migaku-audio-card-control:has(input:checked)::after {
   background-image: var(--migaku-selected-tick);
-  font-weight: 700;
+  text-decoration: underline;
 }
 
 .migaku-typeselect input[type="checkbox"] {

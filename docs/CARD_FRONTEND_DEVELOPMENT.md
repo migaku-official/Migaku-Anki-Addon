@@ -180,13 +180,11 @@ two left-aligned on/off controls beneath a `Customize front of card` heading at
 `1.25rem`.
 `Which field is on the front:` selects Sentence or Vocab, while
 `Text or audio on the front:` selects Text or Audio. Both pairs use
-secondary-text color at `0.875rem`, with the selected side emboldened. The controls
-reserve fixed-width label and checkmark space, and the selected side also displays
-a leading Lucide-style tick, so changing weight or selection does not shift the
-controls. Those reserved widths stay compact: 72 px for Sentence/Vocab and 56 px
-for Text/Audio. Each toggle row also declares compact fixed grid tracks around
-the 44 px switch so the long headings cannot distribute those controls across
-their full width. A
+secondary-text color at `0.875rem`. Each heading occupies its own line, while
+the labels and 44 px switch flow inline at their natural widths beneath it.
+Selection is shown with an underline and a leading Lucide-style tick rather than
+a font-weight change. The 16 px tick slot remains reserved, and the unselected
+tick becomes transparent, so changing selection does not shift the controls. A
 smaller secondary-text disclaimer beneath both toggle groups explains that they
 edit the `Is Vocab Card` and `Is Audio Card` fields and therefore determine the
 review front. Its two sentences render on separate lines, and the second begins
