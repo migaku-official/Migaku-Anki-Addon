@@ -203,6 +203,7 @@ main.container .migaku-card audio {
 .migaku-translation-toggle,
 .migaku-card-back .migaku-card-translation {
   order: 5;
+  height: 34px;
   min-height: 34px;
   margin: 16px auto;
   padding: 8px 16px;
@@ -214,6 +215,7 @@ main.container .migaku-card audio {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow-y: auto;
   color: rgba(0 0 90 / 60%);
   text-align: center;
   width: 100%;
@@ -501,7 +503,11 @@ ruby {
   display: flex;
   align-items: center;
   width: 64px;
+  padding-left: 16px;
   min-height: 24px;
+  background-position: left center;
+  background-repeat: no-repeat;
+  background-size: 14px;
   color: rgba(0 0 90 / 60%);
   font-size: .875rem;
   font-weight: 400;
@@ -509,7 +515,8 @@ ruby {
 
 .migaku-audio-card-control::before {
   grid-area: text;
-  content: "✓ Text";
+  content: "Text";
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238c7bd6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m20 6-11 11-5-5'/%3E%3C/svg%3E");
   font-weight: 700;
 }
 
@@ -519,16 +526,16 @@ ruby {
 
 .migaku-audio-card-control::after {
   grid-area: audio;
-  content: "\00a0 Audio";
+  content: "Audio";
 }
 
 .migaku-audio-card-control:has(input:checked)::before {
-  content: "\00a0 Text";
+  background-image: none;
   font-weight: 400;
 }
 
 .migaku-audio-card-control:has(input:checked)::after {
-  content: "✓ Audio";
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238c7bd6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m20 6-11 11-5-5'/%3E%3C/svg%3E");
   font-weight: 700;
 }
 

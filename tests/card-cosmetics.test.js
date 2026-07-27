@@ -110,11 +110,11 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-translation-toggle,\s*\.migaku-card-back \.migaku-card-translation\s*\{[^}]*order: 5;[^}]*min-height: 34px;[^}]*margin: 16px auto;[^}]*padding: 8px 16px;[^}]*font-size: \.875rem;[^}]*line-height: 1\.25;/s,
+  /\.migaku-translation-toggle,\s*\.migaku-card-back \.migaku-card-translation\s*\{[^}]*order: 5;[^}]*height: 34px;[^}]*min-height: 34px;[^}]*margin: 16px auto;[^}]*padding: 8px 16px;[^}]*font-size: \.875rem;[^}]*line-height: 1\.25;/s,
 );
 assert.match(
   light,
-  /\.migaku-card-back \.migaku-card-translation\s*\{[^}]*display: flex;[^}]*align-items: center;[^}]*justify-content: center;[^}]*color: rgba\(0 0 90 \/ 60%\);/s,
+  /\.migaku-card-back \.migaku-card-translation\s*\{[^}]*display: flex;[^}]*align-items: center;[^}]*justify-content: center;[^}]*overflow-y: auto;[^}]*color: rgba\(0 0 90 \/ 60%\);/s,
 );
 assert.match(
   light,
@@ -206,23 +206,23 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control::before,\s*\.migaku-audio-card-control::after\s*\{[^}]*width: 64px;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.875rem;[^}]*font-weight: 400;/s,
+  /\.migaku-audio-card-control::before,\s*\.migaku-audio-card-control::after\s*\{[^}]*width: 64px;[^}]*padding-left: 16px;[^}]*background-position: left center;[^}]*background-repeat: no-repeat;[^}]*background-size: 14px;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.875rem;[^}]*font-weight: 400;/s,
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control::before\s*\{[^}]*grid-area: text;[^}]*content: "✓ Text";[^}]*font-weight: 700;/s,
+  /\.migaku-audio-card-control::before\s*\{[^}]*grid-area: text;[^}]*content: "Text";[^}]*background-image: url\("data:image\/svg\+xml,[^"]+"\);[^}]*font-weight: 700;/s,
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control::after\s*\{[^}]*grid-area: audio;[^}]*content: "\\00a0 Audio";/s,
+  /\.migaku-audio-card-control::after\s*\{[^}]*grid-area: audio;[^}]*content: "Audio";/s,
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control:has\(input:checked\)::before\s*\{[^}]*content: "\\00a0 Text";[^}]*font-weight: 400;/s,
+  /\.migaku-audio-card-control:has\(input:checked\)::before\s*\{[^}]*background-image: none;[^}]*font-weight: 400;/s,
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control:has\(input:checked\)::after\s*\{[^}]*content: "✓ Audio";[^}]*font-weight: 700;/s,
+  /\.migaku-audio-card-control:has\(input:checked\)::after\s*\{[^}]*background-image: url\("data:image\/svg\+xml,[^"]+"\);[^}]*font-weight: 700;/s,
 );
 assert.match(
   light,

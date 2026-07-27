@@ -161,10 +161,10 @@ target-word emphasis survives inside sentences.
 
 Translation starts hidden behind a `See Translation` button. Activating it
 reveals the translation and removes the one-time button. The button and revealed
-translation share the same flex order, 34 px minimum height, and 16 px vertical
-margin, plus identical type metrics and padding, so a one-line translation
-replaces the control without moving surrounding
-content. The button label is bold. Japanese ruby annotations use centered
+translation share the same flex order, fixed 34 px height, and 16 px vertical
+margin, plus identical type metrics and padding. Longer translations scroll
+inside that reserved slot, so revealing them does not move surrounding content.
+The button label is bold. Japanese ruby annotations use centered
 alignment so readings such as `せかい` remain naturally grouped above their base
 word rather than being distributed across it.
 The card-type controls
@@ -176,7 +176,7 @@ two left-aligned on/off controls beneath a `Customize front of card` heading at
 `Text or audio on the front:` selects Text or Audio. Both pairs use
 secondary-text color at `0.875rem`, with the selected side emboldened. The controls
 reserve fixed-width label and checkmark space, and the selected side also displays
-a leading tick, so changing weight or selection does not shift the controls. A
+a leading Lucide-style tick, so changing weight or selection does not shift the controls. A
 secondary-text subtitle explains that the toggles edit the `Is Vocab Card` and
 `Is Audio Card` fields and therefore determine the review front.
 The controls
