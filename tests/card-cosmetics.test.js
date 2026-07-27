@@ -127,7 +127,7 @@ assert.match(
 assert.match(light, /\.migaku-card-back \.migaku-card-definitions\s*\{[^}]*order: 8;[^}]*width: 100%;/s);
 assert.match(
   light,
-  /\.migaku-card-shell > \.migaku-type-toggle\s*\{[^}]*position: static;[^}]*align-self: center;[^}]*margin: 4px auto 0;[^}]*transform: none;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*background: transparent;[^}]*font-size: 0;[^}]*font-weight: 400;[^}]*opacity: \.5;/s,
+  /\.migaku-card-shell > \.migaku-type-toggle\s*\{[^}]*position: static;[^}]*align-self: center;[^}]*margin: 4px auto 0;[^}]*transform: none;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*background: transparent;[^}]*box-shadow: none;[^}]*font-size: 0;[^}]*font-weight: 400;[^}]*opacity: \.5;/s,
 );
 assert.match(
   light,
@@ -261,6 +261,10 @@ assert.match(dark, /\.nightMode main\.container\s*\{[^}]*background: #0a002a;/s)
 assert.match(
   dark,
   /\.ankidroid_dark_mode \.migaku-translation-toggle,\s*\.nightMode \.migaku-translation-toggle\s*\{[^}]*background: #2b2b60;/s,
+);
+assert.match(
+  dark,
+  /\.ankidroid_dark_mode \.migaku-card-shell > \.migaku-type-toggle,\s*\.nightMode \.migaku-card-shell > \.migaku-type-toggle\s*\{[^}]*box-shadow: none;/s,
 );
 assert.match(
   dark,

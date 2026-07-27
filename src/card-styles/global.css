@@ -328,6 +328,7 @@ ruby {
   transform: none;
   color: rgba(0 0 90 / 60%);
   background: transparent;
+  box-shadow: none;
   font-size: 0;
   font-weight: 400;
   opacity: .5;
@@ -623,6 +624,11 @@ ruby {
 .ankidroid_dark_mode .migaku-translation-toggle,
 .nightMode .migaku-translation-toggle {
   background: #2b2b60;
+}
+
+.ankidroid_dark_mode .migaku-card-shell > .migaku-type-toggle,
+.nightMode .migaku-card-shell > .migaku-type-toggle {
+  box-shadow: none;
 }
 
 .ankidroid_dark_mode .migaku-card-translation,

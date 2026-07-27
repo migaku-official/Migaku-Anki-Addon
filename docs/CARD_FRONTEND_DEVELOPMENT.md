@@ -172,7 +172,10 @@ alignment so readings such as `せかい` remain naturally grouped above their b
 word rather than being distributed across it.
 The card-type controls
 also start hidden. The half-opacity `Customize front of card` button remains in place,
-changes its text to `Dismiss`, and reveals a panel beneath it. The panel contains
+changes its text to `Dismiss`, and reveals a panel beneath it.
+The trigger is intentionally text-only in both themes: it has no surface fill or
+button elevation, and only gains an underline and full opacity on hover.
+The panel contains
 two left-aligned on/off controls beneath a `Customize front of card` heading at
 `1.25rem`.
 `Which field is on the front:` selects Sentence or Vocab, while
