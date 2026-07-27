@@ -156,7 +156,7 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-typeselect form\s*\{[^}]*display: grid;[^}]*"section-subtitle section-subtitle"[^}]*grid-template-columns: auto auto;[^}]*justify-content: flex-start;[^}]*column-gap: 40px;/s,
+  /\.migaku-typeselect form\s*\{[^}]*display: grid;[^}]*"section-title section-title"[^}]*"card-mode audio"[^}]*"section-disclaimer section-disclaimer"[^}]*grid-template-columns: auto auto;[^}]*justify-content: flex-start;[^}]*column-gap: 40px;/s,
 );
 assert.match(
   light,
@@ -164,7 +164,7 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-typeselect form::after\s*\{[^}]*grid-area: section-subtitle;[^}]*content: 'These toggles control the "Is Vocab Card" and "Is Audio Card" fields\. Those values determine what is shown on the front of the card when you are reviewing';[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.875rem;/s,
+  /\.migaku-typeselect form::after\s*\{[^}]*grid-area: section-disclaimer;[^}]*content: 'These toggles control the "Is Vocab Card" and "Is Audio Card" fields\. Those values determine what is shown on the front of the card when you are reviewing';[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.75rem;/s,
 );
 assert.match(
   light,
@@ -176,7 +176,7 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-card-mode-control span\s*\{[^}]*display: flex;[^}]*align-items: center;[^}]*width: 76px;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.875rem;[^}]*font-weight: 400;/s,
+  /\.migaku-card-mode-control span\s*\{[^}]*display: flex;[^}]*align-items: center;[^}]*width: 72px;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.875rem;[^}]*font-weight: 400;/s,
 );
 assert.match(
   light,
@@ -210,7 +210,7 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control::before,\s*\.migaku-audio-card-control::after\s*\{[^}]*width: 64px;[^}]*padding-left: 16px;[^}]*background-position: left center;[^}]*background-repeat: no-repeat;[^}]*background-size: 14px;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.875rem;[^}]*font-weight: 400;/s,
+  /\.migaku-audio-card-control::before,\s*\.migaku-audio-card-control::after\s*\{[^}]*width: 56px;[^}]*padding-left: 16px;[^}]*background-position: left center;[^}]*background-repeat: no-repeat;[^}]*background-size: 14px;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.875rem;[^}]*font-weight: 400;/s,
 );
 assert.match(
   light,
@@ -238,7 +238,7 @@ assert.match(
 );
 assert.match(
   light,
-  /@media only screen and \(max-width: 520px\)\s*\{[\s\S]*?\.migaku-typeselect form\s*\{[^}]*grid-template-columns: 1fr;/,
+  /@media only screen and \(max-width: 520px\)\s*\{[\s\S]*?\.migaku-typeselect form\s*\{[^}]*"section-title"[^}]*"card-mode"[^}]*"audio"[^}]*"section-disclaimer"[^}]*grid-template-columns: 1fr;/,
 );
 assert.match(
   light,

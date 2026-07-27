@@ -382,8 +382,8 @@ ruby {
   display: grid;
   grid-template-areas:
     "section-title section-title"
-    "section-subtitle section-subtitle"
-    "card-mode audio";
+    "card-mode audio"
+    "section-disclaimer section-disclaimer";
   grid-template-columns: auto auto;
   align-items: flex-start;
   justify-content: flex-start;
@@ -400,11 +400,11 @@ ruby {
 }
 
 .migaku-typeselect form::after {
-  grid-area: section-subtitle;
+  grid-area: section-disclaimer;
   content: 'These toggles control the "Is Vocab Card" and "Is Audio Card" fields. Those values determine what is shown on the front of the card when you are reviewing';
   max-width: 640px;
   color: rgba(0 0 90 / 60%);
-  font-size: .875rem;
+  font-size: .75rem;
   line-height: 1.4;
   text-align: left;
 }
@@ -432,7 +432,7 @@ ruby {
 .migaku-card-mode-control span {
   display: flex;
   align-items: center;
-  width: 76px;
+  width: 72px;
   min-height: 24px;
   color: rgba(0 0 90 / 60%);
   font-size: .875rem;
@@ -508,7 +508,7 @@ ruby {
 .migaku-audio-card-control::after {
   display: flex;
   align-items: center;
-  width: 64px;
+  width: 56px;
   padding-left: 16px;
   min-height: 24px;
   background-position: left center;
@@ -593,9 +593,9 @@ ruby {
   .migaku-typeselect form {
     grid-template-areas:
       "section-title"
-      "section-subtitle"
       "card-mode"
-      "audio";
+      "audio"
+      "section-disclaimer";
     grid-template-columns: 1fr;
   }
 
