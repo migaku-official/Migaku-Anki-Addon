@@ -198,7 +198,7 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control\s*\{[^}]*display: grid;[^}]*grid-template-areas:[^}]*"title title title"[^}]*"text toggle audio";[^}]*align-items: center;[^}]*justify-items: start;[^}]*column-gap: 8px;/s,
+  /\.migaku-audio-card-control\s*\{[^}]*--migaku-selected-tick: url\("data:image\/svg\+xml,[^"]+"\);[^}]*display: grid;[^}]*grid-template-areas:[^}]*"title title title"[^}]*"text toggle audio";[^}]*align-items: center;[^}]*justify-items: start;[^}]*column-gap: 8px;/s,
 );
 assert.match(
   light,
@@ -210,7 +210,7 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control::before\s*\{[^}]*grid-area: text;[^}]*content: "Text";[^}]*background-image: url\("data:image\/svg\+xml,[^"]+"\);[^}]*font-weight: 700;/s,
+  /\.migaku-audio-card-control::before\s*\{[^}]*grid-area: text;[^}]*content: "Text";[^}]*background-image: var\(--migaku-selected-tick\);[^}]*font-weight: 700;/s,
 );
 assert.match(
   light,
@@ -222,7 +222,7 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control:has\(input:checked\)::after\s*\{[^}]*background-image: url\("data:image\/svg\+xml,[^"]+"\);[^}]*font-weight: 700;/s,
+  /\.migaku-audio-card-control:has\(input:checked\)::after\s*\{[^}]*background-image: var\(--migaku-selected-tick\);[^}]*font-weight: 700;/s,
 );
 assert.match(
   light,
