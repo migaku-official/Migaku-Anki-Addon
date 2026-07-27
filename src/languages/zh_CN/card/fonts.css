@@ -6,7 +6,7 @@
   font-family: cardFont;
   font-style: normal;
   font-weight: 400;
-  font-display: swap;
+  font-display: block;
   src: url('/_migaku-card-noto-sans-sc-noto-sans-sc-latin-400-normal.woff2') format('woff2');
 }
 
@@ -14,7 +14,7 @@
   font-family: cardFont;
   font-style: normal;
   font-weight: 400;
-  font-display: swap;
+  font-display: block;
   src: url('/_migaku-card-noto-sans-sc-noto-sans-sc-chinese-simplified-400-normal.woff2') format('woff2');
 }
 
@@ -22,7 +22,7 @@
   font-family: cardFont;
   font-style: normal;
   font-weight: 500;
-  font-display: swap;
+  font-display: block;
   src: url('/_migaku-card-noto-sans-sc-noto-sans-sc-latin-500-normal.woff2') format('woff2');
 }
 
@@ -30,7 +30,7 @@
   font-family: cardFont;
   font-style: normal;
   font-weight: 500;
-  font-display: swap;
+  font-display: block;
   src: url('/_migaku-card-noto-sans-sc-noto-sans-sc-chinese-simplified-500-normal.woff2') format('woff2');
 }
 
@@ -38,7 +38,7 @@
   font-family: cardFont;
   font-style: normal;
   font-weight: 700;
-  font-display: swap;
+  font-display: block;
   src: url('/_migaku-card-noto-sans-sc-noto-sans-sc-latin-700-normal.woff2') format('woff2');
 }
 
@@ -46,7 +46,7 @@
   font-family: cardFont;
   font-style: normal;
   font-weight: 700;
-  font-display: swap;
+  font-display: block;
   src: url('/_migaku-card-noto-sans-sc-noto-sans-sc-chinese-simplified-700-normal.woff2') format('woff2');
 }
 
@@ -54,7 +54,7 @@
   font-family: cardFont;
   font-style: normal;
   font-weight: 900;
-  font-display: swap;
+  font-display: block;
   src: url('/_migaku-card-noto-sans-sc-noto-sans-sc-latin-900-normal.woff2') format('woff2');
 }
 
@@ -62,6 +62,6 @@
   font-family: cardFont;
   font-style: normal;
   font-weight: 900;
-  font-display: swap;
+  font-display: block;
   src: url('/_migaku-card-noto-sans-sc-noto-sans-sc-chinese-simplified-900-normal.woff2') format('woff2');
 }

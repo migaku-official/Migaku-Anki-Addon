@@ -111,6 +111,9 @@ Card fonts follow the component library defaults:
 | Cantonese | Chiron Hei HK WS |
 
 The committed `fonts.css` and `media/*.woff2` files are offline card artifacts. Refresh them from an adjacent component-library checkout with `node tools/import-card-fonts.js ../migaku-front-end`, then run `npm run build:card-styles`. The importer reads the canonical defaults from the component library's `_variables.scss`, selects the matching WOFF2 faces, validates their headers and bounds, rewrites them to the `cardFont` family, and gives every Anki media file a collision-resistant `_migaku-card-<font-source>-` prefix.
+Imported faces use `font-display: block` so bundled card fonts do not visibly
+replace a fallback face after first paint. This can briefly defer text rendering
+while the local WOFF2 is decoded, but avoids font pop-in and its layout shift.
 
 ## Production parity
 
@@ -158,7 +161,11 @@ target-word emphasis survives inside sentences.
 
 Translation starts hidden behind a `See Translation` button. Activating it
 reveals the translation and removes the one-time button. The button and revealed
-translation share the same 16 px vertical margin, and the button label is bold.
+translation share the same flex order, 34 px minimum height, and 16 px vertical
+margin, so a one-line translation replaces the control without moving surrounding
+content. The button label is bold. Japanese ruby annotations use centered
+alignment so readings such as `せかい` remain naturally grouped above their base
+word rather than being distributed across it.
 The card-type controls
 also start hidden. The half-opacity `Customize front of card` button remains in place,
 changes its text to `Dismiss`, and reveals a panel beneath it. The panel contains
@@ -167,6 +174,11 @@ two left-aligned on/off controls beneath a `Customize front of card` heading at
 `Which field is on the front:` selects Sentence or Vocab, while
 `Text or audio on the front:` selects Text or Audio. Both pairs use
 secondary-text color at `0.875rem`, with the selected side emboldened. The controls
+reserve fixed-width label and checkmark space, and the selected side also displays
+a leading tick, so changing weight or selection does not shift the controls. A
+secondary-text subtitle explains that the toggles edit the `Is Vocab Card` and
+`Is Audio Card` fields and therefore determine the review front.
+The controls
 share one row with a 40 px gap when space permits and stack with 24 px of
 effective separation on narrow cards. Together they
 preserve the four existing `s`, `v`, `as`, and `av` states. Switch changes

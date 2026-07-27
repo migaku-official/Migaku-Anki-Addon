@@ -37,6 +37,8 @@ const getFontFaces = ({ family, source }) => {
     const assetName = `_migaku-card-${path.basename(source, ".scss")}-${path.basename(new URL(sourceUrl).pathname)}`;
     const css = face
       .replace(/font-family:\s*[^;]+;/, "font-family: cardFont;")
+      .replace(/font-display:\s*[^;]+;/, "font-display: block;")
+      .replace(/(@font-face\s*\{)(?![\s\S]*font-display:)/, "$1\n  font-display: block;")
       .replace(/\s*src:\s*url\([\s\S]*?;/g, "")
       .replace(/\}$/, `  src: url('/${assetName}') format('woff2');\n}`)
       .trim();

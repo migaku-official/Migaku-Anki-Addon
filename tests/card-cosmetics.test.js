@@ -110,11 +110,11 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-translation-toggle\s*\{[^}]*order: 5;[^}]*margin: 16px auto;[^}]*background: #fff;[^}]*font-weight: 700;/s,
+  /\.migaku-translation-toggle,\s*\.migaku-card-back \.migaku-card-translation\s*\{[^}]*order: 5;[^}]*min-height: 34px;[^}]*margin: 16px auto;/s,
 );
 assert.match(
   light,
-  /\.migaku-card-back \.migaku-card-translation\s*\{[^}]*order: 6;[^}]*margin: 16px auto;[^}]*font-size: 0\.875rem;[^}]*color: rgba\(0 0 90 \/ 60%\);/s,
+  /\.migaku-card-back \.migaku-card-translation\s*\{[^}]*display: flex;[^}]*align-items: center;[^}]*justify-content: center;[^}]*font-size: 0\.875rem;[^}]*color: rgba\(0 0 90 \/ 60%\);/s,
 );
 assert.match(
   light,
@@ -152,11 +152,15 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-typeselect form\s*\{[^}]*display: grid;[^}]*grid-template-columns: auto auto;[^}]*justify-content: flex-start;[^}]*column-gap: 40px;/s,
+  /\.migaku-typeselect form\s*\{[^}]*display: grid;[^}]*"section-subtitle section-subtitle"[^}]*grid-template-columns: auto auto;[^}]*justify-content: flex-start;[^}]*column-gap: 40px;/s,
 );
 assert.match(
   light,
   /\.migaku-typeselect form::before\s*\{[^}]*grid-area: section-title;[^}]*content: "Customize front of card";[^}]*font-size: 1\.25rem;[^}]*font-weight: 700;[^}]*text-align: left;/s,
+);
+assert.match(
+  light,
+  /\.migaku-typeselect form::after\s*\{[^}]*grid-area: section-subtitle;[^}]*content: 'These toggles control the "Is Vocab Card" and "Is Audio Card" fields\. Those values determine what is shown on the front of the card when you are reviewing';[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.875rem;/s,
 );
 assert.match(
   light,
@@ -168,7 +172,20 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-card-mode-control span\s*\{[^}]*display: flex;[^}]*align-items: center;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.875rem;[^}]*font-weight: 400;/s,
+  /\.migaku-card-mode-control span\s*\{[^}]*display: flex;[^}]*align-items: center;[^}]*width: 76px;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.875rem;[^}]*font-weight: 400;/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-mode-control span::before\s*\{[^}]*content: "✓";[^}]*width: 16px;[^}]*opacity: 0;/s,
+);
+assert.match(light, /\.migaku-card-mode-control span:first-child::before\s*\{[^}]*opacity: 1;/s);
+assert.match(
+  light,
+  /\.migaku-card-mode-control:has\(input:checked\) span:first-child::before\s*\{[^}]*opacity: 0;/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-mode-control input:checked ~ span::before\s*\{[^}]*opacity: 1;/s,
 );
 assert.match(light, /\.migaku-card-mode-control span:first-child\s*\{[^}]*font-weight: 700;/s);
 assert.match(
@@ -189,23 +206,23 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control::before,\s*\.migaku-audio-card-control::after\s*\{[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.875rem;[^}]*font-weight: 400;/s,
+  /\.migaku-audio-card-control::before,\s*\.migaku-audio-card-control::after\s*\{[^}]*width: 64px;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.875rem;[^}]*font-weight: 400;/s,
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control::before\s*\{[^}]*grid-area: text;[^}]*content: "Text";[^}]*font-weight: 700;/s,
+  /\.migaku-audio-card-control::before\s*\{[^}]*grid-area: text;[^}]*content: "✓ Text";[^}]*font-weight: 700;/s,
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control::after\s*\{[^}]*grid-area: audio;[^}]*content: "Audio";/s,
+  /\.migaku-audio-card-control::after\s*\{[^}]*grid-area: audio;[^}]*content: "\\00a0 Audio";/s,
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control:has\(input:checked\)::before\s*\{[^}]*font-weight: 400;/s,
+  /\.migaku-audio-card-control:has\(input:checked\)::before\s*\{[^}]*content: "\\00a0 Text";[^}]*font-weight: 400;/s,
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control:has\(input:checked\)::after\s*\{[^}]*font-weight: 700;/s,
+  /\.migaku-audio-card-control:has\(input:checked\)::after\s*\{[^}]*content: "✓ Audio";[^}]*font-weight: 700;/s,
 );
 assert.match(
   light,
@@ -229,6 +246,7 @@ assert.match(
 );
 assert.doesNotMatch(light, /\.migaku-typeselect\s*\{[^}]*border-radius: 10px;/s);
 assert.match(light, /\.dict-form\s*\{[^}]*white-space: nowrap;[^}]*word-break: normal;/s);
+assert.match(light, /ruby\s*\{[^}]*ruby-align: center;/s);
 assert.match(
   light,
   /box-shadow: 0 9px 20px rgba\(0 0 90 \/ 14%\), 0 3\.76px 8\.3555px rgba\(0 0 90 \/ 8\.3%\), 0 2\.0103px 4\.4673px rgba\(0 0 90 \/ 5%\), 0 1\.1269px 2\.5043px rgba\(0 0 90 \/ 2\.6%\), 0 \.5985px 1\.33px rgba\(0 0 90 \/ \.8%\);/,
@@ -246,7 +264,11 @@ assert.match(
 );
 assert.match(
   dark,
-  /\.ankidroid_dark_mode \.migaku-card-translation,\s*\.nightMode \.migaku-card-translation,\s*\.ankidroid_dark_mode \.migaku-type-toggle,\s*\.nightMode \.migaku-type-toggle,\s*\.ankidroid_dark_mode \.migaku-card-mode-control span,\s*\.nightMode \.migaku-card-mode-control span,\s*\.ankidroid_dark_mode \.migaku-audio-card-control::before,\s*\.nightMode \.migaku-audio-card-control::before,\s*\.ankidroid_dark_mode \.migaku-audio-card-control::after,\s*\.nightMode \.migaku-audio-card-control::after\s*\{[^}]*color: rgba\(255 255 255 \/ 60%\);/s,
+  /\.ankidroid_dark_mode \.migaku-card-translation,[\s\S]*?\.nightMode \.migaku-audio-card-control::after\s*\{[^}]*color: rgba\(255 255 255 \/ 60%\);/s,
+);
+assert.match(
+  dark,
+  /\.ankidroid_dark_mode \.migaku-typeselect form::after,\s*\.nightMode \.migaku-typeselect form::after,/s,
 );
 assert.match(
   dark,

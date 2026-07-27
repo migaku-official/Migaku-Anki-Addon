@@ -26,12 +26,22 @@ Object.entries(expectedAssetCounts).forEach(([language, assetCount]) => {
   const stylesCss = fs.readFileSync(path.join(cardDir, "styles.css"), "utf8");
   const mediaDir = path.join(cardDir, "media");
   const referencedAssets = Array.from(fontsCss.matchAll(/url\('\/(_[^']+\.woff2)'\)/g), (match) => match[1]);
+  const fontFaces = fontsCss.match(/@font-face\s*\{[\s\S]*?\}/g) || [];
   const mediaEntries = fs.readdirSync(mediaDir).sort();
   const mediaAssets = mediaEntries.filter((asset) => asset.endsWith(".woff2"));
 
   assert.match(fontsCss, /^\/\* Migaku UI default: [^*]+ \*\//);
   assert.match(fontsCss, /\/\* Canonical variable: \$font-[\w-]+ in packages\/ui\/src\/styles\/scss\/_variables\.scss\. \*\//);
   assert.match(fontsCss, /font-family: cardFont;/);
+  assert.ok(
+    !/font-display:\s*swap;/.test(fontsCss),
+    `${language} should not render a fallback face before the bundled font`,
+  );
+  assert.match(fontsCss, /font-display:\s*block;/);
+  assert.ok(
+    fontFaces.every((face) => (face.match(/font-display:\s*block;/g) || []).length === 1),
+    `${language} should block fallback swapping on every font face`,
+  );
   assert.ok(referencedAssets.length > 0, `${language} should reference local WOFF2 media`);
   assert.ok(!/https?:\/\//.test(fontsCss), `${language} should work without remote font requests`);
   assert.deepEqual(mediaAssets, Array.from(new Set(referencedAssets)).sort());

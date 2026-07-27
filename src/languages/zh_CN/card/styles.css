@@ -6,7 +6,7 @@
   font-family: cardFont;
   font-style: normal;
   font-weight: 400;
-  font-display: swap;
+  font-display: block;
   src: url('/_migaku-card-noto-sans-sc-noto-sans-sc-latin-400-normal.woff2') format('woff2');
 }
 
@@ -14,7 +14,7 @@
   font-family: cardFont;
   font-style: normal;
   font-weight: 400;
-  font-display: swap;
+  font-display: block;
   src: url('/_migaku-card-noto-sans-sc-noto-sans-sc-chinese-simplified-400-normal.woff2') format('woff2');
 }
 
@@ -22,7 +22,7 @@
   font-family: cardFont;
   font-style: normal;
   font-weight: 500;
-  font-display: swap;
+  font-display: block;
   src: url('/_migaku-card-noto-sans-sc-noto-sans-sc-latin-500-normal.woff2') format('woff2');
 }
 
@@ -30,7 +30,7 @@
   font-family: cardFont;
   font-style: normal;
   font-weight: 500;
-  font-display: swap;
+  font-display: block;
   src: url('/_migaku-card-noto-sans-sc-noto-sans-sc-chinese-simplified-500-normal.woff2') format('woff2');
 }
 
@@ -38,7 +38,7 @@
   font-family: cardFont;
   font-style: normal;
   font-weight: 700;
-  font-display: swap;
+  font-display: block;
   src: url('/_migaku-card-noto-sans-sc-noto-sans-sc-latin-700-normal.woff2') format('woff2');
 }
 
@@ -46,7 +46,7 @@
   font-family: cardFont;
   font-style: normal;
   font-weight: 700;
-  font-display: swap;
+  font-display: block;
   src: url('/_migaku-card-noto-sans-sc-noto-sans-sc-chinese-simplified-700-normal.woff2') format('woff2');
 }
 
@@ -54,7 +54,7 @@
   font-family: cardFont;
   font-style: normal;
   font-weight: 900;
-  font-display: swap;
+  font-display: block;
   src: url('/_migaku-card-noto-sans-sc-noto-sans-sc-latin-900-normal.woff2') format('woff2');
 }
 
@@ -62,7 +62,7 @@
   font-family: cardFont;
   font-style: normal;
   font-weight: 900;
-  font-display: swap;
+  font-display: block;
   src: url('/_migaku-card-noto-sans-sc-noto-sans-sc-chinese-simplified-900-normal.woff2') format('woff2');
 }
 
@@ -256,9 +256,17 @@ main.container .migaku-card audio {
   color: inherit;
 }
 
+.migaku-translation-toggle,
 .migaku-card-back .migaku-card-translation {
-  order: 6;
+  order: 5;
+  min-height: 34px;
   margin: 16px auto;
+}
+
+.migaku-card-back .migaku-card-translation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 0.875rem;
   color: rgba(0 0 90 / 60%);
   text-align: center;
@@ -348,6 +356,10 @@ main.container .migaku-card audio {
   word-break: normal;
 }
 
+ruby {
+  ruby-align: center;
+}
+
 .UiButton {
   appearance: none;
   cursor: pointer;
@@ -371,8 +383,6 @@ main.container .migaku-card audio {
 }
 
 .migaku-translation-toggle {
-  order: 5;
-  margin: 16px auto;
   background: #fff;
   font-weight: 700;
 }
@@ -419,6 +429,7 @@ main.container .migaku-card audio {
   display: grid;
   grid-template-areas:
     "section-title section-title"
+    "section-subtitle section-subtitle"
     "card-mode audio";
   grid-template-columns: auto auto;
   align-items: flex-start;
@@ -432,6 +443,16 @@ main.container .migaku-card audio {
   content: "Customize front of card";
   font-size: 1.25rem;
   font-weight: 700;
+  text-align: left;
+}
+
+.migaku-typeselect form::after {
+  grid-area: section-subtitle;
+  content: 'These toggles control the "Is Vocab Card" and "Is Audio Card" fields. Those values determine what is shown on the front of the card when you are reviewing';
+  max-width: 640px;
+  color: rgba(0 0 90 / 60%);
+  font-size: .875rem;
+  line-height: 1.4;
   text-align: left;
 }
 
@@ -458,15 +479,27 @@ main.container .migaku-card audio {
 .migaku-card-mode-control span {
   display: flex;
   align-items: center;
+  width: 76px;
   min-height: 24px;
   color: rgba(0 0 90 / 60%);
   font-size: .875rem;
   font-weight: 400;
 }
 
+.migaku-card-mode-control span::before {
+  content: "✓";
+  flex: 0 0 16px;
+  width: 16px;
+  opacity: 0;
+}
+
 .migaku-card-mode-control span:first-child {
   grid-area: sentence;
   font-weight: 700;
+}
+
+.migaku-card-mode-control span:first-child::before {
+  opacity: 1;
 }
 
 .migaku-card-mode-control input {
@@ -481,8 +514,16 @@ main.container .migaku-card audio {
   font-weight: 400;
 }
 
+.migaku-card-mode-control:has(input:checked) span:first-child::before {
+  opacity: 0;
+}
+
 .migaku-card-mode-control input:checked ~ span {
   font-weight: 700;
+}
+
+.migaku-card-mode-control input:checked ~ span::before {
+  opacity: 1;
 }
 
 .migaku-audio-card-control {
@@ -513,6 +554,7 @@ main.container .migaku-card audio {
 .migaku-audio-card-control::after {
   display: flex;
   align-items: center;
+  width: 64px;
   min-height: 24px;
   color: rgba(0 0 90 / 60%);
   font-size: .875rem;
@@ -521,7 +563,7 @@ main.container .migaku-card audio {
 
 .migaku-audio-card-control::before {
   grid-area: text;
-  content: "Text";
+  content: "✓ Text";
   font-weight: 700;
 }
 
@@ -531,14 +573,16 @@ main.container .migaku-card audio {
 
 .migaku-audio-card-control::after {
   grid-area: audio;
-  content: "Audio";
+  content: "\00a0 Audio";
 }
 
 .migaku-audio-card-control:has(input:checked)::before {
+  content: "\00a0 Text";
   font-weight: 400;
 }
 
 .migaku-audio-card-control:has(input:checked)::after {
+  content: "✓ Audio";
   font-weight: 700;
 }
 
@@ -590,6 +634,7 @@ main.container .migaku-card audio {
   .migaku-typeselect form {
     grid-template-areas:
       "section-title"
+      "section-subtitle"
       "card-mode"
       "audio";
     grid-template-columns: 1fr;
@@ -644,6 +689,8 @@ main.container .migaku-card audio {
 
 .ankidroid_dark_mode .migaku-card-translation,
 .nightMode .migaku-card-translation,
+.ankidroid_dark_mode .migaku-typeselect form::after,
+.nightMode .migaku-typeselect form::after,
 .ankidroid_dark_mode .migaku-type-toggle,
 .nightMode .migaku-type-toggle,
 .ankidroid_dark_mode .migaku-card-mode-control span,

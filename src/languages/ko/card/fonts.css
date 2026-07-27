@@ -6,6 +6,7 @@
   font-family: cardFont;
   font-weight: 400;
   font-style: normal;
+  font-display: block;
   src: url('/_migaku-card-line-seed-kr-LINESeedKR-Rg.woff2') format('woff2');
 }
 
@@ -13,5 +14,6 @@
   font-family: cardFont;
   font-weight: 700;
   font-style: normal;
+  font-display: block;
   src: url('/_migaku-card-line-seed-kr-LINESeedKR-Bd.woff2') format('woff2');
 }
