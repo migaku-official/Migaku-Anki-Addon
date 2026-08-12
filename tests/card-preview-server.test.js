@@ -126,6 +126,9 @@ const run = async () => {
     app.body,
     /id="theme-toggle"[^>]*aria-label="Switch to dark mode"[^>]*><i data-lucide="moon"><\/i><\/button>/,
   );
+  assert.doesNotMatch(app.body, /<select id="theme"/);
+  assert.match(app.body, /const themeState = \{ value: \["light", "dark", "ankidroid"\]\.includes\(query\.get\("theme"\)\)/);
+  assert.match(app.body, /params\.set\("theme", themeState\.value\)/);
   assert.match(
     app.body,
     /<div class="toolbar-actions">[\s\S]*<summary aria-label="Choose populated fields" title="Fields"><span>Fields<\/span><i data-lucide="list"><\/i><\/summary>[\s\S]*id="theme-toggle"/,
@@ -151,7 +154,7 @@ const run = async () => {
   assert.match(app.body, /iframe\s*\{[^}]*height: 100%;[^}]*min-height: 0;/s);
   assert.match(app.body, /frame\.addEventListener\("load",/);
   assert.match(app.body, /side\.value = side\.value === "front" \? "back" : "front"/);
-  assert.match(app.body, /theme\.value = theme\.value === "light" \? "dark" : "light"/);
+  assert.match(app.body, /themeState\.value = themeState\.value === "light" \? "dark" : "light"/);
   assert.match(app.body, /themeToggle\.addEventListener\("click", toggleTheme\)/);
   [
     "Sentence",

@@ -48,12 +48,11 @@ The toolbar changes the preview URL and rerenders the iframe:
 | Language | Every language listed in `template-contract.json` |
 | Side | Front or back |
 | Fixture | Sentence, vocabulary, audio, syntax showcase, or stress test |
-| Theme | Light, Anki dark, or AnkiDroid dark |
 | Theme toggle | Right-aligned moon/sun icon that switches directly between Light and Anki dark |
 | Viewport | Responsive wide view, 768 px tablet, or 390 px mobile |
 | Fields | Right-aligned `Fields` button with a list icon that opens a checklist for visible card content and card-type fields |
 
-Control state is stored in the page query string. A particular combination can therefore be bookmarked or shared with another developer running the lab. The labeled Fields control and icon-only theme control use the locally installed Lucide package and stay grouped at the right edge of the toolbar. The theme button updates the same Theme control and query parameter, while the Theme select retains direct access to AnkiDroid dark mode.
+Control state is stored in the page query string. A particular combination can therefore be bookmarked or shared with another developer running the lab. The labeled Fields control and icon-only theme control use the locally installed Lucide package and stay grouped at the right edge of the toolbar. The theme button switches between Light and Anki dark while updating the `theme` query parameter. Existing `theme=ankidroid` URLs remain valid for direct AnkiDroid dark-mode QA.
 
 Click non-interactive space inside the rendered card to toggle between front and back. The lab updates the Side control and query string. Links, audio, form controls, syntax words, and popups remain interactive without changing sides.
 

@@ -136,9 +136,6 @@ const renderAppShell = () => `<!doctype html>
           (name) => fixtures[name].label,
         )}</select>
       </label>
-      <label>Theme
-        <select id="theme"><option value="light">Light</option><option value="dark">Anki dark</option><option value="ankidroid">AnkiDroid dark</option></select>
-      </label>
       <label>Viewport
         <span class="viewport-picker">
           <button type="button" data-viewport="100%" aria-label="Responsive desktop" aria-pressed="true">Wide</button>
@@ -162,9 +159,8 @@ const renderAppShell = () => `<!doctype html>
   </div>
   <script src="/vendor/lucide.js"></script>
   <script>
-    const controls = ["language", "side", "fixture", "theme"].map((id) => document.getElementById(id));
+    const controls = ["language", "side", "fixture"].map((id) => document.getElementById(id));
     const side = document.getElementById("side");
-    const theme = document.getElementById("theme");
     const themeToggle = document.getElementById("theme-toggle");
     const device = document.getElementById("device");
     const frame = document.getElementById("preview");
@@ -183,6 +179,7 @@ const renderAppShell = () => `<!doctype html>
       ),
     )};
     const query = new URLSearchParams(window.location.search);
+    const themeState = { value: ["light", "dark", "ankidroid"].includes(query.get("theme")) ? query.get("theme") : "light" };
     const applyQuery = () => controls.forEach((control) => {
       const value = query.get(control.id);
       if (value && Array.from(control.options).some((option) => option.value === value)) control.value = value;
@@ -193,6 +190,7 @@ const renderAppShell = () => `<!doctype html>
     else syncFixtureFields();
     const getParams = () => {
       const params = new URLSearchParams(Object.fromEntries(controls.map((control) => [control.id, control.value])));
+      params.set("theme", themeState.value);
       params.set("fields", "configured");
       fieldToggles.filter((toggle) => toggle.checked).forEach((toggle) => params.append("field", toggle.dataset.field));
       return params;
@@ -208,14 +206,14 @@ const renderAppShell = () => `<!doctype html>
       render();
     };
     const syncThemeToggle = () => {
-      const isDark = theme.value !== "light";
+      const isDark = themeState.value !== "light";
       themeToggle.setAttribute("aria-label", "Switch to " + (isDark ? "light" : "dark") + " mode");
       themeToggle.setAttribute("aria-pressed", String(isDark));
       themeToggle.innerHTML = '<i data-lucide="' + (isDark ? "sun" : "moon") + '"></i>';
       lucide.createIcons();
     };
     const toggleTheme = () => {
-      theme.value = theme.value === "light" ? "dark" : "light";
+      themeState.value = themeState.value === "light" ? "dark" : "light";
       syncThemeToggle();
       render();
     };
@@ -226,7 +224,6 @@ const renderAppShell = () => `<!doctype html>
     applyQuery();
     syncThemeToggle();
     controls.forEach((control) => control.addEventListener("change", () => {
-      if (control === theme) syncThemeToggle();
       if (control.id === "fixture") syncFixtureFields();
       render();
     }));
