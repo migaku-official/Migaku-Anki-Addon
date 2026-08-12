@@ -4230,24 +4230,12 @@ ruby {
   opacity: 0;
 }
 
-.migaku-card-mode-control span:first-child {
-  text-decoration: underline;
-}
-
 .migaku-card-mode-control span:first-child::before {
   opacity: 1;
 }
 
-.migaku-card-mode-control:has(input:checked) span:first-child {
-  text-decoration: none;
-}
-
 .migaku-card-mode-control:has(input:checked) span:first-child::before {
   opacity: 0;
-}
-
-.migaku-card-mode-control input:checked ~ span {
-  text-decoration: underline;
 }
 
 .migaku-card-mode-control input:checked ~ span::before {
@@ -4298,7 +4286,6 @@ ruby {
   order: 1;
   content: "Text";
   background-image: var(--migaku-selected-tick);
-  text-decoration: underline;
 }
 
 .migaku-audio-card-control input {
@@ -4313,12 +4300,10 @@ ruby {
 
 .migaku-audio-card-control:has(input:checked)::before {
   background-image: var(--migaku-unselected-tick);
-  text-decoration: none;
 }
 
 .migaku-audio-card-control:has(input:checked)::after {
   background-image: var(--migaku-selected-tick);
-  text-decoration: underline;
 }
 
 .migaku-typeselect input[type="checkbox"] {

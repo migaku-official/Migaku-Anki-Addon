@@ -196,14 +196,9 @@ assert.match(
   light,
   /\.migaku-card-mode-control input:checked ~ span::before\s*\{[^}]*opacity: 1;/s,
 );
-assert.match(light, /\.migaku-card-mode-control span:first-child\s*\{[^}]*text-decoration: underline;/s);
-assert.match(
+assert.doesNotMatch(
   light,
-  /\.migaku-card-mode-control:has\(input:checked\) span:first-child\s*\{[^}]*text-decoration: none;/s,
-);
-assert.match(
-  light,
-  /\.migaku-card-mode-control input:checked ~ span\s*\{[^}]*text-decoration: underline;/s,
+  /\.migaku-card-mode-control[^{}]*\{[^}]*text-decoration: underline;/s,
 );
 assert.doesNotMatch(light, /\.migaku-card-mode-control\s*\{[^}]*grid-template-columns:/s);
 assert.match(
@@ -224,7 +219,7 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control::before\s*\{[^}]*order: 1;[^}]*content: "Text";[^}]*background-image: var\(--migaku-selected-tick\);[^}]*text-decoration: underline;/s,
+  /\.migaku-audio-card-control::before\s*\{[^}]*order: 1;[^}]*content: "Text";[^}]*background-image: var\(--migaku-selected-tick\);/s,
 );
 assert.match(
   light,
@@ -236,11 +231,15 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control:has\(input:checked\)::before\s*\{[^}]*background-image: var\(--migaku-unselected-tick\);[^}]*text-decoration: none;/s,
+  /\.migaku-audio-card-control:has\(input:checked\)::before\s*\{[^}]*background-image: var\(--migaku-unselected-tick\);/s,
 );
 assert.match(
   light,
-  /\.migaku-audio-card-control:has\(input:checked\)::after\s*\{[^}]*background-image: var\(--migaku-selected-tick\);[^}]*text-decoration: underline;/s,
+  /\.migaku-audio-card-control:has\(input:checked\)::after\s*\{[^}]*background-image: var\(--migaku-selected-tick\);/s,
+);
+assert.doesNotMatch(
+  light,
+  /\.migaku-audio-card-control[^{}]*\{[^}]*text-decoration: underline;/s,
 );
 assert.doesNotMatch(light, /\.migaku-audio-card-control\s*\{[^}]*grid-template-columns:/s);
 assert.match(

@@ -194,8 +194,8 @@ two left-aligned on/off controls beneath a `Customize front of card` heading at
 `Text or audio on the front:` selects Text or Audio. Both pairs use
 secondary-text color at `0.875rem`. Each heading occupies its own line, while
 the labels and 44 px switch flow inline at their natural widths beneath it.
-Selection is shown with an underline and a leading Lucide-style tick rather than
-a font-weight change. The 16 px tick slot remains reserved, and the unselected
+Selection is shown with a leading Lucide-style tick rather than an underline or
+font-weight change. The 16 px tick slot remains reserved, and the unselected
 tick becomes transparent, so changing selection does not shift the controls. A
 smaller secondary-text disclaimer beneath both toggle groups explains that they
 edit the `Is Vocab Card` and `Is Audio Card` fields and therefore determine the
