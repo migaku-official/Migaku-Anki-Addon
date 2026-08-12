@@ -56,9 +56,13 @@ assert.strictEqual(sekaiSyntax[5], "への");
   assert.ok(fixture.fields.Sentence.includes(expectedTargetWords.ja));
 });
 
-const audio = buildLocalizedFixture("zh_CN", "audio");
-assert.ok(audio.fields.Sentence.includes(expectedTargetWords.zh_CN));
-assert.strictEqual(audio.fields["Target Word"], "");
+const audioSentence = buildLocalizedFixture("zh_CN", "sentence", true);
+const audioVocabulary = buildLocalizedFixture("zh_CN", "vocabulary", true);
+assert.ok(audioSentence.fields.Sentence.includes(expectedTargetWords.zh_CN));
+assert.strictEqual(audioSentence.fields["Is Audio Card"], "1");
+assert.strictEqual(audioSentence.fields["Is Vocabulary Card"], "");
+assert.strictEqual(audioVocabulary.fields["Is Audio Card"], "1");
+assert.strictEqual(audioVocabulary.fields["Is Vocabulary Card"], "1");
 
 const stress = buildLocalizedFixture("ja", "stress");
 assert.ok(stress.fields.Sentence.includes(expectedTargetWords.ja));
@@ -136,7 +140,11 @@ assert.deepStrictEqual(standardFields, [
   "Is Vocabulary Card",
   "Is Audio Card",
 ]);
-assert.deepStrictEqual(toggleFields, standardFields.filter((field) => field !== "Reading"));
+assert.deepStrictEqual(
+  toggleFields,
+  standardFields.filter((field) => !["Reading", "Is Audio Card"].includes(field)),
+);
+assert.deepStrictEqual(Object.keys(fixtures), ["sentence", "vocabulary", "stress", "syntax"]);
 Object.keys(expectedTargetWords).forEach((language) =>
   Object.keys(fixtures).forEach((fixtureName) => {
     const { fields } = buildLocalizedFixture(language, fixtureName);

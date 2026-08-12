@@ -140,6 +140,9 @@ const run = async () => {
   assert.match(app.body, /\.field-menu summary\s*\{[^}]*display: grid;[^}]*grid-auto-flow: column;[^}]*width: auto;[^}]*padding: 0 12px;/s);
   assert.match(app.body, /#theme-toggle\s*\{[^}]*margin-left: 0;[^}]*width: 40px;/s);
   assert.match(app.body, />Syntax showcase<\/option>/);
+  assert.doesNotMatch(app.body, /<option value="audio">Audio card<\/option>/);
+  assert.match(app.body, /<input type="checkbox" id="audio-card">Audio/);
+  assert.match(app.body, /params\.set\("audio", audioCard\.checked \? "1" : "0"\)/);
   assert.match(app.body, /new EventSource\("\/events"\)/);
   assert.match(app.body, /html, body\s*\{[^}]*height: 100%;[^}]*overflow: hidden;/s);
   assert.match(app.body, /\.app\s*\{[^}]*height: 100vh;[^}]*overflow: hidden;/s);
@@ -169,9 +172,9 @@ const run = async () => {
     "Notes",
     "Alternate Sentence",
     "Is Vocabulary Card",
-    "Is Audio Card",
   ].forEach((field) => assert.match(app.body, new RegExp(`data-field="${field}"`)));
   assert.doesNotMatch(app.body, /data-field="Reading"/);
+  assert.doesNotMatch(app.body, /data-field="Is Audio Card"/);
 
   const preview = await request(
     port,
@@ -180,6 +183,27 @@ const run = async () => {
   assert.strictEqual(preview.statusCode, 200);
   assert.match(preview.body, /data-preview-side="back"/);
   assert.match(preview.body, /Eine Sprache zu lernen/);
+
+  const textFront = await request(
+    port,
+    "/preview?language=en&side=front&theme=light&fixture=sentence&audio=0",
+  );
+  const audioSentenceFront = await request(
+    port,
+    "/preview?language=en&side=front&theme=light&fixture=sentence&audio=1",
+  );
+  const audioVocabularyFront = await request(
+    port,
+    "/preview?language=en&side=front&theme=light&fixture=vocabulary&audio=1",
+  );
+  assert.doesNotMatch(
+    textFront.body,
+    /class="replay-button soundLink" data-preview-audio-button/,
+  );
+  assert.match(audioSentenceFront.body, /src="\/fixture-media\/sentence\.m4a"/);
+  assert.doesNotMatch(audioSentenceFront.body, /target-word\.mp3/);
+  assert.match(audioVocabularyFront.body, /src="\/fixture-media\/target-word\.mp3"/);
+  assert.doesNotMatch(audioVocabularyFront.body, /sentence\.m4a/);
 
   const conditionalPreview = await request(
     port,

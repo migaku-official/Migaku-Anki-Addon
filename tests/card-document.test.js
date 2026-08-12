@@ -92,7 +92,16 @@ const vocabularyFront = renderCardDocument({
   theme: "light",
 });
 const audioFront = renderCardDocument({
-  fixtureName: "audio",
+  audioCard: true,
+  fixtureName: "sentence",
+  language: "en",
+  rootDir,
+  side: "front",
+  theme: "light",
+});
+const audioVocabularyFront = renderCardDocument({
+  audioCard: true,
+  fixtureName: "vocabulary",
   language: "en",
   rootDir,
   side: "front",
@@ -107,7 +116,7 @@ const back = renderCardDocument({
 });
 const imagesOnlyBack = renderCardDocument({
   enabledFields: ["Images"],
-  fixtureName: "audio",
+  fixtureName: "sentence",
   language: "en",
   rootDir,
   side: "back",
@@ -170,6 +179,15 @@ assert.doesNotMatch(vocabularyFront, /class="field migaku-card-sentence"/);
 assert.match(
   audioFront,
   /class="migaku-card migaku-card-front">[\s\S]*class="migaku-card-content">[\s\S]*class="replay-button soundLink"/,
+);
+assert.match(audioFront, /src="\/fixture-media\/sentence\.m4a"/);
+assert.doesNotMatch(audioFront, /target-word\.mp3/);
+assert.match(audioVocabularyFront, /src="\/fixture-media\/target-word\.mp3"/);
+assert.doesNotMatch(audioVocabularyFront, /sentence\.m4a/);
+assert.doesNotMatch(front, /class="replay-button soundLink" data-preview-audio-button/);
+assert.doesNotMatch(
+  vocabularyFront,
+  /class="replay-button soundLink" data-preview-audio-button/,
 );
 
 contract.languages.forEach((language) => {
@@ -249,12 +267,12 @@ contract.languages.forEach((language) => {
     template,
     buildLocalizedFixture(language, "vocabulary").fields,
   );
-  const audioFields = buildLocalizedFixture(language, "audio").fields;
+  const audioFields = buildLocalizedFixture(language, "sentence", true).fields;
   const audioInteractions = executeBackInteractions(template, audioFields);
-  const audioVocabularyInteractions = executeBackInteractions(template, {
-    ...audioFields,
-    "Is Vocabulary Card": "1",
-  });
+  const audioVocabularyInteractions = executeBackInteractions(
+    template,
+    buildLocalizedFixture(language, "vocabulary", true).fields,
+  );
   const noPycmdInteractions = executeBackInteractions(template, fields, false);
   const localizedBack = renderCardDocument({
     fixtureName: "sentence",
@@ -264,7 +282,8 @@ contract.languages.forEach((language) => {
     theme: "light",
   });
   const audioBack = renderCardDocument({
-    fixtureName: "audio",
+    audioCard: true,
+    fixtureName: "sentence",
     language,
     rootDir,
     side: "back",

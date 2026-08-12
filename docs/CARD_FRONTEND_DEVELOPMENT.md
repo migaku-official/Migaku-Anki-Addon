@@ -47,7 +47,8 @@ The toolbar changes the preview URL and rerenders the iframe:
 | --- | --- |
 | Language | Every language listed in `template-contract.json` |
 | Side | Front or back |
-| Fixture | Sentence, vocabulary, audio, syntax showcase, or stress test |
+| Fixture | Sentence, vocabulary, syntax showcase, or stress test |
+| Front content | Text or audio, independently combined with the selected fixture |
 | Theme toggle | Right-aligned moon/sun icon that switches directly between Light and Anki dark |
 | Viewport | Responsive wide view, 768 px tablet, or 390 px mobile |
 | Fields | Right-aligned `Fields` button with a list icon that opens a checklist for visible card content and card-type fields |
@@ -61,12 +62,18 @@ labels and controls use comfortable development-tool sizing, and the control
 groups wrap onto additional rows when the browser is too narrow to contain them.
 The card receives the remaining viewport height below those rows.
 
+The Front content control writes the independent `audio` query parameter. In
+audio mode, a sentence fixture renders Sentence Audio on the front and a
+vocabulary fixture renders Word Audio. Text mode renders Sentence or Target Word
+respectively.
+
 The Fields menu writes a `fields=configured` marker and one repeated `field`
 query parameter per enabled field. The marker preserves the all-fields-off state.
 Unchecking a field supplies an empty value to the shipped template, so real
 Anki conditional rendering can be inspected without editing a fixture.
 The production `Reading` field is intentionally omitted because it supports
 language reading behavior rather than an independently visible card section.
+`Is Audio Card` is also omitted because Front content is its dedicated control.
 
 ## What to edit
 
@@ -244,9 +251,11 @@ A content-rich sentence card with translation, definitions, examples, notes, aud
 
 A vocabulary-card state that exercises target-word and word-audio branches.
 
-### Audio
+### Front content mode
 
-An audio-card state that exercises the audio-first conditional branch with deliberately sparse supporting fields.
+Text/audio is independent of the fixture. Exercise both modes with sentence and
+vocabulary fixtures to cover all four production front states. Sentence audio
+uses the Sentence Audio field; vocabulary audio uses Word Audio.
 
 ### Syntax showcase
 
@@ -272,7 +281,7 @@ When a visual bug depends on a new content shape, add a named fixture rather tha
 1. Start the lab and edit `src/card-styles/global.css`.
 2. Start with the sentence fixture on the front and back.
 3. Check the syntax showcase for coloring and popups.
-4. Check the vocabulary and audio branches.
+4. Check sentence and vocabulary fixtures in both text and audio modes.
 5. Check the stress fixture at 390 px.
 6. Check both dark themes.
 7. Repeat the matrix for languages with different font assets, especially Japanese, Korean, Simplified Chinese, Traditional Chinese, and Cantonese.
@@ -386,7 +395,7 @@ A cosmetic card change is complete when:
 - Functional template hashes remain unchanged.
 - Generated language stylesheets are current.
 - Front and back render correctly.
-- Sentence, vocabulary, audio, and stress fixtures remain usable.
+- Sentence, vocabulary, syntax, and stress fixtures remain usable in text and audio modes.
 - Light, Anki dark, and AnkiDroid dark modes have adequate contrast.
 - Wide and narrow layouts do not overflow unexpectedly.
 - The complete automated suite passes.

@@ -50,6 +50,7 @@ const assertOption = (options, value, optionName) => {
 };
 
 const renderCardDocument = ({
+  audioCard = false,
   enabledFields,
   fixtureName,
   language,
@@ -60,11 +61,11 @@ const renderCardDocument = ({
   assertOption(contract.languages, language, "language");
   assertOption(["front", "back"], side, "side");
   assertOption(Object.keys(themes), theme, "theme");
-  const fixture = buildLocalizedFixture(language, fixtureName);
+  const fixture = buildLocalizedFixture(language, fixtureName, audioCard);
   if (enabledFields) {
     const enabledFieldSet = new Set(enabledFields);
     const fallbackFields = buildFieldFallbacks(language);
-    standardFields.forEach((field) => {
+    standardFields.filter((field) => field !== "Is Audio Card").forEach((field) => {
       fixture.fields[field] = enabledFieldSet.has(field)
         ? fixture.fields[field] || fallbackFields[field]
         : "";
@@ -87,7 +88,7 @@ const renderCardDocument = ({
   <script>const pycmd = () => {};</script>
   <style>${styles}\n${supportStyles}</style>
 </head>
-<body class="${themes[theme]}" data-preview-fixture="${fixtureName}" data-preview-side="${side}" data-preview-theme="${theme}">
+<body class="${themes[theme]}" data-preview-audio="${audioCard ? "audio" : "text"}" data-preview-fixture="${fixtureName}" data-preview-side="${side}" data-preview-theme="${theme}">
   <main class="container">
     <div id="qa">
       <div id="content">${card}</div>

@@ -78,6 +78,8 @@ const renderAppShell = () => `<!doctype html>
     }
     select { min-width: 112px; padding: 0 30px 0 10px; }
     #fixture { min-width: 160px; }
+    .audio-choice { display: flex; align-items: center; min-height: 38px; gap: 8px; padding: 0 10px; border: 1px solid #3b404b; border-radius: 8px; background: #242832; color: #f6f7fb; font-size: 12px; letter-spacing: 0; text-transform: none; }
+    .audio-choice input { width: 16px; height: 16px; margin: 0; }
     #theme-toggle {
       display: grid;
       flex: 0 0 auto;
@@ -136,6 +138,9 @@ const renderAppShell = () => `<!doctype html>
           (name) => fixtures[name].label,
         )}</select>
       </label>
+      <label>Front content
+        <span class="audio-choice"><input type="checkbox" id="audio-card">Audio</span>
+      </label>
       <label>Viewport
         <span class="viewport-picker">
           <button type="button" data-viewport="100%" aria-label="Responsive desktop" aria-pressed="true">Wide</button>
@@ -160,6 +165,7 @@ const renderAppShell = () => `<!doctype html>
   <script src="/vendor/lucide.js"></script>
   <script>
     const controls = ["language", "side", "fixture"].map((id) => document.getElementById(id));
+    const audioCard = document.getElementById("audio-card");
     const side = document.getElementById("side");
     const themeToggle = document.getElementById("theme-toggle");
     const device = document.getElementById("device");
@@ -180,16 +186,20 @@ const renderAppShell = () => `<!doctype html>
     )};
     const query = new URLSearchParams(window.location.search);
     const themeState = { value: ["light", "dark", "ankidroid"].includes(query.get("theme")) ? query.get("theme") : "light" };
-    const applyQuery = () => controls.forEach((control) => {
-      const value = query.get(control.id);
-      if (value && Array.from(control.options).some((option) => option.value === value)) control.value = value;
-    });
+    const applyQuery = () => {
+      controls.forEach((control) => {
+        const value = query.get(control.id);
+        if (value && Array.from(control.options).some((option) => option.value === value)) control.value = value;
+      });
+      audioCard.checked = query.get("audio") === "1";
+    };
     const enabledQueryFields = query.getAll("field");
     const syncFixtureFields = () => fieldToggles.forEach((toggle) => toggle.checked = fixtureFieldPresence[document.getElementById("fixture").value].includes(toggle.dataset.field));
     if (enabledQueryFields.length) fieldToggles.forEach((toggle) => toggle.checked = enabledQueryFields.includes(toggle.dataset.field));
     else syncFixtureFields();
     const getParams = () => {
       const params = new URLSearchParams(Object.fromEntries(controls.map((control) => [control.id, control.value])));
+      params.set("audio", audioCard.checked ? "1" : "0");
       params.set("theme", themeState.value);
       params.set("fields", "configured");
       fieldToggles.filter((toggle) => toggle.checked).forEach((toggle) => params.append("field", toggle.dataset.field));
@@ -228,6 +238,7 @@ const renderAppShell = () => `<!doctype html>
       render();
     }));
     fieldToggles.forEach((toggle) => toggle.addEventListener("change", render));
+    audioCard.addEventListener("change", render);
     themeToggle.addEventListener("click", toggleTheme);
     frame.addEventListener("load", () =>
       frame.contentDocument?.addEventListener("click", (event) => {
@@ -344,6 +355,7 @@ const createPreviewServer = ({ rootDir, watch = true }) => {
     if (url.pathname === "/preview") {
       try {
         const document = renderCardDocument({
+          audioCard: url.searchParams.get("audio") === "1",
           enabledFields: url.searchParams.has("fields") || url.searchParams.has("field")
             ? url.searchParams.getAll("field")
             : undefined,

@@ -21,7 +21,9 @@ const standardFields = [
   "Is Vocabulary Card",
   "Is Audio Card",
 ];
-const toggleFields = standardFields.filter((field) => field !== "Reading");
+const toggleFields = standardFields.filter(
+  (field) => !["Reading", "Is Audio Card"].includes(field),
+);
 const storybookImages = '<img alt="Square Storybook fixture" src="/fixture-media/storybook-square.png"><img alt="Portrait Storybook fixture" src="/fixture-media/storybook-portrait.png"><img alt="Landscape Storybook fixture" src="/fixture-media/storybook-landscape.png">';
 const fixedMediaFields = {
   Screenshot:
@@ -162,23 +164,6 @@ const fixtures = {
       "Word Audio": "<audio controls preload=\"none\"></audio>",
     },
   },
-  audio: {
-    label: "Audio card",
-    fields: {
-      Definitions: "",
-      "Example Sentences": "",
-      Images: "",
-      "Is Audio Card": "1",
-      "Is Vocabulary Card": "",
-      Notes: "",
-      Screenshot: "",
-      Sentence: "Can you understand this sentence from audio alone?",
-      "Sentence Audio": "<audio controls preload=\"none\"></audio>",
-      "Target Word": "",
-      Translation: "Kannst du diesen Satz allein durch den Ton verstehen?",
-      "Word Audio": "",
-    },
-  },
   stress: {
     label: "Stress test",
     fields: {
@@ -224,7 +209,7 @@ const fixtures = {
   },
 };
 
-const buildLocalizedFixture = (language, fixtureName) => {
+const buildLocalizedFixture = (language, fixtureName, audioCard = false) => {
   const fixture = fixtures[fixtureName];
   if (!fixture) throw new Error(`Unknown fixture: ${fixtureName}`);
   const profile = syntaxProfiles[language];
@@ -236,9 +221,10 @@ const buildLocalizedFixture = (language, fixtureName) => {
     fields: {
       ...fixture.fields,
       ...fixedMediaFields,
+      "Is Audio Card": audioCard ? "1" : "",
       Sentence: mergeStressContent(profile.sentence, fixture.fields.Sentence),
       "Target Word": mergeStressContent(
-        fixtureName === "audio" ? fixture.fields["Target Word"] : profile.targetWord,
+        profile.targetWord,
         fixture.fields["Target Word"],
       ),
       Translation: mergeStressContent(profile.translation, fixture.fields.Translation),
