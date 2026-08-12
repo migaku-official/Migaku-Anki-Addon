@@ -54,7 +54,10 @@ Control state is stored in the page query string. A particular combination can t
 
 Click non-interactive space inside the rendered card to toggle between front and back. The lab updates the Side control and query string. Links, audio, form controls, syntax words, and popups remain interactive without changing sides.
 
-The toolbar and preview fill the browser viewport without page scrolling. The toolbar stays compact so the card receives the remaining height.
+The toolbar and preview fill the browser viewport without page scrolling. Toolbar
+labels and controls use comfortable development-tool sizing, and the control
+groups wrap onto additional rows when the browser is too narrow to contain them.
+The card receives the remaining viewport height below those rows.
 
 The Fields menu writes a `fields=configured` marker and one repeated `field`
 query parameter per enabled field. The marker preserves the all-fields-off state.

@@ -57,49 +57,47 @@ const renderAppShell = () => `<!doctype html>
       position: relative;
       z-index: 1;
       display: flex;
-      flex-wrap: nowrap;
-      gap: 8px;
-      align-items: center;
-      padding: 4px 8px;
-      overflow-x: auto;
-      overflow-y: hidden;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      align-items: flex-end;
+      padding: 8px 12px;
       border-bottom: 1px solid #30343d;
       background: #1a1d24;
       box-shadow: 0 10px 30px rgb(0 0 0 / 25%);
     }
     .brand { display: none; }
     .brand span, .status { display: none; }
-    label { display: grid; flex: 0 0 auto; gap: 1px; color: #afb5c2; font-size: 8px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+    label { display: grid; flex: 0 0 auto; gap: 4px; color: #afb5c2; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
     select, button {
-      min-height: 26px;
+      min-height: 38px;
       border: 1px solid #3b404b;
-      border-radius: 6px;
+      border-radius: 8px;
       background: #242832;
       color: #f6f7fb;
       font: inherit;
     }
-    select { min-width: 96px; padding: 0 24px 0 7px; }
-    #fixture { min-width: 132px; }
+    select { min-width: 112px; padding: 0 30px 0 10px; }
+    #fixture { min-width: 160px; }
     #theme-toggle {
       display: grid;
       flex: 0 0 auto;
       place-items: center;
       margin-left: 0;
-      width: 28px;
-      min-width: 28px;
+      width: 40px;
+      min-width: 40px;
       padding: 0;
     }
-    #theme-toggle svg { width: 16px; height: 16px; }
-    button { padding: 0 8px; cursor: pointer; }
+    #theme-toggle svg { width: 20px; height: 20px; }
+    button { padding: 0 12px; cursor: pointer; }
     button:hover, button[aria-pressed="true"] { border-color: #6d8dff; background: #31416f; }
     .viewport-picker { display: flex; gap: 4px; }
-    .viewport-picker button { min-width: 34px; }
-    .toolbar-actions { margin-left: auto; display: flex; align-items: center; gap: 4px; }
+    .viewport-picker button { min-width: 44px; }
+    .toolbar-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
     .field-menu { position: relative; flex: 0 0 auto; }
-    .field-menu summary { display: grid; place-items: center; width: 28px; min-height: 26px; padding: 0; border: 1px solid #3b404b; border-radius: 6px; background: #242832; cursor: pointer; list-style: none; }
-    .field-menu summary svg { width: 16px; height: 16px; }
-    .field-menu-content { position: fixed; z-index: 2; top: 38px; right: 44px; display: grid; grid-template-columns: repeat(2, minmax(150px, 1fr)); gap: 4px 12px; padding: 10px; border: 1px solid #3b404b; border-radius: 10px; background: #1a1d24; box-shadow: 0 12px 32px rgb(0 0 0 / 40%); }
-    .field-toggle { display: flex; align-items: center; gap: 6px; font-size: 10px; letter-spacing: 0; text-transform: none; }
+    .field-menu summary { display: grid; place-items: center; width: 40px; min-height: 38px; padding: 0; border: 1px solid #3b404b; border-radius: 8px; background: #242832; cursor: pointer; list-style: none; }
+    .field-menu summary svg { width: 20px; height: 20px; }
+    .field-menu-content { position: absolute; z-index: 2; top: calc(100% + 8px); right: 0; display: grid; width: min(360px, calc(100vw - 24px)); grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 16px; padding: 12px; border: 1px solid #3b404b; border-radius: 10px; background: #1a1d24; box-shadow: 0 12px 32px rgb(0 0 0 / 40%); }
+    .field-toggle { display: flex; align-items: center; gap: 8px; font-size: 12px; letter-spacing: 0; text-transform: none; }
     .workspace { min-height: 0; overflow: hidden; padding: 8px; background-color: #111318; background-image: radial-gradient(#2d323d 1px, transparent 1px); background-size: 18px 18px; }
     .device {
       width: min(100%, var(--preview-width, 100%));
