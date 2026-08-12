@@ -222,6 +222,11 @@ the [Migaku syntax reference guide](https://magenta-dirigible-0d8.notion.site/Sy
 Changing the lab language therefore exercises that language's parser, coloring,
 and popup metadata rather than reusing English content.
 
+Japanese fixture annotations require whitespace token boundaries when the
+unannotated suffix of one word is immediately followed by the annotated base of
+another. The Japanese parser uses those boundaries to keep the following kanji
+out of the previous annotation's suffix; parser whitespace is not rendered.
+
 Every fixture also receives the same lab-only target-word audio, sentence audio,
 and Vegeta screenshot from `dev/card-preview/media/`. The preview server exposes
 these through `/fixture-media/`; they are regression assets and are not installed
