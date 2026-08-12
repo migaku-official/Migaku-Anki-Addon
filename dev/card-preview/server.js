@@ -67,7 +67,7 @@ const renderAppShell = () => `<!doctype html>
     }
     .brand { display: none; }
     .brand span, .status { display: none; }
-    label { display: grid; flex: 0 0 auto; gap: 4px; color: #afb5c2; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+    label { display: grid; flex: 0 1 auto; min-width: 0; gap: 4px; color: #afb5c2; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
     select, button {
       min-height: 38px;
       border: 1px solid #3b404b;
@@ -90,9 +90,9 @@ const renderAppShell = () => `<!doctype html>
     #theme-toggle svg { width: 20px; height: 20px; }
     button { padding: 0 12px; cursor: pointer; }
     button:hover, button[aria-pressed="true"] { border-color: #6d8dff; background: #31416f; }
-    .viewport-picker { display: flex; gap: 4px; }
+    .viewport-picker { display: flex; flex-wrap: wrap; gap: 4px; }
     .viewport-picker button { min-width: 44px; }
-    .toolbar-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+    .toolbar-actions { margin-left: auto; display: flex; flex: 0 1 auto; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 8px; }
     .field-menu { position: relative; flex: 0 0 auto; }
     .field-menu summary { display: grid; place-items: center; width: 40px; min-height: 38px; padding: 0; border: 1px solid #3b404b; border-radius: 8px; background: #242832; cursor: pointer; list-style: none; }
     .field-menu summary svg { width: 20px; height: 20px; }

@@ -131,6 +131,7 @@ const run = async () => {
   assert.match(app.body, /<script src="\/vendor\/lucide\.js"><\/script>/);
   assert.match(app.body, /lucide\.createIcons\(\)/);
   assert.match(app.body, /\.toolbar-actions\s*\{[^}]*margin-left: auto;[^}]*display: flex;/s);
+  assert.match(app.body, /\.toolbar-actions\s*\{[^}]*flex-wrap: wrap;/s);
   assert.match(app.body, /\.field-menu summary\s*\{[^}]*display: grid;[^}]*width: 40px;[^}]*padding: 0;/s);
   assert.match(app.body, /#theme-toggle\s*\{[^}]*margin-left: 0;[^}]*width: 40px;/s);
   assert.match(app.body, />Syntax showcase<\/option>/);
@@ -140,6 +141,7 @@ const run = async () => {
   assert.match(app.body, /\.toolbar\s*\{[^}]*flex-wrap: wrap;[^}]*padding: 8px 12px;/s);
   assert.match(app.body, /label\s*\{[^}]*font-size: 12px;/s);
   assert.match(app.body, /select, button\s*\{[^}]*min-height: 38px;/s);
+  assert.match(app.body, /\.viewport-picker\s*\{[^}]*flex-wrap: wrap;/s);
   assert.match(app.body, /\.brand\s*\{[^}]*display: none;/s);
   assert.match(app.body, /select\s*\{[^}]*min-width: 112px;/s);
   assert.match(app.body, /\.workspace\s*\{[^}]*overflow: hidden;/s);
