@@ -105,6 +105,14 @@ const back = renderCardDocument({
   side: "back",
   theme: "dark",
 });
+const imagesOnlyBack = renderCardDocument({
+  enabledFields: ["Images"],
+  fixtureName: "audio",
+  language: "en",
+  rootDir,
+  side: "back",
+  theme: "light",
+});
 const previewCommandShim = "<script>const pycmd = () => {};</script>";
 const previewAudioScript = [...back.matchAll(/<script>([\s\S]*?)<\/script>/g)]
   .map((match) => match[1])
@@ -223,6 +231,12 @@ assert.match(
 );
 assert.ok(back.indexOf(previewCommandShim) < back.indexOf('class="migaku-typeselect"'));
 assert.doesNotMatch(back, /{{[^{}]+}}/);
+assert.strictEqual((imagesOnlyBack.match(/<img /g) || []).length, 3);
+[
+  "storybook-square.png",
+  "storybook-portrait.png",
+  "storybook-landscape.png",
+].forEach((image) => assert.match(imagesOnlyBack, new RegExp(`/fixture-media/${image}`)));
 
 contract.languages.forEach((language) => {
   const template = fs.readFileSync(

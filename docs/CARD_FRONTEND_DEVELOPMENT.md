@@ -227,6 +227,11 @@ and Vegeta screenshot from `dev/card-preview/media/`. The preview server exposes
 these through `/fixture-media/`; they are regression assets and are not installed
 as production note-type media.
 
+Enabling the `Images` field renders local copies of the UI Image Storybook's
+square, portrait, and landscape placeholders. The contrasting aspect ratios make
+the card's wrapping media layout visible without depending on a running front-end
+repository or external network assets.
+
 ### Sentence
 
 A content-rich sentence card with translation, definitions, examples, notes, audio controls, screenshot, and supporting image.

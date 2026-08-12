@@ -22,6 +22,7 @@ const standardFields = [
   "Is Audio Card",
 ];
 const toggleFields = standardFields.filter((field) => field !== "Reading");
+const storybookImages = '<img alt="Square Storybook fixture" src="/fixture-media/storybook-square.png"><img alt="Portrait Storybook fixture" src="/fixture-media/storybook-portrait.png"><img alt="Landscape Storybook fixture" src="/fixture-media/storybook-landscape.png">';
 const fixedMediaFields = {
   Screenshot:
     '<img alt="Vegeta wearing a scouter" src="/fixture-media/vegeta-scouter.png">',
@@ -34,8 +35,7 @@ const buildFieldFallbacks = (language) => {
     "Alternate Sentence": profile.sentence,
     Definitions: "<p>Fixture definition.</p>",
     "Example Sentences": "<p>Fixture example sentence.</p>",
-    Images:
-      '<img alt="Vegeta wearing a scouter" src="/fixture-media/vegeta-scouter.png">',
+    Images: storybookImages,
     "Is Audio Card": "1",
     "Is Vocabulary Card": "1",
     Notes: "<p>Fixture note.</p>",
@@ -130,7 +130,7 @@ const fixtures = {
         "<ol><li>A system of communication used by a community.</li><li>The style of a piece of writing or speech.</li></ol>",
       "Example Sentences":
         "<p>Language connects people across cultures.</p><p>Her use of language is precise and warm.</p>",
-      Images: `<img alt="A second fixture" src="${dataImage("Supporting image", "#f59e0b")}">`,
+      Images: storybookImages,
       "Is Audio Card": "",
       "Is Vocabulary Card": "",
       Notes:
@@ -190,11 +190,7 @@ const fixtures = {
       "Example Sentences": `<p>${"A long example sentence with mixed punctuation — commas, dashes, parentheses, and emphasis. ".repeat(
         5,
       )}</p>`,
-      Images: Array.from(
-        { length: 4 },
-        (_, index) =>
-          `<img alt="Stress fixture ${index + 1}" src="${dataImage(`Image ${index + 1}`, "#7c3aed")}">`,
-      ).join(""),
+      Images: storybookImages,
       "Is Audio Card": "",
       "Is Vocabulary Card": "",
       Notes: `<p>${"UnbrokenContent".repeat(24)}</p>`,

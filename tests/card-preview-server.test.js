@@ -197,6 +197,9 @@ const run = async () => {
     ["target-word.mp3", "audio/mpeg"],
     ["sentence.m4a", "audio/mp4"],
     ["vegeta-scouter.png", "image/png"],
+    ["storybook-square.png", "image/png"],
+    ["storybook-portrait.png", "image/png"],
+    ["storybook-landscape.png", "image/png"],
   ]) {
     const media = await requestBinary(port, `/fixture-media/${asset}`);
     assert.strictEqual(media.statusCode, 200);
