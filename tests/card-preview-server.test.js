@@ -128,13 +128,13 @@ const run = async () => {
   );
   assert.match(
     app.body,
-    /<div class="toolbar-actions">[\s\S]*<summary aria-label="Choose populated fields" title="Fields"><i data-lucide="list"><\/i><\/summary>[\s\S]*id="theme-toggle"/,
+    /<div class="toolbar-actions">[\s\S]*<summary aria-label="Choose populated fields" title="Fields"><span>Fields<\/span><i data-lucide="list"><\/i><\/summary>[\s\S]*id="theme-toggle"/,
   );
   assert.match(app.body, /<script src="\/vendor\/lucide\.js"><\/script>/);
   assert.match(app.body, /lucide\.createIcons\(\)/);
   assert.match(app.body, /\.toolbar-actions\s*\{[^}]*margin-left: auto;[^}]*display: flex;/s);
   assert.match(app.body, /\.toolbar-actions\s*\{[^}]*flex-wrap: wrap;/s);
-  assert.match(app.body, /\.field-menu summary\s*\{[^}]*display: grid;[^}]*width: 40px;[^}]*padding: 0;/s);
+  assert.match(app.body, /\.field-menu summary\s*\{[^}]*display: grid;[^}]*grid-auto-flow: column;[^}]*width: auto;[^}]*padding: 0 12px;/s);
   assert.match(app.body, /#theme-toggle\s*\{[^}]*margin-left: 0;[^}]*width: 40px;/s);
   assert.match(app.body, />Syntax showcase<\/option>/);
   assert.match(app.body, /new EventSource\("\/events"\)/);

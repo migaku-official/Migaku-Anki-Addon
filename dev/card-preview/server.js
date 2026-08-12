@@ -94,7 +94,7 @@ const renderAppShell = () => `<!doctype html>
     .viewport-picker button { min-width: 44px; }
     .toolbar-actions { margin-left: auto; display: flex; flex: 0 1 auto; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 8px; }
     .field-menu { position: relative; flex: 0 0 auto; }
-    .field-menu summary { display: grid; place-items: center; width: 40px; min-height: 38px; padding: 0; border: 1px solid #3b404b; border-radius: 8px; background: #242832; cursor: pointer; list-style: none; }
+    .field-menu summary { display: grid; grid-auto-flow: column; place-items: center; width: auto; min-height: 38px; gap: 8px; padding: 0 12px; border: 1px solid #3b404b; border-radius: 8px; background: #242832; cursor: pointer; font-size: 12px; font-weight: 700; list-style: none; }
     .field-menu summary svg { width: 20px; height: 20px; }
     .field-menu-content { position: absolute; z-index: 2; top: calc(100% + 8px); right: 0; display: grid; width: min(360px, calc(100vw - 24px)); grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 16px; padding: 12px; border: 1px solid #3b404b; border-radius: 10px; background: #1a1d24; box-shadow: 0 12px 32px rgb(0 0 0 / 40%); }
     .field-toggle { display: flex; align-items: center; gap: 8px; font-size: 12px; letter-spacing: 0; text-transform: none; }
@@ -148,7 +148,7 @@ const renderAppShell = () => `<!doctype html>
       </label>
       <div class="toolbar-actions">
         <details class="field-menu">
-          <summary aria-label="Choose populated fields" title="Fields"><i data-lucide="list"></i></summary>
+          <summary aria-label="Choose populated fields" title="Fields"><span>Fields</span><i data-lucide="list"></i></summary>
           <div class="field-menu-content">${renderFieldToggles()}</div>
         </details>
         <button type="button" id="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false"><i data-lucide="moon"></i></button>
