@@ -6,6 +6,7 @@ const path = require("path");
 
 const { createPreviewServer } = require("../dev/card-preview/server");
 const contract = require("../dev/card-preview/template-contract.json");
+const packageJson = require("../package.json");
 
 const request = (port, requestPath) =>
   new Promise((resolve, reject) => {
@@ -109,6 +110,7 @@ const testLiveStyleRebuild = async () => {
 };
 
 const run = async () => {
+  assert.strictEqual(packageJson.scripts.dev, "npm run dev:cards");
   const server = createPreviewServer({
     rootDir: path.resolve(__dirname, ".."),
     watch: false,

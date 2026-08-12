@@ -19,8 +19,11 @@ It is not intended to reproduce Anki's scheduler, reviewer controls, editor, aud
 From the repository root:
 
 ```bash
-npm run dev:cards
+npm run dev
 ```
+
+`npm run dev` is the short alias for `npm run dev:cards`; both start the same
+Card Front-end Lab server.
 
 Open [http://127.0.0.1:4173](http://127.0.0.1:4173).
 
