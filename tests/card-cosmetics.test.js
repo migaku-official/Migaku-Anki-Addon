@@ -50,7 +50,7 @@ assert.match(
 );
 assert.match(
   light,
-    /\.card > #qa\s*\{[^}]*display: flex;[^}]*flex-direction: column;[^}]*padding: clamp\(16px, calc\(\(100vw - 760px\) \/ 2\), 80px\) 16px 16px;[^}]*min-height: 100vh;/s,
+    /\.card > #qa\s*\{[^}]*--migaku-card-viewport-gutter: clamp\(16px, calc\(\(100vw - 760px\) \/ 2\), 80px\);[^}]*display: flex;[^}]*flex-direction: column;[^}]*align-items: center;[^}]*width: 100%;[^}]*padding: var\(--migaku-card-viewport-gutter\) 16px;[^}]*min-height: 100vh;/s,
 );
 assert.match(
   light,

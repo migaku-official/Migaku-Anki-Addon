@@ -37,9 +37,12 @@ main.container #qa {
 }
 
 .card > #qa {
+  --migaku-card-viewport-gutter: clamp(16px, calc((100vw - 760px) / 2), 80px);
   display: flex;
   flex-direction: column;
-  padding: clamp(16px, calc((100vw - 760px) / 2), 80px) 16px 16px;
+  align-items: center;
+  width: 100%;
+  padding: var(--migaku-card-viewport-gutter) 16px;
   min-height: 100vh;
 }
 
