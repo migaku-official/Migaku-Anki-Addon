@@ -48,10 +48,17 @@ assert.match(
   light,
   /#content\s*\{[^}]*display: flex;[^}]*flex-direction: column;[^}]*height: 100%;/s,
 );
-assert.match(light, /main\.container \.migaku-card\s*\{[^}]*flex: 1;/s);
 assert.match(
   light,
-  /main\.container \.migaku-card-shell\s*\{[^}]*position: relative;[^}]*flex: 1;[^}]*max-width: 760px;/s,
+    /\.card > #qa\s*\{[^}]*display: flex;[^}]*flex-direction: column;[^}]*padding: clamp\(16px, calc\(\(100vw - 760px\) \/ 2\), 80px\) 16px 16px;[^}]*min-height: 100vh;/s,
+);
+assert.match(
+  light,
+  /main\.container \.migaku-card,\s*\.card > #qa > \.migaku-card,\s*\.card > #qa > \.migaku-card-shell > \.migaku-card\s*\{[^}]*flex: 1;/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-shell\s*\{[^}]*position: relative;[^}]*display: flex;[^}]*flex: 1;[^}]*max-width: 760px;/s,
 );
 assert.match(light, /\.migaku-card\s*\{[^}]*padding: 24px 16px 8px;/s);
 assert.match(light, /\.migaku-card-front \.migaku-card-content\s*\{[^}]*font-size: 32px;/s);
@@ -94,15 +101,15 @@ assert.match(light, /\.migaku-card-back \.migaku-card-content::before\s*\{[^}]*o
 assert.match(light, /\.migaku-card-back \.migaku-card-content::after\s*\{[^}]*order: 13;/s);
 assert.match(
   light,
-  /\.migaku-card-back \.migaku-card-screenshot,\s*\.migaku-card-back \.migaku-card-images\s*\{[^}]*display: contents;/s,
+  /\.migaku-card-back \.migaku-card-screenshot,\s*\.migaku-card-back \.migaku-card-images\s*\{[^}]*display: flex;[^}]*flex: 0 0 100%;[^}]*flex-wrap: wrap;[^}]*justify-content: center;[^}]*gap: 16px;[^}]*width: 100%;/s,
 );
 assert.match(
   light,
-  /\.migaku-card-back \.migaku-card-screenshot img\s*\{[^}]*order: 11;/s,
+  /\.migaku-card-back \.migaku-card-screenshot\s*\{[^}]*order: 11;/s,
 );
 assert.match(
   light,
-  /\.migaku-card-back \.migaku-card-images img\s*\{[^}]*order: 12;/s,
+  /\.migaku-card-back \.migaku-card-images\s*\{[^}]*order: 12;/s,
 );
 assert.match(
   light,
@@ -137,12 +144,12 @@ assert.match(
   light,
   /\.migaku-card-shell > \.migaku-type-toggle\[aria-expanded="true"\]::after\s*\{[^}]*content: "Dismiss";/s,
 );
-assert.match(light, /main\.container \.migaku-card-shell\s*\{[^}]*margin: 0 auto 16px;/s);
+assert.match(light, /\.migaku-card-shell\s*\{[^}]*margin: 0 auto 16px;/s);
 assert.match(light, /main\.container\s*\{[^}]*padding: 80px 16px 120px;/s);
 assert.match(light, /main\.container #qa\s*\{[^}]*height: 100%;/s);
 assert.match(
   light,
-  /main\.container \.migaku-card-shell:has\(> \.migaku-type-toggle\)\s*\{[^}]*padding-bottom: 64px;/s,
+  /\.migaku-card-shell:has\(> \.migaku-type-toggle\)\s*\{[^}]*padding-bottom: 64px;/s,
 );
 assert.match(light, /#content\s*\{[^}]*height: 100%;/s);
 assert.match(light, /\.migaku-type-toggle:hover\s*\{[^}]*opacity: 1;[^}]*text-decoration: underline;/s);
@@ -152,19 +159,19 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-card-shell > \.migaku-typeselect\s*\{[^}]*text-align: left;/s,
+  /\.migaku-card-shell > \.migaku-typeselect\s*\{[^}]*text-align: center;/s,
 );
 assert.match(
   light,
-  /\.migaku-typeselect form\s*\{[^}]*display: grid;[^}]*"section-title section-title"[^}]*"card-mode audio"[^}]*"section-disclaimer section-disclaimer"[^}]*grid-template-columns: auto auto;[^}]*justify-content: flex-start;[^}]*column-gap: 40px;/s,
+  /\.migaku-typeselect form\s*\{[^}]*display: grid;[^}]*"section-title section-title"[^}]*"card-mode audio"[^}]*"section-disclaimer section-disclaimer"[^}]*grid-template-columns: auto auto;[^}]*justify-content: center;[^}]*column-gap: 40px;/s,
 );
 assert.match(
   light,
-  /\.migaku-typeselect form::before\s*\{[^}]*grid-area: section-title;[^}]*content: "Customize front of card";[^}]*font-size: 1\.25rem;[^}]*font-weight: 700;[^}]*text-align: left;/s,
+  /\.migaku-typeselect form::before\s*\{[^}]*grid-area: section-title;[^}]*content: "Customize front of card";[^}]*font-size: 1\.25rem;[^}]*font-weight: 700;[^}]*text-align: center;/s,
 );
 assert.match(
   light,
-  /\.migaku-typeselect form::after\s*\{[^}]*grid-area: section-disclaimer;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.75rem;[^}]*white-space: pre-line;/s,
+  /\.migaku-typeselect form::after\s*\{[^}]*grid-area: section-disclaimer;[^}]*justify-self: center;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.75rem;[^}]*white-space: pre-line;[^}]*text-align: center;/s,
 );
 assert.ok(
   light.includes(
@@ -185,16 +192,20 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-card-mode-control span::before\s*\{[^}]*content: "✓";[^}]*width: 16px;[^}]*opacity: 0;/s,
-);
-assert.match(light, /\.migaku-card-mode-control span:first-child::before\s*\{[^}]*opacity: 1;/s);
-assert.match(
-  light,
-  /\.migaku-card-mode-control:has\(input:checked\) span:first-child::before\s*\{[^}]*opacity: 0;/s,
+  /\.migaku-typeselect\s*\{[^}]*--migaku-selected-tick: url\("data:image\/svg\+xml,[^"]+"\);[^}]*--migaku-unselected-tick: url\("data:image\/svg\+xml,[^"]*stroke-opacity='0'[^"]*"\);/s,
 );
 assert.match(
   light,
-  /\.migaku-card-mode-control input:checked ~ span::before\s*\{[^}]*opacity: 1;/s,
+    /\.migaku-card-mode-control span::before\s*\{[^}]*content: "";[^}]*width: 16px;[^}]*height: 14px;[^}]*background-image: var\(--migaku-selected-tick\);[^}]*background-size: 14px;/s,
+);
+assert.match(light, /\.migaku-card-mode-control span:last-child::before\s*\{[^}]*background-image: var\(--migaku-unselected-tick\);/s);
+assert.match(
+  light,
+  /\.migaku-card-mode-control:has\(input:checked\) span:first-child::before\s*\{[^}]*background-image: var\(--migaku-unselected-tick\);/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-mode-control input:checked ~ span::before\s*\{[^}]*background-image: var\(--migaku-selected-tick\);/s,
 );
 assert.doesNotMatch(
   light,
@@ -203,7 +214,7 @@ assert.doesNotMatch(
 assert.doesNotMatch(light, /\.migaku-card-mode-control\s*\{[^}]*grid-template-columns:/s);
 assert.match(
   light,
-  /\.migaku-audio-card-control\s*\{[^}]*--migaku-selected-tick: url\("data:image\/svg\+xml,[^"]+"\);[^}]*--migaku-unselected-tick: url\("data:image\/svg\+xml,[^"]*stroke-opacity='0'[^"]*"\);[^}]*display: flex;[^}]*flex-wrap: wrap;[^}]*align-items: center;[^}]*column-gap: 8px;[^}]*row-gap: 4px;[^}]*white-space: nowrap;/s,
+  /\.migaku-audio-card-control\s*\{[^}]*display: flex;[^}]*flex-wrap: wrap;[^}]*align-items: center;[^}]*column-gap: 8px;[^}]*row-gap: 4px;[^}]*white-space: nowrap;/s,
 );
 assert.match(
   light,

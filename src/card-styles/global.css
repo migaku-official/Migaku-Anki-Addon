@@ -16,11 +16,20 @@ main.container #qa {
   height: 100%;
 }
 
-main.container .migaku-card {
+.card > #qa {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(16px, calc((100vw - 760px) / 2), 80px) 16px 16px;
+  min-height: 100vh;
+}
+
+main.container .migaku-card,
+.card > #qa > .migaku-card,
+.card > #qa > .migaku-card-shell > .migaku-card {
   flex: 1;
 }
 
-main.container .migaku-card-shell {
+.migaku-card-shell {
   position: relative;
   display: flex;
   flex: 1;
@@ -30,7 +39,7 @@ main.container .migaku-card-shell {
   margin: 0 auto 16px;
 }
 
-main.container .migaku-card-shell:has(> .migaku-type-toggle) {
+.migaku-card-shell:has(> .migaku-type-toggle) {
   padding-bottom: 64px;
 }
 
@@ -228,7 +237,13 @@ main.container .migaku-card audio {
 
 .migaku-card-back .migaku-card-screenshot,
 .migaku-card-back .migaku-card-images {
-  display: contents;
+  display: flex;
+  flex: 0 0 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  order: 11;
 }
 
 .migaku-card-screenshot br,
@@ -236,11 +251,11 @@ main.container .migaku-card audio {
   display: none;
 }
 
-.migaku-card-back .migaku-card-screenshot img {
+.migaku-card-back .migaku-card-screenshot {
   order: 11;
 }
 
-.migaku-card-back .migaku-card-images img {
+.migaku-card-back .migaku-card-images {
   order: 12;
 }
 
@@ -355,7 +370,12 @@ ruby {
   margin: 8px auto 0;
   padding: 16px;
   transform: none;
-  text-align: left;
+  text-align: center;
+}
+
+.migaku-typeselect {
+  --migaku-selected-tick: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238c7bd6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m20 6-11 11-5-5'/%3E%3C/svg%3E");
+  --migaku-unselected-tick: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238c7bd6' stroke-opacity='0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m20 6-11 11-5-5'/%3E%3C/svg%3E");
 }
 
 .migaku-typeselect form {
@@ -366,7 +386,7 @@ ruby {
     "section-disclaimer section-disclaimer";
   grid-template-columns: auto auto;
   align-items: flex-start;
-  justify-content: flex-start;
+  justify-content: center;
   column-gap: 40px;
   row-gap: 12px;
 }
@@ -376,18 +396,19 @@ ruby {
   content: "Customize front of card";
   font-size: 1.25rem;
   font-weight: 700;
-  text-align: left;
+  text-align: center;
 }
 
 .migaku-typeselect form::after {
   grid-area: section-disclaimer;
   content: 'These toggles control the "Is Vocab Card" and "Is Audio Card" fields.\A These values determine what is shown on the front of the card when you are reviewing.';
   max-width: 640px;
+  justify-self: center;
   color: rgba(0 0 90 / 60%);
   font-size: .75rem;
   line-height: 1.4;
   white-space: pre-line;
-  text-align: left;
+  text-align: center;
 }
 
 .migaku-card-mode-control {
@@ -395,6 +416,7 @@ ruby {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   column-gap: 8px;
   row-gap: 4px;
   white-space: nowrap;
@@ -405,6 +427,7 @@ ruby {
   flex: 0 0 100%;
   content: "Which field is on the front:";
   font-size: 1rem;
+  text-align: center;
 }
 
 .migaku-card-mode-control span {
@@ -420,31 +443,34 @@ ruby {
 }
 
 .migaku-card-mode-control span::before {
-  content: "✓";
+  content: "";
   flex: 0 0 16px;
   width: 16px;
-  opacity: 0;
+  height: 14px;
+  background-image: var(--migaku-selected-tick);
+  background-position: left center;
+  background-repeat: no-repeat;
+  background-size: 14px;
 }
 
-.migaku-card-mode-control span:first-child::before {
-  opacity: 1;
+.migaku-card-mode-control span:last-child::before {
+  background-image: var(--migaku-unselected-tick);
 }
 
 .migaku-card-mode-control:has(input:checked) span:first-child::before {
-  opacity: 0;
+  background-image: var(--migaku-unselected-tick);
 }
 
 .migaku-card-mode-control input:checked ~ span::before {
-  opacity: 1;
+  background-image: var(--migaku-selected-tick);
 }
 
 .migaku-audio-card-control {
-  --migaku-selected-tick: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238c7bd6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m20 6-11 11-5-5'/%3E%3C/svg%3E");
-  --migaku-unselected-tick: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238c7bd6' stroke-opacity='0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m20 6-11 11-5-5'/%3E%3C/svg%3E");
   grid-area: audio;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   column-gap: 8px;
   row-gap: 4px;
   white-space: nowrap;
@@ -455,7 +481,7 @@ ruby {
   order: 0;
   flex: 0 0 100%;
   font-size: 0;
-  text-align: left;
+  text-align: center;
 }
 
 .migaku-audio-card-control > span::after {
