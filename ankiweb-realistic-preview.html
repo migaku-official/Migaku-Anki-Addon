@@ -156,7 +156,17 @@
           if (!response.ok) throw new Error(`Could not load ankiweb.html (${response.status})`)
           return response.text()
         })
-        .then((html) => { document.querySelector("#ankiweb-description").innerHTML = html })
+        .then((html) => {
+          const description = document.querySelector("#ankiweb-description")
+          const previewVersion = Date.now().toString()
+          description.innerHTML = html
+          description.querySelectorAll("img").forEach((image) => {
+            const source = new URL(image.src)
+            if (source.origin !== location.origin) return
+            source.searchParams.set("preview", previewVersion)
+            image.src = source
+          })
+        })
         .catch((error) => { document.querySelector("#ankiweb-description").textContent = error.message })
     </script>
   </body>
