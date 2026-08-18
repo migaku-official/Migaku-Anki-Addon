@@ -79,15 +79,16 @@
       dt { font-weight: 700; }
       dd { margin-bottom: 8px; margin-left: 0; }
 
-      .action-row {
+      .page-heading {
         display: flex;
         align-items: center;
-        justify-content: flex-end;
+        justify-content: space-between;
         gap: 16px;
         padding-bottom: 18px;
         border-bottom: 1px solid #dee2e6;
       }
 
+      .page-heading h1 { margin-bottom: 0; }
       .actions { display: flex; gap: 8px; }
 
       .button {
@@ -120,7 +121,7 @@
   <body>
     <header class="navbar">
       <nav class="navbar-inner" aria-label="Primary">
-        <a class="brand" href="https://ankiweb.net/">AnkiWeb</a>
+        <a class="brand" href="https://ankiweb.net/">AnkiWeb Preview</a>
         <div class="nav-links">
           <a href="https://ankiweb.net/decks">Decks</a>
           <a href="https://ankiweb.net/addons">Add-ons</a>
@@ -130,8 +131,8 @@
     </header>
 
     <main class="page">
-      <h1>AnkiWeb Preview</h1>
-      <div class="action-row">
+      <div class="page-heading">
+        <h1>Migaku Anki Add-on</h1>
         <div class="actions">
           <a class="button" href="#">Contact Author</a>
           <a class="button" href="#">Rate This</a>
