@@ -4,6 +4,13 @@
 - Read `docs/CARD_FRONTEND_DEVELOPMENT.md` before changing note-type card HTML, CSS, support assets, preview tooling, fixtures, or card regression tests.
 - Keep those documents synchronized when the corresponding architecture or workflow changes.
 
+## AnkiWeb description preview
+
+- Treat `ankiweb.html` as the canonical AnkiWeb add-on description. Make all published description content changes there.
+- `ankiweb-realistic-preview.html` is an adjacent development-only shell that approximates the AnkiWeb add-on page and fetches `ankiweb.html` at runtime. It must consume the canonical file; never copy the description markup into the preview.
+- Serve the repository over HTTP and open `ankiweb-realistic-preview.html` to review description changes. Opening the preview directly from the filesystem will prevent it from fetching `ankiweb.html`.
+- Change `ankiweb-realistic-preview.html` only when the preview shell itself needs to better match AnkiWeb.
+
 ## Card front-end safety contract
 
 - Treat `src/card-styles/global.css`, language `card/fonts.css` files, and
