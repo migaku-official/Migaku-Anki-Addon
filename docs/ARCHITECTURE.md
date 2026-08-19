@@ -146,9 +146,10 @@ The components have narrow responsibilities:
 | `tools/card-styles.js` | Produces deterministic per-language `styles.css` files from shared and language inputs |
 
 The preview renderer is intentionally not a complete Anki emulator. It provides the DOM and visual states needed for CSS work, but final validation must still happen in Anki because the reviewer, scheduler, WebView, audio replacement, and platform integrations belong to Anki.
-When the selected front field is empty, `card-document.js` adds a centered,
-preview-only diagnostic naming the missing Sentence, Target Word, Sentence
-Audio, or Word Audio field. It does not alter the production card template.
+When the selected front field is empty, `card-document.js` adds a preview-only
+diagnostic at the normal front-field position. Its subtitle names the selected
+card type and the missing Sentence, Target Word, Sentence Audio, or Word Audio
+field. It does not alter the production card template.
 
 ## Development dependency direction
 

@@ -77,6 +77,16 @@ const renderEmptyFrontNotice = (side, fields) => {
   if (fields[frontField]) return "";
   return `<div data-preview-empty-front role="status"><strong>Front of card is blank</strong><span>This is a ${getFrontCardType(fields)} card, but the ${frontField} field is empty.</span></div>`;
 };
+const injectEmptyFrontNotice = (card, notice) => {
+  if (!notice) return card;
+  const frontContentMarker = '<div class="migaku-card-content">';
+  if (!card.includes(frontContentMarker))
+    throw new Error("Cannot render the empty-front diagnostic without the front content container.");
+  return card.replace(
+    frontContentMarker,
+    `${frontContentMarker}\n        ${notice}`,
+  );
+};
 
 const assertOption = (options, value, optionName) => {
   if (!options.includes(value))
@@ -111,12 +121,7 @@ const renderCardDocument = ({
   const template = readCardFile(rootDir, language, `${side}.html`);
   const card = renderPreviewAudio(renderTemplate(template, fields));
   const emptyFrontNotice = renderEmptyFrontNotice(side, fixture.fields);
-  const cardWithEmptyFrontNotice = emptyFrontNotice
-    ? card.replace(
-      '<div class="migaku-card-content">',
-      `<div class="migaku-card-content">\n        ${emptyFrontNotice}`,
-    )
-    : card;
+  const cardWithEmptyFrontNotice = injectEmptyFrontNotice(card, emptyFrontNotice);
   const styles = readCardFile(rootDir, language, "styles.css");
   const supportStyles = readCardFile(rootDir, language, "support.css");
   const supportScript = readCardFile(rootDir, language, "support.html");

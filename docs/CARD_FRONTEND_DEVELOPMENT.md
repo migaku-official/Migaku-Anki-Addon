@@ -71,10 +71,11 @@ The Fields menu writes a `fields=configured` marker and one repeated `field`
 query parameter per enabled field. The marker preserves the all-fields-off state.
 Unchecking a field supplies an empty value to the shipped template, so real
 Anki conditional rendering can be inspected without editing a fixture.
-If the field selected for the front is empty, the lab overlays a preview-only
-diagnostic naming that field instead of presenting an unexplained blank card.
-The production template output remains empty so the diagnostic cannot mask a
-card-template regression or leak into Anki.
+If the field selected for the front is empty, the lab places a preview-only
+diagnostic at the normal front-field position instead of presenting an
+unexplained blank card. Its subtitle names the selected card type and missing
+field. The production template output remains empty so the diagnostic cannot
+mask a card-template regression or leak into Anki.
 The production `Reading` field is intentionally omitted because it supports
 language reading behavior rather than an independently visible card section.
 `Is Audio Card` is also omitted because Front content is its dedicated control.
