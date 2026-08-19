@@ -25,6 +25,13 @@ const ankidroid = renderCardDocument({
   side: "back",
   theme: "ankidroid",
 });
+const japanese = renderCardDocument({
+  fixtureName: "syntax",
+  language: "ja",
+  rootDir,
+  side: "back",
+  theme: "dark",
+});
 
 assert.match(light, /\.migaku-header\s*\{\s*display: none;/);
 assert.match(
@@ -65,6 +72,14 @@ assert.match(light, /\.migaku-card-front \.migaku-card-content\s*\{[^}]*font-siz
 assert.match(light, /\.migaku-card-front \.migaku-card-content\s*\{[^}]*gap: 8px;/s);
 assert.match(light, /\.migaku-card-front \.migaku-card-unknown\s*\{[^}]*font-size: 46px;/s);
 assert.match(light, /\.migaku-card-front \.migaku-card-sentence\s*\{[^}]*font-size: 32px;/s);
+assert.match(
+  japanese,
+  /@media only screen and \(max-width: 520px\)\s*\{\s*\.migaku-card-sentence,\s*\.migaku-card-unknown\s*\{[^}]*line-height: 1;/s,
+);
+assert.match(
+  japanese,
+  /@media only screen and \(max-width: 520px\)[\s\S]*ruby > rt\s*\{[^}]*line-height: 1;/s,
+);
 assert.match(
   light,
   /\.migaku-card-back \.migaku-card-unknown\s*\{[^}]*order: 1;[^}]*font-size: 46px;[^}]*text-align: center;[^}]*width: 100%;[^}]*margin: 0 0 8px;/s,

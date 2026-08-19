@@ -181,7 +181,10 @@ margin, plus identical type metrics and padding. Longer translations scroll
 inside that reserved slot, so revealing them does not move surrounding content.
 The button label is bold. Japanese ruby annotations use centered
 alignment so readings such as `せかい` remain naturally grouped above their base
-word rather than being distributed across it.
+word rather than being distributed across it. At the 520 px mobile breakpoint,
+the sentence line box and annotation use compact line heights to avoid
+AnkiMobile WebKit adding excessive space between a reading and its base text;
+desktop line-height behavior remains unchanged.
 The card-type controls
 also start hidden. The half-opacity `Customize front of card` button remains in place,
 changes its text to `Dismiss`, and reveals a panel beneath it.
