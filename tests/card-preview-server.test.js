@@ -196,6 +196,10 @@ const run = async () => {
     port,
     "/preview?language=en&side=front&theme=light&fixture=vocabulary&audio=1",
   );
+  const emptyAudioFront = await request(
+    port,
+    "/preview?language=en&side=front&theme=light&fixture=sentence&audio=1&fields=configured&field=Sentence",
+  );
   assert.doesNotMatch(
     textFront.body,
     /class="replay-button soundLink" data-preview-audio-button/,
@@ -204,6 +208,10 @@ const run = async () => {
   assert.doesNotMatch(audioSentenceFront.body, /target-word\.mp3/);
   assert.match(audioVocabularyFront.body, /src="\/fixture-media\/target-word\.mp3"/);
   assert.doesNotMatch(audioVocabularyFront.body, /sentence\.m4a/);
+  assert.match(
+    emptyAudioFront.body,
+    /<div data-preview-empty-front role="status"><strong>Front of card is blank<\/strong><span>The Sentence Audio field is empty\.<\/span><\/div>/,
+  );
 
   const conditionalPreview = await request(
     port,

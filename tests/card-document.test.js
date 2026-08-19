@@ -107,6 +107,40 @@ const audioVocabularyFront = renderCardDocument({
   side: "front",
   theme: "light",
 });
+const emptyAudioFront = renderCardDocument({
+  audioCard: true,
+  enabledFields: ["Sentence"],
+  fixtureName: "sentence",
+  language: "en",
+  rootDir,
+  side: "front",
+  theme: "light",
+});
+const emptySentenceFront = renderCardDocument({
+  enabledFields: [],
+  fixtureName: "sentence",
+  language: "en",
+  rootDir,
+  side: "front",
+  theme: "light",
+});
+const emptyVocabularyFront = renderCardDocument({
+  enabledFields: ["Is Vocabulary Card"],
+  fixtureName: "vocabulary",
+  language: "en",
+  rootDir,
+  side: "front",
+  theme: "light",
+});
+const emptyAudioVocabularyFront = renderCardDocument({
+  audioCard: true,
+  enabledFields: ["Is Vocabulary Card"],
+  fixtureName: "vocabulary",
+  language: "en",
+  rootDir,
+  side: "front",
+  theme: "light",
+});
 const back = renderCardDocument({
   fixtureName: "sentence",
   language: "en",
@@ -184,6 +218,16 @@ assert.match(audioFront, /src="\/fixture-media\/sentence\.m4a"/);
 assert.doesNotMatch(audioFront, /target-word\.mp3/);
 assert.match(audioVocabularyFront, /src="\/fixture-media\/target-word\.mp3"/);
 assert.doesNotMatch(audioVocabularyFront, /sentence\.m4a/);
+assert.match(emptyAudioFront, /<div data-preview-empty-front/);
+assert.match(emptyAudioFront, /Front of card is blank/);
+assert.match(emptyAudioFront, /The Sentence Audio field is empty\./);
+assert.match(emptySentenceFront, /The Sentence field is empty\./);
+assert.match(emptyVocabularyFront, /The Target Word field is empty\./);
+assert.match(emptyAudioVocabularyFront, /The Word Audio field is empty\./);
+assert.doesNotMatch(front, /<div data-preview-empty-front/);
+assert.doesNotMatch(vocabularyFront, /<div data-preview-empty-front/);
+assert.doesNotMatch(audioFront, /<div data-preview-empty-front/);
+assert.doesNotMatch(audioVocabularyFront, /<div data-preview-empty-front/);
 assert.doesNotMatch(front, /class="replay-button soundLink" data-preview-audio-button/);
 assert.doesNotMatch(
   vocabularyFront,
