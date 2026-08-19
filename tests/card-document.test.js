@@ -220,6 +220,7 @@ assert.match(audioVocabularyFront, /src="\/fixture-media\/target-word\.mp3"/);
 assert.doesNotMatch(audioVocabularyFront, /sentence\.m4a/);
 assert.match(emptyAudioFront, /<div data-preview-empty-front/);
 assert.match(emptyAudioFront, /Front of card is blank/);
+assert.match(emptyAudioFront, /text-wrap: balance;/);
 assert.match(
   emptyAudioFront,
   /class="migaku-card-content">\s*<div data-preview-empty-front role="status">/,

@@ -61,6 +61,7 @@ const previewEmptyFrontStyles = `
   font-size: .875rem;
   line-height: 1.4;
   opacity: .65;
+  text-wrap: balance;
 }`;
 
 const getFrontField = (fields) => {
