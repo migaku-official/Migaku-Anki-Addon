@@ -220,10 +220,26 @@ assert.match(audioVocabularyFront, /src="\/fixture-media\/target-word\.mp3"/);
 assert.doesNotMatch(audioVocabularyFront, /sentence\.m4a/);
 assert.match(emptyAudioFront, /<div data-preview-empty-front/);
 assert.match(emptyAudioFront, /Front of card is blank/);
-assert.match(emptyAudioFront, /The Sentence Audio field is empty\./);
-assert.match(emptySentenceFront, /The Sentence field is empty\./);
-assert.match(emptyVocabularyFront, /The Target Word field is empty\./);
-assert.match(emptyAudioVocabularyFront, /The Word Audio field is empty\./);
+assert.match(
+  emptyAudioFront,
+  /class="migaku-card-content">\s*<div data-preview-empty-front role="status">/,
+);
+assert.match(
+  emptyAudioFront,
+  /This is a Sentence Audio card, but the Sentence Audio field is empty\./,
+);
+assert.match(
+  emptySentenceFront,
+  /This is a Sentence card, but the Sentence field is empty\./,
+);
+assert.match(
+  emptyVocabularyFront,
+  /This is a Vocab card, but the Target Word field is empty\./,
+);
+assert.match(
+  emptyAudioVocabularyFront,
+  /This is a Vocab Audio card, but the Word Audio field is empty\./,
+);
 assert.doesNotMatch(front, /<div data-preview-empty-front/);
 assert.doesNotMatch(vocabularyFront, /<div data-preview-empty-front/);
 assert.doesNotMatch(audioFront, /<div data-preview-empty-front/);

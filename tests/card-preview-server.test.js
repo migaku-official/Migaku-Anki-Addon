@@ -210,7 +210,7 @@ const run = async () => {
   assert.doesNotMatch(audioVocabularyFront.body, /sentence\.m4a/);
   assert.match(
     emptyAudioFront.body,
-    /<div data-preview-empty-front role="status"><strong>Front of card is blank<\/strong><span>The Sentence Audio field is empty\.<\/span><\/div>/,
+    /class="migaku-card-content">\s*<div data-preview-empty-front role="status"><strong>Front of card is blank<\/strong><span>This is a Sentence Audio card, but the Sentence Audio field is empty\.<\/span><\/div>/,
   );
 
   const conditionalPreview = await request(

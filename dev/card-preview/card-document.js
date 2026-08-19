@@ -46,15 +46,9 @@ document.querySelectorAll("[data-preview-audio-button]").forEach((button) => {
 
 const previewEmptyFrontStyles = `
 [data-preview-empty-front] {
-  position: absolute;
-  z-index: 1;
-  top: 50%;
-  left: 50%;
   display: grid;
   gap: 8px;
-  width: min(calc(100% - 64px), 420px);
-  padding: 20px;
-  transform: translate(-50%, -50%);
+  width: min(100%, 420px);
   color: inherit;
   text-align: center;
   pointer-events: none;
@@ -74,12 +68,14 @@ const getFrontField = (fields) => {
     return fields["Is Vocabulary Card"] ? "Word Audio" : "Sentence Audio";
   return fields["Is Vocabulary Card"] ? "Target Word" : "Sentence";
 };
+const getFrontCardType = (fields) =>
+  `${fields["Is Vocabulary Card"] ? "Vocab" : "Sentence"}${fields["Is Audio Card"] ? " Audio" : ""}`;
 
 const renderEmptyFrontNotice = (side, fields) => {
   if (side !== "front") return "";
   const frontField = getFrontField(fields);
   if (fields[frontField]) return "";
-  return `<div data-preview-empty-front role="status"><strong>Front of card is blank</strong><span>The ${frontField} field is empty.</span></div>`;
+  return `<div data-preview-empty-front role="status"><strong>Front of card is blank</strong><span>This is a ${getFrontCardType(fields)} card, but the ${frontField} field is empty.</span></div>`;
 };
 
 const assertOption = (options, value, optionName) => {
@@ -115,6 +111,12 @@ const renderCardDocument = ({
   const template = readCardFile(rootDir, language, `${side}.html`);
   const card = renderPreviewAudio(renderTemplate(template, fields));
   const emptyFrontNotice = renderEmptyFrontNotice(side, fixture.fields);
+  const cardWithEmptyFrontNotice = emptyFrontNotice
+    ? card.replace(
+      '<div class="migaku-card-content">',
+      `<div class="migaku-card-content">\n        ${emptyFrontNotice}`,
+    )
+    : card;
   const styles = readCardFile(rootDir, language, "styles.css");
   const supportStyles = readCardFile(rootDir, language, "support.css");
   const supportScript = readCardFile(rootDir, language, "support.html");
@@ -130,7 +132,7 @@ const renderCardDocument = ({
 <body class="${themes[theme]}" data-preview-audio="${audioCard ? "audio" : "text"}" data-preview-fixture="${fixtureName}" data-preview-side="${side}" data-preview-theme="${theme}">
   <main class="container">
     <div id="qa">
-      <div id="content">${card}${emptyFrontNotice}</div>
+      <div id="content">${cardWithEmptyFrontNotice}</div>
     </div>
   </main>
   ${supportScript}
