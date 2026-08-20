@@ -195,14 +195,14 @@ Production code must not depend on `dev/` or `tests/`. This keeps the preview la
 
 ## Regression layers
 
-The card workflow is protected at five seams:
+The card workflow is protected at six seams:
 
 1. Style compilation: every card language has font input, deterministic output, and current generated CSS.
 2. Template engine behavior: field substitution and nested conditionals.
 3. Template contract: all shipped functional HTML files match approved hashes.
 4. Document rendering: real front/back files, CSS, support assets, and fixtures compose successfully.
 5. HTTP workflow: the lab shell, preview route, and live style rebuild expose valid development states and errors.
-6. Browser layout: when Chrome or Chromium is available, the rendered lab checks hover stability, mobile control visibility, and both native and WebKit Japanese reading layouts.
+6. Browser layout: when Chrome or Chromium is available, the rendered lab checks hover stability, mobile control visibility, native Japanese reading layout, and WebKit fallback markup selection.
 
 The existing syntax-parser suite remains part of the same top-level test command.
 

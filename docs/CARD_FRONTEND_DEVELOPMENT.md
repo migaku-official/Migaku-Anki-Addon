@@ -320,7 +320,7 @@ The card-specific suites are:
 | `tests/card-document.test.js` | Composition of real assets into front/back documents |
 | `tests/card-cosmetics.test.js` | Shared light/dark surface and layout tokens in rendered cards |
 | `tests/card-preview-server.test.js` | Lab shell, preview route, state parameters, and invalid-input responses |
-| `tests/card-hover-layout.test.js` | Browser layout stability, mobile control visibility, and native/WebKit Japanese reading layout |
+| `tests/card-hover-layout.test.js` | Browser layout stability, mobile control visibility, native Japanese reading layout, and WebKit fallback markup selection |
 
 `run-tests.sh` invokes the same complete npm test command. The pre-push workflow can therefore continue using the repository's shell runner.
 
