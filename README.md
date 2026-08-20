@@ -160,6 +160,12 @@ The repository includes syntax parsing tests plus card template contract, render
 
 - Node.js (v14 or higher)
 
+Install the locked development dependencies from the repository root:
+
+```bash
+npm ci
+```
+
 #### Run Tests Manually
 
 ```bash
