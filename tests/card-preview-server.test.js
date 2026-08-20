@@ -185,6 +185,12 @@ const run = async () => {
   assert.match(preview.body, /data-preview-side="back"/);
   assert.match(preview.body, /Eine Sprache zu lernen/);
 
+  const bridgelessPreview = await request(
+    port,
+    "/preview?language=en&side=back&theme=light&fixture=sentence&bridge=none",
+  );
+  assert.doesNotMatch(bridgelessPreview.body, /const pycmd/);
+
   const textFront = await request(
     port,
     "/preview?language=en&side=front&theme=light&fixture=sentence&audio=0",

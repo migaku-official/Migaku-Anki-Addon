@@ -438,7 +438,11 @@ ruby {
 
 .migaku-card-shell > .migaku-type-toggle:hover {
   opacity: 1;
-  text-decoration: underline;
+}
+
+.migaku-card-shell > .migaku-type-toggle[hidden],
+.migaku-card-shell > .migaku-typeselect[hidden] {
+  display: none;
 }
 
 .migaku-card-shell > .migaku-typeselect {

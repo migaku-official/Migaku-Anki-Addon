@@ -96,6 +96,7 @@ const assertOption = (options, value, optionName) => {
 
 const renderCardDocument = ({
   audioCard = false,
+  commandBridge = true,
   enabledFields,
   fixtureName,
   language,
@@ -132,7 +133,7 @@ const renderCardDocument = ({
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script>const pycmd = () => {};</script>
+  ${commandBridge ? "<script>const pycmd = () => {};</script>" : ""}
   <style>${styles}\n${supportStyles}\n${previewEmptyFrontStyles}</style>
 </head>
 <body class="${themes[theme]}" data-preview-audio="${audioCard ? "audio" : "text"}" data-preview-fixture="${fixtureName}" data-preview-side="${side}" data-preview-theme="${theme}">

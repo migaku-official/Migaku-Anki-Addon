@@ -356,6 +356,7 @@ const createPreviewServer = ({ rootDir, watch = true }) => {
       try {
         const document = renderCardDocument({
           audioCard: url.searchParams.get("audio") === "1",
+          commandBridge: url.searchParams.get("bridge") !== "none",
           enabledFields: url.searchParams.has("fields") || url.searchParams.has("field")
             ? url.searchParams.getAll("field")
             : undefined,
