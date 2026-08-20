@@ -1,3 +1,10 @@
+## 0.6.0
+
+- [FEATURE] Redesign Migaku card visuals across supported languages
+- [FEATURE] Add bundled offline fonts and refreshed media, audio, and card customization presentation
+- [FEATURE] Improve light, dark, mobile, and AnkiDroid card layouts
+- [FEATURE] Refresh the AnkiWeb add-on description and setup guide
+
 ## 0.5.2
 
 - [FIX] Add spacing above new Notes field
