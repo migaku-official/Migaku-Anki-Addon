@@ -21,6 +21,19 @@ const chromePaths = [
 
 const wait = (duration) => new Promise((resolve) => setTimeout(resolve, duration))
 const removeDirectory = (path) => (fs.rmSync || fs.rmdirSync)(path, { recursive: true, force: true })
+const withTimeout = (promise, duration, message) => new Promise((resolve, reject) => {
+  const timeout = setTimeout(() => reject(new Error(message)), duration)
+  promise.then(
+    (value) => {
+      clearTimeout(timeout)
+      resolve(value)
+    },
+    (error) => {
+      clearTimeout(timeout)
+      reject(error)
+    },
+  )
+})
 
 const getResponse = (url) => new Promise((resolve, reject) => {
   const request = get(url, (response) => {
@@ -32,6 +45,7 @@ const getResponse = (url) => new Promise((resolve, reject) => {
     }))
   })
   request.on('error', reject)
+  request.setTimeout(1000, () => request.destroy(new Error(`Request timed out: ${url}`)))
 })
 
 const getAvailablePort = () => new Promise((resolve, reject) => {
@@ -44,7 +58,7 @@ const getAvailablePort = () => new Promise((resolve, reject) => {
 })
 
 const waitForServer = async (url) => {
-  for (let attempt = 0; attempt < 100; attempt += 1) {
+  for (const attempt of Array(100).keys()) {
     try {
       const { statusCode } = await getResponse(url)
       if (statusCode >= 200 && statusCode < 300) return
@@ -55,7 +69,7 @@ const waitForServer = async (url) => {
 }
 
 const waitForPage = async (port, previewUrl) => {
-  for (let attempt = 0; attempt < 100; attempt += 1) {
+  for (const attempt of Array(100).keys()) {
     try {
       const { body } = await getResponse(`http://127.0.0.1:${port}/json/list`)
       const pages = JSON.parse(body)
@@ -70,7 +84,7 @@ const waitForPage = async (port, previewUrl) => {
 const connect = (url) => new Promise((resolve, reject) => {
   const socket = new WebSocket(url)
   const pending = new Map()
-  let nextId = 0
+  const state = { nextId: 0 }
   socket.on('error', reject)
   socket.on('message', (data) => {
     const message = JSON.parse(data)
@@ -83,7 +97,7 @@ const connect = (url) => new Promise((resolve, reject) => {
   socket.on('open', () => resolve({
     close: () => socket.close(),
     send: (method, params = {}) => new Promise((resolveRequest, rejectRequest) => {
-      const id = ++nextId
+      const id = ++state.nextId
       pending.set(id, { resolve: resolveRequest, reject: rejectRequest })
       socket.send(JSON.stringify({ id, method, params }))
     }),
@@ -101,7 +115,7 @@ const evaluate = async (client, expression) => {
 }
 
 const waitForCard = async (client) => {
-  for (let attempt = 0; attempt < 100; attempt += 1) {
+  for (const attempt of Array(100).keys()) {
     const ready = await evaluate(client, `Boolean(document.querySelector('iframe')?.contentDocument?.querySelector('.migaku-card-shell > .migaku-type-toggle'))`)
     if (ready) return
     await wait(50)
@@ -154,11 +168,16 @@ const getLayout = (client) => evaluate(client, `(() => {
 
 const scrollToggleIntoView = (client) => evaluate(client, `document.querySelector('iframe').contentDocument.querySelector('.migaku-card-shell > .migaku-type-toggle').scrollIntoView({ block: 'center' })`)
 
-const stopProcess = async (process) => {
-  if (process.exitCode !== null) return
-  const exited = new Promise((resolve) => process.once('exit', resolve))
-  process.kill('SIGTERM')
-  await exited
+const stopProcess = async (childProcess) => {
+  if (childProcess.exitCode !== null || childProcess.signalCode !== null) return
+  const exited = new Promise((resolve) => childProcess.once('exit', resolve))
+  childProcess.kill('SIGTERM')
+  try {
+    await withTimeout(exited, 2000, 'Child process did not exit after SIGTERM')
+  } catch {
+    childProcess.kill('SIGKILL')
+    await withTimeout(exited, 2000, 'Child process did not exit after SIGKILL')
+  }
 }
 
 const assertNoHoverShift = async (client, label) => {
@@ -177,9 +196,13 @@ const assertNoHoverShift = async (client, label) => {
   assert.deepStrictEqual(after.label, before.label, `${label} typography shifts on hover`)
 }
 
-const loadPreview = (client, url) => evaluate(client, `new Promise((resolve) => {
+const loadPreview = (client, url) => evaluate(client, `new Promise((resolve, reject) => {
   const frame = document.querySelector('iframe')
-  frame.addEventListener('load', resolve, { once: true })
+  const timeout = setTimeout(() => reject(new Error('Card preview iframe did not load')), 5000)
+  frame.addEventListener('load', () => {
+    clearTimeout(timeout)
+    resolve()
+  }, { once: true })
   frame.src = ${JSON.stringify(url)}
 })`)
 
@@ -250,11 +273,9 @@ const run = async () => {
     env: { ...process.env, CARD_PREVIEW_PORT: String(serverPort) },
     stdio: 'ignore',
   })
-  let chrome
-
   try {
     await waitForServer(previewUrl)
-    chrome = spawn(chromePath, [
+    const chrome = spawn(chromePath, [
       '--headless=new',
       '--disable-gpu',
       '--no-first-run',
@@ -264,8 +285,9 @@ const run = async () => {
       previewUrl,
     ], { stdio: 'ignore' })
     const page = await waitForPage(devtoolsPort, previewUrl)
-    const client = await connect(page.webSocketDebuggerUrl)
     try {
+      const client = await withTimeout(connect(page.webSocketDebuggerUrl), 5000, 'Chrome DevTools connection timed out')
+      try {
       await client.send('Runtime.enable')
       await evaluate(client, `(() => {
         const side = document.querySelector('#side')
@@ -280,11 +302,13 @@ const run = async () => {
       await assertMobileControlsHidden(client, previewUrl)
       await assertMobileReadingSpacing(client)
       await assertWebkitRubyLayout(client, previewUrl)
+      } finally {
+        client.close()
+      }
     } finally {
-      client.close()
+      await stopProcess(chrome)
     }
   } finally {
-    if (chrome) await stopProcess(chrome)
     await stopProcess(previewServer)
     removeDirectory(profile)
   }
