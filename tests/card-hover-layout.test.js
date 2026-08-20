@@ -34,6 +34,14 @@ const withTimeout = (promise, duration, message) => new Promise((resolve, reject
     },
   )
 })
+const startProcess = (command, args, options) => {
+  const childProcess = spawn(command, args, options)
+  const started = new Promise((resolve, reject) => {
+    childProcess.once('spawn', () => resolve(childProcess))
+    childProcess.once('error', reject)
+  })
+  return { childProcess, started }
+}
 
 const getResponse = (url) => new Promise((resolve, reject) => {
   const request = get(url, (response) => {
@@ -85,7 +93,13 @@ const connect = (url) => new Promise((resolve, reject) => {
   const socket = new WebSocket(url)
   const pending = new Map()
   const state = { nextId: 0 }
-  socket.on('error', reject)
+  const rejectPending = (error) => {
+    reject(error)
+    for (const { reject: rejectRequest } of pending.values()) rejectRequest(error)
+    pending.clear()
+  }
+  socket.on('error', rejectPending)
+  socket.on('close', () => rejectPending(new Error('Chrome DevTools connection closed')))
   socket.on('message', (data) => {
     const message = JSON.parse(data)
     if (!message.id || !pending.has(message.id)) return
@@ -96,11 +110,12 @@ const connect = (url) => new Promise((resolve, reject) => {
   })
   socket.on('open', () => resolve({
     close: () => socket.close(),
-    send: (method, params = {}) => new Promise((resolveRequest, rejectRequest) => {
+    send: (method, params = {}) => {
       const id = ++state.nextId
-      pending.set(id, { resolve: resolveRequest, reject: rejectRequest })
+      const response = new Promise((resolveRequest, rejectRequest) => pending.set(id, { resolve: resolveRequest, reject: rejectRequest }))
       socket.send(JSON.stringify({ id, method, params }))
-    }),
+      return withTimeout(response, 10000, `Chrome DevTools command timed out: ${method}`).finally(() => pending.delete(id))
+    },
   }))
 })
 
@@ -268,14 +283,15 @@ const run = async () => {
   const devtoolsPort = await getAvailablePort()
   const previewUrl = `http://127.0.0.1:${serverPort}`
   const profile = mkdtempSync(join(tmpdir(), 'migaku-card-hover-'))
-  const previewServer = spawn(process.execPath, ['dev/card-preview/server.js'], {
+  const previewServer = startProcess(process.execPath, ['dev/card-preview/server.js'], {
     cwd: join(__dirname, '..'),
     env: { ...process.env, CARD_PREVIEW_PORT: String(serverPort) },
     stdio: 'ignore',
   })
   try {
+    await withTimeout(previewServer.started, 5000, 'Card preview server process did not start')
     await waitForServer(previewUrl)
-    const chrome = spawn(chromePath, [
+    const chrome = startProcess(chromePath, [
       '--headless=new',
       '--disable-gpu',
       '--no-first-run',
@@ -284,6 +300,7 @@ const run = async () => {
       `--user-data-dir=${profile}`,
       previewUrl,
     ], { stdio: 'ignore' })
+    await withTimeout(chrome.started, 5000, 'Chrome process did not start')
     const page = await waitForPage(devtoolsPort, previewUrl)
     try {
       const client = await withTimeout(connect(page.webSocketDebuggerUrl), 5000, 'Chrome DevTools connection timed out')
@@ -306,11 +323,14 @@ const run = async () => {
         client.close()
       }
     } finally {
-      await stopProcess(chrome)
+      await stopProcess(chrome.childProcess)
     }
   } finally {
-    await stopProcess(previewServer)
-    removeDirectory(profile)
+    try {
+      await stopProcess(previewServer.childProcess)
+    } finally {
+      removeDirectory(profile)
+    }
   }
 }
 
