@@ -143,6 +143,7 @@ const run = async () => {
   assert.doesNotMatch(app.body, /<option value="audio">Audio card<\/option>/);
   assert.match(app.body, /<input type="checkbox" id="audio-card">Audio/);
   assert.match(app.body, /params\.set\("audio", audioCard\.checked \? "1" : "0"\)/);
+  assert.match(app.body, /if \(query\.has\("fields"\)\) fieldToggles\.forEach/);
   assert.match(app.body, /new EventSource\("\/events"\)/);
   assert.match(app.body, /html, body\s*\{[^}]*height: 100%;[^}]*overflow: hidden;/s);
   assert.match(app.body, /\.app\s*\{[^}]*height: 100vh;[^}]*overflow: hidden;/s);

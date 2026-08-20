@@ -195,7 +195,7 @@ const renderAppShell = () => `<!doctype html>
     };
     const enabledQueryFields = query.getAll("field");
     const syncFixtureFields = () => fieldToggles.forEach((toggle) => toggle.checked = fixtureFieldPresence[document.getElementById("fixture").value].includes(toggle.dataset.field));
-    if (enabledQueryFields.length) fieldToggles.forEach((toggle) => toggle.checked = enabledQueryFields.includes(toggle.dataset.field));
+    if (query.has("fields")) fieldToggles.forEach((toggle) => toggle.checked = enabledQueryFields.includes(toggle.dataset.field));
     else syncFixtureFields();
     const getParams = () => {
       const params = new URLSearchParams(Object.fromEntries(controls.map((control) => [control.id, control.value])));
