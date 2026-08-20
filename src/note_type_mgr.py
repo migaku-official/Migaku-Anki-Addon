@@ -139,7 +139,8 @@ def nt_update(nt: NotetypeDict, lang: Language, commit=True) -> None:
     # Set template css
     nt_set_css_lang(nt, lang, commit=False)
 
-    # Copy media files
+    # Copy media files additively. Do not delete older collection media here:
+    # customized note types can retain references to legacy asset filenames.
     media_dir = lang.file_path("card", "media")
     if os.path.exists(media_dir):
         for fname in os.listdir(media_dir):

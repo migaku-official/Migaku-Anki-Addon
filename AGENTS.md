@@ -17,6 +17,11 @@
   `src/languages/<language>/card/` as production sources. Do not create or
   maintain preview-only copies of production templates or styles.
 - For cosmetic-only work, do not change `front.html`, `back.html`, or `support.html`.
+- A cosmetic-first release may include explicitly reviewed functional template or
+  media migrations. Keep each accepted behavior change documented in
+  `docs/ARCHITECTURE.md`, cover it with focused regression tests, and update only
+  the affected template hashes. The accepted result becomes the protected
+  baseline for subsequent cosmetic-only work.
 - `src/card-styles/global.css` is the primary cosmetic surface.
   Per-language `styles.css` files are generated; never edit them directly.
   Treat `support.css` as behavior-adjacent because its selectors may affect
