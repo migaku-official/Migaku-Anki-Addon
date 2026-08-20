@@ -40,9 +40,6 @@ main.container .migaku-card,
   width: 100%;
   max-width: 760px;
   margin: 0 auto 16px;
-}
-
-.migaku-card-shell:has(> .migaku-type-toggle) {
   padding-bottom: 64px;
 }
 
@@ -450,22 +447,10 @@ ruby {
   flex: 0 0 16px;
   width: 16px;
   height: 14px;
-  background-image: var(--migaku-selected-tick);
+  background-image: var(--migaku-unselected-tick);
   background-position: left center;
   background-repeat: no-repeat;
   background-size: 14px;
-}
-
-.migaku-card-mode-control span:last-child::before {
-  background-image: var(--migaku-unselected-tick);
-}
-
-.migaku-card-mode-control:has(input:checked) span:first-child::before {
-  background-image: var(--migaku-unselected-tick);
-}
-
-.migaku-card-mode-control input:checked ~ span::before {
-  background-image: var(--migaku-selected-tick);
 }
 
 .migaku-audio-card-control {
@@ -510,7 +495,7 @@ ruby {
 .migaku-audio-card-control::before {
   order: 1;
   content: "Text";
-  background-image: var(--migaku-selected-tick);
+  background-image: var(--migaku-unselected-tick);
 }
 
 .migaku-audio-card-control input {
@@ -523,12 +508,15 @@ ruby {
   background-image: var(--migaku-unselected-tick);
 }
 
-.migaku-audio-card-control:has(input:checked)::before {
-  background-image: var(--migaku-unselected-tick);
-}
-
-.migaku-audio-card-control:has(input:checked)::after {
-  background-image: var(--migaku-selected-tick);
+/* Older supported Anki WebEngines omit decorative ticks and rely on the switch.
+ * Newer Chromium versions enhance the selected label without changing layout. */
+@supports selector(.migaku-card-mode-control:has(input:checked)) {
+  .migaku-card-mode-control:not(:has(input:checked)) span:first-child::before,
+  .migaku-card-mode-control:has(input:checked) span:last-child::before,
+  .migaku-audio-card-control:not(:has(input:checked))::before,
+  .migaku-audio-card-control:has(input:checked)::after {
+    background-image: var(--migaku-selected-tick);
+  }
 }
 
 .migaku-typeselect input[type="checkbox"] {
