@@ -202,6 +202,7 @@ The card workflow is protected at five seams:
 3. Template contract: all shipped functional HTML files match approved hashes.
 4. Document rendering: real front/back files, CSS, support assets, and fixtures compose successfully.
 5. HTTP workflow: the lab shell, preview route, and live style rebuild expose valid development states and errors.
+6. Browser layout: when Chrome or Chromium is available, the rendered lab checks hover stability, mobile control visibility, and both native and WebKit Japanese reading layouts.
 
 The existing syntax-parser suite remains part of the same top-level test command.
 
