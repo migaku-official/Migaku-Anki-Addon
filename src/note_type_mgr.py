@@ -1,7 +1,7 @@
 import re
 import os
 import shutil
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Union
 
 import aqt
 from anki.models import NotetypeDict
@@ -111,15 +111,20 @@ def nt_update(nt: NotetypeDict, lang: Language, commit=True) -> None:
     # Set template html
     if template:
         for fmt, html_name in [("qfmt", "front.html"), ("afmt", "back.html")]:
-            fields_settings = nt_get_tmpl_fields_settings(nt, template_idx, fmt)
-
             # The base template is always reset to the default:
             # User may not change it, except for setting Migaku Options which are applied by the nt_set_tmpl_lang call below
             if is_base_tmpl:
                 html_path = lang.file_path("card", html_name)
                 with open(html_path, "r", encoding="utf-8") as file:
                     html = file.read()
+                fields_settings = nt_migrate_tmpl_fields_settings(
+                    nt["tmpls"][template_idx][fmt], html
+                )
                 nt["tmpls"][template_idx][fmt] = html
+            else:
+                fields_settings = nt_get_tmpl_fields_settings(
+                    nt, template_idx, fmt
+                )
 
             nt_set_tmpl_lang(
                 nt,
@@ -184,7 +189,9 @@ def nt_set_tmpl_lang(
     lang: Optional[Language],
     tmpl_idx: int,
     fmt: str,
-    fields_settings: List[Dict[str, str]],
+    fields_settings: Union[
+        List[Dict[str, str]], Dict[str, Dict[str, str]]
+    ],
     settings_mismatch_ignore=False,
     commit=True,
 ) -> None:
@@ -200,7 +207,11 @@ def nt_set_tmpl_lang(
 
     skip_field_replacement = False
 
-    if len(fields_settings) != field_count:
+    settings_by_name = isinstance(fields_settings, dict)
+
+    if settings_by_name and not fields_settings:
+        skip_field_replacement = True
+    elif not settings_by_name and len(fields_settings) != field_count:
         if settings_mismatch_ignore:
             skip_field_replacement = True
         else:
@@ -224,7 +235,13 @@ def nt_set_tmpl_lang(
             else:
                 field_name = d3
 
-            field_settings = fields_settings[field_i]
+            if settings_by_name:
+                if field_name not in fields_settings:
+                    text_i = match.end()
+                    continue
+                field_settings = fields_settings[field_name]
+            else:
+                field_settings = fields_settings[field_i]
 
             field_active = len(field_settings) > 0
 
@@ -241,7 +258,8 @@ def nt_set_tmpl_lang(
                 fmt_data[: match.start()] + field_replace + fmt_data[match.end() :]
             )
             text_i = match.start() + len(field_replace)
-            field_i += 1
+            if not settings_by_name:
+                field_i += 1
 
     # Insert Formatting
     if lang:
@@ -260,10 +278,7 @@ def nt_set_tmpl_lang(
         nt_mgr.update_dict(nt)
 
 
-def nt_get_tmpl_fields_settings(
-    nt: NotetypeDict, tmpl_idx: int, fmt: str, field_names: bool = False
-):
-    fmt_data = nt["tmpls"][tmpl_idx][fmt]
+def tmpl_get_fields_settings(fmt_data: str, field_names: bool = False):
     fmt_data = FORMAT_RE.sub("", fmt_data)
 
     matches = FIELD_RE.findall(fmt_data)
@@ -285,6 +300,42 @@ def nt_get_tmpl_fields_settings(
             ret.append(field_settings)
 
     return ret
+
+
+def nt_get_tmpl_fields_settings(
+    nt: NotetypeDict, tmpl_idx: int, fmt: str, field_names: bool = False
+):
+    return tmpl_get_fields_settings(
+        nt["tmpls"][tmpl_idx][fmt], field_names=field_names
+    )
+
+
+def nt_migrate_tmpl_fields_settings(
+    current_fmt: str, next_fmt: str
+) -> Dict[str, Dict[str, str]]:
+    current_settings = dict(
+        tmpl_get_fields_settings(current_fmt, field_names=True)
+    )
+    next_settings = dict(tmpl_get_fields_settings(next_fmt, field_names=True))
+
+    sentence_field = "editable:Sentence"
+    word_audio_field = "editable:Word Audio"
+    sentence_settings = current_settings.get(sentence_field, {})
+    word_audio_settings = current_settings.get(word_audio_field, {})
+    next_sentence_settings = next_settings.get(sentence_field, {})
+    next_word_audio_settings = next_settings.get(word_audio_field, {})
+
+    settings_were_shifted = (
+        not sentence_settings
+        and bool(word_audio_settings)
+        and word_audio_settings == next_sentence_settings
+        and not next_word_audio_settings
+    )
+    if settings_were_shifted:
+        current_settings[sentence_field] = word_audio_settings
+        current_settings[word_audio_field] = {}
+
+    return current_settings
 
 
 def nt_was_installed(nt: NotetypeDict) -> bool:
