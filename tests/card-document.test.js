@@ -215,8 +215,18 @@ assert.match(
   /class="migaku-card migaku-card-front">[\s\S]*class="migaku-card-content">[\s\S]*class="replay-button soundLink"/,
 );
 assert.match(audioFront, /src="\/fixture-media\/sentence\.m4a"/);
+assert.match(
+  audioFront,
+  /class="migaku-card-sentence-audio">[\s\S]*class="replay-button soundLink"/,
+);
+assert.doesNotMatch(audioFront, /class="migaku-card-unknown-audio"/);
 assert.doesNotMatch(audioFront, /target-word\.mp3/);
 assert.match(audioVocabularyFront, /src="\/fixture-media\/target-word\.mp3"/);
+assert.match(
+  audioVocabularyFront,
+  /class="migaku-card-unknown-audio">[\s\S]*class="replay-button soundLink"/,
+);
+assert.doesNotMatch(audioVocabularyFront, /class="migaku-card-sentence-audio"/);
 assert.doesNotMatch(audioVocabularyFront, /sentence\.m4a/);
 assert.match(emptyAudioFront, /<div data-preview-empty-front/);
 assert.match(emptyAudioFront, /Front of card is blank/);
@@ -258,8 +268,12 @@ contract.languages.forEach((language) => {
   );
   const sentenceFields = buildLocalizedFixture(language, "sentence").fields;
   const vocabularyFields = buildLocalizedFixture(language, "vocabulary").fields;
+  const audioSentenceFields = buildLocalizedFixture(language, "sentence", true).fields;
+  const audioVocabularyFields = buildLocalizedFixture(language, "vocabulary", true).fields;
   const sentence = renderTemplate(template, sentenceFields);
   const vocabulary = renderTemplate(template, vocabularyFields);
+  const audioSentence = renderTemplate(template, audioSentenceFields);
+  const audioVocabulary = renderTemplate(template, audioVocabularyFields);
   const emptySentence = renderTemplate(template, { ...sentenceFields, Sentence: "" });
   const emptyTargetWord = renderTemplate(template, { ...vocabularyFields, "Target Word": "" });
 
@@ -267,6 +281,10 @@ contract.languages.forEach((language) => {
   assert.doesNotMatch(sentence, /class="field migaku-card-unknown"/);
   assert.match(vocabulary, /class="field migaku-card-unknown"/);
   assert.doesNotMatch(vocabulary, /class="field migaku-card-sentence"/);
+  assert.match(audioSentence, /class="migaku-card-sentence-audio"/);
+  assert.doesNotMatch(audioSentence, /class="migaku-card-unknown-audio"/);
+  assert.match(audioVocabulary, /class="migaku-card-unknown-audio"/);
+  assert.doesNotMatch(audioVocabulary, /class="migaku-card-sentence-audio"/);
   assert.doesNotMatch(emptySentence, /class="field migaku-card-sentence"/);
   assert.doesNotMatch(emptyTargetWord, /class="field migaku-card-unknown"/);
 });
