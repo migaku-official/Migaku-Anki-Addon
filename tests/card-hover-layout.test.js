@@ -300,9 +300,9 @@ const run = async () => {
       `--user-data-dir=${profile}`,
       previewUrl,
     ], { stdio: 'ignore' })
-    await withTimeout(chrome.started, 5000, 'Chrome process did not start')
-    const page = await waitForPage(devtoolsPort, previewUrl)
     try {
+      await withTimeout(chrome.started, 5000, 'Chrome process did not start')
+      const page = await waitForPage(devtoolsPort, previewUrl)
       const client = await withTimeout(connect(page.webSocketDebuggerUrl), 5000, 'Chrome DevTools connection timed out')
       try {
       await client.send('Runtime.enable')
