@@ -310,7 +310,15 @@
     display: none;
 }
 
+.furigana-invisible .migaku-webkit-ruby-reading {
+    display: none;
+}
+
 .furigana-hover:not(.active) rt {
+    display: none;
+}
+
+.furigana-hover:not(.active) .migaku-webkit-ruby-reading {
     display: none;
 }
 
@@ -319,13 +327,36 @@ ruby > rt {
     user-select: none;
 }
 
+.migaku-webkit-ruby {
+    position: relative;
+    display: inline-block;
+    padding-top: .58em;
+    vertical-align: baseline;
+    line-height: 1;
+}
+
+.migaku-webkit-ruby-reading {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: .5em;
+    line-height: 1;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.migaku-webkit-ruby-surface {
+    display: block;
+    line-height: 1;
+}
+
 @media only screen and (max-width: 520px) {
-    .migaku-card-sentence,
-    .migaku-card-unknown {
-        line-height: 1;
+    .migaku-card-sentence {
+        line-height: 1.7;
     }
 
-    ruby > rt {
+    .migaku-card-unknown {
         line-height: 1;
     }
 }

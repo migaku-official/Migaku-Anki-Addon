@@ -74,12 +74,27 @@ assert.match(light, /\.migaku-card-front \.migaku-card-unknown\s*\{[^}]*font-siz
 assert.match(light, /\.migaku-card-front \.migaku-card-sentence\s*\{[^}]*font-size: 32px;/s);
 assert.match(
   japanese,
-  /@media only screen and \(max-width: 520px\)\s*\{\s*\.migaku-card-sentence,\s*\.migaku-card-unknown\s*\{[^}]*line-height: 1;/s,
+  /@media only screen and \(max-width: 520px\)\s*\{\s*\.migaku-card-sentence\s*\{[^}]*line-height: 1\.7;/s,
+);
+assert.match(japanese, /\.migaku-card-unknown\s*\{[^}]*line-height: 1;/s);
+assert.match(
+  japanese,
+  /\.migaku-webkit-ruby\s*\{[^}]*position: relative;[^}]*display: inline-block;[^}]*padding-top: \.58em;[^}]*vertical-align: baseline;[^}]*line-height: 1;/s,
 );
 assert.match(
   japanese,
-  /@media only screen and \(max-width: 520px\)[\s\S]*ruby > rt\s*\{[^}]*line-height: 1;/s,
+  /\.migaku-webkit-ruby-reading\s*\{[^}]*position: absolute;[^}]*top: 0;[^}]*left: 50%;[^}]*transform: translateX\(-50%\);[^}]*font-size: \.5em;[^}]*line-height: 1;/s,
 );
+assert.match(
+  japanese,
+  /\.migaku-webkit-ruby-surface\s*\{[^}]*display: block;[^}]*line-height: 1;/s,
+);
+assert.match(
+  japanese,
+  /const USE_WEBKIT_RUBY_LAYOUT\s*=\s*\/AppleWebKit\/i\.test\(navigator\.userAgent\)[\s\S]*!\/\(Android\|Chrome\|Chromium\|CriOS\|Edg\|OPR\)\/i\.test\(navigator\.userAgent\)/s,
+);
+assert.match(japanese, /reading_elem\.classList\.add\('migaku-webkit-ruby-reading'\)/);
+assert.match(japanese, /surface_elem\.classList\.add\('migaku-webkit-ruby-surface'\)/);
 assert.match(
   light,
   /\.migaku-card-back \.migaku-card-unknown\s*\{[^}]*order: 1;[^}]*font-size: 46px;[^}]*text-align: center;[^}]*width: 100%;[^}]*margin: 0 0 8px;/s,

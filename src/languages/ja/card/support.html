@@ -1,5 +1,9 @@
 <script>
   (function () {
+    const USE_WEBKIT_RUBY_LAYOUT =
+      /AppleWebKit/i.test(navigator.userAgent) &&
+      !/(Android|Chrome|Chromium|CriOS|Edg|OPR)/i.test(navigator.userAgent)
+
     //// YOMICHAN START ////
 
     const KATAKANA_SMALL_KA_CODE_POINT = 0x30f5
@@ -447,26 +451,66 @@
           field_settings.furigana !== 'no' &&
           (segments.length > 1 || segments[0].reading)
         ) {
-          const ruby_elem = document.createElement('ruby')
+          const ruby_elem = document.createElement(
+            USE_WEBKIT_RUBY_LAYOUT ? 'span' : 'ruby'
+          )
           text_content.appendChild(ruby_elem)
 
-          for (const segment of segments) {
-            if (field_settings.furigana === "replace") {
-              ruby_elem.appendChild(document.createTextNode(segment.reading))
-              continue
+          if (
+            USE_WEBKIT_RUBY_LAYOUT &&
+            field_settings.furigana !== 'replace'
+          ) {
+            for (const segment of segments) {
+              if (!segment.reading) {
+                ruby_elem.appendChild(document.createTextNode(segment.text))
+                continue
+              }
+
+              const group_elem = document.createElement('span')
+              group_elem.classList.add('migaku-webkit-ruby')
+              group_elem.setAttribute(
+                'aria-label',
+                `${segment.text} (${segment.reading})`
+              )
+
+              const reading_elem = document.createElement('span')
+              reading_elem.classList.add('migaku-webkit-ruby-reading')
+              reading_elem.textContent = segment.reading
+              reading_elem.setAttribute('aria-hidden', 'true')
+
+              const surface_elem = document.createElement('span')
+              surface_elem.classList.add('migaku-webkit-ruby-surface')
+              surface_elem.textContent = segment.text
+
+              group_elem.appendChild(reading_elem)
+              group_elem.appendChild(surface_elem)
+              ruby_elem.appendChild(group_elem)
             }
 
-            ruby_elem.appendChild(document.createTextNode(segment.text))
+            if (syntax_element.word_post) {
+              ruby_elem.appendChild(
+                document.createTextNode(syntax_element.word_post)
+              )
+            }
+          } else {
+            for (const segment of segments) {
+              if (field_settings.furigana === "replace") {
+                ruby_elem.appendChild(document.createTextNode(segment.reading))
+                continue
+              }
 
-            const rt_elem = document.createElement('rt')
-            rt_elem.textContent = segment.reading
-            ruby_elem.appendChild(rt_elem)
-          }
+              ruby_elem.appendChild(document.createTextNode(segment.text))
 
-          if (syntax_element.word_post) {
-            ruby_elem.appendChild(
-              document.createTextNode(syntax_element.word_post)
-            )
+              const rt_elem = document.createElement('rt')
+              rt_elem.textContent = segment.reading
+              ruby_elem.appendChild(rt_elem)
+            }
+
+            if (syntax_element.word_post) {
+              ruby_elem.appendChild(
+                document.createTextNode(syntax_element.word_post)
+              )
+            }
           }
         } else {
           text_content.textContent =
