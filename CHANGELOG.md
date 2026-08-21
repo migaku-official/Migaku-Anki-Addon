@@ -1,3 +1,9 @@
+## 0.6.1
+
+### Patch Changes
+
+- 436d005: Improve the Notes field presentation across supported card languages, including clearer spacing, alignment, contrast, and conditional rendering.
+
 ## 0.6.0
 
 - [FEATURE] Redesign Migaku card visuals across supported languages
