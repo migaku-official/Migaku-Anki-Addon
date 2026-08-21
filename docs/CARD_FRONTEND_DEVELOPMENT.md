@@ -181,9 +181,10 @@ reveals the translation and removes the one-time button, with no control for
 hiding it again. The author stylesheet explicitly preserves `display: none` while
 the translation carries its `hidden` attribute so layout styling cannot expose it
 prematurely. The button and revealed
-translation share the same flex order, fixed 34 px height, and 16 px vertical
-margin, plus identical type metrics and padding. Longer translations scroll
-inside that reserved slot, so revealing them does not move surrounding content.
+translation keeps the same flex order, 16 px vertical margin, and type metrics
+and padding, but has only a 34 px minimum height. Longer translations wrap and
+expand the card instead of scrolling inside a fixed slot, so surrounding content
+moves down as needed.
 The button label is bold. Japanese ruby annotations use centered alignment so
 readings such as `せかい` remain naturally grouped above their base word rather
 than being distributed across it. Safari and AnkiMobile use a baseline-preserving

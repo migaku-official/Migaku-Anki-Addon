@@ -189,8 +189,7 @@ main.container .migaku-card audio {
   color: inherit;
 }
 
-.migaku-translation-toggle,
-.migaku-card-back .migaku-card-translation {
+.migaku-translation-toggle {
   order: 5;
   height: 34px;
   min-height: 34px;
@@ -201,10 +200,15 @@ main.container .migaku-card audio {
 }
 
 .migaku-card-back .migaku-card-translation {
+  order: 5;
+  min-height: 34px;
+  margin: 16px auto;
+  padding: 8px 16px;
+  font-size: .875rem;
+  line-height: 1.25;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow-y: auto;
   color: rgba(0 0 90 / 60%);
   text-align: center;
   width: 100%;

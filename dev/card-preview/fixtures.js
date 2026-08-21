@@ -84,7 +84,8 @@ const syntaxProfiles = {
     sentence:
       "言語[げんご;h]を 学[まな,まなぶ;n2]ぶと、 世界[せかい;h]への 窓[まど;a]が 開[ひら,ひらく;n2]きます。",
     targetWord: "言語[げんご;h]",
-    translation: syntaxTranslation,
+    translation:
+      "言語を学ぶと、世界への新しい窓が開きます。異なる言葉を知ることで、人々の考え方や文化への理解も少しずつ深まっていきます。これは、遠く離れた場所にいる人とも気持ちを通わせるための大切な一歩です。",
   },
   ko: {
     sentence:

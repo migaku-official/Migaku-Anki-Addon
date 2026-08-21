@@ -25,6 +25,9 @@ const ankidroid = renderCardDocument({
   side: "back",
   theme: "ankidroid",
 });
+const translationRule = light.match(
+  /\.migaku-card-back \.migaku-card-translation\s*\{[^}]*\}/s,
+)[0];
 const japanese = renderCardDocument({
   fixtureName: "syntax",
   language: "ja",
@@ -159,11 +162,23 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-translation-toggle,\s*\.migaku-card-back \.migaku-card-translation\s*\{[^}]*order: 5;[^}]*height: 34px;[^}]*min-height: 34px;[^}]*margin: 16px auto;[^}]*padding: 8px 16px;[^}]*font-size: \.875rem;[^}]*line-height: 1\.25;/s,
+  /\.migaku-translation-toggle\s*\{[^}]*order: 5;[^}]*height: 34px;[^}]*min-height: 34px;[^}]*margin: 16px auto;[^}]*padding: 8px 16px;[^}]*font-size: \.875rem;[^}]*line-height: 1\.25;/s,
 );
 assert.match(
   light,
-  /\.migaku-card-back \.migaku-card-translation\s*\{[^}]*display: flex;[^}]*align-items: center;[^}]*justify-content: center;[^}]*overflow-y: auto;[^}]*color: rgba\(0 0 90 \/ 60%\);/s,
+  /\.migaku-card-back \.migaku-card-translation\s*\{[^}]*order: 5;[^}]*min-height: 34px;[^}]*margin: 16px auto;[^}]*padding: 8px 16px;[^}]*font-size: \.875rem;[^}]*line-height: 1\.25;/s,
+);
+assert.doesNotMatch(
+  translationRule,
+  /\n  height: 34px;/,
+);
+assert.doesNotMatch(
+  translationRule,
+  /overflow-y:/,
+);
+assert.match(
+  translationRule,
+  /display: flex;[^}]*align-items: center;[^}]*justify-content: center;[^}]*color: rgba\(0 0 90 \/ 60%\);/s,
 );
 assert.match(
   light,
