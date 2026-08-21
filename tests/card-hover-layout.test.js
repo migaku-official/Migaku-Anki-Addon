@@ -293,6 +293,8 @@ const run = async () => {
     await waitForServer(previewUrl)
     const chrome = startProcess(chromePath, [
       '--headless=new',
+      '--no-sandbox',
+      '--disable-dev-shm-usage',
       '--disable-gpu',
       '--no-first-run',
       '--no-default-browser-check',
