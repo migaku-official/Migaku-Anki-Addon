@@ -14,11 +14,17 @@ const createInteractiveElement = (hidden) => {
   const element = {
     hidden,
     removed: false,
-    attributes: {},
+    attributes: hidden ? { hidden: "" } : {},
     textContent: "",
     addEventListener: (event, listener) => listeners[event] = listener,
     click: () => listeners.click(),
-    remove: () => element.removed = true,
+    parentNode: {
+      removeChild: () => element.removed = true,
+    },
+    removeAttribute: (name) => {
+      delete element.attributes[name];
+      if (name === "hidden") element.hidden = false;
+    },
     setAttribute: (name, value) => element.attributes[name] = value,
   };
   return element;
@@ -383,8 +389,8 @@ contract.languages.forEach((language) => {
   assert.match(localizedBack, /id="migaku-typeselect" class="migaku-typeselect" hidden/);
   assert.match(localizedBack, /name="vocabulary" role="switch"/);
   assert.match(localizedBack, /name="audio" role="switch"/);
-  assert.match(localizedBack, /translation\.hidden = false/);
-  assert.match(localizedBack, /translationToggle\.remove\(\)/);
+  assert.match(localizedBack, /translation\.removeAttribute\('hidden'\)/);
+  assert.match(localizedBack, /translationToggle\.parentNode\.removeChild\(translationToggle\)/);
   assert.match(localizedBack, /pycmd\('update_card_type\|'/);
   assert.match(audioBack, /class="sentence-separator"/);
   assert.doesNotMatch(emptyTranslation, /class="UiButton migaku-translation-toggle"/);
@@ -392,6 +398,7 @@ contract.languages.forEach((language) => {
   assert.doesNotMatch(emptyNotes, /class="migaku-card-notes migaku-indented"/);
   assert.match(emptySentenceVocabulary, /class="sentence-separator"/);
   assert.strictEqual(interactions.translation.hidden, false);
+  assert.strictEqual("hidden" in interactions.translation.attributes, false);
   assert.strictEqual(interactions.translationToggle.removed, true);
   assert.strictEqual(interactions.typeSelectorAfterOpen, false);
   assert.strictEqual(interactions.typeToggleTextAfterOpen, "Dismiss");

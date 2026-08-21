@@ -76,8 +76,8 @@
     const translation = document.querySelector('.migaku-card-translation');
     if (translationToggle && translation) {
         translationToggle.addEventListener('click', () => {
-            translation.hidden = false;
-            translationToggle.remove();
+            translation.removeAttribute('hidden');
+            translationToggle.parentNode.removeChild(translationToggle);
         });
     }
 
