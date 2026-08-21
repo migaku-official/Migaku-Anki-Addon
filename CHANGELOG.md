@@ -1,3 +1,12 @@
+## 0.6.2
+
+### Patch Changes
+
+- eada272: Improve the See Translation control on AnkiDroid and other legacy card WebViews by using a more compatible show-and-remove interaction.
+- 2d9f75a: Keep the audio button icons and playback indicator aligned in AnkiDroid and other legacy card WebViews.
+- 1a5d510: Restrict the front-of-card customization control to desktop Anki; it is now hidden in AnkiDroid and AnkiMobile.
+- 9c04491: Allow revealed translations to grow with multi-line content instead of clipping or scrolling inside a fixed-height slot.
+
 ## 0.6.1
 
 ### Patch Changes
