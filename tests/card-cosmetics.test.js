@@ -164,7 +164,11 @@ assert.match(
 assert.match(light, /\.migaku-card-back \.migaku-card-definitions\s*\{[^}]*order: 8;[^}]*width: 100%;[^}]*margin-top: 15px;/s);
 assert.match(
   light,
-  /\.migaku-card-back \.migaku-card-notes\s*\{[^}]*order: 10;[^}]*width: 100%;[^}]*padding: 16px;[^}]*border-radius: 16px;[^}]*background: #ede3ff;[^}]*display: flex;[^}]*flex-direction: column;[^}]*gap: 8px;[^}]*user-select: inherit;[^}]*margin: 20px auto;[^}]*text-align: center;[^}]*font-size: \.9375rem;[^}]*min-height: 150px;/s,
+  /\.migaku-card-back \.migaku-card-notes\s*\{[^}]*order: 10;[^}]*width: 100%;[^}]*padding: 24px 16px;[^}]*border-radius: 16px;[^}]*background: #ede3ff;[^}]*display: flex;[^}]*flex-direction: column;[^}]*gap: 8px;[^}]*user-select: inherit;[^}]*margin: 20px auto;[^}]*text-align: center;[^}]*font-size: \.9375rem;[^}]*min-height: 150px;/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-back \.migaku-card-notes::before\s*\{[^}]*content: "NOTES";[^}]*align-self: center;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.75rem;[^}]*font-weight: 700;/s,
 );
 assert.match(
   light,
@@ -349,6 +353,10 @@ assert.match(
 assert.match(
   dark,
   /\.ankidroid_dark_mode \.migaku-card-notes,\s*\.nightMode \.migaku-card-notes\s*\{[^}]*background: #36206d;/s,
+);
+assert.match(
+  dark,
+  /\.ankidroid_dark_mode \.migaku-card-notes::before,\s*\.nightMode \.migaku-card-notes::before\s*\{[^}]*color: rgba\(255 255 255 \/ 60%\);/s,
 );
 assert.match(
   dark,

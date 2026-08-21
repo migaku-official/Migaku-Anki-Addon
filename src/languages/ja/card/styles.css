@@ -400,7 +400,7 @@ main.container .migaku-card audio {
 .migaku-card-back .migaku-card-notes {
   order: 10;
   width: 100%;
-  padding: 16px;
+  padding: 24px 16px;
   border-radius: 16px;
   background: #ede3ff;
   display: flex;
@@ -411,6 +411,16 @@ main.container .migaku-card audio {
   text-align: center;
   font-size: .9375rem;
   min-height: 150px;
+}
+
+.migaku-card-back .migaku-card-notes::before {
+  content: "NOTES";
+  align-self: center;
+  color: rgba(0 0 90 / 60%);
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  line-height: 1.25;
 }
 
 .migaku-card-sentence,
@@ -756,6 +766,11 @@ ruby {
 .ankidroid_dark_mode .migaku-card-notes,
 .nightMode .migaku-card-notes {
   background: #36206d;
+}
+
+.ankidroid_dark_mode .migaku-card-notes::before,
+.nightMode .migaku-card-notes::before {
+  color: rgba(255 255 255 / 60%);
 }
 
 .ankidroid_dark_mode .migaku-card-shell > .migaku-type-toggle,
