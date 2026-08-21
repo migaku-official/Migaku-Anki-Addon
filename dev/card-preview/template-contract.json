@@ -24,15 +24,15 @@
       }
     },
     "back.html": {
-      "default": "7fb08647eff4268e6efc4692e29714bb5c6140aeeed430156cb268e61f978f1a",
+      "default": "347fc28b5f0b8f59d446c6767ae81243ff8e76f4be66627f3e1f288c58ac8e6b",
       "overrides": {
-        "en": "e7bd1140612fdf1ea12b9fe1924e35d0910a9a9e407193a3a13b03b9443bc566",
-        "ja": "e310a6dbec1caeb1c38a80a9b1ddad2fb9b3c42c37837c69b849593fbad5b4bb",
-        "ko": "e7bd1140612fdf1ea12b9fe1924e35d0910a9a9e407193a3a13b03b9443bc566",
-        "vi": "e7bd1140612fdf1ea12b9fe1924e35d0910a9a9e407193a3a13b03b9443bc566",
-        "yue": "bbd50d6482dbd1cea2bbe632ffd18c6a6ba54ded6e4dc106ed67083d22cc460f",
-        "zh_CN": "437c68eccf126fedb88f755d3880cc472d9faddaea899fc072eec43208bd41a9",
-        "zh_TW": "f2f6abcf4ee0921b2773a3e3d4f66b124a07f35b7b13dfbb9131110c4936f95e"
+        "en": "2d5c27498add4e8d7bdb623cbd281ce4659ba00479c215296c20c4660c8e2f4e",
+        "ja": "ba1bf2648ac3495c73b22041ff573d1834d58d09948cb239f4b337772924e8f2",
+        "ko": "2d5c27498add4e8d7bdb623cbd281ce4659ba00479c215296c20c4660c8e2f4e",
+        "vi": "2d5c27498add4e8d7bdb623cbd281ce4659ba00479c215296c20c4660c8e2f4e",
+        "yue": "54f3d14aa329fee678122a48ba6e300002cbe49d0b08d00e087c781c6739e106",
+        "zh_CN": "77a652012689795bc8616c5aa672f43608e3e6235d27b6255d1f732c66e37583",
+        "zh_TW": "d40731393c2def4a80741fa8b5b05b975c81fb3b340305b55463294c69cfd550"
       }
     },
     "support.html": {

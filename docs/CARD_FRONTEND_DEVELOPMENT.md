@@ -181,9 +181,10 @@ reveals the translation and removes the one-time button, with no control for
 hiding it again. The author stylesheet explicitly preserves `display: none` while
 the translation carries its `hidden` attribute so layout styling cannot expose it
 prematurely. The button and revealed
-translation share the same flex order, fixed 34 px height, and 16 px vertical
-margin, plus identical type metrics and padding. Longer translations scroll
-inside that reserved slot, so revealing them does not move surrounding content.
+translation keeps the same flex order, 16 px vertical margin, and type metrics
+and padding, but has only a 34 px minimum height. Longer translations wrap and
+expand the card instead of scrolling inside a fixed slot, so surrounding content
+moves down as needed.
 The button label is bold. Japanese ruby annotations use centered alignment so
 readings such as `せかい` remain naturally grouped above their base word rather
 than being distributed across it. Safari and AnkiMobile use a baseline-preserving
@@ -216,7 +217,8 @@ effective separation on narrow cards. Together they
 preserve the four existing `s`, `v`, `as`, and `av` states. Switch changes
 continue to send the existing
 `update_card_type` command through `pycmd`. The production script hides that
-entry point when `pycmd` is absent.
+entry point when `pycmd` is absent or when the card is running in AnkiMobile or
+AnkiDroid, where the desktop-only control is not supported.
 The back card shell is one normal flex-column layout containing the card,
 card-type trigger, optional switch panel, and 64 px of internal bottom padding.
 The controls remain in document flow, so collapsed and expanded states contribute

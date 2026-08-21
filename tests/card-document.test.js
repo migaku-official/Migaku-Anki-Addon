@@ -14,16 +14,27 @@ const createInteractiveElement = (hidden) => {
   const element = {
     hidden,
     removed: false,
-    attributes: {},
+    attributes: hidden ? { hidden: "" } : {},
     textContent: "",
     addEventListener: (event, listener) => listeners[event] = listener,
     click: () => listeners.click(),
-    remove: () => element.removed = true,
+    parentNode: {
+      removeChild: () => element.removed = true,
+    },
+    removeAttribute: (name) => {
+      delete element.attributes[name];
+      if (name === "hidden") element.hidden = false;
+    },
     setAttribute: (name, value) => element.attributes[name] = value,
   };
   return element;
 };
-const executeBackInteractions = (template, fields, hasPycmd = true) => {
+const executeBackInteractions = (
+  template,
+  fields,
+  hasPycmd = true,
+  userAgent = "AnkiDesktop",
+) => {
   const rendered = renderTemplate(template, fields);
   const scripts = [...rendered.matchAll(/<script>([\s\S]*?)<\/script>/g)];
   const translationToggle = createInteractiveElement(false);
@@ -49,6 +60,7 @@ const executeBackInteractions = (template, fields, hasPycmd = true) => {
 
   const context = {
     document: { querySelector: (selector) => elements[selector] },
+    navigator: { userAgent },
   };
   if (hasPycmd) context.pycmd = (command) => commands.push(command);
   vm.runInNewContext(scripts[scripts.length - 1][1], context);
@@ -57,7 +69,7 @@ const executeBackInteractions = (template, fields, hasPycmd = true) => {
     vocabulary: form.elements.vocabulary.checked,
   };
   translationToggle.click();
-  if (hasPycmd) {
+  if (hasPycmd && form.onchange) {
     typeToggle.click();
     const typeSelectorAfterOpen = typeSelector.hidden;
     const typeToggleTextAfterOpen = typeToggle.textContent;
@@ -353,6 +365,18 @@ contract.languages.forEach((language) => {
     buildLocalizedFixture(language, "vocabulary", true).fields,
   );
   const noPycmdInteractions = executeBackInteractions(template, fields, false);
+  const ankidroidInteractions = executeBackInteractions(
+    template,
+    fields,
+    true,
+    "Mozilla/5.0 (Linux; Android 14; AnkiDroid)",
+  );
+  const ankiMobileInteractions = executeBackInteractions(
+    template,
+    fields,
+    true,
+    "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)",
+  );
   const localizedBack = renderCardDocument({
     fixtureName: "sentence",
     language,
@@ -383,8 +407,8 @@ contract.languages.forEach((language) => {
   assert.match(localizedBack, /id="migaku-typeselect" class="migaku-typeselect" hidden/);
   assert.match(localizedBack, /name="vocabulary" role="switch"/);
   assert.match(localizedBack, /name="audio" role="switch"/);
-  assert.match(localizedBack, /translation\.hidden = false/);
-  assert.match(localizedBack, /translationToggle\.remove\(\)/);
+  assert.match(localizedBack, /translation\.removeAttribute\('hidden'\)/);
+  assert.match(localizedBack, /translationToggle\.parentNode\.removeChild\(translationToggle\)/);
   assert.match(localizedBack, /pycmd\('update_card_type\|'/);
   assert.match(audioBack, /class="sentence-separator"/);
   assert.doesNotMatch(emptyTranslation, /class="UiButton migaku-translation-toggle"/);
@@ -392,6 +416,7 @@ contract.languages.forEach((language) => {
   assert.doesNotMatch(emptyNotes, /class="migaku-card-notes migaku-indented"/);
   assert.match(emptySentenceVocabulary, /class="sentence-separator"/);
   assert.strictEqual(interactions.translation.hidden, false);
+  assert.strictEqual("hidden" in interactions.translation.attributes, false);
   assert.strictEqual(interactions.translationToggle.removed, true);
   assert.strictEqual(interactions.typeSelectorAfterOpen, false);
   assert.strictEqual(interactions.typeToggleTextAfterOpen, "Dismiss");
@@ -409,6 +434,12 @@ contract.languages.forEach((language) => {
   assert.strictEqual(noPycmdInteractions.typeToggle.hidden, true);
   assert.strictEqual(noPycmdInteractions.typeSelector.hidden, true);
   assert.deepStrictEqual(noPycmdInteractions.commands, []);
+  assert.strictEqual(ankidroidInteractions.typeToggle.hidden, true);
+  assert.strictEqual(ankidroidInteractions.typeSelector.hidden, true);
+  assert.deepStrictEqual(ankidroidInteractions.commands, []);
+  assert.strictEqual(ankiMobileInteractions.typeToggle.hidden, true);
+  assert.strictEqual(ankiMobileInteractions.typeSelector.hidden, true);
+  assert.deepStrictEqual(ankiMobileInteractions.commands, []);
 });
 
 const syntaxCases = {

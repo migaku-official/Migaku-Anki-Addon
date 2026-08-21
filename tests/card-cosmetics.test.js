@@ -25,6 +25,9 @@ const ankidroid = renderCardDocument({
   side: "back",
   theme: "ankidroid",
 });
+const translationRule = light.match(
+  /\.migaku-card-back \.migaku-card-translation\s*\{[^}]*\}/s,
+)[0];
 const japanese = renderCardDocument({
   fixtureName: "syntax",
   language: "ja",
@@ -109,6 +112,18 @@ assert.match(
 );
 assert.match(
   light,
+  /\.migaku-card-sentence-audio \.replay-button,\s*\.migaku-card-unknown-audio \.replay-button\s*\{[^}]*box-sizing: border-box;/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-sentence-audio \.replay-button::before,\s*\.migaku-card-unknown-audio \.replay-button::before\s*\{[^}]*position: absolute;[^}]*top: 50%;[^}]*left: 8px;[^}]*transform: translateY\(-50%\);/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-sentence-audio \.replay-button::after\s*\{[^}]*position: absolute;[^}]*top: 50%;[^}]*right: 8px;[^}]*transform: translateY\(-50%\);/s,
+);
+assert.match(
+  light,
   /\.UiButton\s*\{[^}]*appearance: none;[^}]*display: inline-flex;[^}]*min-height: 34px;[^}]*padding: 8px 16px;[^}]*border-radius: 20px;/s,
 );
 assert.match(
@@ -147,11 +162,23 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-translation-toggle,\s*\.migaku-card-back \.migaku-card-translation\s*\{[^}]*order: 5;[^}]*height: 34px;[^}]*min-height: 34px;[^}]*margin: 16px auto;[^}]*padding: 8px 16px;[^}]*font-size: \.875rem;[^}]*line-height: 1\.25;/s,
+  /\.migaku-translation-toggle\s*\{[^}]*order: 5;[^}]*height: 34px;[^}]*min-height: 34px;[^}]*margin: 16px auto;[^}]*padding: 8px 16px;[^}]*font-size: \.875rem;[^}]*line-height: 1\.25;/s,
 );
 assert.match(
   light,
-  /\.migaku-card-back \.migaku-card-translation\s*\{[^}]*display: flex;[^}]*align-items: center;[^}]*justify-content: center;[^}]*overflow-y: auto;[^}]*color: rgba\(0 0 90 \/ 60%\);/s,
+  /\.migaku-card-back \.migaku-card-translation\s*\{[^}]*order: 5;[^}]*min-height: 34px;[^}]*margin: 16px auto;[^}]*padding: 8px 16px;[^}]*font-size: \.875rem;[^}]*line-height: 1\.25;/s,
+);
+assert.doesNotMatch(
+  translationRule,
+  /\n  height: 34px;/,
+);
+assert.doesNotMatch(
+  translationRule,
+  /overflow-y:/,
+);
+assert.match(
+  translationRule,
+  /display: flex;[^}]*align-items: center;[^}]*justify-content: center;[^}]*color: rgba\(0 0 90 \/ 60%\);/s,
 );
 assert.match(
   light,

@@ -43,6 +43,8 @@ Object.entries(expectedTargetWords).forEach(([language, targetWord]) => {
 const japanese = buildLocalizedFixture("ja", "syntax");
 assert.ok(japanese.fields.Sentence.includes("世界[せかい;h]"));
 assert.ok(japanese.fields.Sentence.includes("窓[まど;a]"));
+assert.ok(japanese.fields.Translation.length > 90);
+assert.match(japanese.fields.Translation, /。.+。/s);
 const japaneseSyntaxPattern = /{([^]*?)}|(([^\[\]\s\{\}　]*)\[(.*?)\]([^\[\]\s\{\}　]*))|([^ \u00A0{　]+)/gm;
 const sekaiSyntax = [...japanese.fields.Sentence.matchAll(japaneseSyntaxPattern)].find(
   (match) => match[4] === "せかい;h",
