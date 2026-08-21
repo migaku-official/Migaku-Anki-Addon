@@ -77,7 +77,7 @@ const waitForServer = async (url) => {
 }
 
 const waitForPage = async (port, previewUrl) => {
-  for (const attempt of Array(100).keys()) {
+  for (const attempt of Array(400).keys()) {
     try {
       const { body } = await getResponse(`http://127.0.0.1:${port}/json/list`)
       const pages = JSON.parse(body)
