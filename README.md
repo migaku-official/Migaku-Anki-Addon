@@ -221,17 +221,20 @@ ls -la .git/hooks/pre-push
    - Use the `migaku-anki-addon` package and choose `patch`, `minor`, or `major`.
    - Do not edit `CHANGELOG.md` manually; the release workflow consumes Changesets.
 
-2. **Merge feature work into `develop`.** The test workflow validates every pull request and branch push.
+2. **Merge feature work into `develop`.** This is the integration branch, and the test workflow validates every pull request and branch push.
 
-3. **Promote `develop` to the configured production branch (`main` by default).** Run the **Promote develop to production** workflow to create the promotion pull request.
+3. **Promote `develop` to the configured production branch (`main` by default).** Run the **Promote develop to production** workflow to create the promotion pull request. The optional `PRODUCTION_BRANCH` and `DEVELOPMENT_BRANCH` repository variables, or workflow inputs, can override these defaults.
 
-4. **Merge the promotion pull request.** The release workflow then:
-   - Consumes pending Changesets and updates `package.json` and `CHANGELOG.md`.
-   - Synchronizes the canonical AnkiWeb asset URLs.
+4. **Merge the promotion pull request.** A push to the production branch starts the **Release** workflow. It checks out the production branch, so ordinary pushes to `develop` do not publish releases. The workflow can also be run manually with optional branch overrides.
+
+5. **The Release workflow prepares and publishes the release:**
+   - Runs `npm run release:prepare`, which consumes pending Changesets, updates `package.json` and `CHANGELOG.md`, and synchronizes the canonical AnkiWeb asset URLs.
    - Runs the complete test suite.
-   - Commits and tags the release as `v<version>`.
-   - Builds and attaches `Migaku.ankiaddon` to a GitHub release.
-   - Merges the release metadata back into `develop`.
+   - Commits the release metadata to the production branch as `chore: release <version>` and merges that commit back into `develop`.
+   - Tags the release as `v<version>`.
+   - Builds and attaches `Migaku.ankiaddon` to the corresponding GitHub release.
+
+If there are no pending Changesets, release preparation is a no-op and no new version is created. A tagged release whose add-on asset is missing can still be retried by running the workflow again.
 
 ### QA Testing a Release Candidate
 
