@@ -20,7 +20,19 @@ const chromePaths = [
 ].filter(Boolean)
 
 const wait = (duration) => new Promise((resolve) => setTimeout(resolve, duration))
-const removeDirectory = (path) => (fs.rmSync || fs.rmdirSync)(path, { recursive: true, force: true })
+const removeDirectory = async (path) => {
+  const remove = fs.rmSync || fs.rmdirSync
+  for (const attempt of Array(50).keys()) {
+    try {
+      remove(path, { recursive: true, force: true })
+      return
+    } catch (error) {
+      if (!['EBUSY', 'ENOTEMPTY', 'EPERM'].includes(error.code)) throw error
+      await wait(100)
+    }
+  }
+  throw new Error(`Could not remove temporary directory: ${path}`)
+}
 const withTimeout = (promise, duration, message) => new Promise((resolve, reject) => {
   const timeout = setTimeout(() => reject(new Error(message)), duration)
   promise.then(
@@ -341,7 +353,7 @@ const run = async () => {
     try {
       await stopProcess(previewServer.childProcess)
     } finally {
-      removeDirectory(profile)
+      await removeDirectory(profile)
     }
   }
 }
