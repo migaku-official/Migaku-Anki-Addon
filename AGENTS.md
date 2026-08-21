@@ -11,6 +11,13 @@
 - Serve the repository over HTTP and open `ankiweb-realistic-preview.html` to review description changes. Opening the preview directly from the filesystem will prevent it from fetching `ankiweb.html`.
 - Change `ankiweb-realistic-preview.html` only when the preview shell itself needs to better match AnkiWeb.
 
+## Supported Anki version
+
+- The latest supported Anki version is currently `26.08.1`.
+- The runtime compatibility value is maintained separately in `src/anki_version.py`; AnkiWeb compatibility settings do not update it automatically.
+- Before add-on update or versioning work, ask the developer running the session whether the supported Anki version should also change. If they have not supplied the value, explicitly confirm it against AnkiWeb before editing version-related files.
+- Keep the AnkiWeb compatibility setting and `src/anki_version.py` aligned, and state the confirmed value in the implementation handoff.
+
 ## Card front-end safety contract
 
 - Treat `src/card-styles/global.css`, language `card/fonts.css` files, and
