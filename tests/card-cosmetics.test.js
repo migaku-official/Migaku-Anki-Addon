@@ -109,6 +109,18 @@ assert.match(
 );
 assert.match(
   light,
+  /\.migaku-card-sentence-audio \.replay-button,\s*\.migaku-card-unknown-audio \.replay-button\s*\{[^}]*box-sizing: border-box;/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-sentence-audio \.replay-button::before,\s*\.migaku-card-unknown-audio \.replay-button::before\s*\{[^}]*position: absolute;[^}]*top: 50%;[^}]*left: 8px;[^}]*transform: translateY\(-50%\);/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-sentence-audio \.replay-button::after\s*\{[^}]*position: absolute;[^}]*top: 50%;[^}]*right: 8px;[^}]*transform: translateY\(-50%\);/s,
+);
+assert.match(
+  light,
   /\.UiButton\s*\{[^}]*appearance: none;[^}]*display: inline-flex;[^}]*min-height: 34px;[^}]*padding: 8px 16px;[^}]*border-radius: 20px;/s,
 );
 assert.match(

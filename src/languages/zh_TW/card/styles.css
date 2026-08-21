@@ -771,6 +771,7 @@ ruby {
 .migaku-card-sentence-audio .replay-button,
 .migaku-card-unknown-audio .replay-button {
   appearance: none;
+  box-sizing: border-box;
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -807,9 +808,13 @@ ruby {
 
 .migaku-card-sentence-audio .replay-button::before,
 .migaku-card-unknown-audio .replay-button::before {
+  position: absolute;
+  top: 50%;
+  left: 8px;
   width: 24px;
   height: 24px;
   flex: 0 0 24px;
+  transform: translateY(-50%);
   background: currentcolor;
   content: "";
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6.5 16H6a4 4 0 0 1 0-8h.5l1.573-3.146A1.545 1.545 0 0 1 11 5.545v12.91a1.545 1.545 0 0 1-2.927.69zM13 5a1 1 0 0 1 1-1 8 8 0 1 1 0 16 1 1 0 1 1 0-2 6 6 0 0 0 0-12 1 1 0 0 1-1-1M14 8a1 1 0 1 0 0 2 2 2 0 1 1 0 4 1 1 0 1 0 0 2 4 4 0 0 0 0-8'/%3E%3C/svg%3E") center / contain no-repeat;
@@ -817,6 +822,9 @@ ruby {
 }
 
 .migaku-card-sentence-audio .replay-button::after {
+  position: absolute;
+  top: 50%;
+  right: 8px;
   width: 22px;
   height: 13px;
   flex: 0 0 22px;
@@ -826,6 +834,7 @@ ruby {
     linear-gradient(currentcolor, currentcolor) 0 5px / 100% 3px no-repeat,
     linear-gradient(currentcolor, currentcolor) 0 10px / 70% 3px no-repeat;
   content: "";
+  transform: translateY(-50%);
 }
 
 .migaku-card-sentence-audio .replay-button:focus:not(:focus-visible)::after {
