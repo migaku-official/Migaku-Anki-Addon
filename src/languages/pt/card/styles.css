@@ -314,6 +314,18 @@ main.container .migaku-card audio {
   flex-direction: column;
   gap: 8px;
   user-select: inherit;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.migaku-card-back .migaku-card-notes::before {
+  content: "NOTES";
+  align-self: center;
+  color: rgba(0 0 90 / 60%);
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  line-height: 1.25;
 }
 
 .migaku-card-sentence,
@@ -659,6 +671,11 @@ ruby {
 .ankidroid_dark_mode .migaku-card-notes,
 .nightMode .migaku-card-notes {
   background: rgba(255 255 255 / 6%);
+}
+
+.ankidroid_dark_mode .migaku-card-notes::before,
+.nightMode .migaku-card-notes::before {
+  color: rgba(255 255 255 / 60%);
 }
 
 .ankidroid_dark_mode .migaku-card-shell > .migaku-type-toggle,
