@@ -144,6 +144,13 @@
     </main>
 
     <script>
+      const sanitizeForAnkiWeb = (html) => {
+        const parsed = new DOMParser().parseFromString(html, "text/html")
+        parsed.querySelectorAll("script, style").forEach((element) => element.remove())
+        parsed.body.querySelectorAll("*").forEach((element) => ["style", "class", "id"].forEach((attribute) => element.removeAttribute(attribute)))
+        return parsed.body.innerHTML
+      }
+
       fetch("ankiweb.html", { cache: "no-store" })
         .then((response) => {
           if (!response.ok) throw new Error(`Could not load ankiweb.html (${response.status})`)
@@ -152,7 +159,7 @@
         .then((html) => {
           const description = document.querySelector("#ankiweb-description")
           const previewVersion = Date.now().toString()
-          description.innerHTML = html
+          description.innerHTML = sanitizeForAnkiWeb(html)
           description.querySelectorAll("img").forEach((image) => {
             const source = new URL(image.src)
             if (source.origin !== location.origin) return
