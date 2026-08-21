@@ -356,7 +356,7 @@ assert.match(
 );
 assert.match(
   dark,
-  /\.ankidroid_dark_mode \.migaku-card-notes::before,\s*\.nightMode \.migaku-card-notes::before\s*\{[^}]*color: #24164d;/s,
+  /\.ankidroid_dark_mode \.migaku-card-notes::before,\s*\.nightMode \.migaku-card-notes::before\s*\{[^}]*color: #b8a3f0;/s,
 );
 assert.match(
   dark,
