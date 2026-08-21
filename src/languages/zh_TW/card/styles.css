@@ -363,6 +363,13 @@ main.container .migaku-card audio {
 .migaku-card-back .migaku-card-notes {
   order: 10;
   width: 100%;
+  padding: 24px 16px;
+  border-radius: 16px;
+  background: rgba(0 0 90 / 4%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  user-select: inherit;
 }
 
 .migaku-card-sentence,
@@ -372,6 +379,11 @@ main.container .migaku-card audio {
 .migaku-card-definitions,
 .migaku-card-notes {
   word-break: break-word;
+}
+
+.migaku-card-notes p {
+  min-height: 20px;
+  hyphens: auto;
 }
 
 .dict-form {
@@ -698,6 +710,11 @@ ruby {
 .ankidroid_dark_mode .migaku-translation-toggle,
 .nightMode .migaku-translation-toggle {
   background: #2b2b60;
+}
+
+.ankidroid_dark_mode .migaku-card-notes,
+.nightMode .migaku-card-notes {
+  background: rgba(255 255 255 / 6%);
 }
 
 .ankidroid_dark_mode .migaku-card-shell > .migaku-type-toggle,

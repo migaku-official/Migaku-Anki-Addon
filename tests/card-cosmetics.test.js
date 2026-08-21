@@ -164,6 +164,14 @@ assert.match(
 assert.match(light, /\.migaku-card-back \.migaku-card-definitions\s*\{[^}]*order: 8;[^}]*width: 100%;/s);
 assert.match(
   light,
+  /\.migaku-card-back \.migaku-card-notes\s*\{[^}]*order: 10;[^}]*width: 100%;[^}]*padding: 24px 16px;[^}]*border-radius: 16px;[^}]*background: rgba\(0 0 90 \/ 4%\);[^}]*display: flex;[^}]*flex-direction: column;[^}]*gap: 8px;[^}]*user-select: inherit;/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-notes p\s*\{[^}]*min-height: 20px;[^}]*hyphens: auto;/s,
+);
+assert.match(
+  light,
   /\.migaku-card-shell > \.migaku-type-toggle\s*\{[^}]*position: static;[^}]*align-self: center;[^}]*margin: 4px auto 0;[^}]*transform: none;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*background: transparent;[^}]*box-shadow: none;[^}]*font-size: 0;[^}]*font-weight: 400;[^}]*opacity: \.5;/s,
 );
 assert.match(
@@ -337,6 +345,10 @@ assert.match(
 assert.match(
   dark,
   /\.ankidroid_dark_mode \.sentence-separator,\s*\.nightMode \.sentence-separator\s*\{[^}]*border-color: rgba\(255 255 255 \/ 19%\);/s,
+);
+assert.match(
+  dark,
+  /\.ankidroid_dark_mode \.migaku-card-notes,\s*\.nightMode \.migaku-card-notes\s*\{[^}]*background: rgba\(255 255 255 \/ 6%\);/s,
 );
 assert.match(
   dark,
