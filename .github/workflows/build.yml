@@ -19,16 +19,10 @@ jobs:
         shell: bash
         run: |
           mkdir dist
-      - name: Set version
-        shell: bash
-        run: |
-          echo "VERSION_STRING = '${{ env.RELEASE_VERSION }}'" > src/version.py
       - name: Zip
         shell: bash
         run: |
-          cd src
-          zip -r ../dist/Migaku.ankiaddon . -x user_files/\* meta.json
-          cd ..
+          MIGAKU_VERSION="${RELEASE_VERSION}" python3 tools/build_ankiaddon.py --output dist/Migaku.ankiaddon
       - name: Upload artifacts
         uses: ncipollo/release-action@v1
         with:
