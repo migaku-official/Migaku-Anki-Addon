@@ -142,6 +142,15 @@ const waitForCard = async (client) => {
   throw new Error(`Card preview iframe did not render the type toggle: ${JSON.stringify(details)}`)
 }
 
+const waitForSelector = async (client, selector) => {
+  for (const attempt of Array(400).keys()) {
+    const ready = await evaluate(client, `Boolean(document.querySelector(${JSON.stringify(selector)}))`)
+    if (ready) return
+    await wait(50)
+  }
+  throw new Error(`Card preview did not render ${selector}`)
+}
+
 const getLayout = (client) => evaluate(client, `(() => {
   const frame = document.querySelector('iframe')
   const button = frame.contentDocument.querySelector('.migaku-card-shell > .migaku-type-toggle')
@@ -308,6 +317,7 @@ const run = async () => {
       const client = await withTimeout(connect(page.webSocketDebuggerUrl), 5000, 'Chrome DevTools connection timed out')
       try {
       await client.send('Runtime.enable')
+      await waitForSelector(client, '#side')
       await evaluate(client, `(() => {
         const side = document.querySelector('#side')
         side.value = 'back'
