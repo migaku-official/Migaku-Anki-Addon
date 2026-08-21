@@ -12,11 +12,11 @@ recommended_version_tuple = (2, 1, 65)
 recommended_version = ".".join(str(x) for x in recommended_version_tuple)
 recommended_version_lower = ".".join(str(x) for x in recommended_version_lower_tuple)
 
-# We only want to include major and minor here, not patch version
-# We do not really care about the patch version
-# We trust that Anki will not break anything in a patch version *fingers crossed*
-new_recommended_version_tuple = (25, 9)
-new_recommended_version = ".".join(str(x).zfill(2) for x in new_recommended_version_tuple)
+# Current recommended version using Anki's year.month.patch versioning scheme
+new_recommended_version_tuple = (26, 8, 1)
+new_recommended_version = (
+    f"{new_recommended_version_tuple[0]}.{new_recommended_version_tuple[1]:02d}.{new_recommended_version_tuple[2]}"
+)
 
 
 class VersionState(Enum):
@@ -44,8 +44,8 @@ def get_state() -> VersionState:
             return VersionState.HIGHER
     else:
         # New versioning scheme
-        # Only major and minor are breaking
-        new_version_tuple = (major, minor)
+        patch = rest[0] if rest else 0
+        new_version_tuple = (major, minor, patch)
 
         if new_version_tuple < new_recommended_version_tuple:
             return VersionState.LOWER
