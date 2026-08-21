@@ -6,16 +6,10 @@ const path = require("path");
 
 const repoRoot = path.join(__dirname, "..");
 const outputPath = path.join(os.tmpdir(), `migaku-anki-addon-${process.pid}.ankiaddon`);
-const formattedVersion = execFileSync(
-  "python3",
-  [
-    "-c",
-    "from tools.build_ankiaddon import format_git_version; print(format_git_version('0.6.0-4-g053094b'))",
-  ],
-  { cwd: repoRoot, encoding: "utf8" },
-).trim();
-
-assert.strictEqual(formattedVersion, "0.6.0-dev.4+053094b");
+const expectedTag = execFileSync("git", ["describe", "--tags", "--abbrev=0"], {
+  cwd: repoRoot,
+  encoding: "utf8",
+}).trim();
 
 try {
   execFileSync("python3", ["tools/build_ankiaddon.py", "--output", outputPath], {
@@ -32,6 +26,19 @@ try {
   assert.strictEqual(version, 'VERSION_STRING = "9.9.9-test"\n');
   assert.ok(entries.includes("manifest.json\n"));
   assert.doesNotMatch(entries, /(^|\/)(?:meta\.json|user_files\/|__pycache__\/|.*\.pyc$)/m);
+
+  const localEnv = { ...process.env };
+  delete localEnv.MIGAKU_VERSION;
+  const localBuild = spawnSync("python3", ["tools/build_ankiaddon.py", "--output", outputPath], {
+    cwd: repoRoot,
+    env: localEnv,
+    encoding: "utf8",
+  });
+  assert.strictEqual(localBuild.status, 0, localBuild.stderr);
+  const localVersion = execFileSync("unzip", ["-p", outputPath, "version.py"], {
+    encoding: "utf8",
+  });
+  assert.strictEqual(localVersion, `VERSION_STRING = "${expectedTag}"\n`);
 
   const placeholderBuild = spawnSync("python3", ["tools/build_ankiaddon.py", "--output", outputPath], {
     cwd: repoRoot,

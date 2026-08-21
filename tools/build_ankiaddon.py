@@ -13,21 +13,6 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE_ROOT = ROOT / "src"
 DEFAULT_OUTPUT = ROOT / "dist" / "Migaku.ankiaddon"
 VERSION_PATTERN = re.compile(r"[A-Za-z0-9][A-Za-z0-9._+-]*\Z")
-GIT_VERSION_PATTERN = re.compile(
-    r"(?P<tag>.+)-(?P<commits>\d+)-g(?P<commit>[0-9a-f]+)(?P<dirty>-dirty)?\Z"
-)
-
-
-def format_git_version(description):
-    match = GIT_VERSION_PATTERN.fullmatch(description)
-    if not match:
-        return description
-
-    dirty_suffix = ".dirty" if match.group("dirty") else ""
-    return (
-        f"{match.group('tag')}-dev.{match.group('commits')}"
-        f"+{match.group('commit')}{dirty_suffix}"
-    )
 
 
 def get_version():
@@ -35,12 +20,11 @@ def get_version():
     if configured_version:
         version = configured_version
     else:
-        git_description = subprocess.check_output(
-            ["git", "describe", "--tags", "--always", "--dirty"],
+        version = subprocess.check_output(
+            ["git", "describe", "--tags", "--abbrev=0"],
             cwd=ROOT,
             text=True,
         ).strip()
-        version = format_git_version(git_description)
 
     if version == "git" or not VERSION_PATTERN.fullmatch(version):
         raise ValueError(f"Invalid add-on version: {version!r}")
