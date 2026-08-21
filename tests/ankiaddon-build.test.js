@@ -6,6 +6,16 @@ const path = require("path");
 
 const repoRoot = path.join(__dirname, "..");
 const outputPath = path.join(os.tmpdir(), `migaku-anki-addon-${process.pid}.ankiaddon`);
+const formattedVersion = execFileSync(
+  "python3",
+  [
+    "-c",
+    "from tools.build_ankiaddon import format_git_version; print(format_git_version('0.6.0-4-g053094b'))",
+  ],
+  { cwd: repoRoot, encoding: "utf8" },
+).trim();
+
+assert.strictEqual(formattedVersion, "0.6.0-dev.4+053094b");
 
 try {
   execFileSync("python3", ["tools/build_ankiaddon.py", "--output", outputPath], {
