@@ -1,16 +1,3 @@
-## 0.6.2
-
-### Patch Changes
-
-- b2d5990: Improve the Notes field presentation across supported card languages, including clearer spacing, alignment, contrast, and conditional rendering.
-
-## 0.6.1
-
-- [FIX] Build release archives with the tagged add-on version
-- [FIX] Keep temporary media outside the installed add-on directory
-- [FIX] Update the recommended Anki version to 26.08.1
-- [DOC] Refresh the AnkiWeb description and release guidance
-
 ## 0.6.0
 
 - [FEATURE] Redesign Migaku card visuals across supported languages
