@@ -164,11 +164,7 @@ assert.match(
 assert.match(light, /\.migaku-card-back \.migaku-card-definitions\s*\{[^}]*order: 8;[^}]*width: 100%;/s);
 assert.match(
   light,
-  /\.migaku-card-back \.migaku-card-notes\s*\{[^}]*order: 10;[^}]*width: 100%;[^}]*padding: 24px 16px;[^}]*border-radius: 16px;[^}]*background: rgba\(0 0 90 \/ 4%\);[^}]*display: flex;[^}]*flex-direction: column;[^}]*gap: 8px;[^}]*user-select: inherit;[^}]*margin-left: auto;[^}]*margin-right: auto;/s,
-);
-assert.match(
-  light,
-  /\.migaku-card-back \.migaku-card-notes::before\s*\{[^}]*content: "NOTES";[^}]*align-self: center;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*font-size: \.75rem;[^}]*font-weight: 700;/s,
+  /\.migaku-card-back \.migaku-card-notes\s*\{[^}]*order: 10;[^}]*width: 100%;[^}]*padding: 24px 16px;[^}]*border-radius: 16px;[^}]*background: #ede3ff;[^}]*display: flex;[^}]*flex-direction: column;[^}]*gap: 8px;[^}]*user-select: inherit;[^}]*margin: 30px auto;/s,
 );
 assert.match(
   light,
@@ -352,11 +348,7 @@ assert.match(
 );
 assert.match(
   dark,
-  /\.ankidroid_dark_mode \.migaku-card-notes,\s*\.nightMode \.migaku-card-notes\s*\{[^}]*background: rgba\(255 255 255 \/ 6%\);/s,
-);
-assert.match(
-  dark,
-  /\.ankidroid_dark_mode \.migaku-card-notes::before,\s*\.nightMode \.migaku-card-notes::before\s*\{[^}]*color: rgba\(255 255 255 \/ 60%\);/s,
+  /\.ankidroid_dark_mode \.migaku-card-notes,\s*\.nightMode \.migaku-card-notes\s*\{[^}]*background: #36206d;/s,
 );
 assert.match(
   dark,
