@@ -277,6 +277,7 @@ main.container .migaku-card audio {
 .migaku-card-back .migaku-card-definitions {
   order: 8;
   width: 100%;
+  margin-top: 15px;
 }
 
 .migaku-card-back .migaku-card-examples {
@@ -295,6 +296,8 @@ main.container .migaku-card audio {
   gap: 8px;
   user-select: inherit;
   margin: 30px auto;
+  text-align: center;
+  font-size: .875rem;
 }
 
 .migaku-card-sentence,

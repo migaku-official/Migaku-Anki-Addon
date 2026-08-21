@@ -161,10 +161,10 @@ assert.match(
   light,
   /\.sentence-separator\s*\{[^}]*order: 7;[^}]*margin: 8px 0;[^}]*border-color: rgba\(0 0 90 \/ 15%\);/s,
 );
-assert.match(light, /\.migaku-card-back \.migaku-card-definitions\s*\{[^}]*order: 8;[^}]*width: 100%;/s);
+assert.match(light, /\.migaku-card-back \.migaku-card-definitions\s*\{[^}]*order: 8;[^}]*width: 100%;[^}]*margin-top: 15px;/s);
 assert.match(
   light,
-  /\.migaku-card-back \.migaku-card-notes\s*\{[^}]*order: 10;[^}]*width: 100%;[^}]*padding: 24px 16px;[^}]*border-radius: 16px;[^}]*background: #ede3ff;[^}]*display: flex;[^}]*flex-direction: column;[^}]*gap: 8px;[^}]*user-select: inherit;[^}]*margin: 30px auto;/s,
+  /\.migaku-card-back \.migaku-card-notes\s*\{[^}]*order: 10;[^}]*width: 100%;[^}]*padding: 24px 16px;[^}]*border-radius: 16px;[^}]*background: #ede3ff;[^}]*display: flex;[^}]*flex-direction: column;[^}]*gap: 8px;[^}]*user-select: inherit;[^}]*margin: 30px auto;[^}]*text-align: center;[^}]*font-size: \.875rem;/s,
 );
 assert.match(
   light,
