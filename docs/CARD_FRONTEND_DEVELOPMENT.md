@@ -217,7 +217,8 @@ effective separation on narrow cards. Together they
 preserve the four existing `s`, `v`, `as`, and `av` states. Switch changes
 continue to send the existing
 `update_card_type` command through `pycmd`. The production script hides that
-entry point when `pycmd` is absent.
+entry point when `pycmd` is absent or when the card is running in AnkiMobile or
+AnkiDroid, where the desktop-only control is not supported.
 The back card shell is one normal flex-column layout containing the card,
 card-type trigger, optional switch panel, and 64 px of internal bottom padding.
 The controls remain in document flow, so collapsed and expanded states contribute

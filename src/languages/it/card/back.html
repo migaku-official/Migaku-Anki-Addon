@@ -83,7 +83,8 @@
 
     const typeToggle = document.querySelector('.migaku-type-toggle');
     const typeSelector = document.querySelector('.migaku-typeselect');
-    if (typeof (pycmd) !== "undefined") {
+    const isMobileAnki = typeof (navigator) !== "undefined" && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (typeof (pycmd) !== "undefined" && !isMobileAnki) {
         const form = document.querySelector('.migaku-typeselect form');
         const vocabularyToggle = form.elements['vocabulary'];
         const audioToggle = form.elements['audio'];

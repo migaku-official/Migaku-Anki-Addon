@@ -29,7 +29,12 @@ const createInteractiveElement = (hidden) => {
   };
   return element;
 };
-const executeBackInteractions = (template, fields, hasPycmd = true) => {
+const executeBackInteractions = (
+  template,
+  fields,
+  hasPycmd = true,
+  userAgent = "AnkiDesktop",
+) => {
   const rendered = renderTemplate(template, fields);
   const scripts = [...rendered.matchAll(/<script>([\s\S]*?)<\/script>/g)];
   const translationToggle = createInteractiveElement(false);
@@ -55,6 +60,7 @@ const executeBackInteractions = (template, fields, hasPycmd = true) => {
 
   const context = {
     document: { querySelector: (selector) => elements[selector] },
+    navigator: { userAgent },
   };
   if (hasPycmd) context.pycmd = (command) => commands.push(command);
   vm.runInNewContext(scripts[scripts.length - 1][1], context);
@@ -63,7 +69,7 @@ const executeBackInteractions = (template, fields, hasPycmd = true) => {
     vocabulary: form.elements.vocabulary.checked,
   };
   translationToggle.click();
-  if (hasPycmd) {
+  if (hasPycmd && form.onchange) {
     typeToggle.click();
     const typeSelectorAfterOpen = typeSelector.hidden;
     const typeToggleTextAfterOpen = typeToggle.textContent;
@@ -359,6 +365,18 @@ contract.languages.forEach((language) => {
     buildLocalizedFixture(language, "vocabulary", true).fields,
   );
   const noPycmdInteractions = executeBackInteractions(template, fields, false);
+  const ankidroidInteractions = executeBackInteractions(
+    template,
+    fields,
+    true,
+    "Mozilla/5.0 (Linux; Android 14; AnkiDroid)",
+  );
+  const ankiMobileInteractions = executeBackInteractions(
+    template,
+    fields,
+    true,
+    "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)",
+  );
   const localizedBack = renderCardDocument({
     fixtureName: "sentence",
     language,
@@ -416,6 +434,12 @@ contract.languages.forEach((language) => {
   assert.strictEqual(noPycmdInteractions.typeToggle.hidden, true);
   assert.strictEqual(noPycmdInteractions.typeSelector.hidden, true);
   assert.deepStrictEqual(noPycmdInteractions.commands, []);
+  assert.strictEqual(ankidroidInteractions.typeToggle.hidden, true);
+  assert.strictEqual(ankidroidInteractions.typeSelector.hidden, true);
+  assert.deepStrictEqual(ankidroidInteractions.commands, []);
+  assert.strictEqual(ankiMobileInteractions.typeToggle.hidden, true);
+  assert.strictEqual(ankiMobileInteractions.typeSelector.hidden, true);
+  assert.deepStrictEqual(ankiMobileInteractions.commands, []);
 });
 
 const syntaxCases = {
