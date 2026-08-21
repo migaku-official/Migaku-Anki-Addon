@@ -304,12 +304,12 @@ main.container .migaku-card audio {
 .migaku-card-back .migaku-card-notes::before {
   content: "NOTES";
   align-self: center;
-  color: #8066c2;
+  color: #6f55b5;
   font-size: .75rem;
   font-weight: 700;
   letter-spacing: .08em;
   line-height: 1.25;
-  transform: translateY(-8px);
+  transform: translateY(-4px);
 }
 
 .migaku-card-sentence,

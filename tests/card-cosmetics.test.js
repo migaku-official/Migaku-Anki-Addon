@@ -168,7 +168,7 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-card-back \.migaku-card-notes::before\s*\{[^}]*content: "NOTES";[^}]*align-self: center;[^}]*color: #8066c2;[^}]*font-size: \.75rem;[^}]*font-weight: 700;[^}]*transform: translateY\(-8px\);/s,
+  /\.migaku-card-back \.migaku-card-notes::before\s*\{[^}]*content: "NOTES";[^}]*align-self: center;[^}]*color: #6f55b5;[^}]*font-size: \.75rem;[^}]*font-weight: 700;[^}]*transform: translateY\(-4px\);/s,
 );
 assert.match(
   light,
