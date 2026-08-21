@@ -60,18 +60,24 @@ def handle_audio_file(file, filename, suffix):
     ):
         move_file_to_tmp_dir(file, filename)
         audio_temp_path = util.tmp_path(filename)
-        if not check_file_exists(audio_temp_path):
-            alert(filename + " could not be converted to an mp3.")
-            return
+        try:
+            if not check_file_exists(audio_temp_path):
+                alert(filename + " could not be converted to an mp3.")
+                return
 
-        parts = filename.split(".")
-        parts.pop()
-        filename = ".".join(parts) + ".mp3"
+            parts = filename.split(".")
+            parts.pop()
+            filename = ".".join(parts) + ".mp3"
 
-        if config.get("normalize_audio", True):
-            move_extension_mp3_normalize_to_media_folder(audio_temp_path, filename)
-        else:
-            move_extension_mp3_to_media_folder(audio_temp_path, filename)
+            if config.get("normalize_audio", True):
+                move_extension_mp3_normalize_to_media_folder(audio_temp_path, filename)
+            else:
+                move_extension_mp3_to_media_folder(audio_temp_path, filename)
+        finally:
+            try:
+                os.remove(audio_temp_path)
+            except OSError:
+                pass
     else:
         move_file_to_media_dir(file, filename)
     

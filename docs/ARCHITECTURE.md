@@ -26,6 +26,8 @@ Anki loads the add-on through `src/__init__.py`. Initialization registers hooks 
 
 The main integration entry point for external Migaku clients is `MigakuConnection` in `src/migaku_connection/__init__.py`. Its handlers include the `/anki-connect` WebSocket endpoint used by the Migaku Extension.
 
+Ephemeral media and conversion files are stored in a process-scoped directory under the operating system's temporary location, not inside the installed add-on directory. This keeps active audio files from preventing Anki from replacing the add-on during an update.
+
 ## Note-type asset pipeline
 
 Every supported language owns a card asset directory:

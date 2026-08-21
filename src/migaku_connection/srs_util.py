@@ -220,75 +220,85 @@ def _upload_media_single_attempt(fname, user_token, is_audio=False):
     with open(in_path, "wb") as file:
         file.write(data)
 
+    out_path = None
     try:
-        if fname.endswith(".webp") or fname.endswith(".m4a"):
-            # if file is already in target format, use it directly
+        try:
+            if fname.endswith(".webp") or fname.endswith(".m4a"):
+                # if file is already in target format, use it directly
+                with open(in_path, "rb") as file:
+                    data = file.read()
+            elif is_audio:
+                fname = os.path.splitext(fname)[0] + ".m4a"
+                out_path = tmp_path(fname)
+                # The arguments to ffmpeg are the same as in MM
+                r = aqt.mw.migaku_connection.ffmpeg.call(
+                    "-y",
+                    "-i",
+                    in_path,
+                    "-vn",
+                    "-b:a",
+                    "128k",
+                    out_path,
+                )
+                if r != 0:
+                    # ignore failed conversions, most likely bad audio
+                    return None
+
+                with open(out_path, "rb") as file:
+                    data = file.read()
+
+            else:
+                # We assume that if something is not audio, it is a picture
+                fname = os.path.splitext(fname)[0] + ".webp"
+                out_path = tmp_path(fname)
+
+                # The arguments to ffmpeg are the same as in MM
+                r = aqt.mw.migaku_connection.ffmpeg.call(
+                    "-y",
+                    "-i",
+                    in_path,
+                    "-vf",
+                    "scale='min(800,iw)':-1",
+                    out_path,
+                )
+                if r != 0:
+                    # ignore failed conversions, most likely bad audio
+                    return None
+
+                with open(out_path, "rb") as file:
+                    data = file.read()
+        except Exception as e:
+            print(f"File conversion failed: {e}")
+            # use original file in case of error
             with open(in_path, "rb") as file:
                 data = file.read()
-        elif is_audio:
-            fname = os.path.splitext(fname)[0] + ".m4a"
-            out_path = tmp_path(fname)
-            # The arguments to ffmpeg are the same as in MM
-            r = aqt.mw.migaku_connection.ffmpeg.call(
-                "-y",
-                "-i",
-                in_path,
-                "-vn",
-                "-b:a",
-                "128k",
-                out_path,
-            )
-            if r != 0:
-                # ignore failed conversions, most likely bad audio
-                return None
 
-            with open(out_path, "rb") as file:
-                data = file.read()
+        quoted = urllib.parse.quote(fname)
+        r = request_retry(
+            "PUT",
+            f"{upload_host}/{quoted}",
+            headers=headers,
+            data=data,
+        )
 
-        else:
-            # We assume that if something is not audio, it is a picture
-            fname = os.path.splitext(fname)[0] + ".webp"
-            out_path = tmp_path(fname)
+        if not r.ok:
+            raise Exception(f"upload failed, requests, {r.status_code}, {r.text}")
 
-            # The arguments to ffmpeg are the same as in MM
-            r = aqt.mw.migaku_connection.ffmpeg.call(
-                "-y",
-                "-i",
-                in_path,
-                "-vf",
-                "scale='min(800,iw)':-1",
-                out_path,
-            )
-            if r != 0:
-                # ignore failed conversions, most likely bad audio
-                return None
+        upload_info = r.json()
+        file_path = upload_info["filePath"]
 
-            with open(out_path, "rb") as file:
-                data = file.read()
-    except Exception as e:
-        print(f"File conversion failed: {e}")
-        # use original file in case of error
-        with open(in_path, "rb") as file:
-            data = file.read()
+        global upload_data_size
+        upload_data_size += len(data)
 
-    quoted = urllib.parse.quote(fname)
-    r = request_retry(
-        "PUT",
-        f"{upload_host}/{quoted}",
-        headers=headers,
-        data=data,
-    )
-
-    if not r.ok:
-        raise Exception(f"upload failed, requests, {r.status_code}, {r.text}")
-
-    upload_info = r.json()
-    file_path = upload_info["filePath"]
-
-    global upload_data_size
-    upload_data_size += len(data)
-
-    return "r2://" + file_path
+        return "r2://" + file_path
+    finally:
+        for temporary_path in (in_path, out_path):
+            if not temporary_path:
+                continue
+            try:
+                os.remove(temporary_path)
+            except OSError:
+                pass
 
 
 def _upload_media(fname, user_token, is_audio=False, max_attempts=5):

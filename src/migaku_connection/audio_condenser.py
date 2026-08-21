@@ -33,20 +33,21 @@ class AudioCondenser(MigakuHTTPHandler):
             out_filename = self.clean_filename(filename + "\n") + "-condensed.mp3"
             out_path = os.path.join(condensed_dir, out_filename)
 
-            self.connection.ffmpeg.call(
-                "-y",
-                "-f",
-                "concat",
-                "-safe",
-                "0",
-                "-i",
-                segment_list_path,
-                "-write_xing",
-                "0",
-                out_path,
-            )
-
-            shutil.rmtree(segments_dir, ignore_errors=True)
+            try:
+                self.connection.ffmpeg.call(
+                    "-y",
+                    "-f",
+                    "concat",
+                    "-safe",
+                    "0",
+                    "-i",
+                    segment_list_path,
+                    "-write_xing",
+                    "0",
+                    out_path,
+                )
+            finally:
+                shutil.rmtree(segments_dir, ignore_errors=True)
 
             remove_condensed_audio_pogress_message(timestamp)
             if not config.get("condensed_audio_messages_disabled", False):
