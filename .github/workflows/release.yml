@@ -75,30 +75,12 @@ jobs:
           echo "version=$release_version" >> "$GITHUB_OUTPUT"
           echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
-      - name: Build release archive
-        if: steps.prepare.outputs.has_release == 'true'
-        run: |
-          mkdir -p dist
-          MIGAKU_VERSION="${{ steps.commit.outputs.version }}" \
-            python3 tools/build_ankiaddon.py --output dist/Migaku.ankiaddon
-          npm run release:notes -- "${{ steps.commit.outputs.version }}" > dist/release-notes.md
-
       - name: Tag release
         if: steps.prepare.outputs.has_release == 'true'
         run: |
           git tag -a "v${{ steps.commit.outputs.version }}" \
             -m "Release ${{ steps.commit.outputs.version }}"
           git push origin "v${{ steps.commit.outputs.version }}"
-
-      - name: Publish GitHub release
-        if: steps.prepare.outputs.has_release == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release create "v${{ steps.commit.outputs.version }}" \
-            dist/Migaku.ankiaddon \
-            --title "Migaku Anki Add-on ${{ steps.commit.outputs.version }}" \
-            --notes-file dist/release-notes.md
 
       - name: Sync release metadata back to development
         if: steps.prepare.outputs.has_release == 'true'
@@ -107,3 +89,51 @@ jobs:
           git checkout -B "$DEVELOPMENT_BRANCH" "origin/$DEVELOPMENT_BRANCH"
           git merge --no-edit "${{ steps.commit.outputs.commit }}"
           git push origin "HEAD:$DEVELOPMENT_BRANCH"
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out tagged release
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate tagged release
+        run: |
+          test "v$(node -p "require('./package.json').version")" = "$GITHUB_REF_NAME"
+          npm test
+
+      - name: Build release archive
+        run: |
+          mkdir -p dist
+          MIGAKU_VERSION="${GITHUB_REF_NAME#v}" \
+            python3 tools/build_ankiaddon.py --output dist/Migaku.ankiaddon
+          npm run release:notes -- "${GITHUB_REF_NAME#v}" > dist/release-notes.md
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" \
+              dist/Migaku.ankiaddon \
+              --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" \
+              dist/Migaku.ankiaddon \
+              --title "Migaku Anki Add-on ${GITHUB_REF_NAME#v}" \
+              --notes-file dist/release-notes.md
+          fi
