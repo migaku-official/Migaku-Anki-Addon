@@ -223,7 +223,7 @@ ls -la .git/hooks/pre-push
 
 2. **Merge feature work into `develop`.** The test workflow validates every pull request and branch push.
 
-3. **Promote `develop` to the repository’s default production branch.** Run the **Promote develop to production** workflow to create the promotion pull request.
+3. **Promote `develop` to the configured production branch (`main` by default).** Run the **Promote develop to production** workflow to create the promotion pull request.
 
 4. **Merge the promotion pull request.** The release workflow then:
    - Consumes pending Changesets and updates `package.json` and `CHANGELOG.md`.
