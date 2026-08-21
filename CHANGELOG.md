@@ -1,3 +1,9 @@
+## 0.6.2
+
+### Patch Changes
+
+- b2d5990: Improve the Notes field presentation across supported card languages, including clearer spacing, alignment, contrast, and conditional rendering.
+
 ## 0.6.1
 
 - [FIX] Build release archives with the tagged add-on version
