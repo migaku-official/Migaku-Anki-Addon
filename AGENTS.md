@@ -18,6 +18,15 @@
 - Before add-on update or versioning work, ask the developer running the session whether the supported Anki version should also change. If they have not supplied the value, explicitly confirm it against AnkiWeb before editing version-related files.
 - Keep the AnkiWeb compatibility setting and `src/anki_version.py` aligned, and state the confirmed value in the implementation handoff.
 
+## Agent-aware release changesets
+
+- For every implementation, consciously decide whether the change affects shipped add-on behavior, packaging, compatibility, or user-facing documentation.
+- If it does, add a focused `.changeset/<descriptive-name>.md` file in the same change. Use the `migaku-anki-addon` package and choose `patch`, `minor`, or `major` deliberately.
+- Write the changeset body as a user-facing release note. Do not merely restate the commit title.
+- If the change is internal-only, test-only, or development-only, do not add a changeset; state that decision in the handoff.
+- Changesets are the source of release intent. Do not edit `CHANGELOG.md` manually for normal feature or fix work; the production release workflow consumes pending changesets when `develop` is promoted to the default production branch.
+- Before handoff, verify that every applicable shipped change has a changeset and that unrelated changes do not.
+
 ## Card front-end safety contract
 
 - Treat `src/card-styles/global.css`, language `card/fonts.css` files, and

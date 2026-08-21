@@ -1,0 +1,48 @@
+name: Promote develop to production
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_branch:
+        description: Integration branch to promote
+        required: false
+        default: develop
+        type: string
+      target_branch:
+        description: Production branch override; defaults to the repository default branch
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: write
+
+env:
+  SOURCE_BRANCH: ${{ inputs.source_branch || vars.DEVELOPMENT_BRANCH || 'develop' }}
+  TARGET_BRANCH: ${{ inputs.target_branch || github.event.repository.default_branch }}
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create promotion pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$SOURCE_BRANCH" = "$TARGET_BRANCH" ]; then
+            echo "Source and target branches must differ" >&2
+            exit 1
+          fi
+
+          existing_pr="$(gh pr list --head "$SOURCE_BRANCH" --base "$TARGET_BRANCH" \
+            --state open --json number --jq '.[0].number')"
+          if [ -n "$existing_pr" ]; then
+            echo "Promotion pull request #$existing_pr already exists"
+            exit 0
+          fi
+
+          gh pr create \
+            --head "$SOURCE_BRANCH" \
+            --base "$TARGET_BRANCH" \
+            --title "Promote $SOURCE_BRANCH to $TARGET_BRANCH" \
+            --body "Promotes the validated integration branch into production. The release workflow will consume pending Changesets after merge."

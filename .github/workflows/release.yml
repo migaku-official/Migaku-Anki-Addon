@@ -1,0 +1,109 @@
+name: Release
+
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      production_branch:
+        description: Production branch override; defaults to the repository default branch
+        required: false
+        type: string
+      development_branch:
+        description: Integration branch override
+        required: false
+        default: develop
+        type: string
+
+concurrency:
+  group: release-${{ github.event.repository.default_branch }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  PRODUCTION_BRANCH: ${{ inputs.production_branch || github.event.repository.default_branch }}
+  DEVELOPMENT_BRANCH: ${{ inputs.development_branch || vars.DEVELOPMENT_BRANCH || 'develop' }}
+
+jobs:
+  release:
+    if: github.event_name == 'workflow_dispatch' || github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out production branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.PRODUCTION_BRANCH }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Consume pending changesets
+        id: prepare
+        run: |
+          npm run release:prepare
+          if git diff --quiet; then
+            echo "has_release=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "has_release=true" >> "$GITHUB_OUTPUT"
+
+      - name: Validate release
+        if: steps.prepare.outputs.has_release == 'true'
+        run: npm test
+
+      - name: Commit release metadata
+        if: steps.prepare.outputs.has_release == 'true'
+        id: commit
+        run: |
+          release_version="$(node -p "require('./package.json').version")"
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .changeset CHANGELOG.md package.json package-lock.json ankiweb.html
+          git commit -m "chore: release $release_version"
+          git push origin "HEAD:$PRODUCTION_BRANCH"
+          echo "version=$release_version" >> "$GITHUB_OUTPUT"
+          echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Build release archive
+        if: steps.prepare.outputs.has_release == 'true'
+        run: |
+          mkdir -p dist
+          MIGAKU_VERSION="${{ steps.commit.outputs.version }}" \
+            python3 tools/build_ankiaddon.py --output dist/Migaku.ankiaddon
+          npm run release:notes -- "${{ steps.commit.outputs.version }}" > dist/release-notes.md
+
+      - name: Tag release
+        if: steps.prepare.outputs.has_release == 'true'
+        run: |
+          git tag -a "v${{ steps.commit.outputs.version }}" \
+            -m "Release ${{ steps.commit.outputs.version }}"
+          git push origin "v${{ steps.commit.outputs.version }}"
+
+      - name: Publish GitHub release
+        if: steps.prepare.outputs.has_release == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "v${{ steps.commit.outputs.version }}" \
+            dist/Migaku.ankiaddon \
+            --title "Migaku Anki Add-on ${{ steps.commit.outputs.version }}" \
+            --notes-file dist/release-notes.md
+
+      - name: Sync release metadata back to development
+        if: steps.prepare.outputs.has_release == 'true'
+        run: |
+          git fetch origin "$DEVELOPMENT_BRANCH"
+          git checkout -B "$DEVELOPMENT_BRANCH" "origin/$DEVELOPMENT_BRANCH"
+          git merge --no-edit "${{ steps.commit.outputs.commit }}"
+          git push origin "HEAD:$DEVELOPMENT_BRANCH"

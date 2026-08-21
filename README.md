@@ -216,31 +216,22 @@ ls -la .git/hooks/pre-push
 
 ### Creating a New Release
 
-1. **Update version and changelog:**
-   - Update `CHANGELOG.md` with the new version number and changes
-   - Commit the changes to your feature branch
+1. **Record release intent with a Changeset:**
+   - Add `.changeset/<descriptive-name>.md` for shipped behavior, packaging, compatibility, or user-facing documentation changes.
+   - Use the `migaku-anki-addon` package and choose `patch`, `minor`, or `major`.
+   - Do not edit `CHANGELOG.md` manually; the release workflow consumes Changesets.
 
-2. **Merge to master:**
+2. **Merge feature work into `develop`.** The test workflow validates every pull request and branch push.
 
-   ```bash
-   git checkout master
-   git pull origin master
-   git merge your-feature-branch
-   git push origin master
-   ```
+3. **Promote `develop` to the repository’s default production branch.** Run the **Promote develop to production** workflow to create the promotion pull request.
 
-3. **Create and push a tag:**
-
-   ```bash
-   git tag 0.4.0  # Use the new version number
-   git push origin 0.4.0
-   ```
-
-4. **GitHub Actions will automatically:**
-   - Build the `.ankiaddon` file
-   - Set the version in `src/version.py`
-   - Create a GitHub release
-   - Attach the built file to the release
+4. **Merge the promotion pull request.** The release workflow then:
+   - Consumes pending Changesets and updates `package.json` and `CHANGELOG.md`.
+   - Synchronizes the canonical AnkiWeb asset URLs.
+   - Runs the complete test suite.
+   - Commits and tags the release as `v<version>`.
+   - Builds and attaches `Migaku.ankiaddon` to a GitHub release.
+   - Merges the release metadata back into `develop`.
 
 ### QA Testing a Release Candidate
 

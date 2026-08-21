@@ -1,13 +1,19 @@
 {
-  "name": "migaku-anki-addon-tests",
-  "version": "1.0.0",
-  "description": "Test suite for Migaku Anki Add-on",
+  "name": "migaku-anki-addon",
+  "version": "0.6.1",
+  "private": true,
+  "description": "Migaku Anki add-on release tooling and tests",
   "scripts": {
+    "changeset": "changeset",
+    "changeset:status": "changeset status",
+    "changeset:version": "changeset version",
+    "release:prepare": "python3 tools/prepare_release.py",
+    "release:notes": "python3 tools/release_notes.py",
     "build:card-styles": "node tools/card-styles.js",
     "check:card-styles": "node tools/card-styles.js --check",
     "dev": "npm run dev:cards",
     "dev:cards": "node dev/card-preview/server.js",
-    "test": "python3 tests/note_type_migration_test.py && node tests/ankiaddon-build.test.js && node tests/card-styles.test.js && node tests/card-fonts.test.js && node tools/card-styles.js --check && node tests/ankiweb-description.test.js && node tests/card-preview.test.js && node tests/card-template-contract.test.js && node tests/card-fixtures.test.js && node tests/card-document.test.js && node tests/card-cosmetics.test.js && node tests/card-preview-server.test.js && node tests/card-hover-layout.test.js && node tests/syntax-parser.test.js",
+    "test": "python3 tests/note_type_migration_test.py && node tests/ankiaddon-build.test.js && node tests/release-metadata.test.js && node tests/card-styles.test.js && node tests/card-fonts.test.js && node tools/card-styles.js --check && node tests/ankiweb-description.test.js && node tests/card-preview.test.js && node tests/card-template-contract.test.js && node tests/card-fixtures.test.js && node tests/card-document.test.js && node tests/card-cosmetics.test.js && node tests/card-preview-server.test.js && node tests/card-hover-layout.test.js && node tests/syntax-parser.test.js",
     "test:watch": "nodemon --watch tests --watch dev/card-preview --watch src/card-styles --watch src/languages --watch tools/card-styles.js --exec \"npm test\""
   },
   "keywords": [
@@ -16,6 +22,7 @@
     "testing"
   ],
   "devDependencies": {
+    "@changesets/cli": "^2.31.1",
     "lucide": "^1.26.0",
     "nodemon": "^3.0.0",
     "ws": "^8.21.3"
