@@ -1,3 +1,5 @@
+from datetime import date
+
 import aqt
 from aqt.qt import *
 from .menu.vacation_window import BalanceSchedulerVacationWindow
@@ -21,13 +23,15 @@ class AboutWidget(SettingsWidget):
     TITLE = "About"
 
     def init_ui(self):
+        current_year = date.today().year
+
         self.add_label(
             f"<h2>Migaku Anki - {VERSION_STRING}</h2>"
             "<h3>License</h3>"
-            '<p><a href="https://github.com/migaku-official/Migaku-Anki">Migaku Anki</a> is copyright © 2022 Migaku Ltd. and released under the <a href="https://github.com/migaku-official/Migaku-Anki/blob/main/COPYING">GNU General Public License</a>.</p>'
+            f'<p><a href="https://github.com/migaku-official/Migaku-Anki">Migaku Anki</a> is copyright © {current_year} Migaku Ltd. and released under the <a href="https://github.com/migaku-official/Migaku-Anki/blob/main/COPYING">GNU General Public License</a>.</p>'
             "<h3>Third-Party Libraries</h3>"
             "<p>Migaku Anki uses several third-party libraries to function. Below are links to homepages and licenses of these:</p>"
-            '<p><a href="https://foosoft.net/projects/yomichan/">Yomichan</a> is used for distributing furigana, and is copyright © 2016-2022 Yomichan Authors and released under the <a href="https://github.com/FooSoft/yomichan/blob/master/LICENSE">GNU General Public License</a>.</p>'
+            f'<p><a href="https://foosoft.net/projects/yomichan/">Yomichan</a> is used for distributing furigana, and is copyright © 2016-{current_year} Yomichan Authors and released under the <a href="https://github.com/FooSoft/yomichan/blob/master/LICENSE">GNU General Public License</a>.</p>'
         )
 
         self.add_label("<hr>")
