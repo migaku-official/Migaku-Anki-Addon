@@ -369,12 +369,14 @@ contract.languages.forEach((language) => {
     theme: "light",
   });
   const emptyTranslation = renderTemplate(template, { ...fields, Translation: "" });
+  const emptyNotes = renderTemplate(template, { ...fields, Notes: "" });
   const emptySentenceVocabulary = renderTemplate(template, {
     ...buildLocalizedFixture(language, "vocabulary").fields,
     Sentence: "",
   });
 
   assert.match(localizedBack, /class="migaku-card-shell"/);
+  assert.match(localizedBack, /class="migaku-card-notes migaku-indented"/);
   assert.match(localizedBack, /class="UiButton migaku-translation-toggle"/);
   assert.match(localizedBack, /id="migaku-card-translation" class="migaku-card-translation" hidden/);
   assert.match(localizedBack, /class="UiButton migaku-type-toggle"/);
@@ -387,6 +389,7 @@ contract.languages.forEach((language) => {
   assert.match(audioBack, /class="sentence-separator"/);
   assert.doesNotMatch(emptyTranslation, /class="UiButton migaku-translation-toggle"/);
   assert.doesNotMatch(emptyTranslation, /id="migaku-card-translation"/);
+  assert.doesNotMatch(emptyNotes, /class="migaku-card-notes migaku-indented"/);
   assert.match(emptySentenceVocabulary, /class="sentence-separator"/);
   assert.strictEqual(interactions.translation.hidden, false);
   assert.strictEqual(interactions.translationToggle.removed, true);
