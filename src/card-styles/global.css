@@ -288,7 +288,7 @@ main.container .migaku-card audio {
 .migaku-card-back .migaku-card-notes {
   order: 10;
   width: 100%;
-  padding: 24px 16px;
+  padding: 16px;
   border-radius: 16px;
   background: #ede3ff;
   display: flex;
@@ -297,7 +297,7 @@ main.container .migaku-card audio {
   user-select: inherit;
   margin: 30px auto;
   text-align: center;
-  font-size: .875rem;
+  font-size: .9375rem;
 }
 
 .migaku-card-sentence,
