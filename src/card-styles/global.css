@@ -277,6 +277,7 @@ main.container .migaku-card audio {
 .migaku-card-back .migaku-card-definitions {
   order: 8;
   width: 100%;
+  margin-top: 15px;
 }
 
 .migaku-card-back .migaku-card-examples {
@@ -287,6 +288,28 @@ main.container .migaku-card audio {
 .migaku-card-back .migaku-card-notes {
   order: 10;
   width: 100%;
+  padding: 24px 16px;
+  border-radius: 16px;
+  background: #ede3ff;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  user-select: inherit;
+  margin: 20px auto;
+  text-align: center;
+  font-size: .9375rem;
+  min-height: 150px;
+}
+
+.migaku-card-back .migaku-card-notes::before {
+  content: "NOTES";
+  align-self: center;
+  color: #5b43a0;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  line-height: 1.25;
+  transform: translateY(-4px);
 }
 
 .migaku-card-sentence,
@@ -296,6 +319,11 @@ main.container .migaku-card audio {
 .migaku-card-definitions,
 .migaku-card-notes {
   word-break: break-word;
+}
+
+.migaku-card-notes p {
+  min-height: 20px;
+  hyphens: auto;
 }
 
 .dict-form {
@@ -622,6 +650,16 @@ ruby {
 .ankidroid_dark_mode .migaku-translation-toggle,
 .nightMode .migaku-translation-toggle {
   background: #2b2b60;
+}
+
+.ankidroid_dark_mode .migaku-card-notes,
+.nightMode .migaku-card-notes {
+  background: #36206d;
+}
+
+.ankidroid_dark_mode .migaku-card-notes::before,
+.nightMode .migaku-card-notes::before {
+  color: #b8a3f0;
 }
 
 .ankidroid_dark_mode .migaku-card-shell > .migaku-type-toggle,
