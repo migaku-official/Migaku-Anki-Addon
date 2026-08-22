@@ -89,6 +89,54 @@ const executeBackInteractions = (
 
   return { commands, initialState, translation, translationToggle, typeSelector, typeToggle };
 };
+const createBackInteractionCard = () => {
+  const translationToggle = createInteractiveElement(false);
+  const translation = createInteractiveElement(true);
+  const typeToggle = createInteractiveElement(false);
+  typeToggle.textContent = "Change card type";
+  const typeSelector = createInteractiveElement(true);
+  const form = {
+    elements: {
+      audio: { checked: false },
+      vocabulary: { checked: false },
+    },
+    onchange: undefined,
+  };
+  return {
+    elements: {
+      ".migaku-card-translation": translation,
+      ".migaku-translation-toggle": translationToggle,
+      ".migaku-type-toggle": typeToggle,
+      ".migaku-typeselect": typeSelector,
+      ".migaku-typeselect form": form,
+    },
+    translation,
+    translationToggle,
+  };
+};
+const executeBackInteractionsAcrossReviews = (template, firstFields, secondFields) => {
+  const state = { card: createBackInteractionCard() };
+  const context = vm.createContext({
+    document: { querySelector: (selector) => state.card.elements[selector] },
+    navigator: { userAgent: "AnkiDesktop" },
+    pycmd: () => undefined,
+  });
+  const executeReview = (fields) => {
+    const rendered = renderTemplate(template, fields);
+    const scripts = [...rendered.matchAll(/<script>([\s\S]*?)<\/script>/g)];
+    vm.runInContext(scripts[scripts.length - 1][1], context);
+  };
+
+  executeReview(firstFields);
+  state.card.translationToggle.click();
+  assert.strictEqual(state.card.translation.hidden, false);
+  assert.strictEqual(state.card.translationToggle.removed, true);
+
+  state.card = createBackInteractionCard();
+  executeReview(secondFields);
+  state.card.translationToggle.click();
+  return state.card;
+};
 const front = renderCardDocument({
   fixtureName: "sentence",
   language: "en",
@@ -364,6 +412,11 @@ contract.languages.forEach((language) => {
     template,
     buildLocalizedFixture(language, "vocabulary", true).fields,
   );
+  const repeatedReviewInteractions = executeBackInteractionsAcrossReviews(
+    template,
+    fields,
+    buildLocalizedFixture(language, "vocabulary").fields,
+  );
   const noPycmdInteractions = executeBackInteractions(template, fields, false);
   const ankidroidInteractions = executeBackInteractions(
     template,
@@ -431,6 +484,9 @@ contract.languages.forEach((language) => {
   assert.deepStrictEqual(audioInteractions.commands, ["update_card_type|as"]);
   assert.deepStrictEqual(audioVocabularyInteractions.initialState, { audio: true, vocabulary: true });
   assert.deepStrictEqual(audioVocabularyInteractions.commands, ["update_card_type|av"]);
+  assert.strictEqual(repeatedReviewInteractions.translation.hidden, false);
+  assert.strictEqual("hidden" in repeatedReviewInteractions.translation.attributes, false);
+  assert.strictEqual(repeatedReviewInteractions.translationToggle.removed, true);
   assert.strictEqual(noPycmdInteractions.typeToggle.hidden, true);
   assert.strictEqual(noPycmdInteractions.typeSelector.hidden, true);
   assert.deepStrictEqual(noPycmdInteractions.commands, []);

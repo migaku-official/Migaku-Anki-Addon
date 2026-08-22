@@ -72,6 +72,7 @@
 </div>
 
 <script>
+    (() => {
     const translationToggle = document.querySelector('.migaku-translation-toggle');
     const translation = document.querySelector('.migaku-card-translation');
     if (translationToggle && translation) {
@@ -105,5 +106,6 @@
         typeToggle.hidden = true;
         typeSelector.hidden = true;
     }
+    })();
 </script>
 </div>

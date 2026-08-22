@@ -126,6 +126,11 @@ audio-vocabulary states. Both interactions remain production template behavior;
 the development lab only supplies its no-op `pycmd` bridge so the same controls
 can be exercised safely.
 
+Anki can evaluate successive back templates in one reviewer WebView context, so
+the back-card script must be re-entrant: per-card bindings are scoped to each
+evaluation instead of becoming global lexical declarations. The card-document
+regression test executes successive card scripts in one persistent VM context.
+
 `support.css` is CSS, but some of its selectors may control the presentation of interactive language support such as readings or popups. Treat it as behavior-adjacent: visual changes are allowed, but visibility, hit targets, and state selectors must remain functional.
 
 Card media installation is additive. `nt_update()` copies the assets shipped by

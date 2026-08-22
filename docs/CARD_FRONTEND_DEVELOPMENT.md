@@ -319,7 +319,7 @@ The card-specific suites are:
 | `tests/card-preview.test.js` | Template fields and nested section semantics |
 | `tests/card-template-contract.test.js` | Approved hashes for all functional card HTML |
 | `tests/card-fixtures.test.js` | Language-specific sentence and target-word syntax |
-| `tests/card-document.test.js` | Composition of real assets into front/back documents |
+| `tests/card-document.test.js` | Composition of real assets into front/back documents, including repeated back-card script execution |
 | `tests/card-cosmetics.test.js` | Shared light/dark surface and layout tokens in rendered cards |
 | `tests/card-preview-server.test.js` | Lab shell, preview route, state parameters, and invalid-input responses |
 | `tests/card-hover-layout.test.js` | Browser layout stability, mobile control visibility, native Japanese reading layout, and WebKit fallback markup selection |
