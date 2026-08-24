@@ -47,11 +47,14 @@ try {
   assert.notStrictEqual(invalidBuildTimestamp.status, 0);
   assert.match(invalidBuildTimestamp.stderr, /Invalid build timestamp/);
 
+  fs.mkdirSync(path.join(distPath, "stale"), { recursive: true });
+  fs.writeFileSync(path.join(distPath, "stale", "previous-build.ankiaddon"), "stale");
   execFileSync("python3", ["tools/build_ankiaddon.py", "--output", outputPath], {
     cwd: repoRoot,
     env: { ...process.env, MIGAKU_VERSION: "9.9.9-test" },
     stdio: "pipe",
   });
+  assert.ok(!fs.existsSync(distPath));
 
   const version = execFileSync("unzip", ["-p", outputPath, "version.py"], {
     encoding: "utf8",

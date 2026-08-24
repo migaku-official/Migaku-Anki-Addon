@@ -61,7 +61,7 @@ def should_skip(path):
 
 
 def build(output_path, version):
-    if output_path.parent.resolve() == DIST_ROOT.resolve() and DIST_ROOT.exists(): shutil.rmtree(DIST_ROOT)
+    if DIST_ROOT.exists(): shutil.rmtree(DIST_ROOT)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     with tempfile.NamedTemporaryFile(
