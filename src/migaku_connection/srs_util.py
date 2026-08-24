@@ -17,7 +17,7 @@ from anki.utils import is_mac
 
 from .. import note_type_mgr
 from ..languages import Languages
-from ..util import tmp_path
+from ..util import temporary_workspace, tmp_path
 
 # supports both src="" and src=''
 IMG_RE = re.compile(r"<img (.*?)src=(?:\"|')(.*?)(?:\"|')(.*?)>", re.IGNORECASE)
@@ -216,12 +216,11 @@ def _upload_media_single_attempt(fname, user_token, is_audio=False):
         with open(path, "rb") as file:
             data = file.read()
 
-    in_path = tmp_path(fname)
-    with open(in_path, "wb") as file:
-        file.write(data)
+    with temporary_workspace() as workspace:
+        in_path = os.path.join(workspace, os.path.basename(fname))
+        with open(in_path, "wb") as file:
+            file.write(data)
 
-    out_path = None
-    try:
         try:
             if fname.endswith(".webp") or fname.endswith(".m4a"):
                 # if file is already in target format, use it directly
@@ -229,7 +228,7 @@ def _upload_media_single_attempt(fname, user_token, is_audio=False):
                     data = file.read()
             elif is_audio:
                 fname = os.path.splitext(fname)[0] + ".m4a"
-                out_path = tmp_path(fname)
+                out_path = os.path.join(workspace, os.path.basename(fname))
                 # The arguments to ffmpeg are the same as in MM
                 r = aqt.mw.migaku_connection.ffmpeg.call(
                     "-y",
@@ -250,7 +249,7 @@ def _upload_media_single_attempt(fname, user_token, is_audio=False):
             else:
                 # We assume that if something is not audio, it is a picture
                 fname = os.path.splitext(fname)[0] + ".webp"
-                out_path = tmp_path(fname)
+                out_path = os.path.join(workspace, os.path.basename(fname))
 
                 # The arguments to ffmpeg are the same as in MM
                 r = aqt.mw.migaku_connection.ffmpeg.call(
@@ -291,14 +290,6 @@ def _upload_media_single_attempt(fname, user_token, is_audio=False):
         upload_data_size += len(data)
 
         return "r2://" + file_path
-    finally:
-        for temporary_path in (in_path, out_path):
-            if not temporary_path:
-                continue
-            try:
-                os.remove(temporary_path)
-            except OSError:
-                pass
 
 
 def _upload_media(fname, user_token, is_audio=False, max_attempts=5):

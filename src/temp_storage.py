@@ -2,13 +2,25 @@ import atexit
 import os
 import shutil
 import tempfile
+from contextlib import contextmanager
 
 
 temp_dir = tempfile.mkdtemp(prefix="migaku-anki-addon-")
 
 
 def tmp_path(*path_parts):
+    os.makedirs(temp_dir, exist_ok=True)
     return os.path.join(temp_dir, *path_parts)
+
+
+@contextmanager
+def temporary_workspace():
+    os.makedirs(temp_dir, exist_ok=True)
+    workspace = tempfile.mkdtemp(prefix="operation-", dir=temp_dir)
+    try:
+        yield workspace
+    finally:
+        shutil.rmtree(workspace, ignore_errors=True)
 
 
 def cleanup():

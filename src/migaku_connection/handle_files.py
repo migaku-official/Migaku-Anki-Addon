@@ -18,10 +18,11 @@ def move_file_to_media_dir(file_body, filename):
         file_handle.write(file_body)
 
 
-def move_file_to_tmp_dir(file_body, filename):
-    file_path = util.tmp_path(filename)
+def move_file_to_tmp_dir(file_body, filename, workspace=None):
+    file_path = os.path.join(workspace, filename) if workspace else util.tmp_path(filename)
     with open(file_path, "wb") as file_handle:
         file_handle.write(file_body)
+    return file_path
 
 
 def check_file_exists(source):
@@ -58,9 +59,8 @@ def handle_audio_file(file, filename, suffix):
     if config.get("normalize_audio", True) or (
         config.get("convert_audio_mp3", True) and suffix != "mp3"
     ):
-        move_file_to_tmp_dir(file, filename)
-        audio_temp_path = util.tmp_path(filename)
-        try:
+        with util.temporary_workspace() as workspace:
+            audio_temp_path = move_file_to_tmp_dir(file, filename, workspace)
             if not check_file_exists(audio_temp_path):
                 alert(filename + " could not be converted to an mp3.")
                 return
@@ -73,11 +73,6 @@ def handle_audio_file(file, filename, suffix):
                 move_extension_mp3_normalize_to_media_folder(audio_temp_path, filename)
             else:
                 move_extension_mp3_to_media_folder(audio_temp_path, filename)
-        finally:
-            try:
-                os.remove(audio_temp_path)
-            except OSError:
-                pass
     else:
         move_file_to_media_dir(file, filename)
     
