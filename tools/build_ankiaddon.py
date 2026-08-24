@@ -38,6 +38,16 @@ def get_default_output(version, build_date=None):
     return ROOT / "dist" / f"Migaku-Anki-Addon-v{archive_version}--{build_date}.ankiaddon"
 
 
+def get_output_path(output_arg, version, build_date=None):
+    default_output = get_default_output(version, build_date)
+    output_path = output_arg or default_output
+    if not output_path.is_absolute():
+        output_path = ROOT / output_path
+    if output_path.parent.resolve() == default_output.parent.resolve() and output_path.name != default_output.name:
+        raise ValueError(f"Archives written to dist must use {default_output.name}")
+    return output_path
+
+
 def should_skip(path):
     relative_path = path.relative_to(SOURCE_ROOT)
     return (
@@ -79,9 +89,7 @@ def main():
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     version = get_version()
-    output_path = args.output or get_default_output(version)
-    if not output_path.is_absolute():
-        output_path = ROOT / output_path
+    output_path = get_output_path(args.output, version)
     build(output_path, version)
     print(f"Built {output_path} ({version})")
 

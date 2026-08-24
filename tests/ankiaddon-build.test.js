@@ -20,6 +20,14 @@ const resolvedDefaultOutput = execFileSync(
   ],
   { cwd: repoRoot, encoding: "utf8" },
 ).trim();
+const invalidDistOutput = spawnSync(
+  "python3",
+  [
+    "-c",
+    "from pathlib import Path; from tools.build_ankiaddon import get_output_path; get_output_path(Path('dist/Migaku.ankiaddon'), '9.9.9-test', '20260824')",
+  ],
+  { cwd: repoRoot, encoding: "utf8" },
+);
 const expectedTag = execFileSync("git", ["describe", "--tags", "--abbrev=0"], {
   cwd: repoRoot,
   encoding: "utf8",
@@ -30,6 +38,8 @@ try {
     resolvedDefaultOutput,
     path.join(repoRoot, "dist", "Migaku-Anki-Addon-v9.9.9-test--20260824.ankiaddon"),
   );
+  assert.notStrictEqual(invalidDistOutput.status, 0);
+  assert.match(invalidDistOutput.stderr, /Archives written to dist must use/);
 
   execFileSync("python3", ["tools/build_ankiaddon.py", "--output", outputPath], {
     cwd: repoRoot,
