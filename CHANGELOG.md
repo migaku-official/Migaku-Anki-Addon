@@ -1,3 +1,9 @@
+## 0.6.3
+
+### Patch Changes
+
+- c6fd75e: Keep the See Translation control working when moving between review cards.
+
 ## 0.6.2
 
 ### Patch Changes
