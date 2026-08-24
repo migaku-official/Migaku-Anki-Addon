@@ -56,9 +56,9 @@ jobs:
           release_version="$(node -p "require('./package.json').version")"
           if git diff --quiet; then
             release_tag="v$release_version"
-            release_asset_name="Migaku-Anki-Addon-v${release_version}--$(date -u +%Y%m%d).ankiaddon"
+            release_asset_prefix="Migaku-Anki-Addon-v${release_version}--"
             if git ls-remote --exit-code origin "refs/tags/$release_tag" >/dev/null 2>&1 \
-              && ! gh release view "$release_tag" --json assets --jq '.assets[].name' 2>/dev/null | grep -Fxq "$release_asset_name"; then
+              && ! gh release view "$release_tag" --json assets --jq '.assets[].name' 2>/dev/null | grep -Fq "$release_asset_prefix"; then
               echo "has_release=true" >> "$GITHUB_OUTPUT"
             else
               echo "has_release=false" >> "$GITHUB_OUTPUT"
@@ -72,8 +72,10 @@ jobs:
         id: version
         run: |
           release_version="$(node -p "require('./package.json').version")"
+          build_timestamp="$(date -u +%Y-%m-%d--%H%M)"
           echo "version=$release_version" >> "$GITHUB_OUTPUT"
-          echo "asset_name=Migaku-Anki-Addon-v${release_version}--$(date -u +%Y%m%d).ankiaddon" >> "$GITHUB_OUTPUT"
+          echo "build_timestamp=$build_timestamp" >> "$GITHUB_OUTPUT"
+          echo "asset_name=Migaku-Anki-Addon-v${release_version}--${build_timestamp}.ankiaddon" >> "$GITHUB_OUTPUT"
 
       - name: Validate release
         if: steps.prepare.outputs.has_release == 'true'
@@ -110,7 +112,9 @@ jobs:
           mkdir -p dist
           archive_path="dist/${{ steps.version.outputs.asset_name }}"
           MIGAKU_VERSION="${{ steps.version.outputs.version }}" \
-            python3 tools/build_ankiaddon.py --output "$archive_path"
+            python3 tools/build_ankiaddon.py \
+              --output "$archive_path" \
+              --build-timestamp "${{ steps.version.outputs.build_timestamp }}"
           npm run release:notes -- "${{ steps.version.outputs.version }}" > dist/release-notes.md
 
       - name: Publish GitHub release
