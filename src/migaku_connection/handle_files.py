@@ -18,8 +18,8 @@ def move_file_to_media_dir(file_body, filename):
         file_handle.write(file_body)
 
 
-def move_file_to_tmp_dir(file_body, filename, workspace=None):
-    file_path = os.path.join(workspace, filename) if workspace else util.tmp_path(filename)
+def move_file_to_tmp_dir(file_body, filename, workspace):
+    file_path = os.path.join(workspace, os.path.basename(filename))
     with open(file_path, "wb") as file_handle:
         file_handle.write(file_body)
     return file_path
@@ -34,21 +34,25 @@ def check_file_exists(source):
             return False
 
 
-def move_extension_mp3_to_media_folder(source, filename):
-    path = util.col_media_path(filename)
-    aqt.mw.migaku_connection.ffmpeg.call("-i", source, path)
+def move_extension_mp3_to_media_folder(source, filename, workspace):
+    output_path = os.path.join(workspace, "converted.mp3")
+    result = aqt.mw.migaku_connection.ffmpeg.call("-y", "-i", source, output_path)
+    if result != 0:
+        raise RuntimeError("Audio conversion failed.")
+    util.publish_file_atomically(output_path, util.col_media_path(filename))
 
 
-def move_extension_mp3_normalize_to_media_folder(source, filename):
-    path = util.col_media_path(filename)
+def move_extension_mp3_normalize_to_media_folder(source, filename, workspace):
+    output_path = os.path.join(workspace, "normalized.mp3")
     def match_target_amplitude(sound, target_dBFS):
         change_in_dBFS = target_dBFS - sound.dBFS
         return sound.apply_gain(change_in_dBFS)
 
     sound = AudioSegment.from_file(source)
     normalized_sound = match_target_amplitude(sound, -25.0)
-    with open(path, "wb") as file:
+    with open(output_path, "wb") as file:
         normalized_sound.export(file, format="mp3")
+    util.publish_file_atomically(output_path, util.col_media_path(filename))
 
 
 def alert(msg: str):
@@ -56,6 +60,7 @@ def alert(msg: str):
 
 
 def handle_audio_file(file, filename, suffix):
+    filename = os.path.basename(filename.replace("\\", "/"))
     if config.get("normalize_audio", True) or (
         config.get("convert_audio_mp3", True) and suffix != "mp3"
     ):
@@ -70,9 +75,11 @@ def handle_audio_file(file, filename, suffix):
             filename = ".".join(parts) + ".mp3"
 
             if config.get("normalize_audio", True):
-                move_extension_mp3_normalize_to_media_folder(audio_temp_path, filename)
+                move_extension_mp3_normalize_to_media_folder(
+                    audio_temp_path, filename, workspace
+                )
             else:
-                move_extension_mp3_to_media_folder(audio_temp_path, filename)
+                move_extension_mp3_to_media_folder(audio_temp_path, filename, workspace)
     else:
         move_file_to_media_dir(file, filename)
     
@@ -84,6 +91,7 @@ def handle_file(file_data, only_move=False):
 
     if re.search(r'\?source=.*$', file_name):
         file_name = file_name.split("?source=")[0]
+    file_name = os.path.basename(file_name.replace("\\", "/"))
 
     suffix = file_name[-3:]
 

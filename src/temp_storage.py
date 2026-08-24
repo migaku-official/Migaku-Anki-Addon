@@ -23,6 +23,22 @@ def temporary_workspace():
         shutil.rmtree(workspace, ignore_errors=True)
 
 
+def publish_file_atomically(source, destination):
+    destination_directory = os.path.dirname(destination) or "."
+    file_descriptor, staging_path = tempfile.mkstemp(
+        prefix=".migaku-media-", dir=destination_directory
+    )
+    os.close(file_descriptor)
+    try:
+        shutil.copyfile(source, staging_path)
+        os.replace(staging_path, destination)
+    finally:
+        try:
+            os.remove(staging_path)
+        except OSError:
+            pass
+
+
 def cleanup():
     shutil.rmtree(temp_dir, ignore_errors=True)
 

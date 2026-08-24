@@ -4,7 +4,7 @@ from typing import Optional, List
 import aqt
 from aqt.qt import *
 
-from .temp_storage import temporary_workspace, tmp_path
+from .temp_storage import publish_file_atomically, temporary_workspace, tmp_path
 
 addon_dir = os.path.dirname(__file__)
 user_files_dir = os.path.join(addon_dir, "user_files")
