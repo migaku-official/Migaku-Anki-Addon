@@ -41,10 +41,8 @@ def get_default_output(version, build_date=None):
 def get_output_path(output_arg, version, build_date=None):
     default_output = get_default_output(version, build_date)
     output_path = output_arg or default_output
-    if not output_path.is_absolute():
-        output_path = ROOT / output_path
-    if output_path.parent.resolve() == default_output.parent.resolve() and output_path.name != default_output.name:
-        raise ValueError(f"Archives written to dist must use {default_output.name}")
+    if not output_path.is_absolute(): output_path = ROOT / output_path
+    if default_output.parent.resolve() in output_path.resolve().parents and output_path.name != default_output.name: raise ValueError(f"Archives written to dist must use {default_output.name}")
     return output_path
 
 
