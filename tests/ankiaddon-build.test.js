@@ -6,12 +6,31 @@ const path = require("path");
 
 const repoRoot = path.join(__dirname, "..");
 const outputPath = path.join(os.tmpdir(), `migaku-anki-addon-${process.pid}.ankiaddon`);
+const buildDate = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+const defaultOutputPath = path.join(
+  repoRoot,
+  "dist",
+  `Migaku-Anki-Addon-v9.9.9-test--${buildDate}.ankiaddon`,
+);
+const resolvedDefaultOutput = execFileSync(
+  "python3",
+  [
+    "-c",
+    "from tools.build_ankiaddon import get_default_output; print(get_default_output('v9.9.9-test', '20260824'))",
+  ],
+  { cwd: repoRoot, encoding: "utf8" },
+).trim();
 const expectedTag = execFileSync("git", ["describe", "--tags", "--abbrev=0"], {
   cwd: repoRoot,
   encoding: "utf8",
 }).trim();
 
 try {
+  assert.strictEqual(
+    resolvedDefaultOutput,
+    path.join(repoRoot, "dist", "Migaku-Anki-Addon-v9.9.9-test--20260824.ankiaddon"),
+  );
+
   execFileSync("python3", ["tools/build_ankiaddon.py", "--output", outputPath], {
     cwd: repoRoot,
     env: { ...process.env, MIGAKU_VERSION: "9.9.9-test" },
@@ -40,6 +59,15 @@ try {
   });
   assert.strictEqual(localVersion, `VERSION_STRING = "${expectedTag}"\n`);
 
+  const defaultBuild = spawnSync("python3", ["tools/build_ankiaddon.py"], {
+    cwd: repoRoot,
+    env: { ...process.env, MIGAKU_VERSION: "v9.9.9-test" },
+    encoding: "utf8",
+  });
+  assert.strictEqual(defaultBuild.status, 0, defaultBuild.stderr);
+  assert.ok(fs.existsSync(defaultOutputPath));
+  assert.match(defaultBuild.stdout, /Migaku-Anki-Addon-v9\.9\.9-test--\d{8}\.ankiaddon/);
+
   const placeholderBuild = spawnSync("python3", ["tools/build_ankiaddon.py", "--output", outputPath], {
     cwd: repoRoot,
     env: { ...process.env, MIGAKU_VERSION: "git" },
@@ -49,6 +77,7 @@ try {
   assert.match(placeholderBuild.stderr, /Invalid add-on version/);
 } finally {
   fs.rmSync(outputPath, { force: true });
+  fs.rmSync(defaultOutputPath, { force: true });
 }
 
-console.log("✓ Anki add-on build injects a validated version and excludes development files");
+console.log("✓ Anki add-on build uses a dated versioned filename and excludes development files");

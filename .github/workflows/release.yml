@@ -56,8 +56,9 @@ jobs:
           release_version="$(node -p "require('./package.json').version")"
           if git diff --quiet; then
             release_tag="v$release_version"
+            release_asset_name="Migaku-Anki-Addon-v${release_version}--$(date -u +%Y%m%d).ankiaddon"
             if git ls-remote --exit-code origin "refs/tags/$release_tag" >/dev/null 2>&1 \
-              && ! gh release view "$release_tag" --json assets --jq '.assets[].name' 2>/dev/null | grep -Fxq 'Migaku.ankiaddon'; then
+              && ! gh release view "$release_tag" --json assets --jq '.assets[].name' 2>/dev/null | grep -Fxq "$release_asset_name"; then
               echo "has_release=true" >> "$GITHUB_OUTPUT"
             else
               echo "has_release=false" >> "$GITHUB_OUTPUT"
@@ -72,6 +73,7 @@ jobs:
         run: |
           release_version="$(node -p "require('./package.json').version")"
           echo "version=$release_version" >> "$GITHUB_OUTPUT"
+          echo "asset_name=Migaku-Anki-Addon-v${release_version}--$(date -u +%Y%m%d).ankiaddon" >> "$GITHUB_OUTPUT"
 
       - name: Validate release
         if: steps.prepare.outputs.has_release == 'true'
@@ -106,8 +108,9 @@ jobs:
         if: steps.prepare.outputs.has_release == 'true'
         run: |
           mkdir -p dist
+          archive_path="dist/${{ steps.version.outputs.asset_name }}"
           MIGAKU_VERSION="${{ steps.version.outputs.version }}" \
-            python3 tools/build_ankiaddon.py --output dist/Migaku.ankiaddon
+            python3 tools/build_ankiaddon.py --output "$archive_path"
           npm run release:notes -- "${{ steps.version.outputs.version }}" > dist/release-notes.md
 
       - name: Publish GitHub release
@@ -116,13 +119,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           release_tag="v${{ steps.version.outputs.version }}"
+          archive_path="dist/${{ steps.version.outputs.asset_name }}"
           if gh release view "$release_tag" >/dev/null 2>&1; then
             gh release upload "$release_tag" \
-              dist/Migaku.ankiaddon \
+              "$archive_path" \
               --clobber
           else
             gh release create "$release_tag" \
-              dist/Migaku.ankiaddon \
+              "$archive_path" \
               --title "Migaku Anki Add-on ${{ steps.version.outputs.version }}" \
               --notes-file dist/release-notes.md
           fi
