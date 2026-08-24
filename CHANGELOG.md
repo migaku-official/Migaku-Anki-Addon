@@ -1,3 +1,9 @@
+## 0.6.4
+
+### Patch Changes
+
+- a1cd629: Prevent intermittent Card Creator audio failures by isolating concurrent media conversions and recovering when the operating system removes temporary storage during a long-running Anki session.
+
 ## 0.6.3
 
 ### Patch Changes
