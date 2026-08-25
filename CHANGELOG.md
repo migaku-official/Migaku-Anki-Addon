@@ -1,3 +1,14 @@
+## 0.6.4
+
+### Patch Changes
+
+- 9e59465: Clear existing distribution artifacts before creating a new add-on build, and include the UTC build time in archive filenames.
+- 9e59465: Release builds now use versioned, dated filenames so downloaded add-on archives are easy to identify.
+- 9af73aa: Prevent intermittent Card Creator audio failures by isolating concurrent media conversions and recovering when the operating system removes temporary storage during a long-running Anki session.
+- 9e59465: Keep English readings attached to their complete words when card text wraps.
+- 9e59465: Keep the card customization controls from resizing when hovered in desktop Anki.
+- 9e59465: Keep the card customization link visually stable when its hover emphasis appears.
+
 ## 0.6.3
 
 ### Patch Changes
