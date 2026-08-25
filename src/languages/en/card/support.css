@@ -1,3 +1,8 @@
+.migaku-card-sentence ruby,
+.migaku-card-target ruby {
+    white-space: nowrap;
+}
+
 .word {
     position: relative;
 }

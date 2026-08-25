@@ -278,6 +278,39 @@ const assertMobileReadingSpacing = async (client) => {
   )
 }
 
+const assertEnglishReadingWordsStayIntact = async (client, previewUrl) => {
+  await client.send('Emulation.setDeviceMetricsOverride', {
+    width: 868,
+    height: 441,
+    deviceScaleFactor: 1,
+    mobile: false,
+  })
+  await loadPreview(client, `${previewUrl}/preview?language=en&side=back&fixture=sentence&theme=dark`)
+  await evaluate(client, `document.querySelector('iframe').contentDocument.fonts.ready`)
+  const baseRectCount = await evaluate(client, `(() => {
+    const sentence = document.querySelector('iframe').contentDocument.querySelector('.migaku-card-sentence')
+    const field = sentence.querySelector('.field')
+    const tokens = ['And', 'I', 'try', 'to', 'wake', 'up', 'at', '8a.m.', 'every', 'single', 'day']
+    field.replaceChildren()
+    tokens.forEach((token, index) => {
+      const ruby = document.createElement('ruby')
+      const reading = document.createElement('rt')
+      ruby.dataset.token = token
+      ruby.append(token)
+      reading.textContent = token.toLowerCase().replace(/[^a-z]/g, '')
+      ruby.append(reading)
+      field.append(ruby)
+      field.append(index === tokens.length - 1 ? '.' : ' ')
+    })
+    sentence.style.width = '520px'
+    const single = sentence.querySelector('ruby[data-token="single"]')
+    const baseRange = document.createRange()
+    baseRange.selectNode(single.firstChild)
+    return baseRange.getClientRects().length
+  })()`)
+  assert.strictEqual(baseRectCount, 1, 'English reading base word "single" should not split across lines')
+}
+
 const assertWebkitRubyLayout = async (client, previewUrl) => {
   await client.send('Emulation.setUserAgentOverride', {
     userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
@@ -342,6 +375,7 @@ const run = async () => {
       await assertNoHoverShift(client, 'Dismiss')
       await assertMobileControlsHidden(client, previewUrl)
       await assertMobileReadingSpacing(client)
+      await assertEnglishReadingWordsStayIntact(client, previewUrl)
       await assertWebkitRubyLayout(client, previewUrl)
       } finally {
         client.close()
