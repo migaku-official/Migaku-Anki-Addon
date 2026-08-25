@@ -197,7 +197,8 @@ also start hidden. The muted `Customize front of card` button remains in place,
 changes its text to `Dismiss`, and reveals a panel beneath it.
 The trigger is intentionally text-only in both themes: it has no surface fill or
 button elevation. Hover strengthens its text color without changing the element's
-opacity, which keeps text rasterization stable.
+opacity, and explicitly suppresses Anki's reviewer hover border so the trigger's
+box remains fixed while its label and panel state change.
 The panel contains
 two left-aligned on/off controls beneath a `Customize front of card` heading at
 `1.25rem`.

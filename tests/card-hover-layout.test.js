@@ -175,6 +175,10 @@ const getLayout = (client) => evaluate(client, `(() => {
   const rect = ({ x, y, width, height }) => ({ x, y, width, height })
   return {
     button: rect(buttonRect),
+    buttonBorder: {
+      style: buttonStyle.borderTopStyle,
+      width: buttonStyle.borderTopWidth,
+    },
     buttonColor: buttonStyle.color,
     hovered: button.matches(':hover'),
     opacity: buttonStyle.opacity,
@@ -205,6 +209,14 @@ const getLayout = (client) => evaluate(client, `(() => {
 
 const scrollToggleIntoView = (client) => evaluate(client, `document.querySelector('iframe').contentDocument.querySelector('.migaku-card-shell > .migaku-type-toggle').scrollIntoView({ block: 'center' })`)
 
+const installAnkiReviewerHoverFixture = (client) => evaluate(client, `(() => {
+  const cardDocument = document.querySelector('iframe').contentDocument
+  const style = cardDocument.createElement('style')
+  style.dataset.ankiReviewerHoverFixture = ''
+  style.textContent = 'button:hover { border: 1px solid rgb(20, 20, 20); }'
+  cardDocument.head.append(style)
+})()`)
+
 const stopProcess = async (childProcess) => {
   if (childProcess.exitCode !== null || childProcess.signalCode !== null) return
   const exited = new Promise((resolve) => childProcess.once('exit', resolve))
@@ -229,6 +241,7 @@ const assertNoHoverShift = async (client, label) => {
   assert.strictEqual(after.hovered, true, `${label} hover was not activated`)
   assert.strictEqual(before.opacity, '1', `${label} should not use composited opacity`)
   assert.strictEqual(after.opacity, before.opacity, `${label} opacity shifts on hover`)
+  assert.deepStrictEqual(after.buttonBorder, before.buttonBorder, `${label} gains an Anki reviewer border on hover`)
   assert.notStrictEqual(after.buttonColor, before.buttonColor, `${label} hover color should change`)
   assert.deepStrictEqual(after.button, before.button, `${label} button shifts on hover`)
   assert.deepStrictEqual(after.buttonTypography, before.buttonTypography, `${label} button typography shifts on hover`)
@@ -373,6 +386,7 @@ const run = async () => {
         side.dispatchEvent(new Event('change', { bubbles: true }))
       })()`)
       await waitForCard(client)
+      await installAnkiReviewerHoverFixture(client)
       await assertNoHoverShift(client, 'Customize front of card')
       await evaluate(client, `document.querySelector('iframe').contentDocument.querySelector('.migaku-card-shell > .migaku-type-toggle').click()`)
       await wait(150)

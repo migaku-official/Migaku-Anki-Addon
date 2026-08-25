@@ -468,6 +468,7 @@ ruby {
 }
 
 .migaku-card-shell > .migaku-type-toggle:hover {
+  border: 0;
   color: rgba(0 0 90 / 60%);
 }
 

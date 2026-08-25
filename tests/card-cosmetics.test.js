@@ -207,7 +207,7 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-card-shell > \.migaku-type-toggle:hover\s*\{[^}]*color: rgba\(0 0 90 \/ 60%\);/s,
+  /\.migaku-card-shell > \.migaku-type-toggle:hover\s*\{[^}]*border: 0;[^}]*color: rgba\(0 0 90 \/ 60%\);/s,
 );
 assert.match(
   dark,
