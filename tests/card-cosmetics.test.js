@@ -203,7 +203,19 @@ assert.match(
 );
 assert.match(
   light,
-  /\.migaku-card-shell > \.migaku-type-toggle\s*\{[^}]*position: static;[^}]*align-self: center;[^}]*margin: 4px auto 0;[^}]*transform: none;[^}]*color: rgba\(0 0 90 \/ 60%\);[^}]*background: transparent;[^}]*box-shadow: none;[^}]*font-size: 0;[^}]*font-weight: 400;[^}]*opacity: \.5;/s,
+  /\.migaku-card-shell > \.migaku-type-toggle\s*\{[^}]*position: static;[^}]*align-self: center;[^}]*margin: 4px auto 0;[^}]*transform: none;[^}]*color: rgba\(0 0 90 \/ 30%\);[^}]*background: transparent;[^}]*box-shadow: none;[^}]*font-size: 0;[^}]*font-weight: 400;[^}]*transition: color 120ms ease;/s,
+);
+assert.match(
+  light,
+  /\.migaku-card-shell > \.migaku-type-toggle:hover\s*\{[^}]*color: rgba\(0 0 90 \/ 60%\);/s,
+);
+assert.match(
+  dark,
+  /\.nightMode \.migaku-card-shell > \.migaku-type-toggle\s*\{[^}]*color: rgba\(255 255 255 \/ 30%\);/s,
+);
+assert.match(
+  dark,
+  /\.nightMode \.migaku-card-shell > \.migaku-type-toggle:hover\s*\{[^}]*color: rgba\(255 255 255 \/ 60%\);/s,
 );
 assert.match(
   light,
@@ -220,7 +232,7 @@ assert.match(
 assert.match(light, /main\.container\s*\{[^}]*padding: 80px 16px 120px;/s);
 assert.match(light, /main\.container #qa\s*\{[^}]*height: 100%;/s);
 assert.match(light, /#content\s*\{[^}]*height: 100%;/s);
-assert.match(light, /\.migaku-type-toggle:hover\s*\{[^}]*opacity: 1;/s);
+assert.doesNotMatch(light, /\.migaku-type-toggle:hover\s*\{[^}]*opacity:/s);
 assert.doesNotMatch(light, /\.migaku-type-toggle:hover\s*\{[^}]*text-decoration:/s);
 assert.match(
   light,

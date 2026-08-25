@@ -175,6 +175,7 @@ const getLayout = (client) => evaluate(client, `(() => {
   const rect = ({ x, y, width, height }) => ({ x, y, width, height })
   return {
     button: rect(buttonRect),
+    buttonColor: buttonStyle.color,
     hovered: button.matches(':hover'),
     opacity: buttonStyle.opacity,
     buttonTypography: {
@@ -226,6 +227,9 @@ const assertNoHoverShift = async (client, label) => {
   await wait(150)
   const after = await getLayout(client)
   assert.strictEqual(after.hovered, true, `${label} hover was not activated`)
+  assert.strictEqual(before.opacity, '1', `${label} should not use composited opacity`)
+  assert.strictEqual(after.opacity, before.opacity, `${label} opacity shifts on hover`)
+  assert.notStrictEqual(after.buttonColor, before.buttonColor, `${label} hover color should change`)
   assert.deepStrictEqual(after.button, before.button, `${label} button shifts on hover`)
   assert.deepStrictEqual(after.buttonTypography, before.buttonTypography, `${label} button typography shifts on hover`)
   assert.deepStrictEqual(after.shell, before.shell, `${label} card shell shifts on hover`)

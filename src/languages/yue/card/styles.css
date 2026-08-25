@@ -4177,14 +4177,13 @@ ruby {
   margin: 4px auto 0;
   padding: 4px;
   transform: none;
-  color: rgba(0 0 90 / 60%);
+  color: rgba(0 0 90 / 30%);
   background: transparent;
   box-shadow: none;
   font-size: 0;
   font-weight: 400;
-  opacity: .5;
   white-space: nowrap;
-  transition: opacity 120ms ease;
+  transition: color 120ms ease;
 }
 
 .migaku-card-shell > .migaku-type-toggle::after {
@@ -4197,7 +4196,7 @@ ruby {
 }
 
 .migaku-card-shell > .migaku-type-toggle:hover {
-  opacity: 1;
+  color: rgba(0 0 90 / 60%);
 }
 
 .migaku-card-shell > .migaku-type-toggle[hidden],
@@ -4473,6 +4472,12 @@ ruby {
 .ankidroid_dark_mode .migaku-card-shell > .migaku-type-toggle,
 .nightMode .migaku-card-shell > .migaku-type-toggle {
   box-shadow: none;
+  color: rgba(255 255 255 / 30%);
+}
+
+.ankidroid_dark_mode .migaku-card-shell > .migaku-type-toggle:hover,
+.nightMode .migaku-card-shell > .migaku-type-toggle:hover {
+  color: rgba(255 255 255 / 60%);
 }
 
 .ankidroid_dark_mode .migaku-card-translation,
