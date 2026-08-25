@@ -1,3 +1,13 @@
+## 0.6.5
+
+### Patch Changes
+
+- 228bc1e: Clear existing distribution artifacts before creating a new add-on build, and include the UTC build time in archive filenames.
+- 839f6c9: Release builds now use versioned, dated filenames so downloaded add-on archives are easy to identify.
+- e11bb4d: Keep English readings attached to their complete words when card text wraps.
+- 0a65787: Keep the card customization controls from resizing when hovered in desktop Anki.
+- d564450: Keep the card customization link visually stable when its hover emphasis appears.
+
 ## 0.6.4
 
 ### Patch Changes
