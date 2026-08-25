@@ -91,6 +91,16 @@ try {
   assert.match(distEntries[0], /^Migaku-Anki-Addon-v9\.9\.9-test--\d{4}-\d{2}-\d{2}--\d{4}\.ankiaddon$/);
   assert.ok(defaultBuild.stdout.includes(distEntries[0]));
 
+  const releaseBuild = spawnSync("python3", ["tools/build_ankiaddon.py", "--release"], {
+    cwd: repoRoot,
+    env: { ...process.env, MIGAKU_VERSION: "v9.9.9-test" },
+    encoding: "utf8",
+  });
+  assert.strictEqual(releaseBuild.status, 0, releaseBuild.stderr);
+  const releaseEntries = fs.readdirSync(distPath);
+  assert.deepStrictEqual(releaseEntries, ["Migaku-Anki-Addon-v9.9.9-test.ankiaddon"]);
+  assert.ok(releaseBuild.stdout.includes(releaseEntries[0]));
+
   const placeholderBuild = spawnSync("python3", ["tools/build_ankiaddon.py", "--output", outputPath], {
     cwd: repoRoot,
     env: { ...process.env, MIGAKU_VERSION: "git" },
@@ -103,4 +113,4 @@ try {
   fs.rmSync(distPath, { recursive: true, force: true });
 }
 
-console.log("✓ Anki add-on build clears dist, uses a timestamped versioned filename, and excludes development files");
+console.log("✓ Anki add-on build uses timestamped local and version-only release filenames and excludes development files");

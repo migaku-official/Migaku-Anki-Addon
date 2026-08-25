@@ -42,11 +42,16 @@ def get_default_output(version, build_timestamp=None):
     return DIST_ROOT / f"Migaku-Anki-Addon-v{archive_version}--{build_timestamp}.ankiaddon"
 
 
-def get_output_path(output_arg, version, build_timestamp=None):
-    default_output = get_default_output(version, build_timestamp)
-    output_path = output_arg or default_output
+def get_release_output(version):
+    archive_version = version[1:] if version.startswith("v") else version
+    return DIST_ROOT / f"Migaku-Anki-Addon-v{archive_version}.ankiaddon"
+
+
+def get_output_path(output_arg, version, build_timestamp=None, release=False):
+    expected_output = get_release_output(version) if release else get_default_output(version, build_timestamp)
+    output_path = output_arg or expected_output
     if not output_path.is_absolute(): output_path = ROOT / output_path
-    if default_output.parent.resolve() in output_path.resolve().parents and output_path.name != default_output.name: raise ValueError(f"Archives written to dist must use {default_output.name}")
+    if expected_output.parent.resolve() in output_path.resolve().parents and output_path.name != expected_output.name: raise ValueError(f"Archives written to dist must use {expected_output.name}")
     return output_path
 
 
@@ -90,10 +95,12 @@ def build(output_path, version):
 def main():
     parser = argparse.ArgumentParser(description="Build a Migaku Anki add-on archive")
     parser.add_argument("--output", type=Path)
-    parser.add_argument("--build-timestamp")
+    naming_group = parser.add_mutually_exclusive_group()
+    naming_group.add_argument("--build-timestamp")
+    naming_group.add_argument("--release", action="store_true")
     args = parser.parse_args()
     version = get_version()
-    output_path = get_output_path(args.output, version, args.build_timestamp)
+    output_path = get_output_path(args.output, version, args.build_timestamp, args.release)
     build(output_path, version)
     print(f"Built {output_path} ({version})")
 

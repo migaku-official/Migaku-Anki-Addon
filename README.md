@@ -232,7 +232,7 @@ ls -la .git/hooks/pre-push
    - Runs the complete test suite.
    - Commits the release metadata to the production branch as `chore: release <version>` and merges that commit back into `develop`.
    - Tags the release as `v<version>`.
-   - Builds and attaches `Migaku.ankiaddon` to the corresponding GitHub release.
+   - Builds and attaches `Migaku-Anki-Addon-v<version>.ankiaddon` to the corresponding GitHub release.
 
 If there are no pending Changesets, release preparation is a no-op and no new version is created. A tagged release whose add-on asset is missing can still be retried by running the workflow again.
 
