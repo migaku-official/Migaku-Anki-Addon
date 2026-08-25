@@ -242,7 +242,7 @@ If there are no pending Changesets, release preparation is a no-op and no new ve
 
 1. Go to https://github.com/migaku-official/Migaku-Anki-Addon/releases
 2. Find the release version (e.g., 0.4.0)
-3. Download `Migaku.ankiaddon`
+3. Download `Migaku-Anki-Addon-v<version>.ankiaddon`
 
 **Step 2: Backup Current Production Version**
 
@@ -274,7 +274,7 @@ mv 1846879528 ~/Desktop/1846879528.backup
 1. Open Anki
 2. Go to **Tools → Add-ons**
 3. Click **Install from file...**
-4. Select the downloaded `Migaku.ankiaddon` file
+4. Select the downloaded `Migaku-Anki-Addon-v<version>.ankiaddon` file
 5. Restart Anki
 
 **Step 4: Test the Add-on**
