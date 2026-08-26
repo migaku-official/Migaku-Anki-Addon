@@ -148,4 +148,5 @@ assert (
     == '<span style="color:red;">きかい</span>'
 )
 
+assert card_types.extract_readings_cjk("機会[きかい;n2,h ]") == "きかい"
 print("✓ multi-pattern pitch accent is stripped from extracted readings")
