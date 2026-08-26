@@ -73,7 +73,7 @@ REMOVE_RE_BRACKETS = re.compile(r"(?:\(([^)]*)\))?(\[(?!sound:).*?\])(?![^{]*})"
 REMOVE_RE_CJ = re.compile(r"( +|\[(?!sound:).*?\])(?![^{]*})")
 REMOVE_RE_K = re.compile(r"(\[(?!sound:).*?\])(?![^{]*})")
 EXTRACT_RE_READINGS = re.compile(r"\[(?!sound:)(.*?)\]")
-STRIP_RE_PITCH = re.compile(r";[a-zA-Z0-9]+")
+STRIP_RE_PITCH = re.compile(r";[a-zA-Z0-9,]+$")
 
 def extract_readings_cjk(text: str) -> str:
     parts = EXTRACT_RE_READINGS.findall(text)

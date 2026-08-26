@@ -106,3 +106,46 @@ with tempfile.TemporaryDirectory(prefix="migaku-media-test-") as media_dir:
 temp_storage.cleanup()
 
 print("✓ concurrent audio conversions publish complete isolated media")
+
+
+def load_card_types():
+    package = types.ModuleType("card_types_test_addon")
+    package.__path__ = [str(root / "src")]
+    sys.modules["card_types_test_addon"] = package
+
+    connection = types.ModuleType("card_types_test_addon.migaku_connection")
+    connection.__path__ = [str(root / "src" / "migaku_connection")]
+    sys.modules["card_types_test_addon.migaku_connection"] = connection
+
+    # card_types imports these for asset publishing, which reading extraction
+    # never touches.
+    fake_handle_files = types.ModuleType(
+        "card_types_test_addon.migaku_connection.handle_files"
+    )
+    fake_handle_files.handle_audio_file = lambda *args, **kwargs: ""
+    fake_handle_files.move_file_to_media_dir = lambda *args, **kwargs: ""
+    sys.modules["card_types_test_addon.migaku_connection.handle_files"] = (
+        fake_handle_files
+    )
+    sys.modules.setdefault("requests", types.ModuleType("requests"))
+
+    spec = importlib.util.spec_from_file_location(
+        "card_types_test_addon.card_types", root / "src" / "card_types.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["card_types_test_addon.card_types"] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+card_types = load_card_types()
+
+assert card_types.extract_readings_cjk("機会[きかい;n2,h]") == "きかい"
+assert card_types.extract_readings_cjk("機会[きかい;n2,h][sound:a.mp3]") == "きかい"
+
+assert (
+    card_types.extract_readings_cjk('機会[<span style="color:red;">きかい</span>;n2,h]')
+    == '<span style="color:red;">きかい</span>'
+)
+
+print("✓ multi-pattern pitch accent is stripped from extracted readings")
