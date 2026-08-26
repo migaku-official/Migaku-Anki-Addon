@@ -1,3 +1,9 @@
+## 0.6.5
+
+### Patch Changes
+
+- e72989f: Release downloads now use a stable version-only filename while local builds keep their date and time suffix for easy identification.
+
 ## 0.6.4
 
 ### Patch Changes

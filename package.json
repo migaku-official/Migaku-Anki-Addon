@@ -1,6 +1,6 @@
 {
   "name": "migaku-anki-addon",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "private": true,
   "description": "Migaku Anki add-on release tooling and tests",
   "scripts": {
