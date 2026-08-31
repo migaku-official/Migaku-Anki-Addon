@@ -344,6 +344,57 @@ const assertWebkitRubyLayout = async (client, previewUrl) => {
   assert.ok(readings.webkit > 0, 'WebKit fallback should render positioned ruby readings')
 }
 
+const assertAudioControlsShareWrappingRow = async (client, previewUrl) => {
+  await client.send('Emulation.setDeviceMetricsOverride', {
+    width: 868,
+    height: 441,
+    deviceScaleFactor: 1,
+    mobile: false,
+  })
+  await loadPreview(client, `${previewUrl}/preview?language=en&side=back&fixture=sentence&theme=dark`)
+  const layout = await evaluate(client, `(() => {
+    const cardDocument = document.querySelector('iframe').contentDocument
+    const sentenceAudio = cardDocument.querySelector('.migaku-card-sentence-audio')
+    const wordAudio = cardDocument.querySelector('.migaku-card-unknown-audio')
+    const addControls = (container, count) => {
+      container.replaceChildren()
+      Array.from({ length: count }, (_, index) => {
+        const button = cardDocument.createElement('button')
+        button.className = 'replay-button soundLink'
+        container.append(button)
+        if (index < count - 1) container.append(cardDocument.createElement('br'))
+      })
+    }
+    addControls(sentenceAudio, 2)
+    addControls(wordAudio, 4)
+    const controls = [...cardDocument.querySelectorAll('.migaku-card-audio-row .replay-button')]
+    const rects = controls.map((control) => control.getBoundingClientRect())
+    return {
+      breakDisplays: [...cardDocument.querySelectorAll('.migaku-card-audio-row br')].map((element) => getComputedStyle(element).display),
+      gaps: rects.slice(1).map((rect, index) => Math.round(rect.left - rects[index].right)),
+      tops: rects.map(({ top }) => Math.round(top)),
+    }
+  })()`)
+  assert.ok(layout.breakDisplays.every((display) => display === 'none'), 'audio field line breaks should not split the controls')
+  assert.ok(layout.tops.every((top) => top === layout.tops[0]), 'audio controls should share one row when space permits')
+  assert.deepStrictEqual(layout.gaps, Array(layout.gaps.length).fill(8), 'audio controls should use one uniform gap')
+  const wrappedLayout = await evaluate(client, `(() => {
+    const cardDocument = document.querySelector('iframe').contentDocument
+    const row = cardDocument.querySelector('.migaku-card-audio-row')
+    row.style.width = '220px'
+    const rects = [...row.querySelectorAll('.replay-button')].map((control) => control.getBoundingClientRect())
+    const rowTops = [...new Set(rects.map(({ top }) => Math.round(top)))]
+    return {
+      horizontalGaps: rects.slice(1).flatMap((rect, index) => Math.round(rect.top) === Math.round(rects[index].top) ? [Math.round(rect.left - rects[index].right)] : []),
+      rowGaps: rowTops.slice(1).map((top, index) => top - rowTops[index] - Math.round(rects[0].height)),
+      rowCount: rowTops.length,
+    }
+  })()`)
+  assert.ok(wrappedLayout.rowCount > 1, 'audio controls should wrap when the row is constrained')
+  assert.ok(wrappedLayout.horizontalGaps.every((gap) => gap === 8), 'wrapped audio controls should keep their horizontal gap')
+  assert.ok(wrappedLayout.rowGaps.every((gap) => gap === 8), 'wrapped audio controls should keep their vertical gap')
+}
+
 const run = async () => {
   const chromePath = chromePaths.find((path) => existsSync(path))
   if (!chromePath) {
@@ -394,6 +445,7 @@ const run = async () => {
       await assertMobileControlsHidden(client, previewUrl)
       await assertMobileReadingSpacing(client)
       await assertEnglishReadingWordsStayIntact(client, previewUrl)
+      await assertAudioControlsShareWrappingRow(client, previewUrl)
       await assertWebkitRubyLayout(client, previewUrl)
       } finally {
         client.close()

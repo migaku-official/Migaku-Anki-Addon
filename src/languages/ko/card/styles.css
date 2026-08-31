@@ -243,16 +243,18 @@ main.container .migaku-card audio {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  gap: 8px;
   width: 100%;
   margin: 8px 0;
 }
 
 .migaku-card-back .migaku-card-sentence-audio,
 .migaku-card-back .migaku-card-unknown-audio {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin: 0 4px;
+  display: contents;
+}
+
+.migaku-card-back .migaku-card-audio-row br {
+  display: none;
 }
 
 .migaku-card-back .migaku-translation-toggle {

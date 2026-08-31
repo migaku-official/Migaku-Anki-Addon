@@ -168,8 +168,10 @@ On the front and back, Target Word and Sentence retain distinct semantic
 containers and render at 46 px and 32 px respectively, stepping down to 40 px
 and 28 px at the 520 px mobile breakpoint. The back visual order is Target Word,
 Sentence, a dedicated
-row containing both audio controls, translation, divider, definitions and
-supporting content, then one centered wrapping media flow. Screenshots render
+row containing both audio fields, translation, divider, definitions and
+supporting content, then one centered wrapping media flow. Every replay control
+from either audio field shares one wrapping flow with an 8 px gap; line breaks
+between repeated audio tags do not force separate rows. Screenshots render
 before images; both fields use a 16 px gap, 16 px corner radius, and 450 px
 maximum width. The divider remains present when Sentence
 is empty so vocabulary and audio-vocabulary backs keep the same section boundary.
