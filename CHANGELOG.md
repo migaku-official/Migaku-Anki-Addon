@@ -1,3 +1,10 @@
+## 0.6.6
+
+### Patch Changes
+
+- d51469c: Let the Notes panel size to its content instead of reserving a fixed minimum height.
+- 0eabda4: Keep repeated sentence and word audio buttons in one evenly spaced wrapping row.
+
 ## 0.6.5
 
 ### Patch Changes
