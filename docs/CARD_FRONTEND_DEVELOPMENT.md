@@ -299,6 +299,9 @@ Long multilingual text, unbroken strings, repeated definitions, multiple images,
 - Poor narrow-screen spacing.
 - Dark-mode contrast failures.
 
+The back-card Notes panel grows to fit its content and does not impose a fixed
+minimum height.
+
 When a visual bug depends on a new content shape, add a named fixture rather than embedding preview-only markup into production templates.
 
 ## Recommended CSS loop

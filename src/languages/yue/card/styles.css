@@ -4108,7 +4108,6 @@ main.container .migaku-card audio {
   margin: 20px auto;
   text-align: center;
   font-size: .9375rem;
-  min-height: 150px;
 }
 
 .migaku-card-back .migaku-card-notes::before {
