@@ -259,6 +259,34 @@ const loadPreview = (client, url) => evaluate(client, `new Promise((resolve, rej
   frame.src = ${JSON.stringify(url)}
 })`)
 
+const assertAudioCountControls = async (client) => {
+  await evaluate(client, `new Promise((resolve) => {
+    const frame = document.querySelector('iframe')
+    const sentenceAudioCount = document.querySelector('#sentence-audio-count')
+    const wordAudioCount = document.querySelector('#word-audio-count')
+    frame.addEventListener('load', resolve, { once: true })
+    sentenceAudioCount.value = '2'
+    wordAudioCount.value = '4'
+    wordAudioCount.dispatchEvent(new Event('input', { bubbles: true }))
+  })`)
+  const state = await evaluate(client, `(() => {
+    const cardDocument = document.querySelector('iframe').contentDocument
+    const query = new URLSearchParams(window.location.search)
+    return {
+      sentenceAudioCount: cardDocument.querySelectorAll('.migaku-card-sentence-audio .replay-button').length,
+      sentenceAudioQuery: query.get('sentence-audio-count'),
+      wordAudioCount: cardDocument.querySelectorAll('.migaku-card-unknown-audio .replay-button').length,
+      wordAudioQuery: query.get('word-audio-count'),
+    }
+  })()`)
+  assert.deepStrictEqual(state, {
+    sentenceAudioCount: 2,
+    sentenceAudioQuery: '2',
+    wordAudioCount: 4,
+    wordAudioQuery: '4',
+  })
+}
+
 const assertMobileControlsHidden = async (client, previewUrl) => {
   const cardUrl = `${previewUrl}/preview?language=ja&side=back&fixture=syntax&theme=light&bridge=none`
   await client.send('Emulation.setDeviceMetricsOverride', {
@@ -351,22 +379,9 @@ const assertAudioControlsShareWrappingRow = async (client, previewUrl) => {
     deviceScaleFactor: 1,
     mobile: false,
   })
-  await loadPreview(client, `${previewUrl}/preview?language=en&side=back&fixture=sentence&theme=dark`)
+  await loadPreview(client, `${previewUrl}/preview?language=en&side=back&fixture=sentence&theme=dark&sentence-audio-count=2&word-audio-count=4`)
   const layout = await evaluate(client, `(() => {
     const cardDocument = document.querySelector('iframe').contentDocument
-    const sentenceAudio = cardDocument.querySelector('.migaku-card-sentence-audio')
-    const wordAudio = cardDocument.querySelector('.migaku-card-unknown-audio')
-    const addControls = (container, count) => {
-      container.replaceChildren()
-      Array.from({ length: count }, (_, index) => {
-        const button = cardDocument.createElement('button')
-        button.className = 'replay-button soundLink'
-        container.append(button)
-        if (index < count - 1) container.append(cardDocument.createElement('br'))
-      })
-    }
-    addControls(sentenceAudio, 2)
-    addControls(wordAudio, 4)
     const controls = [...cardDocument.querySelectorAll('.migaku-card-audio-row .replay-button')]
     const rects = controls.map((control) => control.getBoundingClientRect())
     return {
@@ -437,6 +452,7 @@ const run = async () => {
         side.dispatchEvent(new Event('change', { bubbles: true }))
       })()`)
       await waitForCard(client)
+      await assertAudioCountControls(client)
       await installAnkiReviewerHoverFixture(client)
       await assertNoHoverShift(client, 'Customize front of card')
       await evaluate(client, `document.querySelector('iframe').contentDocument.querySelector('.migaku-card-shell > .migaku-type-toggle').click()`)

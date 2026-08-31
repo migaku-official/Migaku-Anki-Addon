@@ -142,6 +142,8 @@ const run = async () => {
   assert.match(app.body, />Syntax showcase<\/option>/);
   assert.doesNotMatch(app.body, /<option value="audio">Audio card<\/option>/);
   assert.match(app.body, /<input type="checkbox" id="audio-card">Audio/);
+  assert.match(app.body, /<input class="audio-count" type="number" id="sentence-audio-count" min="0" step="1" value="1">/);
+  assert.match(app.body, /<input class="audio-count" type="number" id="word-audio-count" min="0" step="1" value="1">/);
   assert.match(app.body, /params\.set\("audio", audioCard\.checked \? "1" : "0"\)/);
   assert.match(app.body, /if \(query\.has\("fields"\)\) fieldToggles\.forEach/);
   assert.match(app.body, /new EventSource\("\/events"\)/);
@@ -149,7 +151,7 @@ const run = async () => {
   assert.match(app.body, /\.app\s*\{[^}]*height: 100vh;[^}]*overflow: hidden;/s);
   assert.match(app.body, /\.toolbar\s*\{[^}]*flex-wrap: wrap;[^}]*padding: 8px 12px;/s);
   assert.match(app.body, /label\s*\{[^}]*font-size: 12px;/s);
-  assert.match(app.body, /select, button\s*\{[^}]*min-height: 38px;/s);
+  assert.match(app.body, /select, button, \.audio-count\s*\{[^}]*min-height: 38px;/s);
   assert.match(app.body, /\.viewport-picker\s*\{[^}]*flex-wrap: wrap;/s);
   assert.match(app.body, /\.brand\s*\{[^}]*display: none;/s);
   assert.match(app.body, /select\s*\{[^}]*min-width: 112px;/s);
@@ -184,6 +186,20 @@ const run = async () => {
   assert.strictEqual(preview.statusCode, 200);
   assert.match(preview.body, /data-preview-side="back"/);
   assert.match(preview.body, /Eine Sprache zu lernen/);
+
+  const repeatedAudioPreview = await request(
+    port,
+    "/preview?language=en&side=back&theme=dark&fixture=sentence&sentence-audio-count=3&word-audio-count=4",
+  );
+  assert.strictEqual((repeatedAudioPreview.body.match(/sentence\.m4a/g) || []).length, 3);
+  assert.strictEqual((repeatedAudioPreview.body.match(/target-word\.mp3/g) || []).length, 4);
+
+  const zeroAudioPreview = await request(
+    port,
+    "/preview?language=en&side=back&theme=dark&fixture=sentence&sentence-audio-count=0&word-audio-count=0&fields=configured&field=Sentence%20Audio&field=Word%20Audio",
+  );
+  assert.doesNotMatch(zeroAudioPreview.body, /sentence\.m4a/);
+  assert.doesNotMatch(zeroAudioPreview.body, /target-word\.mp3/);
 
   const bridgelessPreview = await request(
     port,
@@ -229,7 +245,7 @@ const run = async () => {
 
   const emptyPreview = await request(
     port,
-    "/preview?language=en&side=back&theme=dark&fixture=sentence&fields=configured",
+    "/preview?language=en&side=back&theme=dark&fixture=sentence&sentence-audio-count=3&word-audio-count=4&fields=configured",
   );
   assert.doesNotMatch(emptyPreview.body, /\(language\)\[language,noun/);
   assert.doesNotMatch(emptyPreview.body, /\(Learning\)\[learn,verb/);

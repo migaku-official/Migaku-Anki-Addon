@@ -68,7 +68,7 @@ const renderAppShell = () => `<!doctype html>
     .brand { display: none; }
     .brand span, .status { display: none; }
     label { display: grid; flex: 0 1 auto; min-width: 0; gap: 4px; color: #afb5c2; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
-    select, button {
+    select, button, .audio-count {
       min-height: 38px;
       border: 1px solid #3b404b;
       border-radius: 8px;
@@ -77,6 +77,7 @@ const renderAppShell = () => `<!doctype html>
       font: inherit;
     }
     select { min-width: 112px; padding: 0 30px 0 10px; }
+    .audio-count { width: 88px; padding: 0 8px; }
     #fixture { min-width: 160px; }
     .audio-choice { display: flex; align-items: center; min-height: 38px; gap: 8px; padding: 0 10px; border: 1px solid #3b404b; border-radius: 8px; background: #242832; color: #f6f7fb; font-size: 12px; letter-spacing: 0; text-transform: none; }
     .audio-choice input { width: 16px; height: 16px; margin: 0; }
@@ -141,6 +142,12 @@ const renderAppShell = () => `<!doctype html>
       <label>Front content
         <span class="audio-choice"><input type="checkbox" id="audio-card">Audio</span>
       </label>
+      <label>Sentence audio count
+        <input class="audio-count" type="number" id="sentence-audio-count" min="0" step="1" value="1">
+      </label>
+      <label>Word audio count
+        <input class="audio-count" type="number" id="word-audio-count" min="0" step="1" value="1">
+      </label>
       <label>Viewport
         <span class="viewport-picker">
           <button type="button" data-viewport="100%" aria-label="Responsive desktop" aria-pressed="true">Wide</button>
@@ -165,6 +172,7 @@ const renderAppShell = () => `<!doctype html>
   <script src="/vendor/lucide.js"></script>
   <script>
     const controls = ["language", "side", "fixture"].map((id) => document.getElementById(id));
+    const audioCounts = ["sentence-audio-count", "word-audio-count"].map((id) => document.getElementById(id));
     const audioCard = document.getElementById("audio-card");
     const side = document.getElementById("side");
     const themeToggle = document.getElementById("theme-toggle");
@@ -191,6 +199,10 @@ const renderAppShell = () => `<!doctype html>
         const value = query.get(control.id);
         if (value && Array.from(control.options).some((option) => option.value === value)) control.value = value;
       });
+      audioCounts.forEach((control) => {
+        const value = query.get(control.id);
+        if (value !== null && Number.isSafeInteger(Number(value)) && Number(value) >= 0) control.value = value;
+      });
       audioCard.checked = query.get("audio") === "1";
     };
     const enabledQueryFields = query.getAll("field");
@@ -198,7 +210,7 @@ const renderAppShell = () => `<!doctype html>
     if (query.has("fields")) fieldToggles.forEach((toggle) => toggle.checked = enabledQueryFields.includes(toggle.dataset.field));
     else syncFixtureFields();
     const getParams = () => {
-      const params = new URLSearchParams(Object.fromEntries(controls.map((control) => [control.id, control.value])));
+      const params = new URLSearchParams(Object.fromEntries([...controls, ...audioCounts].map((control) => [control.id, control.value])));
       params.set("audio", audioCard.checked ? "1" : "0");
       params.set("theme", themeState.value);
       params.set("fields", "configured");
@@ -238,6 +250,7 @@ const renderAppShell = () => `<!doctype html>
       render();
     }));
     fieldToggles.forEach((toggle) => toggle.addEventListener("change", render));
+    audioCounts.forEach((control) => control.addEventListener("input", render));
     audioCard.addEventListener("change", render);
     themeToggle.addEventListener("click", toggleTheme);
     frame.addEventListener("load", () =>
@@ -363,8 +376,10 @@ const createPreviewServer = ({ rootDir, watch = true }) => {
           fixtureName: url.searchParams.get("fixture") || "sentence",
           language: url.searchParams.get("language") || "en",
           rootDir,
+          sentenceAudioCount: Number(url.searchParams.get("sentence-audio-count") ?? 1),
           side: url.searchParams.get("side") || "front",
           theme: url.searchParams.get("theme") || "light",
+          wordAudioCount: Number(url.searchParams.get("word-audio-count") ?? 1),
         });
         return send(res, 200, "text/html", document);
       } catch (error) {

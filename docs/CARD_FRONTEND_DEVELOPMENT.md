@@ -49,6 +49,8 @@ The toolbar changes the preview URL and rerenders the iframe:
 | Side | Front or back |
 | Fixture | Sentence, vocabulary, syntax showcase, or stress test |
 | Front content | Text or audio, independently combined with the selected fixture |
+| Sentence audio count | Any non-negative number of repeated Sentence Audio controls |
+| Word audio count | Any non-negative number of repeated Word Audio controls |
 | Theme toggle | Right-aligned moon/sun icon that switches directly between Light and Anki dark |
 | Viewport | Responsive wide view, 768 px tablet, or 390 px mobile |
 | Fields | Right-aligned `Fields` button with a list icon that opens a checklist for visible card content and card-type fields |
@@ -66,6 +68,13 @@ The Front content control writes the independent `audio` query parameter. In
 audio mode, a sentence fixture renders Sentence Audio on the front and a
 vocabulary fixture renders Word Audio. Text mode renders Sentence or Target Word
 respectively.
+
+Sentence audio count and Word audio count write the `sentence-audio-count` and
+`word-audio-count` query parameters. Each defaults to one and accepts any
+non-negative integer. The lab repeats the corresponding fixture sound tag with
+field-style line breaks, allowing single-row and wrapped audio layouts to be
+inspected through the same template and preview-audio rendering path as other
+fixtures. A count of zero empties that audio field.
 
 The Fields menu writes a `fields=configured` marker and one repeated `field`
 query parameter per enabled field. The marker preserves the all-fields-off state.
@@ -249,9 +258,10 @@ another. The Japanese parser uses those boundaries to keep the following kanji
 out of the previous annotation's suffix; parser whitespace is not rendered.
 
 Every fixture also receives the same lab-only target-word audio, sentence audio,
-and Vegeta screenshot from `dev/card-preview/media/`. The preview server exposes
-these through `/fixture-media/`; they are regression assets and are not installed
-as production note-type media.
+and Vegeta screenshot from `dev/card-preview/media/`. The audio count controls
+repeat those fixture sound tags without requiring additional media files. The
+preview server exposes these through `/fixture-media/`; they are regression
+assets and are not installed as production note-type media.
 
 Enabling the `Images` field renders local copies of the UI Image Storybook's
 square, portrait, and landscape placeholders. The contrasting aspect ratios make
@@ -326,7 +336,7 @@ The card-specific suites are:
 | `tests/card-document.test.js` | Composition of real assets into front/back documents, including repeated back-card script execution |
 | `tests/card-cosmetics.test.js` | Shared light/dark surface and layout tokens in rendered cards |
 | `tests/card-preview-server.test.js` | Lab shell, preview route, state parameters, and invalid-input responses |
-| `tests/card-hover-layout.test.js` | Browser layout stability, mobile control visibility, native Japanese reading layout, and WebKit fallback markup selection |
+| `tests/card-hover-layout.test.js` | Browser layout stability, audio-count control behavior, mobile control visibility, native Japanese reading layout, and WebKit fallback markup selection |
 
 `run-tests.sh` invokes the same complete npm test command. The pre-push workflow can therefore continue using the repository's shell runner.
 

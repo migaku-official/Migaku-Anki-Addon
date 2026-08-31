@@ -94,6 +94,13 @@ const assertOption = (options, value, optionName) => {
     throw new Error(`Unknown ${optionName} "${value}". Expected one of: ${options.join(", ")}`);
 };
 
+const assertAudioCount = (count, fieldName) => {
+  if (!Number.isSafeInteger(count) || count < 0)
+    throw new Error(`${fieldName} count must be a non-negative integer.`);
+};
+
+const repeatAudio = (value, count) => value ? Array.from({ length: count }, () => value).join("<br>") : "";
+
 const renderCardDocument = ({
   audioCard = false,
   commandBridge = true,
@@ -101,12 +108,16 @@ const renderCardDocument = ({
   fixtureName,
   language,
   rootDir,
+  sentenceAudioCount = 1,
   side,
   theme,
+  wordAudioCount = 1,
 }) => {
   assertOption(contract.languages, language, "language");
   assertOption(["front", "back"], side, "side");
   assertOption(Object.keys(themes), theme, "theme");
+  assertAudioCount(sentenceAudioCount, "Sentence audio");
+  assertAudioCount(wordAudioCount, "Word audio");
   const fixture = buildLocalizedFixture(language, fixtureName, audioCard);
   if (enabledFields) {
     const enabledFieldSet = new Set(enabledFields);
@@ -117,6 +128,8 @@ const renderCardDocument = ({
         : "";
     });
   }
+  fixture.fields["Sentence Audio"] = repeatAudio(fixture.fields["Sentence Audio"], sentenceAudioCount);
+  fixture.fields["Word Audio"] = repeatAudio(fixture.fields["Word Audio"], wordAudioCount);
   const frontTemplate = readCardFile(rootDir, language, "front.html");
   const frontSide = renderTemplate(frontTemplate, fixture.fields);
   const fields = { ...fixture.fields, FrontSide: frontSide };
